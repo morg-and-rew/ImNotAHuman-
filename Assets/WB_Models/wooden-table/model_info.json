@@ -1,0 +1,316 @@
+{
+    "uid": "6856e465f6a7407098224ac050141779",
+    "slug": "wooden-table",
+    "user": {
+        "account": "basic",
+        "avatars": {
+            "uid": "6ebd087df3fe4b70b0ba2cc95325de5d",
+            "images": [
+                {
+                    "width": 32,
+                    "height": 32,
+                    "size": 2386,
+                    "url": "https://media.sketchfab.com/avatars/6ebd087df3fe4b70b0ba2cc95325de5d/5d315a343fbd45d39102eb7c66c57f76.png"
+                },
+                {
+                    "width": 48,
+                    "height": 48,
+                    "size": 4976,
+                    "url": "https://media.sketchfab.com/avatars/6ebd087df3fe4b70b0ba2cc95325de5d/657529b5f8574579949f986c5bcfa33a.png"
+                },
+                {
+                    "width": 90,
+                    "height": 90,
+                    "size": 16215,
+                    "url": "https://media.sketchfab.com/avatars/6ebd087df3fe4b70b0ba2cc95325de5d/01de0246fdf842f0acab675a174f6f90.png"
+                },
+                {
+                    "width": 100,
+                    "height": 100,
+                    "size": 19871,
+                    "url": "https://media.sketchfab.com/avatars/6ebd087df3fe4b70b0ba2cc95325de5d/e863e1ea78934bfeba819a13ee1241a9.png"
+                }
+            ]
+        },
+        "displayName": "Shedmon",
+        "isAiRestricted": false,
+        "traderSettings": {
+            "isTrader": null,
+            "isVerifiedTrader": false
+        },
+        "planDetail": null,
+        "profileUrl": "https://sketchfab.com/shedmon",
+        "uid": "1193c1bb295240d1a4ad6aa8283f2486",
+        "username": "shedmon"
+    },
+    "name": "Wooden Table",
+    "description": "Simple wooden table.\n\n**If you want to support the author, you can send donations to https://www.donationalerts.com/r/shedmon\nor https://boosty.to/shedmon",
+    "htmlDescription": "<p>Simple wooden table.</p>\n<p>**If you want to support the author, you can send donations to <a rel=\"nofollow noopener noreferrer\" target=\"_blank\"href=\"https://www.donationalerts.com/r/shedmon\">https://www.donationalerts.com/r/shedmon</a>\nor <a rel=\"nofollow noopener noreferrer\" target=\"_blank\"href=\"https://boosty.to/shedmon\">https://boosty.to/shedmon</a></p>",
+    "thumbnails": {
+        "uid": "7d8d620682394b63ab0f2c623052b665",
+        "images": [
+            {
+                "uid": "9199411c2f514258868f260432acac2d",
+                "width": 1920,
+                "height": 1080,
+                "size": 191105,
+                "url": "https://media.sketchfab.com/models/6856e465f6a7407098224ac050141779/thumbnails/7d8d620682394b63ab0f2c623052b665/67b9ac8b25d942b49182cba77e4d5216.jpeg"
+            },
+            {
+                "uid": "6ddce3ab595b4879a4d863c382a74604",
+                "width": 1024,
+                "height": 576,
+                "size": 43923,
+                "url": "https://media.sketchfab.com/models/6856e465f6a7407098224ac050141779/thumbnails/7d8d620682394b63ab0f2c623052b665/7e26f149fa924ac0a93f8e9ee274776b.jpeg"
+            },
+            {
+                "uid": "64147d9f1c8143c29d55b5554e148a8d",
+                "width": 720,
+                "height": 405,
+                "size": 22342,
+                "url": "https://media.sketchfab.com/models/6856e465f6a7407098224ac050141779/thumbnails/7d8d620682394b63ab0f2c623052b665/3ee39657684b4b38918685f990e11419.jpeg"
+            },
+            {
+                "uid": "7fe594c7cbd54a13b7121b4e1aeb377c",
+                "width": 256,
+                "height": 144,
+                "size": 3807,
+                "url": "https://media.sketchfab.com/models/6856e465f6a7407098224ac050141779/thumbnails/7d8d620682394b63ab0f2c623052b665/d9f39179ebbd4171b41f16fd5072f84a.jpeg"
+            },
+            {
+                "uid": "b4db855cf022479286a0b3e4fc5883b0",
+                "width": 64,
+                "height": 36,
+                "size": 1007,
+                "url": "https://media.sketchfab.com/models/6856e465f6a7407098224ac050141779/thumbnails/7d8d620682394b63ab0f2c623052b665/e87b7f8f61f84af38f04f50b12301576.jpeg"
+            }
+        ]
+    },
+    "vertexCount": 150,
+    "faceCount": 300,
+    "viewCount": 28385,
+    "likeCount": 510,
+    "animationCount": 0,
+    "staffpickedAt": null,
+    "publishedAt": "2022-07-31T20:39:13.784036",
+    "createdAt": "2022-07-31T20:36:04.315482",
+    "tags": [
+        "wooden",
+        "table",
+        "dirty",
+        "old",
+        "lowpoly",
+        "free"
+    ],
+    "orgTags": [],
+    "categories": [
+        {
+            "uid": "606f202e5a3c4e62bf9aab1cd9f63e1b",
+            "name": "Furniture & Home",
+            "slug": "furniture-home"
+        }
+    ],
+    "license": null,
+    "isStoreLicenseLocked": false,
+    "viewerUrl": "https://sketchfab.com/3d-models/wooden-table-6856e465f6a7407098224ac050141779",
+    "embedUrl": "https://sketchfab.com/models/6856e465f6a7407098224ac050141779/embed",
+    "editorUrl": "https://sketchfab.com/models/6856e465f6a7407098224ac050141779/edit",
+    "reviewUrl": "https://sketchfab.com/models/6856e465f6a7407098224ac050141779/review",
+    "publicCommentCount": 6,
+    "orgCommentCount": 0,
+    "downloadType": "no",
+    "isInspectable": true,
+    "hasPromotionalContent": false,
+    "downloadCount": 10638,
+    "status": {
+        "processing": "SUCCEEDED"
+    },
+    "isPublished": true,
+    "originalFileName": "table_low",
+    "processingStatus": 2,
+    "archiveSize": 27913,
+    "ext": "obj",
+    "isDeleted": false,
+    "isRestricted": false,
+    "processedAt": "2022-07-31T20:36:12.692928",
+    "files": [
+        {
+            "uid": "a9bb21421ed141898eb0644ea25a61f6",
+            "flag": 0,
+            "osgjsUrl": "https://media.sketchfab.com/models/6856e465f6a7407098224ac050141779/deeb82b00d81477ba62a6b5db48a730c/files/a9bb21421ed141898eb0644ea25a61f6/file.binz",
+            "modelSize": 2908,
+            "osgjsSize": 1251,
+            "wireframeSize": 1110,
+            "p": [
+                {
+                    "v": 1,
+                    "b": "vJ7rXEAbrueF6/bN+8dNPvQ870dOB+RhEKYOo+FY/f6+KQRRzDsu7oJ2dnPAyeqvDAK1sckABO+v\n3BHk6GKIEJ7IQovWnZcwLA8+/HOwru1AD7L3ljsFTgBUAFcAftAtC/Qsip7cz63Zck0pzpHSKmPm\nvulhjvObWxcnTnDKSnGuWRqprcLhIt1acTGYDzAegxFVPKT+huhcwE7YuIQXkQB/WUgx4TMZIix4\nL26CoW6crFxCfrJy8WonED1eO8UufODskRK3F6VD9NJwHaIX6/468cazGfEbr+b2sYdlgsd7WLEZ\nD28znNVvMxzVN2VLEoesyZZskQd85BqmCQcE20KyDeUguG0oJ+UVtyeFLXAbyMEHi1EKyFmMFKSA\nRm4DqKEFmdCcFmQyKyoxkONFJSjwI7VFNFgJeV6+EvKsYsj8oOy4zA+GCkI7JAIutENisudogs0E\n0kdLopO7G0hmQLI0AVIMdWUBkivtbodOSrkbAz1ZKQ6cW21Ecq4ZM0u7/jp6MsptFQgPq0wlS4Di\nKpkOGj62SbuPbbaovm2nAicoACMZMw9QRpk1TmNsDDpvbgAIJD7n9BxbTGDE4LxRMGDTGBpnu+Kh\n1fQeAda83E51miNpzjt43rOo/H6Wt7+KimA0hDfZf1Y4rjg8",
+                    "d": true
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "quad": 0,
+        "triangle": 300,
+        "polygon": 0,
+        "line": 0,
+        "point": 0,
+        "totalTriangle": 300,
+        "vertexCount": 150,
+        "hasNormal": true,
+        "hasTangent": false,
+        "hasVertexColor": false,
+        "pbrType": "metalness",
+        "textureCount": 5,
+        "materialCount": 1,
+        "isRigged": false,
+        "morph": 0,
+        "scale": false,
+        "animation": 0,
+        "uvMapped": true,
+        "sourceFiles": {
+            "3d": [
+                {
+                    "version": "",
+                    "filepath": "source/table_low.obj",
+                    "filesize": 27913,
+                    "extension": "obj",
+                    "fileformat": "OBJ"
+                }
+            ],
+            "misc": [],
+            "count": 1,
+            "image": []
+        },
+        "textureFiles": [
+            {
+                "width": 4096,
+                "format": "RGB",
+                "height": 4096,
+                "is8bit": false,
+                "filepath": "textures/Table_Base_color.png",
+                "filesize": 46606399,
+                "extension": "png",
+                "fileformat": "Portable Network Graphics"
+            },
+            {
+                "width": 4096,
+                "format": "GreyScale",
+                "height": 4096,
+                "is8bit": false,
+                "filepath": "textures/Table_Metallic.png",
+                "filesize": 36156,
+                "extension": "png",
+                "fileformat": "Portable Network Graphics"
+            },
+            {
+                "width": 4096,
+                "format": "GreyScale",
+                "height": 4096,
+                "is8bit": false,
+                "filepath": "textures/Table_Mixed_AO.png",
+                "filesize": 7945617,
+                "extension": "png",
+                "fileformat": "Portable Network Graphics"
+            },
+            {
+                "width": 4096,
+                "format": "RGB",
+                "height": 4096,
+                "is8bit": false,
+                "filepath": "textures/Table_Normal_OpenGL.png",
+                "filesize": 55227715,
+                "extension": "png",
+                "fileformat": "Portable Network Graphics"
+            },
+            {
+                "width": 4096,
+                "format": "GreyScale",
+                "height": 4096,
+                "is8bit": false,
+                "filepath": "textures/Table_Roughness.png",
+                "filesize": 15614433,
+                "extension": "png",
+                "fileformat": "Portable Network Graphics"
+            },
+            {
+                "width": 512,
+                "format": "RGB",
+                "height": 512,
+                "is8bit": true,
+                "filepath": "textures/internal_ground_ao_texture.jpeg",
+                "filesize": 20565,
+                "extension": "jpeg",
+                "fileformat": "JPEG"
+            }
+        ]
+    },
+    "price": null,
+    "inStore": false,
+    "averageRating": 0.0,
+    "reviewCount": 0,
+    "preferOriginalNormalMap": false,
+    "isDisabled": false,
+    "hasCommentsDisabled": false,
+    "useNewViewer": false,
+    "exporter": null,
+    "displayStatus": "ok",
+    "version": {
+        "uid": "deeb82b00d81477ba62a6b5db48a730c",
+        "status": {
+            "processing": "SUCCEEDED"
+        },
+        "isCurrentVersion": true,
+        "isCandidateVersion": false,
+        "createdAt": "2022-07-31T20:36:04.471790",
+        "processedAt": "2022-07-31T20:36:12.656003",
+        "reason": "upload"
+    },
+    "visibility": "public",
+    "org": null,
+    "isAiGenerated": false,
+    "isFabAi": false,
+    "isArEnabled": false,
+    "isArAvailable": false,
+    "archivesStatus": [
+        {
+            "type": "source",
+            "exists": false,
+            "status": null
+        },
+        {
+            "type": "gltf",
+            "exists": false,
+            "status": null
+        },
+        {
+            "type": "extra",
+            "exists": false,
+            "status": null
+        },
+        {
+            "type": "usdz",
+            "exists": false,
+            "status": null
+        },
+        {
+            "type": "gltf-ar",
+            "exists": false,
+            "status": null
+        },
+        {
+            "type": "uasset",
+            "exists": false,
+            "status": null
+        },
+        {
+            "type": "glb",
+            "exists": false,
+            "status": null
+        }
+    ],
+    "mayDownloadThisModel": false,
+    "hasDoptions": false,
+    "fabMigrationListingId": "93d26ddd-a3a5-4d4e-af6c-a1ece30ac831"
+}
