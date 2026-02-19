@@ -16,20 +16,8 @@ public sealed class PlayerCameraBob
 
     public void Tick()
     {
-        if (_input != null && _switchZone != null && _switchZone.IsPlayerInZone && _input.InteractPressed)
-        {
-            _switchZone.SwitchCamera();
-
-            _isCameraSwitched = !_isCameraSwitched;
-
-            if (_isCameraSwitched)
-            {
-                _playerController.SetBlock(true);
-            }
-            else
-            {
-                _playerController.SetBlock(false);
-            }
-        }
+        if (_input == null || _switchZone == null || !_switchZone.IsPlayerInZone || !_input.InteractPressed)
+            return;
+        _switchZone.TryOpenOrInteract();
     }
 }

@@ -8,6 +8,7 @@ public sealed class PlayerInteractionController
     private readonly PlayerHands _hands;
     private readonly ClientInteraction _client;
     private readonly InteractionRaycastCache _raycastCache;
+    private readonly IGameFlowController _flow;
 
     private IWorldInteractable _currentWorldInteractable;
 
@@ -16,13 +17,15 @@ public sealed class PlayerInteractionController
         IPlayerInput input,
         PlayerHands hands,
         ClientInteraction clientInteraction,
-        InteractionRaycastCache raycastCache)
+        InteractionRaycastCache raycastCache,
+        IGameFlowController flow = null)
     {
         _playerView = playerView;
         _input = input;
         _hands = hands;
         _client = clientInteraction;
         _raycastCache = raycastCache;
+        _flow = flow;
     }
 
     public void Tick()
@@ -41,8 +44,17 @@ public sealed class PlayerInteractionController
             return;
         }
 
+        // #region agent log
+        if (holdable is PackageHoldable pkgDenied && !IsHoldableAllowed(holdable))
+            AgentDebugLog.Log("PlayerInteractionController.cs:Tick", "package denied", "{\"state\":\"" + GameStateService.CurrentState + "\",\"isWarehouse\":" + GameStateService.IsWarehouse.ToString().ToLowerInvariant() + ",\"requiredNum\":" + GameStateService.RequiredPackageNumber + ",\"packageNum\":" + pkgDenied.Number + "}", "H_pickup");
+        // #endregion
+
         if (holdable != null && IsHoldableAllowed(holdable))
         {
+            // #region agent log
+            if (holdable is PackageHoldable pkg)
+                AgentDebugLog.Log("PlayerInteractionController.cs:Tick", "pick attempt package", "{\"state\":\"" + GameStateService.CurrentState + "\",\"isWarehouse\":" + GameStateService.IsWarehouse.ToString().ToLowerInvariant() + ",\"requiredNum\":" + GameStateService.RequiredPackageNumber + ",\"packageNum\":" + pkg.Number + ",\"allowed\":" + IsHoldableAllowed(holdable).ToString().ToLowerInvariant() + "}", "H_pickup");
+            // #endregion
             TryPickItem(holdable);
             return;
         }
@@ -96,7 +108,8 @@ public sealed class PlayerInteractionController
         }
 
         Transform handPoint = ResolveHandPoint(holdable);
-        _hands.TryTake(holdable, handPoint);
+        if (_hands.TryTake(holdable, handPoint) && holdable is PackageHoldable)
+            _flow?.ShowEmptyHintAfterPackagePick();
     }
 
     private Transform ResolveHandPoint(IHoldable holdable)

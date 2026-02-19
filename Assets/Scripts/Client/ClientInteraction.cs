@@ -24,6 +24,8 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     [Header("UI Root")]
     [SerializeField] private Canvas _uiRoot;
+    [Tooltip("Панель только с портретами клиента (левый/правый). Если задана — скрываем только её, не весь _uiRoot (PlayerCanvas), чтобы не затронуть подсказки обучения и другой UI.")]
+    [SerializeField] private GameObject _clientPortraitsPanel;
     [SerializeField] private Canvas _hintCanvas;
 
     [Header("Portraits (Left/Right)")]
@@ -35,6 +37,13 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     [Header("Positioning")]
     [SerializeField] private Vector2 _originalLeftAnchoredPosition;
     [SerializeField] private Vector2 _originalRightAnchoredPosition;
+    private Vector3 _originalLeftScale = Vector3.one;
+    private Vector3 _originalRightScale = Vector3.one;
+    private Vector3 _originalLeftEulerAngles = Vector3.zero;
+    private Vector3 _originalRightEulerAngles = Vector3.zero;
+
+    [Header("Debug")]
+    [SerializeField] private bool _debugPortraits;
 
     public bool IsActive { get; private set; }
     public bool IsPlayerInside { get; private set; }
@@ -46,9 +55,12 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     private bool _isUsingOverrides = false;
     private string _currentClientIdOverride;
     private string _currentConversationOverride;
+    private bool _removePackageFromHandsDoneThisConversation;
 
     public event Action<ClientDialogueStepCompletionData> ClientDialogueStepCompleted;
     public event Action ClientDialogueFinished;
+    public event Action ClientConversationStarted;
+    public event Action RequestRemovePackageFromHands;
     public int CurrentStepIndex => _stepIndex;
 
     private ICustomDialogueUI _customDialogueUI;
@@ -60,24 +72,51 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         _uiRoot = uiRoot;
         _leftImage = leftImage;
         _rightImage = rightImage;
+
+        if (_customDialogueUI != null)
+            _customDialogueUI.OnSubtitleShown -= OnSubtitleShown;
+
         _customDialogueUI = customDialogueUI;
+
+        if (_customDialogueUI != null)
+            _customDialogueUI.OnSubtitleShown += OnSubtitleShown;
 
         _leftRoot = leftImage != null ? leftImage.rectTransform : null;
         _rightRoot = rightImage != null ? rightImage.rectTransform : null;
 
-        if (_leftRoot != null) _originalLeftAnchoredPosition = _leftRoot.anchoredPosition;
-        if (_rightRoot != null) _originalRightAnchoredPosition = _rightRoot.anchoredPosition;
+        if (_leftRoot != null)
+        {
+            _originalLeftAnchoredPosition = _leftRoot.anchoredPosition;
+            _originalLeftScale = _leftRoot.localScale;
+            _originalLeftEulerAngles = _leftRoot.localEulerAngles;
+        }
+        if (_rightRoot != null)
+        {
+            _originalRightAnchoredPosition = _rightRoot.anchoredPosition;
+            _originalRightScale = _rightRoot.localScale;
+            _originalRightEulerAngles = _rightRoot.localEulerAngles;
+        }
 
-        if (_uiRoot != null) _uiRoot.gameObject.SetActive(false);
+        SetClientPortraitsRootActive(false);
         if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
     }
 
     private void Awake()
     {
-        if (_leftRoot != null) _originalLeftAnchoredPosition = _leftRoot.anchoredPosition;
-        if (_rightRoot != null) _originalRightAnchoredPosition = _rightRoot.anchoredPosition;
+        if (_leftRoot != null)
+        {
+            _originalLeftAnchoredPosition = _leftRoot.anchoredPosition;
+            _originalLeftScale = _leftRoot.localScale;
+            _originalLeftEulerAngles = _leftRoot.localEulerAngles;
+        }
+        if (_rightRoot != null)
+        {
+            _originalRightAnchoredPosition = _rightRoot.anchoredPosition;
+            _originalRightScale = _rightRoot.localScale;
+            _originalRightEulerAngles = _rightRoot.localEulerAngles;
+        }
 
-        if (_uiRoot != null) _uiRoot.gameObject.SetActive(false);
+        SetClientPortraitsRootActive(false);
         if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
 
         HidePortraits();
@@ -85,10 +124,17 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private void OnEnable()
     {
-        if (_customDialogueUI != null) _customDialogueUI.OnSubtitleShown += OnSubtitleShown;
+        if (_customDialogueUI != null)
+        {
+            _customDialogueUI.OnSubtitleShown -= OnSubtitleShown;
+            _customDialogueUI.OnSubtitleShown += OnSubtitleShown;
+        }
 
         if (DialogueManager.instance != null)
+        {
             DialogueManager.instance.conversationEnded += OnConversationEnded;
+            DialogueManager.instance.conversationStarted += OnConversationStarted;
+        }
     }
 
     private void OnDisable()
@@ -96,7 +142,15 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (_customDialogueUI != null) _customDialogueUI.OnSubtitleShown -= OnSubtitleShown;
 
         if (DialogueManager.instance != null)
+        {
             DialogueManager.instance.conversationEnded -= OnConversationEnded;
+            DialogueManager.instance.conversationStarted -= OnConversationStarted;
+        }
+    }
+
+    private void OnConversationStarted(Transform _)
+    {
+        _removePackageFromHandsDoneThisConversation = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -114,7 +168,9 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         {
             IsPlayerInside = false;
             if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
-            StopDialogUIOnly();
+            // Не отключать канвас с клиентами при выходе из зоны, если идёт диалог — игрока могли переместить к точке диалога (EnterClientDialogueState).
+            if (!IsActive)
+                StopDialogUIOnly();
         }
     }
 
@@ -191,21 +247,54 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     public void CloseUI()
     {
-        if (_uiRoot != null)
-            _uiRoot.gameObject.SetActive(false);
-
+        // #region agent log
+        var caller = new System.Diagnostics.StackTrace(1).GetFrame(0).GetMethod()?.Name ?? "?";
+        Debug.Log($"[ClientInteraction] CloseUI (caller={caller})");
+        // #endregion
+        SetClientPortraitsRootActive(false);
         HidePortraits();
     }
 
     private void ShowUI()
     {
-        if (_uiRoot != null) _uiRoot.gameObject.SetActive(true);
+        // #region agent log
+        var caller = new System.Diagnostics.StackTrace(1).GetFrame(0).GetMethod()?.Name ?? "?";
+        Debug.Log($"[ClientInteraction] ShowUI (caller={caller})");
+        // #endregion
+        SetClientPortraitsRootActive(true);
     }
 
     private void StopDialogUIOnly()
     {
-        if (_uiRoot != null) _uiRoot.gameObject.SetActive(false);
+        // #region agent log
+        Debug.Log("[ClientInteraction] StopDialogUIOnly");
+        // #endregion
+        SetClientPortraitsRootActive(false);
         HidePortraits();
+    }
+
+    /// <summary> Включает/выключает только панель с портретами. Если нет _clientPortraitsPanel — при показе включаем _uiRoot, при скрытии не трогаем канвас (чтобы не гасить TutorialHintView._root на том же Canvas). </summary>
+    private void SetClientPortraitsRootActive(bool active)
+    {
+        if (_clientPortraitsPanel != null)
+        {
+            // #region agent log
+            Debug.Log($"[ClientInteraction] SetClientPortraitsRootActive active={active} target=clientPortraitsPanel name={_clientPortraitsPanel.name}");
+            // #endregion
+            _clientPortraitsPanel.SetActive(active);
+            return;
+        }
+        if (_uiRoot != null)
+        {
+            if (active)
+            {
+                // #region agent log
+                Debug.Log($"[ClientInteraction] SetClientPortraitsRootActive active=true target=uiRoot(PlayerCanvas) name={_uiRoot.gameObject.name}");
+                // #endregion
+                _uiRoot.gameObject.SetActive(true);
+            }
+            // При active=false не выключаем весь _uiRoot — на нём же висит подсказка обучения (TutorialHintView._root). Скрываем только портреты через HidePortraits().
+        }
     }
 
     private void HidePortraits()
@@ -226,6 +315,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         }
 
         DialogueManager.StartConversation(conv);
+        ClientConversationStarted?.Invoke();
     }
 
     private void StartCurrentStepWithOverride()
@@ -237,6 +327,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         }
 
         DialogueManager.StartConversation(_currentConversationOverride);
+        ClientConversationStarted?.Invoke();
     }
 
     private void OnConversationEnded(Transform actor)
@@ -274,30 +365,69 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (subtitle?.dialogueEntry == null) return;
 
         int entryID = subtitle.dialogueEntry.id;
+        int conversationID = subtitle.dialogueEntry.conversationID;
 
-        int mapStepIndex = _isUsingOverrides ? _overrideStepIndex : _stepIndex;
-        if (mapStepIndex < 0) return;
+        int mapStepIndex = _isUsingOverrides ? _overrideStepIndex : GetStepIndexFromConversation(conversationID);
+        if (mapStepIndex < 0)
+        {
+            if (_debugPortraits) Debug.Log($"[ClientInteraction] No step for conversationID={conversationID}, entryID={entryID}");
+            return;
+        }
 
         ClientPortraitMap.PortraitRule rule;
         if (!_portraitMap.TryGetRule(mapStepIndex, entryID, out rule))
+        {
+            if (_debugPortraits) Debug.Log($"[ClientInteraction] No rule for step={mapStepIndex}, entryID={entryID}");
             return;
+        }
+
+        if (_debugPortraits) Debug.Log($"[ClientInteraction] Applying portraits step={mapStepIndex} entryID={entryID} L={rule.leftSprite != null} R={rule.rightSprite != null}");
 
         if (_leftRoot != null)
         {
             bool showLeft = rule.leftSprite != null;
             _leftRoot.gameObject.SetActive(showLeft);
-            if (showLeft && _leftImage != null) _leftImage.sprite = rule.leftSprite;
+            if (showLeft && _leftImage != null)
+            {
+                _leftImage.sprite = rule.leftSprite;
+                _leftImage.color = rule.leftSpriteColor.a < 0.001f ? Color.white : rule.leftSpriteColor;
+            }
         }
 
         if (_rightRoot != null)
         {
             bool showRight = rule.rightSprite != null;
             _rightRoot.gameObject.SetActive(showRight);
-            if (showRight && _rightImage != null) _rightImage.sprite = rule.rightSprite;
+            if (showRight && _rightImage != null)
+            {
+                _rightImage.sprite = rule.rightSprite;
+                _rightImage.color = rule.rightSpriteColor.a < 0.001f ? Color.white : rule.rightSpriteColor;
+            }
         }
 
         ApplyPriority(rule.priority);
-        ApplyPositioningOverride(rule.useCenteredPositionOverride);
+        ApplyPositioningOverride(rule);
+
+        if (!_removePackageFromHandsDoneThisConversation
+            && mapStepIndex >= 0
+            && mapStepIndex < _portraitMap.steps.Count)
+        {
+            ClientPortraitMap.Step step = _portraitMap.steps[mapStepIndex];
+            if (step.removePackageFromHandsAfterEntryID > 0 && entryID >= step.removePackageFromHandsAfterEntryID)
+            {
+                _removePackageFromHandsDoneThisConversation = true;
+                RequestRemovePackageFromHands?.Invoke();
+            }
+        }
+    }
+
+    private int GetStepIndexFromConversation(int conversationID)
+    {
+        if (_portraitMap == null || DialogueManager.masterDatabase == null) return _stepIndex;
+        Conversation conv = DialogueManager.masterDatabase.GetConversation(conversationID);
+        if (conv == null) return _stepIndex;
+        int byTitle = FindStepIndexByConversation(conv.Title);
+        return byTitle >= 0 ? byTitle : _stepIndex;
     }
 
     private void ApplyPriority(ClientPortraitMap.SpeakerPriority priority)
@@ -313,17 +443,89 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         }
     }
 
-    private void ApplyPositioningOverride(bool useOverride)
+    private void ApplyPositioningOverride(ClientPortraitMap.PortraitRule rule)
     {
+        if (rule.useCustomPositionAndSize)
+        {
+            Vector3 leftScaleVec = rule.customLeftScale.sqrMagnitude > 0.001f ? rule.customLeftScale : Vector3.one;
+            Vector3 rightScaleVec = rule.customRightScale.sqrMagnitude > 0.001f ? rule.customRightScale : Vector3.one;
+            if (_leftRoot != null)
+            {
+                _leftRoot.anchoredPosition3D = rule.customLeftAnchoredPos;
+                _leftRoot.localScale = leftScaleVec;
+                _leftRoot.localEulerAngles = rule.customLeftRotation;
+            }
+            if (_rightRoot != null)
+            {
+                _rightRoot.anchoredPosition3D = rule.customRightAnchoredPos;
+                _rightRoot.localScale = rightScaleVec;
+                _rightRoot.localEulerAngles = rule.customRightRotation;
+            }
+            return;
+        }
+
+        bool useOverride = rule.useCenteredPositionOverride;
+        float leftScale = useOverride && rule.leftScale > 0f ? rule.leftScale : _portraitMap.centeredLeftScale;
+        float rightScale = useOverride && rule.rightScale > 0f ? rule.rightScale : _portraitMap.centeredRightScale;
+
         if (_leftRoot != null)
-            _leftRoot.anchoredPosition = useOverride
-                ? _portraitMap.centeredLeftAnchoredPos
-                : _originalLeftAnchoredPosition;
+        {
+            if (useOverride)
+                _leftRoot.anchoredPosition3D = _portraitMap.centeredLeftAnchoredPos;
+            else
+                _leftRoot.anchoredPosition = _originalLeftAnchoredPosition;
+            _leftRoot.localScale = useOverride ? Vector3.one * leftScale : _originalLeftScale;
+            _leftRoot.localEulerAngles = _originalLeftEulerAngles;
+        }
 
         if (_rightRoot != null)
-            _rightRoot.anchoredPosition = useOverride
-                ? _portraitMap.centeredRightAnchoredPos
-                : _originalRightAnchoredPosition;
+        {
+            if (useOverride)
+                _rightRoot.anchoredPosition3D = _portraitMap.centeredRightAnchoredPos;
+            else
+                _rightRoot.anchoredPosition = _originalRightAnchoredPosition;
+            _rightRoot.localScale = useOverride ? Vector3.one * rightScale : _originalRightScale;
+            _rightRoot.localEulerAngles = useOverride ? _portraitMap.centeredRightRotation : _originalRightEulerAngles;
+        }
+    }
+
+    public void ShowPortraitOnly(string conversation)
+    {
+        if (_portraitMap == null || string.IsNullOrEmpty(conversation)) return;
+        int stepIndex = FindStepIndexByConversation(conversation);
+        if (stepIndex < 0 || stepIndex >= _portraitMap.steps.Count) return;
+        var step = _portraitMap.steps[stepIndex];
+        if (step.rules == null || step.rules.Count == 0) return;
+
+        var rule = step.rules[0];
+        if (_leftRoot != null)
+        {
+            bool showLeft = rule.leftSprite != null;
+            _leftRoot.gameObject.SetActive(showLeft);
+            if (showLeft && _leftImage != null)
+            {
+                _leftImage.sprite = rule.leftSprite;
+                _leftImage.color = rule.leftSpriteColor.a < 0.001f ? Color.white : rule.leftSpriteColor;
+            }
+        }
+        if (_rightRoot != null)
+        {
+            bool showRight = rule.rightSprite != null;
+            _rightRoot.gameObject.SetActive(showRight);
+            if (showRight && _rightImage != null)
+            {
+                _rightImage.sprite = rule.rightSprite;
+                _rightImage.color = rule.rightSpriteColor.a < 0.001f ? Color.white : rule.rightSpriteColor;
+            }
+        }
+        ApplyPriority(rule.priority);
+        ApplyPositioningOverride(rule);
+        ShowUI();
+    }
+
+    public void HidePortraitOnly()
+    {
+        CloseUI();
     }
 
     public void PlayWrongPackageConversation()
@@ -340,6 +542,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         GameStateService.SetWrongPackageDialogue(true);
 
         DialogueManager.StartConversation(conv);
+        ClientConversationStarted?.Invoke();
 
         if (_portraitMap.enforceCorrectAfterFirstWrong)
             GameStateService.EnforceRequiredPackageOnly = true;

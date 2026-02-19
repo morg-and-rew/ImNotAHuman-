@@ -48,8 +48,7 @@ public sealed class WarehouseDeliveryController : MonoBehaviour
             return;
         }
 
-        if (_rotation.Count == 0 || _rotationIndex >= _rotation.Count)
-            RebuildRotation();
+        RebuildRotation();
 
         if (_rotation.Count == 0)
         {

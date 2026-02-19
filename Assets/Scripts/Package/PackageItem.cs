@@ -1,9 +1,10 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class PackageItem : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _numberText;
+    [SerializeField] private Text _numberText;
     [SerializeField] private PackageRegistry _registry;
 
     public int Number { get; private set; }
@@ -16,6 +17,11 @@ public sealed class PackageItem : MonoBehaviour
     private void OnDestroy()
     {
         _registry.Unregister(this);
+    }
+
+    public void NotifyTakenFromWarehouse()
+    {
+        _registry?.NotifyPackageTaken(this);
     }
 
     public void SetNumber(int number)

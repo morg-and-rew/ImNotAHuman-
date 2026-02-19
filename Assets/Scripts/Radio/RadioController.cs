@@ -364,7 +364,6 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             GameFlowController flow = GameFlowController.Instance;
             if (flow != null)
                 flow.OnExitZonePassed += OnExitZonePassed;
-            flow?.ShowHintRaw("Пройдите на склад и через зону выхода.");
             Debug.Log("[Radio] Waiting for exit zone. No teleport.");
             return;
         }

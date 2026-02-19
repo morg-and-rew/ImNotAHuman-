@@ -37,16 +37,30 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [SerializeField] private Vector2 normalAnchoredPos;
     [SerializeField] private Vector2 normalSizeDelta;
     [SerializeField] private Vector2 normalSizeText;
+    [SerializeField] private int normalSubtitleFontSize = 24;
     [SerializeField] private Sprite normalSprite;
+    [Header("NPC Text Rect - Normal State")]
+    [SerializeField] private Vector2 normalTextAnchoredPos;
+    [SerializeField] private Vector2 normalTextSize;
 
     [Header("NPC Subtitle - Choice State")]
     [SerializeField] private Vector2 choiceAnchoredPos;
     [SerializeField] private Vector2 choiceSizeDelta;
     [SerializeField] private Vector2 choiceSizeText;
+    [SerializeField] private int choiceSubtitleFontSize = 29;
     [SerializeField] private Sprite choiceSprite;
     [Header("NPC Text Rect - Choice State")]
     [SerializeField] private Vector2 choiceTextAnchoredPos = new Vector2(177.5352f, -6f);
     [SerializeField] private Vector2 choiceTextSize = new Vector2(404.5963f, 297.4301f);
+    [Header("Response Buttons (Choice options)")]
+    [SerializeField] private Color responseButtonTextColor = new Color(240f / 255f, 209f / 255f, 133f / 255f, 1f);
+    [SerializeField] private bool applyResponseButtonTextColor = true;
+    [SerializeField] private int responseButtonTextSize = 28;
+    [SerializeField] private bool applyResponseButtonTextSize = true;
+    [Tooltip("Цвет фона (Image) кнопок ответа. По умолчанию как у панели выбора (choiceImageColor).")]
+    [SerializeField] private bool applyResponseButtonImageColor = true;
+    [SerializeField] private Color responseButtonImageColor = new Color(82f / 255f, 79f / 255f, 13f / 255f, 1f);
+
     [Header("Three Choices Layout (Panels)")]
     [SerializeField] private bool useThreeChoicesPanelLayout = true;
     [SerializeField] private float threeChoicesNpcLeft = 450f;
@@ -90,6 +104,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     {
         base.Awake();
 
+        HideContinueButtons();
+
         if (npcSubtitleRect == null && npcSubtitlePanel != null)
             npcSubtitleRect = npcSubtitlePanel.GetComponent<RectTransform>();
 
@@ -114,6 +130,28 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         }
 
         ApplyNormalState();
+    }
+
+    private void Start()
+    {
+        // Диалоги не пролистываются сами — только по пробелу или F
+        if (DialogueManager.instance != null && DialogueManager.displaySettings != null
+            && DialogueManager.displaySettings.subtitleSettings != null)
+        {
+            DialogueManager.displaySettings.subtitleSettings.continueButton =
+                DisplaySettings.SubtitleSettings.ContinueButtonMode.Always;
+        }
+    }
+
+    private void HideContinueButtons()
+    {
+        if (conversationUIElements == null || conversationUIElements.subtitlePanels == null) return;
+        for (int i = 0; i < conversationUIElements.subtitlePanels.Length; i++)
+        {
+            var panel = conversationUIElements.subtitlePanels[i];
+            if (panel != null && panel.continueButton != null)
+                panel.continueButton.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -193,8 +231,12 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
         base.ShowResponses(subtitle, responses, timeout);
 
+        ApplyResponseButtonColors();
+
         if (npcSubtitleText != null)
             npcSubtitleText.text = subtitle != null ? subtitle.formattedText.text : "";
+
+        OnSubtitleShown?.Invoke(subtitle);
 
         if (IsHideSubtitlePanelOnChoiceConversation(subtitle))
         {
@@ -282,6 +324,83 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         }
     }
 
+    private void ApplyResponseButtonColors()
+    {
+        // Собираем все кнопки ответа: и назначенные в панели, и созданные из шаблона
+        var allButtons = new List<StandardUIResponseButton>();
+
+        if (conversationUIElements?.menuPanels != null)
+        {
+            for (int p = 0; p < conversationUIElements.menuPanels.Length; p++)
+            {
+                var panel = conversationUIElements.menuPanels[p];
+                if (panel == null) continue;
+
+                if (panel.buttons != null)
+                {
+                    for (int i = 0; i < panel.buttons.Length; i++)
+                    {
+                        if (panel.buttons[i] != null && panel.buttons[i].gameObject.activeInHierarchy)
+                            allButtons.Add(panel.buttons[i]);
+                    }
+                }
+
+                if (panel.instantiatedButtons != null)
+                {
+                    for (int i = 0; i < panel.instantiatedButtons.Count; i++)
+                    {
+                        var go = panel.instantiatedButtons[i];
+                        if (go == null) continue;
+                        var rb = go.GetComponent<StandardUIResponseButton>();
+                        if (rb != null && rb.gameObject.activeInHierarchy)
+                            allButtons.Add(rb);
+                    }
+                }
+
+                // Кнопки из шаблона могут быть под buttonTemplateHolder
+                if (panel.buttonTemplateHolder != null)
+                {
+                    var fromHolder = panel.buttonTemplateHolder.GetComponentsInChildren<StandardUIResponseButton>(true);
+                    for (int i = 0; i < fromHolder.Length; i++)
+                    {
+                        if (fromHolder[i] != null && fromHolder[i].gameObject.activeInHierarchy && !allButtons.Contains(fromHolder[i]))
+                            allButtons.Add(fromHolder[i]);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < allButtons.Count; i++)
+            ApplyResponseButtonStyleToSingle(allButtons[i]);
+    }
+
+    private void ApplyResponseButtonStyleToSingle(StandardUIResponseButton rb)
+    {
+        if (rb.label == null) return;
+
+        if (applyResponseButtonTextColor)
+            rb.label.color = responseButtonTextColor;
+
+        if (applyResponseButtonTextSize)
+        {
+            if (rb.label.uiText != null)
+                rb.label.uiText.fontSize = responseButtonTextSize;
+#if TMP_PRESENT
+            if (rb.label.textMeshProUGUI != null)
+                rb.label.textMeshProUGUI.fontSize = responseButtonTextSize;
+#endif
+        }
+
+        if (applyResponseButtonImageColor)
+        {
+            Image plaqueImage = rb.transform.Find("Background")?.GetComponent<Image>();
+            if (plaqueImage == null && rb.button != null)
+                plaqueImage = rb.button.image;
+            if (plaqueImage != null)
+                plaqueImage.color = responseButtonImageColor;
+        }
+    }
+
     private bool IsHideSubtitlePanelOnChoiceConversation(Subtitle subtitle)
     {
         if (hideSubtitlePanelOnChoiceConversations == null || hideSubtitlePanelOnChoiceConversations.Length == 0)
@@ -330,13 +449,21 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         if (npcSubtitleText != null)
         {
             npcSubtitleText.color = Color.white;
-            npcSubtitleText.fontSize = 24;
+            npcSubtitleText.fontSize = normalSubtitleFontSize;
             npcSubtitleText.transform.localScale = normalSizeText;
-            if (_hasCachedTextRect)
+            RectTransform textRect = npcSubtitleText.rectTransform;
+            if (textRect != null)
             {
-                RectTransform textRect = npcSubtitleText.rectTransform;
-                textRect.anchoredPosition = _normalTextAnchoredPosCached;
-                textRect.sizeDelta = _normalTextSizeCached;
+                if (normalTextSize != Vector2.zero)
+                {
+                    textRect.anchoredPosition = normalTextAnchoredPos;
+                    textRect.sizeDelta = normalTextSize;
+                }
+                else if (_hasCachedTextRect)
+                {
+                    textRect.anchoredPosition = _normalTextAnchoredPosCached;
+                    textRect.sizeDelta = _normalTextSizeCached;
+                }
             }
         }
 
@@ -370,7 +497,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         if (npcSubtitleText != null)
         {
             npcSubtitleText.color = choiceTextColor;
-            npcSubtitleText.fontSize = 29;
+            npcSubtitleText.fontSize = choiceSubtitleFontSize;
             npcSubtitleText.transform.localScale = choiceSizeText;
             RectTransform textRect = npcSubtitleText.rectTransform;
             if (textRect != null)

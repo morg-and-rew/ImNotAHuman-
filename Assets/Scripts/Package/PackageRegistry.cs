@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public sealed class PackageRegistry : MonoBehaviour
 {
     private readonly List<PackageItem> _packages = new();
+    private readonly HashSet<PackageItem> _takenFromWarehouse = new();
     [SerializeField] private int _minNumber = 100;
     [SerializeField] private int _maxNumber = 999;
     [Tooltip("Сюжетные номера — есть на сцене с начала, но клиенты их не называют. Только по сюжету.")]
@@ -11,6 +13,12 @@ public sealed class PackageRegistry : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(GenerateAfterPackagesRegistered());
+    }
+
+    private IEnumerator GenerateAfterPackagesRegistered()
+    {
+        yield return null;
         Generate();
     }
 
@@ -57,7 +65,15 @@ public sealed class PackageRegistry : MonoBehaviour
     public void Unregister(PackageItem item)
     {
         _packages.Remove(item);
+        _takenFromWarehouse.Remove(item);
         Destroy(item);
+    }
+
+    /// <summary>Вызвать, когда посылку взяли со склада (больше не предлагать в случайных заказах).</summary>
+    public void NotifyPackageTaken(PackageItem item)
+    {
+        if (item != null)
+            _takenFromWarehouse.Add(item);
     }
 
     public List<int> GetAllNumbers()
@@ -71,18 +87,20 @@ public sealed class PackageRegistry : MonoBehaviour
         return list;
     }
 
-    /// <summary>Номера для случайных заказов — без сюжетных (8335, 5577).</summary>
+    /// <summary>Номера для случайных заказов — только посылки, которые сейчас на складе, без сюжетных.</summary>
     public List<int> GetNumbersForRandomDelivery()
     {
-        var all = GetAllNumbers();
-        if (_storyReservedNumbers == null || _storyReservedNumbers.Length == 0)
-            return all;
-        var reserved = new HashSet<int>(_storyReservedNumbers);
-        var result = new List<int>(all.Count);
-        foreach (int n in all)
+        var reserved = _storyReservedNumbers != null && _storyReservedNumbers.Length > 0
+            ? new HashSet<int>(_storyReservedNumbers)
+            : null;
+        var result = new List<int>();
+        for (int i = 0; i < _packages.Count; i++)
         {
-            if (n > 0 && !reserved.Contains(n))
-                result.Add(n);
+            PackageItem p = _packages[i];
+            if (p == null || p.Number <= 0) continue;
+            if (_takenFromWarehouse.Contains(p)) continue;
+            if (reserved != null && reserved.Contains(p.Number)) continue;
+            result.Add(p.Number);
         }
         return result;
     }

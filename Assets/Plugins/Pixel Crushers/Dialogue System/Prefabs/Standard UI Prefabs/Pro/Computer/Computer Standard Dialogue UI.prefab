@@ -297,6 +297,8 @@ MonoBehaviour:
   finishByKeyConversations:
   - Client_Day1
   - Client_Day1.1
+  - Client_Day1.1
+  - Client_Day1.3
   npcSubtitlePanel: {fileID: 1046714570033430}
   hideOnChoiceMode:
   - {fileID: 5972125699115874149}
@@ -310,13 +312,23 @@ MonoBehaviour:
   normalAnchoredPos: {x: 0, y: -430}
   normalSizeDelta: {x: 1, y: 1}
   normalSizeText: {x: 1, y: 1}
+  normalSubtitleFontSize: 29
   normalSprite: {fileID: 21300000, guid: b5ebb638da4d7c34caefbd0c2aafa5f6, type: 3}
+  normalTextAnchoredPos: {x: 0, y: 0}
+  normalTextSize: {x: 550, y: 100}
   choiceAnchoredPos: {x: 450, y: -47}
   choiceSizeDelta: {x: 0.55, y: 1.7}
   choiceSizeText: {x: 1.7, y: 0.55}
+  choiceSubtitleFontSize: 29
   choiceSprite: {fileID: 21300000, guid: 7fba2f46d1ca6d04e91520647ca12cf0, type: 3}
   choiceTextAnchoredPos: {x: 177.5352, y: -6}
   choiceTextSize: {x: 404.5963, y: 297.4301}
+  responseButtonTextColor: {r: 0.9411765, g: 0.81960785, b: 0.52156866, a: 1}
+  applyResponseButtonTextColor: 1
+  responseButtonTextSize: 29
+  applyResponseButtonTextSize: 1
+  applyResponseButtonImageColor: 1
+  responseButtonImageColor: {r: 0.05490196, g: 0.05490196, b: 0.011764706, a: 1}
   useThreeChoicesPanelLayout: 1
   threeChoicesNpcLeft: 450
   threeChoicesNpcTop: 47
@@ -1390,7 +1402,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1121101797605370}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1420,7 +1432,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1121101797605370}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -2819,10 +2831,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 5e9fd29b2ab3f8749945f6c3462cc0be, type: 3}
-    m_FontSize: 24
+    m_FontSize: 0
     m_FontStyle: 1
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -2830,7 +2842,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '>>'
+  m_Text: 
 --- !u!114 &114317051808866694
 MonoBehaviour:
   m_ObjectHideFlags: 0

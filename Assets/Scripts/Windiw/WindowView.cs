@@ -99,23 +99,30 @@ public sealed class WindowView : MonoBehaviour
         if (other.TryGetComponent(out PlayerView playerView))
         {
             _isPlayerInZone = false;
-            if (_isViewing)
+            // Не закрывать окно при выходе из зоны, пока диалог не прочитан
+            if (_isViewing && !DialogueManager.isConversationActive)
             {
                 ExitView();
             }
         }
     }
 
-    public void ToggleView()
+    /// <summary>
+    /// Открывает или закрывает окно. Возвращает true, если состояние изменилось; false, если закрытие заблокировано (диалог ещё не дочитан).
+    /// </summary>
+    public bool ToggleView()
     {
         if (_isViewing)
         {
+            // Не закрывать окно по E, пока не прочитан весь диалог
+            if (DialogueManager.isConversationActive)
+                return false;
             ExitView();
+            return true;
         }
-        else
-        {
-            EnterView();
-        }
+
+        EnterView();
+        return true;
     }
 
     private void EnterView()

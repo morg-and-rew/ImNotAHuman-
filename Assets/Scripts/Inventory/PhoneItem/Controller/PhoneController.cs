@@ -8,6 +8,7 @@ public sealed class PhoneController
     private readonly PhoneUIView _uiView;
     private readonly IPhoneCallService _callService;
     private readonly IPlayerBlocker _blocker;
+    private readonly IGameFlowController _flow;
 
     private readonly PlayerView _playerView;
     private readonly Transform _usePoint;
@@ -29,6 +30,7 @@ public sealed class PhoneController
         IPhoneCallService callService,
         Func<bool> isConversationActive,
         IPlayerBlocker blocker,
+        IGameFlowController flow,
         PlayerView playerView,
         Transform usePoint,
         Transform lookTarget,
@@ -38,6 +40,7 @@ public sealed class PhoneController
         _itemView = itemView;
         _uiView = uiView;
         _callService = callService;
+        _flow = flow;
 
         _isConversationActive = isConversationActive;
         _blocker = blocker;
@@ -88,6 +91,7 @@ public sealed class PhoneController
     private void OnTaken()
     {
         IsOpen = true;
+        _flow?.ShowPhoneCallHint();
 
         if (_playerView != null && _returnOnClose)
         {
@@ -127,7 +131,10 @@ public sealed class PhoneController
         if (ConversationActive())
             return;
 
+        bool providerCallWasDone = _flow != null && _flow.ProviderCallDone;
         CloseUI();
+        if (providerCallWasDone)
+            _flow?.NotifyTrigger("provider_call");
     }
 
 

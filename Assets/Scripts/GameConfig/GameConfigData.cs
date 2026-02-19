@@ -29,6 +29,8 @@ public class IntroConfig
 public class TutorialConfig
 {
     public string pressSpaceKey = "tutorial.press_space";
+    public string doorWarehouseKey = "tutorial.door_warehouse";
+    public string returnPressFKey = "tutorial.return_press_f";
     public string routerHintKey = "tutorial.router_hint";
     public string phoneHintKey = "tutorial.phone_hint";
     public string phoneCallProviderKey = "tutorial.phone_call_provider";
@@ -39,6 +41,8 @@ public class TutorialConfig
     public string returnToClientKey = "tutorial.return_to_client";
     public string warehousePickKey = "tutorial.warehouse_pick";
     public string warehouseReturnKey = "tutorial.warehouse_return";
+    /// <summary> Ключ для «пустой» подсказки — оставьте поле пустым в таблице текстов. </summary>
+    public string emptyKey = "tutorial.empty";
     public string routerConversation = "Hero_AfterRouterReboot";
     public string providerNumber = "123456";
     public string providerBeepsConversation = "Phone_CallProvider_Beeps";
@@ -84,4 +88,8 @@ public class StoryStepData
     public bool expireRadioOnEnter;
     public string[] activateRadioEventIds;
     public bool showRadioHintOnEnter;
+    /// <summary> Для шага WatchComputerVideo: "indoor" или "street" — какую кнопку камеры разрешить. </summary>
+    public string computerVideoKind;
+    /// <summary> Для шага FadeToBlack: длительность затемнения в секундах (0 = по умолчанию). </summary>
+    public float fadeToBlackDuration;
 }

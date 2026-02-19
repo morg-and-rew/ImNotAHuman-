@@ -85,7 +85,6 @@ public sealed class PhoneStoryWiring
             DialogueManager.instance.conversationEnded -= OnConversationEnded;
 
             _flow.MarkProviderCallDone();
-            _flow.NotifyTrigger("provider_call");
             _flow.ShowPhonePutHintOnce();
             return;
         }

@@ -9,6 +9,8 @@
     },
     "tutorial": {
       "pressSpaceKey": "tutorial.press_space",
+      "doorWarehouseKey": "tutorial.door_warehouse",
+      "returnPressFKey": "tutorial.return_press_f",
       "routerHintKey": "tutorial.router_hint",
       "phoneHintKey": "tutorial.phone_hint",
       "phoneCallProviderKey": "tutorial.phone_call_provider",
@@ -40,11 +42,39 @@
         "showRadioHintOnEnter": false
       },
       {
+        "stepId": "go_to_door_warehouse",
+        "stepType": "GoToDoorWarehouse",
+        "conversationTitle": "",
+        "hintText": "",
+        "triggerId": "",
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 0,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false
+      },
+      {
         "stepId": "go_to_router",
         "stepType": "GoToRouter",
         "conversationTitle": "",
         "hintText": "",
         "triggerId": "router",
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 0,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false
+      },
+      {
+        "stepId": "return_from_warehouse",
+        "stepType": "ReturnFromWarehouse",
+        "conversationTitle": "",
+        "hintText": "",
+        "triggerId": "",
         "removePackageAfterDialogue": false,
         "showDeliveryNote": false,
         "deliveryNoteNumber": 0,
@@ -292,6 +322,21 @@
         "showRadioHintOnEnter": false
       },
       {
+        "stepId": "free_roam_after_day1_4",
+        "stepType": "None",
+        "conversationTitle": "",
+        "hintText": "Свободное хождение. Подойдите к клиенту и нажмите E для следующего диалога.",
+        "triggerId": "",
+        "autoTravel": false,
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 0,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false
+      },
+      {
         "stepId": "go_warehouse_day1_4",
         "stepType": "GoWarehouse",
         "conversationTitle": "",
@@ -301,7 +346,7 @@
         "removePackageAfterDialogue": false,
         "showDeliveryNote": false,
         "deliveryNoteNumber": 5577,
-        "skipIfLuaConditionFalse": "ChoseToGivePackage5577",
+        "skipIfLuaConditionFalse": "RunWarehouse5577Steps",
         "hideDeliveryNote": false,
         "expireRadioOnEnter": false,
         "activateRadioEventIds": [],
@@ -317,7 +362,7 @@
         "removePackageAfterDialogue": false,
         "showDeliveryNote": false,
         "deliveryNoteNumber": 5577,
-        "skipIfLuaConditionFalse": "ChoseToGivePackage5577",
+        "skipIfLuaConditionFalse": "RunWarehouse5577Steps",
         "hideDeliveryNote": false,
         "expireRadioOnEnter": false,
         "activateRadioEventIds": [],
@@ -333,7 +378,7 @@
         "removePackageAfterDialogue": true,
         "showDeliveryNote": false,
         "deliveryNoteNumber": 0,
-        "skipIfLuaConditionFalse": "ChoseToGivePackage5577",
+        "skipIfLuaConditionFalse": "RunWarehouse5577Steps",
         "hideDeliveryNote": false,
         "expireRadioOnEnter": false,
         "activateRadioEventIds": [],
@@ -341,6 +386,21 @@
       },
       {
         "stepId": "go_warehouse_day1_5",
+        "stepType": "GoWarehouse",
+        "conversationTitle": "",
+        "hintText": "",
+        "triggerId": "",
+        "autoTravel": false,
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 0,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false
+      },
+      {
+        "stepId": "go_warehouse_after_day1_5",
         "stepType": "GoWarehouse",
         "conversationTitle": "",
         "hintText": "",
@@ -368,6 +428,68 @@
         "expireRadioOnEnter": false,
         "activateRadioEventIds": [],
         "showRadioHintOnEnter": false
+      },
+      {
+        "stepId": "watch_computer_indoor_day1_5",
+        "stepType": "WatchComputerVideo",
+        "conversationTitle": "",
+        "hintText": "Подойдите к компу и нажмите запись камеры помещения",
+        "triggerId": "",
+        "autoTravel": false,
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 0,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false,
+        "computerVideoKind": "indoor"
+      },
+      {
+        "stepId": "dialogue_client_day1_6",
+        "stepType": "DialogueRadioStyle",
+        "conversationTitle": "Client_Day1.6",
+        "hintText": "",
+        "triggerId": "",
+        "autoTravel": false,
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 0,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false
+      },
+      {
+        "stepId": "radio_static_after_day1_6",
+        "stepType": "ActivateRadioEvent",
+        "conversationTitle": "",
+        "hintText": "Подойдите к радио и нажмите E",
+        "triggerId": "",
+        "autoTravel": false,
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 0,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": ["day1_6_radio"],
+        "showRadioHintOnEnter": false
+      },
+      {
+        "stepId": "fade_to_black_day1_end",
+        "stepType": "FadeToBlack",
+        "conversationTitle": "",
+        "hintText": "",
+        "triggerId": "",
+        "autoTravel": false,
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 0,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false,
+        "fadeToBlackDuration": 3
       }
     ]
   },
@@ -389,6 +511,12 @@
         "requireExitZoneBeforeVideo": true,
         "exitZoneId": "warehouse_exit_passed",
         "postVideoConversation": "PostVideo_Day1_2"
+      },
+      {
+        "eventId": "day1_6_radio",
+        "conversationTitle": "Radio_Day1_6",
+        "priority": 60,
+        "audioPath": "ScriptbleObject/ElevenLabs_2026_02_08T20_14_01_Flint_I"
       }
     ]
   }

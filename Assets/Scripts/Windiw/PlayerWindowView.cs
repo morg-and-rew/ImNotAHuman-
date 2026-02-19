@@ -1,4 +1,5 @@
 using UnityEngine;
+using PixelCrushers.DialogueSystem;
 
 public sealed class PlayerWindowView
 {
@@ -21,7 +22,9 @@ public sealed class PlayerWindowView
 
         if (_input != null && _currentWindowView != null && _input.InteractPressed)
         {
-            _currentWindowView.ToggleView();
+            bool toggled = _currentWindowView.ToggleView();
+            if (!toggled)
+                return; // закрытие заблокировано — диалог ещё не дочитан
 
             _isViewing = !_isViewing;
 
@@ -41,21 +44,31 @@ public sealed class PlayerWindowView
         {
             if (_isViewing)
             {
-                _currentWindowView.ExitView();
-                _playerController.SetBlock(false);
-                _isViewing = false;
+                if (!DialogueManager.isConversationActive)
+                {
+                    _currentWindowView.ExitView();
+                    _playerController.SetBlock(false);
+                    _isViewing = false;
+                    _currentWindowView = null;
+                }
+                // иначе диалог ещё идёт — окно не закрываем, ссылку сохраняем
             }
-
-            _currentWindowView = null;
+            else
+            {
+                _currentWindowView = null;
+            }
         }
 
         else if (closestWindow != null && closestWindow != _currentWindowView)
         {
             if (_isViewing && _currentWindowView != null)
             {
-                _currentWindowView.ExitView();
-                _playerController.SetBlock(false);
-                _isViewing = false;
+                if (!DialogueManager.isConversationActive)
+                {
+                    _currentWindowView.ExitView();
+                    _playerController.SetBlock(false);
+                    _isViewing = false;
+                }
             }
 
             _currentWindowView = closestWindow;

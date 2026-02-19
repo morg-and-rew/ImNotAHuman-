@@ -28,6 +28,8 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
     {
         if (handPoint == null) return;
 
+        _packageItem?.NotifyTakenFromWarehouse();
+
         transform.SetParent(handPoint, false);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
