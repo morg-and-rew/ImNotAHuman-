@@ -145,7 +145,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 8
       leftSprite: {fileID: 21300000, guid: 37503dd445cc06b4aa32c09fba59f1e5, type: 3}
-      rightSprite: {fileID: 21300000, guid: 6d4e90c0d7c82f64c88be5b52531556b, type: 3}
+      rightSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -161,7 +161,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 9
       leftSprite: {fileID: 21300000, guid: 37503dd445cc06b4aa32c09fba59f1e5, type: 3}
-      rightSprite: {fileID: 21300000, guid: 6d4e90c0d7c82f64c88be5b52531556b, type: 3}
+      rightSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -177,7 +177,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 10
       leftSprite: {fileID: 21300000, guid: 37503dd445cc06b4aa32c09fba59f1e5, type: 3}
-      rightSprite: {fileID: 21300000, guid: 6d4e90c0d7c82f64c88be5b52531556b, type: 3}
+      rightSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -193,7 +193,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 11
       leftSprite: {fileID: 21300000, guid: 37503dd445cc06b4aa32c09fba59f1e5, type: 3}
-      rightSprite: {fileID: 21300000, guid: 6d4e90c0d7c82f64c88be5b52531556b, type: 3}
+      rightSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -209,7 +209,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 12
       leftSprite: {fileID: 21300000, guid: 37503dd445cc06b4aa32c09fba59f1e5, type: 3}
-      rightSprite: {fileID: 21300000, guid: 72205d61e80c50143a076c76b031a3f0, type: 3}
+      rightSprite: {fileID: 21300000, guid: 1c3ef1f12a150074e8aa6cbf71302011, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -225,7 +225,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 13
       leftSprite: {fileID: 21300000, guid: 37503dd445cc06b4aa32c09fba59f1e5, type: 3}
-      rightSprite: {fileID: 21300000, guid: 6d4e90c0d7c82f64c88be5b52531556b, type: 3}
+      rightSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -241,7 +241,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 14
       leftSprite: {fileID: 21300000, guid: 37503dd445cc06b4aa32c09fba59f1e5, type: 3}
-      rightSprite: {fileID: 21300000, guid: 72205d61e80c50143a076c76b031a3f0, type: 3}
+      rightSprite: {fileID: 21300000, guid: 1c3ef1f12a150074e8aa6cbf71302011, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -257,7 +257,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 15
       leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
-      rightSprite: {fileID: 21300000, guid: 5c32d766f0d3f944f80533132edb4e42, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -273,7 +273,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 16
       leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
-      rightSprite: {fileID: 21300000, guid: 5c32d766f0d3f944f80533132edb4e42, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -289,7 +289,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 27
       leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
-      rightSprite: {fileID: 21300000, guid: 5c32d766f0d3f944f80533132edb4e42, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -305,7 +305,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 17
       leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
-      rightSprite: {fileID: 21300000, guid: 5c32d766f0d3f944f80533132edb4e42, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -321,7 +321,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 18
       leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
-      rightSprite: {fileID: 21300000, guid: 62de355da44822549ac150ce15b2c2e4, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -337,7 +337,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 19
       leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
-      rightSprite: {fileID: 21300000, guid: 62de355da44822549ac150ce15b2c2e4, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -353,7 +353,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 20
       leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
-      rightSprite: {fileID: 21300000, guid: 62de355da44822549ac150ce15b2c2e4, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -369,7 +369,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 21
       leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
-      rightSprite: {fileID: 21300000, guid: 62de355da44822549ac150ce15b2c2e4, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -385,7 +385,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 22
       leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
-      rightSprite: {fileID: 21300000, guid: 62de355da44822549ac150ce15b2c2e4, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -401,7 +401,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 23
       leftSprite: {fileID: 21300000, guid: 93631f3be152387439bfc1b5c375a6f0, type: 3}
-      rightSprite: {fileID: 21300000, guid: 62de355da44822549ac150ce15b2c2e4, type: 3}
+      rightSprite: {fileID: 21300000, guid: 40dc359624ed20e40a6675091dc24cad, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -417,7 +417,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 35, z: 0}
     - entryID: 24
       leftSprite: {fileID: 21300000, guid: 93631f3be152387439bfc1b5c375a6f0, type: 3}
-      rightSprite: {fileID: 21300000, guid: 62de355da44822549ac150ce15b2c2e4, type: 3}
+      rightSprite: {fileID: 21300000, guid: 40dc359624ed20e40a6675091dc24cad, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -433,7 +433,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 25
       leftSprite: {fileID: 21300000, guid: 93631f3be152387439bfc1b5c375a6f0, type: 3}
-      rightSprite: {fileID: 21300000, guid: 62de355da44822549ac150ce15b2c2e4, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 2
@@ -447,15 +447,47 @@ MonoBehaviour:
       customRightAnchoredPos: {x: 145.6, y: 73, z: 191.5}
       customRightScale: {x: 1.27, y: 1.27, z: 1.27}
       customRightRotation: {x: 0, y: 35, z: 0}
-    removePackageFromHandsAfterEntryID: 0
-  - conversation: Client_Day1.1
-    rules:
-    - entryID: 1
-      leftSprite: {fileID: 21300000, guid: 29a73d6384a20cb4b925784209a92369, type: 3}
+    - entryID: 28
+      leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       rightSprite: {fileID: 21300000, guid: 5c83ec2e5dec94543b14afc0d84de0be, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
-      priority: 1
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1.05
+      rightScale: 1.27
+      useCustomPositionAndSize: 0
+      customLeftAnchoredPos: {x: -19, y: 73, z: 277}
+      customLeftScale: {x: 1.05, y: 1.05, z: 1.05}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: 145.6, y: 73, z: 191.5}
+      customRightScale: {x: 1.27, y: 1.27, z: 1.27}
+      customRightRotation: {x: 0, y: 35, z: 0}
+    - entryID: 29
+      leftSprite: {fileID: 21300000, guid: 97bfe3ab24baa7c4f8dc2f80e5f0e830, type: 3}
+      rightSprite: {fileID: 21300000, guid: d0b514150c89d5e4880dcc066c8619f3, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 1
+      leftScale: 1.05
+      rightScale: 1.27
+      useCustomPositionAndSize: 0
+      customLeftAnchoredPos: {x: -19, y: 73, z: 277}
+      customLeftScale: {x: 1.05, y: 1.05, z: 1.05}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: 145.6, y: 73, z: 191.5}
+      customRightScale: {x: 1.27, y: 1.27, z: 1.27}
+      customRightRotation: {x: 0, y: 35, z: 0}
+    removePackageFromHandsAfterEntryID: 25
+  - conversation: Client_Day1.1
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 2746515ccb7cda14a821b77f3b531a27, type: 3}
+      rightSprite: {fileID: 21300000, guid: 5c83ec2e5dec94543b14afc0d84de0be, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
       useCenteredPositionOverride: 0
       leftScale: 1
       rightScale: 1
@@ -467,11 +499,11 @@ MonoBehaviour:
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 2
-      leftSprite: {fileID: 21300000, guid: 29a73d6384a20cb4b925784209a92369, type: 3}
+      leftSprite: {fileID: 21300000, guid: 2746515ccb7cda14a821b77f3b531a27, type: 3}
       rightSprite: {fileID: 21300000, guid: 225ef14cfa288f0488a9cb1ad38a2495, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
-      priority: 1
+      priority: 2
       useCenteredPositionOverride: 0
       leftScale: 0.8
       rightScale: 1
@@ -482,12 +514,12 @@ MonoBehaviour:
       customRightAnchoredPos: {x: -13, y: 73, z: 191.5}
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
-    removePackageFromHandsAfterEntryID: 0
+    removePackageFromHandsAfterEntryID: 2
   - conversation: Client_Day1.2
     rules:
     - entryID: 1
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 2d5d84c28b1f1e9439357f5a924fc7ae, type: 3}
+      rightSprite: {fileID: 21300000, guid: 6f17faafdfe6b0046b7fba517241837b, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -503,7 +535,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 2
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 2d5d84c28b1f1e9439357f5a924fc7ae, type: 3}
+      rightSprite: {fileID: 21300000, guid: 6f17faafdfe6b0046b7fba517241837b, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -519,7 +551,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 3
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 2d5d84c28b1f1e9439357f5a924fc7ae, type: 3}
+      rightSprite: {fileID: 21300000, guid: 6f17faafdfe6b0046b7fba517241837b, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -535,7 +567,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 4
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 2d5d84c28b1f1e9439357f5a924fc7ae, type: 3}
+      rightSprite: {fileID: 21300000, guid: 6f17faafdfe6b0046b7fba517241837b, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -551,7 +583,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 5
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 2d5d84c28b1f1e9439357f5a924fc7ae, type: 3}
+      rightSprite: {fileID: 21300000, guid: 6f17faafdfe6b0046b7fba517241837b, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -567,7 +599,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 6
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 2d5d84c28b1f1e9439357f5a924fc7ae, type: 3}
+      rightSprite: {fileID: 21300000, guid: 6f17faafdfe6b0046b7fba517241837b, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -583,7 +615,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 9
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 2d5d84c28b1f1e9439357f5a924fc7ae, type: 3}
+      rightSprite: {fileID: 21300000, guid: 6f17faafdfe6b0046b7fba517241837b, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -599,7 +631,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 7
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 72205d61e80c50143a076c76b031a3f0, type: 3}
+      rightSprite: {fileID: 21300000, guid: 1c3ef1f12a150074e8aa6cbf71302011, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -615,7 +647,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 8
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 72205d61e80c50143a076c76b031a3f0, type: 3}
+      rightSprite: {fileID: 21300000, guid: 1c3ef1f12a150074e8aa6cbf71302011, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -631,7 +663,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 13
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 72205d61e80c50143a076c76b031a3f0, type: 3}
+      rightSprite: {fileID: 21300000, guid: 1c3ef1f12a150074e8aa6cbf71302011, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -647,7 +679,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 14
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 6d4e90c0d7c82f64c88be5b52531556b, type: 3}
+      rightSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -663,7 +695,7 @@ MonoBehaviour:
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 14
       leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
-      rightSprite: {fileID: 21300000, guid: 6d4e90c0d7c82f64c88be5b52531556b, type: 3}
+      rightSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
@@ -677,7 +709,7 @@ MonoBehaviour:
       customRightAnchoredPos: {x: 0, y: 0, z: 0}
       customRightScale: {x: 0, y: 0, z: 0}
       customRightRotation: {x: 0, y: 0, z: 0}
-    removePackageFromHandsAfterEntryID: 0
+    removePackageFromHandsAfterEntryID: 20
   - conversation: Client_Day1.3
     rules:
     - entryID: 2

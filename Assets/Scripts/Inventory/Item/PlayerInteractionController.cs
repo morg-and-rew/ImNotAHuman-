@@ -83,6 +83,9 @@ public sealed class PlayerInteractionController
             return true;
         if (holdable is PhoneItemView && !GameStateService.PhoneUnlocked)
             return false;
+        // Посылки — только по сюжету, когда задан номер требуемой посылки.
+        if (holdable is PackageHoldable)
+            return GameStateService.IsWarehouse && GameStateService.RequiredPackageNumber > 0;
         return GameStateService.IsWarehouse;
     }
 

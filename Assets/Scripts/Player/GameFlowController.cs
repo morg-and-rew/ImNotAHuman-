@@ -600,6 +600,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private void OnClientDialogueFinished()
     {
+        _meetClientHintShown = true;
+
         RemovePackageFromHands();
 
         _controller?.SetBlock(false);
@@ -659,7 +661,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             return;
         }
         _preferEmptyOverMeetClient = false;
-        _meetClientHintShown = true;
         _tutorialHint.Show(GetUIText(GameConfig.Tutorial.meetClientKey));
         GameStateService.SetState(GameState.ClientDialog);
     }
@@ -794,6 +795,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (target == TravelTarget.Warehouse)
         {
+            RemovePackageFromHands();
             Transform point = freeTeleport && _freeTeleportToWarehousePoint != null ? _freeTeleportToWarehousePoint : _warehousePoint;
             Teleport(point);
             GameStateService.SetState(GameState.Warehouse);
