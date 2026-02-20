@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02db429ba5d9a3f4ca3b4ce09c2309f3, type: 3}
   m_Name: New Player Config
   m_EditorClassIdentifier: Assembly-CSharp::PlayerConfig
-  MoveSpeed: 5
+  MoveSpeed: 2
   SprintMultiplier: 1.8
   JumpSpeed: 7
   Gravity: -20
