@@ -555,8 +555,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (!GameConfig.StoryStartOnClientInteract) return;
         if (!_clientInteraction.IsPlayerInside || _clientInteraction.IsActive || !_input.InteractPressed)
             return;
+        // Не начинать диалог с клиентом, пока идёт другой диалог (радио, Client_Day1.5.1 и т.д.).
+        if (DialogueManager.isConversationActive)
+            return;
 
-        // Прежде чем говорить с клиентом (Client_Day1), игрок обязан послушать радио (Radio_Tutorial). Покинуть склад можно, к клиенту — нельзя.
+        // Radio_Tutorial обязателен перед первым диалогом с клиентом (Client_Day1). Radio_Day1_2 — необязателен, пропуск обрабатывается в StoryDirector.Tick.
         if (!HasCompletedRadioTutorial())
         {
             string hint = GetUIText(GameConfig.Tutorial.radioBeforeClientKey);
@@ -566,10 +569,13 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         }
 
         ExpireAllRadioAvailable();
-        if (_storyDirector != null && _storyDirector.CanStartFromAfterRadio())
-            _storyDirector.StartStoryFromAfterRadio();
-        else
-            _storyDirector.StartStory();
+        if (_storyDirector != null && !_storyDirector.HasStoryStarted)
+        {
+            if (_storyDirector.CanStartFromAfterRadio())
+                _storyDirector.StartStoryFromAfterRadio();
+            else
+                _storyDirector.StartStory();
+        }
     }
 
     private void SetDialogueControlsLocked(bool isLocked)
@@ -961,6 +967,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             _delivery.ClearTask();
     }
 
+    public bool AcceptAnyPackageForReturn => _acceptAnyPackageForReturn;
+
+    /// <summary> True, только когда по сюжету нужно принести посылку (шаг ReturnToClient / GoWarehouseWaitReturn или return_to_client_day1_5). Иначе брать посылки и показывать Warehouse_WrongPackage нельзя. </summary>
+    public bool IsPackagePickAllowedByStory =>
+        (_storyDirector != null && _storyDirector.DoesCurrentStepRequirePackageForReturn) || _acceptAnyPackageForReturn;
+
     public void ShowSkepticPhoneNote()
     {
         if (_skepticPhoneNoteObject != null)
@@ -1009,7 +1021,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             Teleport(point);
             GameStateService.SetState(GameState.Warehouse);
 
-            if (!freeTeleport && !_tutorialWarehouseVisit && _delivery != null && !_delivery.HasActiveTask)
+            // go_warehouse_after_day1_5: заход на склад только для Client_Day1.5.1, посылку берём после — не запускаем задачу и не показываем «не та посылка»
+            bool warehouseVisitForDay151Only = _storyDirector != null && string.Equals(_storyDirector.CurrentStepId, "go_warehouse_after_day1_5", StringComparison.OrdinalIgnoreCase);
+            if (!freeTeleport && !_tutorialWarehouseVisit && _delivery != null && !_delivery.HasActiveTask && !warehouseVisitForDay151Only)
             {
                 _delivery.ClearTask();
                 if (_fixedPackageForNextWarehouse > 0)
@@ -1022,6 +1036,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                     _delivery.StartNewDeliveryTask(enforceOnlyAfterWrong: false);
                 }
             }
+            if (warehouseVisitForDay151Only)
+                GameStateService.SetRequiredPackage(0, false);
             _tutorialWarehouseVisit = false;
 
             _travelTarget = TravelTarget.None;

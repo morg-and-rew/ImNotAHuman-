@@ -121,6 +121,9 @@ public sealed class WindowView : MonoBehaviour
             return true;
         }
 
+        // Не открывать окно во время любого диалога (радио, Client_Day1.5.1 и т.д.)
+        if (DialogueManager.isConversationActive)
+            return false;
         EnterView();
         return true;
     }

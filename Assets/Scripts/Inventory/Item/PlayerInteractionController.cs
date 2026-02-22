@@ -38,6 +38,10 @@ public sealed class PlayerInteractionController
         if (!_input.InteractPressed)
             return;
 
+        // Во время любого диалога (радио, Client_Day1.5.1 и т.д.) блокируем E: окно, радио, телефон, посылка, клиент через луч.
+        if (DialogueManager.isConversationActive)
+            return;
+
         if (_hands.HasItem)
         {
             TryDropItem();
@@ -83,9 +87,9 @@ public sealed class PlayerInteractionController
             return _flow != null && _flow.IsPhonePickupAllowed();
         if (holdable is PhoneItemView && !GameStateService.PhoneUnlocked)
             return false;
-        // Посылки — только по сюжету, когда задан номер требуемой посылки.
+        // Посылки: только на складе и только когда по сюжету нужно принести посылку (не при каждом заходе на склад).
         if (holdable is PackageHoldable)
-            return GameStateService.IsWarehouse && GameStateService.RequiredPackageNumber > 0;
+            return GameStateService.IsWarehouse && _flow != null && _flow.IsPackagePickAllowedByStory;
         return GameStateService.IsWarehouse;
     }
 
@@ -96,7 +100,8 @@ public sealed class PlayerInteractionController
 
         if (holdable is PackageHoldable package &&
             GameStateService.IsWarehouse &&
-            GameStateService.RequiredPackageNumber > 0)
+            GameStateService.RequiredPackageNumber > 0 &&
+            _flow != null && !_flow.AcceptAnyPackageForReturn)
         {
             if (package.Number != GameStateService.RequiredPackageNumber)
             {

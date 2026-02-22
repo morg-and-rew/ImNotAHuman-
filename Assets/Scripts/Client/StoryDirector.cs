@@ -33,6 +33,8 @@ public sealed class StoryDirector : MonoBehaviour
     private const float RadioStyleAutoAdvanceSeconds = 8f;
 
     public string CurrentStepId => (_index >= 0 && _index < _steps.Count) ? _steps[_index].stepId : "";
+    /// <summary> True, если сюжет уже запущен (хотя бы один шаг был активирован). </summary>
+    public bool HasStoryStarted => _index >= 0;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
     public bool IsWaitingForRadioComplete => _wait == WaitMode.WaitingRadioComplete;
     /// <summary> Всегда false: логика «выйти из зоны склада» заменена на «телепорт на склад → телепорт к клиенту». </summary>
@@ -227,6 +229,29 @@ public sealed class StoryDirector : MonoBehaviour
         Advance();
     }
 
+    /// <summary> Запуск сюжета сразу с первого диалога с клиентом (intro / Client_Day1). Radio_Tutorial и Radio_Day1_2 необязательны. </summary>
+    public void StartStoryFromClientDialogue()
+    {
+        if (_steps == null || _steps.Count == 0) return;
+        int introIndex = -1;
+        for (int i = 0; i < _steps.Count; i++)
+        {
+            if (string.Equals(_steps[i].stepId, "intro", StringComparison.OrdinalIgnoreCase))
+            {
+                introIndex = i;
+                break;
+            }
+        }
+        if (introIndex < 0)
+        {
+            StartStoryFromAfterRadio();
+            return;
+        }
+        _index = introIndex - 1;
+        _wait = WaitMode.Idle;
+        Advance();
+    }
+
     public void Tick()
     {
         if (_input == null) return;
@@ -240,6 +265,16 @@ public sealed class StoryDirector : MonoBehaviour
                 Advance();
                 return;
             }
+        }
+
+        // Необязательный шаг (например Radio_Day1_2): игрок может не идти на склад, а подойти к клиенту и нажать E — пропускаем шаг и сразу запускаем следующий диалог (Client_Day1.3).
+        if (_currentStep != null && _currentStep.optional && _client != null && _client.IsPlayerInside && _input.InteractPressed)
+        {
+            Debug.Log($"[Tutorial] Опциональный шаг \"{_currentStep.stepId}\" пропущен (E у клиента) → переход к Client_Day1.3.");
+            _wait = WaitMode.Idle;
+            Advance(); // optional_radio → free_roam_before_client_day1_3
+            Advance(); // free_roam → client_day1_3 (StartDialogue)
+            return;
         }
 
         if (_wait == WaitMode.WaitingFreeRoamClientConfirm && _client != null && _client.IsPlayerInside && _input.InteractPressed)
@@ -837,7 +872,7 @@ public sealed class StoryDirector : MonoBehaviour
         }
         if (_wait == WaitMode.WaitingClientConfirm)
         {
-            // return_to_client_day1_5: вернулись к клиенту с посылкой — показываем только спрайт клиента, по Space выходим в свободное хождение
+            // return_to_client_day1_5: вернулись к клиенту с посылкой после Client_Day1.5.1 — только спрайт клиентки (без диалога), по Space выходим
             if (_currentStep != null && string.Equals(_currentStep.stepId, "return_to_client_day1_5", StringComparison.OrdinalIgnoreCase))
             {
                 _wait = WaitMode.WaitingClientPortraitOnlySpace;
@@ -845,6 +880,7 @@ public sealed class StoryDirector : MonoBehaviour
                 _controller?.SetBlock(true);
                 ((GameFlowController)_flow).EnterClientDialogueState(true);
                 _client?.ShowPortraitOnly("Client_Day1.5");
+                Debug.Log("[Tutorial] return_to_client_day1_5: показан портрет клиентки (без диалога). Нажмите Space для выхода.");
                 return;
             }
             _wait = WaitMode.Idle;

@@ -109,7 +109,7 @@ public sealed class PhoneController
 
         _model.Open();
         _uiView.SetNumber(_model.Number);
-        _uiView.SetCallInteractable(_model.CanCall());
+        _uiView.SetCallInteractable(_model.CanCall() && !ConversationActive());
         _uiView.Show();
 
         _blocker?.SetBlock(true);
@@ -210,19 +210,21 @@ public sealed class PhoneController
     {
         _model.AddDigit(d);
         _uiView.SetNumber(_model.Number);
-        _uiView.SetCallInteractable(_model.CanCall());
+        _uiView.SetCallInteractable(_model.CanCall() && !ConversationActive());
     }
 
     private void OnBackspace()
     {
         _model.Backspace();
         _uiView.SetNumber(_model.Number);
-        _uiView.SetCallInteractable(_model.CanCall());
+        _uiView.SetCallInteractable(_model.CanCall() && !ConversationActive());
     }
 
     private void OnCall()
     {
         if (!_model.CanCall())
+            return;
+        if (ConversationActive())
             return;
 
         bool ok = _callService.TryCall(_model.Number);

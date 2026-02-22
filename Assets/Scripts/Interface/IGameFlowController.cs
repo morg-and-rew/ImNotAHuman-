@@ -53,6 +53,8 @@ public interface IGameFlowController
     void NotifyTrigger(string triggerId);
     bool IsStoryExpectingTrigger(string triggerId);
     bool IsPhonePickupAllowed();
+    bool AcceptAnyPackageForReturn { get; }
+    bool IsPackagePickAllowedByStory { get; }
     event Action<string> OnExitZonePassed;
     void NotifyExitZonePassed(string zoneId);
     void TeleportToTableAndFixPosition(string postVideoConversation = null);
