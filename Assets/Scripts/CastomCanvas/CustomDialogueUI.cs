@@ -15,6 +15,9 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [Header("Forced Auto Advance")]
     [SerializeField, Min(0.1f)] private float autoAdvanceIntervalSeconds = 10f;
     [SerializeField] private GameObject[] hideOnForcedAutoAdvanceMode;
+    [Tooltip("Диалоги, которые должны сами пролистываться (как радио). Client_Day1.5.1 включается сюжетом (StoryDirector), здесь можно добавить другие при необходимости.")]
+    [SerializeField] private string[] autoAdvanceConversations = new string[0];
+    [SerializeField, Min(0.1f)] private float autoAdvanceIntervalForList = 8f;
 
     [Header("Finish (Only for selected conversations)")]
     [SerializeField] private KeyCode finishKey = KeyCode.F;
@@ -132,9 +135,46 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         ApplyNormalState();
     }
 
+    private void OnEnable()
+    {
+        if (DialogueManager.instance != null)
+        {
+            DialogueManager.instance.conversationStarted += OnConversationStarted;
+            DialogueManager.instance.conversationEnded += OnConversationEnded;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (DialogueManager.instance != null)
+        {
+            DialogueManager.instance.conversationStarted -= OnConversationStarted;
+            DialogueManager.instance.conversationEnded -= OnConversationEnded;
+        }
+    }
+
+    private void OnConversationStarted(Transform actor)
+    {
+        string title = DialogueManager.lastConversationStarted;
+        if (string.IsNullOrEmpty(title)) return;
+        for (int i = 0; i < autoAdvanceConversations?.Length; i++)
+        {
+            if (string.Equals(autoAdvanceConversations[i], title, StringComparison.OrdinalIgnoreCase))
+            {
+                SetForcedAutoAdvance(true, autoAdvanceIntervalForList);
+                return;
+            }
+        }
+    }
+
+    private void OnConversationEnded(Transform actor)
+    {
+        SetForcedAutoAdvance(false);
+    }
+
     private void Start()
     {
-        // Диалоги не пролистываются сами — только по пробелу или F
+        // Диалоги не пролистываются сами — только по пробелу или F (кроме тех, что в autoAdvanceConversations)
         if (DialogueManager.instance != null && DialogueManager.displaySettings != null
             && DialogueManager.displaySettings.subtitleSettings != null)
         {

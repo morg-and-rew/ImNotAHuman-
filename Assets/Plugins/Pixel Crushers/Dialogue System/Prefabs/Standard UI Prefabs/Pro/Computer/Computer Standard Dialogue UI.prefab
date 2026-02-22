@@ -293,12 +293,15 @@ MonoBehaviour:
   advanceOnlyWhenNoResponses: 1
   autoAdvanceIntervalSeconds: 10
   hideOnForcedAutoAdvanceMode: []
+  autoAdvanceConversations: []
+  autoAdvanceIntervalForList: 8
   finishKey: 102
   finishByKeyConversations:
   - Client_Day1
   - Client_Day1.1
   - Client_Day1.1
   - Client_Day1.3
+  - Client_Day1.5
   npcSubtitlePanel: {fileID: 1046714570033430}
   hideOnChoiceMode:
   - {fileID: 5972125699115874149}

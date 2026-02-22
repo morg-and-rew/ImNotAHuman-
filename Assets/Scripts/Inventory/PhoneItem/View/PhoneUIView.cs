@@ -120,7 +120,7 @@ public sealed class PhoneUIView : MonoBehaviour
 
     public void ShowInvalidNumber()
     {
-        ShowTempMessage("Íîìåð íàáðàí íåïðàâèëüíî", _errorShowSeconds);
+        ShowTempMessage("Номер набран неправильно", _errorShowSeconds);
     }
 
     private void ShowTempMessage(string message, float seconds)

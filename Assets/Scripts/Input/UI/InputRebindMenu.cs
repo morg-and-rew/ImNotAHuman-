@@ -44,7 +44,7 @@ public sealed class InputRebindMenu : MonoBehaviour
 
             if (!KeyBindingParser.TryParse(inputText, out KeyBinding binding, out string parseError))
             {
-                ShowError($"?????? ? {field.action}: {parseError}");
+                ShowError($"Ошибка для {field.action}: {parseError}");
                 return; 
             }
 
@@ -53,7 +53,7 @@ public sealed class InputRebindMenu : MonoBehaviour
 
         if (HasDuplicates(parsed))
         {
-            ShowError("???? ? ?? ?? ?????????? ??? ????????? ?? ????????? ????????");
+            ShowError("Нельзя использовать одну и ту же клавишу для разных действий");
             return;
         }
 
@@ -61,7 +61,7 @@ public sealed class InputRebindMenu : MonoBehaviour
         {
             if (!_bindings.TryRebind(pair.Key, pair.Value, out string error))
             {
-                ShowError($"?????? ??? ?????????? {pair.Key}: {error}");
+                ShowError($"Ошибка при назначении {pair.Key}: {error}");
                 continue;
             }
         }

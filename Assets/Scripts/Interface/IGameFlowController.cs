@@ -18,11 +18,13 @@ public interface IGameFlowController
     bool MeetClientHintAlreadyShown { get; }
     void MarkProviderCallDone();
     void HidePhoneHint();
-    void ShowPhoneCallHint(); // <--- ?????????
-    void ShowRadioHintOnce(); // <--- ????????? 
+    void ShowPhoneCallHint();
+    void ShowRadioHintOnce();
     void NotifyPhonePutDown();
-    void ShowMeetClientHintOnce(); // <--- ????????? 
+    void ShowMeetClientHintOnce();
     void ShowHintRaw(string text);
+    /// <summary> Показать подсказку по ключу один раз за сессию; при повторном вызове с тем же ключом показывается пусто. </summary>
+    void ShowHintOnceByKey(string key);
     void LockPlayerForDialogue(bool isLocked);
     event System.Action OnPlayerReturnedFromWarehouse;
     event System.Action OnPlayerReturnedToClient;

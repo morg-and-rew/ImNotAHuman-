@@ -12,7 +12,7 @@ public static class KeyBindingParser
 
         if (string.IsNullOrWhiteSpace(input))
         {
-            error = "Пустое значение";
+            error = "?????? ????????";
             return false;
         }
 
@@ -24,11 +24,11 @@ public static class KeyBindingParser
         {
             if (!TryParseMainKey(parts[0], out KeyCode key))
             {
-                error = "Недопустимая клавиша";
-                return false;
-            }
+error = "???????????? ???????";
+            return false;
+        }
 
-            binding = new KeyBinding(key);
+        binding = new KeyBinding(key);
             return true;
         }
 
@@ -36,15 +36,15 @@ public static class KeyBindingParser
         {
             if (!TryParseMainKey(parts[0], out KeyCode key))
             {
-                error = "Недопустимая клавиша";
-                return false;
-            }
+error = "???????????? ???????";
+            return false;
+        }
 
-            binding = new KeyBinding(key, KeyCode.LeftShift);
+        binding = new KeyBinding(key, KeyCode.LeftShift);
             return true;
         }
 
-        error = "Разрешена только комбинация с Shift";
+        error = "????????? ?????? ?????????? ? Shift";
         return false;
     }
 
