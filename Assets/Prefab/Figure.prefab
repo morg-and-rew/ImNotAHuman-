@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 7678826249062143}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7831512, z: -0.6218314, w: 0}
-  m_LocalPosition: {x: -0.117, y: 1.453, z: 0.4}
+  m_LocalPosition: {x: -0.117, y: 1.18, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 168324447558042332}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.394, z: 0.903}
+  m_LocalPosition: {x: 0, y: 1.153, z: 0.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2289,6 +2289,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2884,6 +2885,7 @@ MonoBehaviour:
   _dropPoint: {fileID: 3010027653379915635}
   _phoneHandPoint: {fileID: 7576925068503218848}
   _deliveryNoteView: {fileID: 526507437968744943}
+  _dialogueCameraYOffset: 0.24
 --- !u!81 &5561922451757417117
 AudioListener:
   m_ObjectHideFlags: 0

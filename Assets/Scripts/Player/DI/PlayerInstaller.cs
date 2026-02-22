@@ -35,7 +35,8 @@ public sealed class PlayerInstaller : MonoBehaviour
     [Header("Phone Pose")]
     [SerializeField] private Transform _phoneUsePoint;
     [SerializeField] private Transform _phoneLookTarget;
-    [SerializeField] private bool _returnAfterPhoneClose = false;
+    [Tooltip("При опускании/закрытии телефона возвращать игрока и камеру на место (камера никуда не уезжает).")]
+    [SerializeField] private bool _returnAfterPhoneClose = true;
 
     [Header("Debug")]
     [Tooltip("Рисовать луч взаимодействия в сцене (линия от камеры до точки попадания).")]

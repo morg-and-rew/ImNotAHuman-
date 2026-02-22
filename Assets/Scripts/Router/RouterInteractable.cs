@@ -43,7 +43,7 @@ public sealed class RouterInteractable : MonoBehaviour, IWorldInteractable
         DialogueManager.instance.conversationEnded -= OnConversationEnded;
 
         GameStateService.UnlockPhone();
-        GameStateService.SetState(GameState.Phone);
+        // Не переключаем в Phone — остаёмся в Warehouse, чтобы игрок мог вернуться к клиенту по F до нажатия E на радио.
 
         _flow.NotifyTrigger("router");
     }

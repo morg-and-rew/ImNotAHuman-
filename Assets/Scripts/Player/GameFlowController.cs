@@ -2,6 +2,7 @@ using PixelCrushers;
 using PixelCrushers.DialogueSystem;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 using static IGameFlowController;
@@ -10,8 +11,6 @@ using static IGameFlowController;
 public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 {
     [Header("Refs")]
-    [SerializeField] private WarehouseExitTrigger _exitTrigger;
-    [SerializeField] private TravelToWarehouseTrigger _travelToWarehouseTrigger;
     [SerializeField] private Transform _warehousePoint;
     [SerializeField] private Transform _clientPoint;
     [SerializeField] private Transform _postVideoTablePoint;
@@ -36,6 +35,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [Header("Free teleport (independent of story — свои точки, без записки; подсказки только из таблицы, здесь не показываем)")]
     [SerializeField] private Transform _freeTeleportToWarehousePoint;
     [SerializeField] private Transform _freeTeleportToClientPoint;
+    [Header("Объекты, на которые нужно смотреть для телепорта по F")]
+    [Tooltip("Дверь/объект на основной локации — телепорт на склад только при взгляде на него.")]
+    [SerializeField] private Transform _warehouseEntranceDoor;
+    [Tooltip("Дверь «к клиенту» на складе — телепорт к клиенту только при взгляде на неё.")]
+    [SerializeField] private Transform _warehouseExitDoor;
 
     [SerializeField] private StoryDirector _storyDirector;
     [SerializeField] private Transform _dialogueLookPoint;
@@ -58,6 +62,15 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private CustomDialogueUI _customDialogueUI;
     private string _awaitingPostVideoDialogueComplete;
 
+    /// <summary> Игрок начал слушать Radio_Day1_2 — до окончания Player_Day1_2_Replica нельзя вернуться к клиенту. </summary>
+    private bool _radioDay1_2ConversationStarted;
+
+    /// <summary> Игрок пролистал Player_Day1_2_Replica — можно вернуться к клиенту; при телепорте запустить диалог. </summary>
+    private bool _playerDay1_2ReplicaCompleted;
+
+    /// <summary> Диалог, который запустить при следующем прибытии к клиенту (после телепорта по F из зоны выхода). </summary>
+    private string _pendingDialogueOnArriveAtClient;
+
     private bool _providerCallDone;
 
     /// <summary> После взятия посылки показывать empty вместо meet_client до следующего шага. </summary>
@@ -65,6 +78,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     /// <summary> Подсказка meet_client уже показывалась один раз — дальше только empty. </summary>
     private bool _meetClientHintShown;
+
+    /// <summary> Подсказка «позвонить провайдеру» при взятии телефона уже показывалась — при повторном взятии не показываем. </summary>
+    private bool _phoneCallHintShownOnce;
+
+    /// <summary> Подсказка «положить телефон» уже показывалась один раз. </summary>
+    private bool _phonePutHintShownOnce;
 
     public bool ProviderCallDone => _providerCallDone;
     public bool PreferEmptyOverMeetClient => _preferEmptyOverMeetClient;
@@ -93,6 +112,16 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     /// <summary> Следующий телепорт к клиенту (по F в зоне выхода) — в точку _freeTeleportToClientPoint (обучение return_from_warehouse). </summary>
     private bool _useFreeTeleportPointForNextClientTravel;
 
+    private float _lastTeleportToClientTime = -999f;
+    private bool _radioHintShownOnce;
+
+    private List<TravelZone> _travelZones = new List<TravelZone>();
+
+    /// <summary> Чтобы не спамить в консоль: логируем причину «нельзя вернуться» не чаще раза в 2 сек и только при смене причины. </summary>
+    private string _lastLoggedReturnBlockReason;
+    private float _lastLoggedReturnBlockTime = -999f;
+    private const float ReturnBlockLogInterval = 2f;
+
     public event Action OnTeleportedToWarehouse;
     public event Action OnTeleportedToClient;
     public event Action OnRadioStoryCompleted;
@@ -111,14 +140,29 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void NotifyRadioStoryCompleted()
     {
-        Debug.Log("[Flow] NotifyRadioStoryCompleted");
         OnRadioStoryCompleted?.Invoke();
     }
+
+    /// <summary> Вызвать, когда начался диалог Radio_Day1_2 — до окончания Player_Day1_2_Replica возврат к клиенту блокируется. </summary>
+    public void NotifyRadioDay1_2Started()
+    {
+        _radioDay1_2ConversationStarted = true;
+    }
+
+    /// <summary> Вызвать, когда игрок пролистал Player_Day1_2_Replica — разрешить возврат; при телепорте к клиенту запустить postVideoConversation. </summary>
+    public void NotifyPlayerDay1_2ReplicaCompleted(string postVideoConversation)
+    {
+        _playerDay1_2ReplicaCompleted = true;
+        if (!string.IsNullOrEmpty(postVideoConversation))
+            _pendingDialogueOnArriveAtClient = postVideoConversation;
+    }
+
+    /// <summary> true, если нельзя вернуться со склада к клиенту (начали Radio_Day1_2, но ещё не пролистали Player_Day1_2_Replica). </summary>
+    private bool BlockReturnUntilPlayerDay1_2ReplicaDone => _radioDay1_2ConversationStarted && !_playerDay1_2ReplicaCompleted;
 
     public void NotifyTrigger(string triggerId)
     {
         if (string.IsNullOrEmpty(triggerId)) return;
-        Debug.Log($"[Flow] NotifyTrigger: {triggerId}");
         OnTriggerFired?.Invoke(triggerId);
     }
 
@@ -127,14 +171,35 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         return _storyDirector != null && _storyDirector.IsExpectingTrigger(triggerId);
     }
 
+    /// <summary> True, если можно брать телефон (обучение дошло до шага go_to_phone или сюжет не идёт). </summary>
+    public bool IsPhonePickupAllowed()
+    {
+        return _storyDirector == null || _storyDirector.IsAtOrPastStep("go_to_phone");
+    }
+
+    /// <summary> True, если игрок уже прослушал Radio_Tutorial (tutorial_radio). До этого нельзя начинать диалог с клиентом (Client_Day1). </summary>
+    public bool HasCompletedRadioTutorial()
+    {
+        return _radioPlayed.Contains("tutorial_radio");
+    }
+
     public void NotifyExitZonePassed(string zoneId)
     {
         if (string.IsNullOrEmpty(zoneId)) return;
-        // #region agent log
-        AgentDebugLog.Log("GameFlowController.cs:NotifyExitZonePassed", "invoke", "{\"zoneId\":\"" + zoneId + "\"}", "H3");
-        // #endregion
-        Debug.Log($"[Flow] ExitZonePassed: {zoneId}");
         OnExitZonePassed?.Invoke(zoneId);
+    }
+
+    /// <summary> Телепортирует игрока в PostVideoTablePoint (стойка клиента, без диалога). Используется при сценарии «Player_Day1_2_Replica просмотрен → переход со склада → видео day1_2_radio_video». В инспекторе должен быть назначен Post Video Table Point. </summary>
+    public void TeleportToClientCounter()
+    {
+        if (_postVideoTablePoint == null)
+        {
+            Debug.LogWarning("[Flow] Post Video Table Point не назначен — назначьте PostVideoTablePoint в инспекторе GameFlowController.");
+            return;
+        }
+        Teleport(_postVideoTablePoint);
+        ApplyPostVideoCameraPitch();
+        Debug.Log("[Flow] Игрок перемещён в PostVideoTablePoint (стойка клиента).");
     }
 
     public void TeleportToTableAndFixPosition(string postVideoConversation = null)
@@ -150,14 +215,13 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         {
             _awaitingPostVideoDialogueComplete = postVideoConversation;
             GameStateService.SetState(GameState.ClientDialog);
-            EnterClientDialogueState(true);
+            EnterClientDialogueState(true, movePlayerToClient: false);
             _clientInteraction?.StartClientDialogWithSpecificStep("", postVideoConversation);
         }
         else
         {
             SetPlayerControlBlocked(true);
         }
-        Debug.Log("[Flow] Teleported to table, position fixed.");
     }
 
     private void ApplyPostVideoCameraPitch()
@@ -271,7 +335,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private System.Collections.IEnumerator StartStoryDelayed(float seconds)
     {
         yield return WaitForSecondsCache.Get(seconds);
-        Debug.Log("[Flow] Story start (config: startTrigger=auto).");
         _storyDirector.StartStory();
     }
 
@@ -281,10 +344,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         if (_travelTarget != TravelTarget.None && _input.ConfirmPressed)
         {
-            // На складе F переносит к клиенту только в зоне двери (у выхода)
-            if (_travelTarget == TravelTarget.Client && GameStateService.CurrentState == GameState.Warehouse && (_exitTrigger == null || !_exitTrigger.PlayerInside))
-                ; // не телепортировать
-            else
+            Debug.LogWarning($"[Телепорт] F нажата: цель={_travelTarget}, state={GameStateService.CurrentState}, freeTeleport={_freeTeleportTargetActive}");
+            if (CanConfirmTravelToCurrentTarget())
             {
                 if (_travelTarget == TravelTarget.Client && _pendingDialogueReturnPackage > 0)
                 {
@@ -313,41 +374,178 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             HandleClientDialog();
     }
 
+    private bool CanConfirmTravelToCurrentTarget()
+    {
+        Debug.LogWarning($"[Телепорт] CanConfirm: цель={_travelTarget}, state={GameStateService.CurrentState}");
+        if (_travelTarget == TravelTarget.Warehouse)
+        {
+            if (GameStateService.CurrentState == GameState.Warehouse)
+            {
+                Debug.LogWarning("[Телепорт] CanConfirm: отказ — уже на складе.");
+                return false;
+            }
+            if (!IsPlayerLookingAt(_warehouseEntranceDoor))
+            {
+                Debug.LogWarning("[Телепорт] CanConfirm: отказ — не смотрите на дверь на склад.");
+                return false;
+            }
+            Debug.LogWarning("[Телепорт] CanConfirm: ПРИНЯТО — телепорт на склад.");
+            return true;
+        }
+
+        if (_travelTarget == TravelTarget.Client && GameStateService.CurrentState == GameState.Warehouse)
+        {
+            bool inZoneToClient = IsPlayerInZoneTo(TravelTarget.Client);
+            bool nearExitDoor = _warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= 5f;
+            Debug.LogWarning($"[Телепорт] CanConfirm Client: inZoneToClient={inZoneToClient}, nearExitDoor={nearExitDoor}, lookAtDoor={IsPlayerLookingAt(_warehouseExitDoor)}, storyAllows={_storyDirector == null || !_storyDirector.IsRunning || _storyDirector.IsStepAllowingTravelToClient}, requiredPkg={GameStateService.RequiredPackageNumber}, BlockReturn={BlockReturnUntilPlayerDay1_2ReplicaDone}");
+            if (!inZoneToClient && !nearExitDoor)
+            {
+                Debug.LogWarning("[Возврат к клиенту] Нельзя: подойдите к двери «к клиенту» или в зону выхода (сейчас не в зоне и не у двери 5м).");
+                return false;
+            }
+            if (!IsPlayerLookingAt(_warehouseExitDoor))
+            {
+                Debug.LogWarning("[Возврат к клиенту] Нельзя: смотрите на дверь «к клиенту».");
+                return false;
+            }
+            if (DialogueManager.isConversationActive && string.Equals(DialogueManager.lastConversationStarted, "Radio_Day1_2", StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.LogWarning("[Возврат к клиенту] Нельзя: идёт диалог Radio_Day1_2.");
+                return false;
+            }
+            if (BlockReturnUntilPlayerDay1_2ReplicaDone)
+            {
+                Debug.LogWarning("[Возврат к клиенту] Нельзя: ждётся реплика Player_Day1_2_Replica.");
+                return false;
+            }
+            if (_storyDirector != null && _storyDirector.IsRunning && !_storyDirector.IsStepAllowingTravelToClient)
+            {
+                Debug.LogWarning("[Возврат к клиенту] Нельзя: сценарий не разрешает возврат (текущий шаг: " + (_storyDirector.CurrentStepId ?? "?") + ").");
+                return false;
+            }
+            // Посылку требуем только на шагах «вернуться с посылкой»; на радио/свободном перемещении возврат без посылки разрешён.
+            if (_storyDirector != null && _storyDirector.DoesCurrentStepRequirePackageForReturn && GameStateService.RequiredPackageNumber > 0 && !CanLeaveWarehouseToClient())
+            {
+                Debug.LogWarning("[Возврат к клиенту] Нельзя: нужна посылка в руках (требуется №" + GameStateService.RequiredPackageNumber + ").");
+                return false;
+            }
+            Debug.LogWarning("[Телепорт] CanConfirm: ПРИНЯТО — возврат к клиенту.");
+            return true;
+        }
+
+        if (_travelTarget == TravelTarget.Client && GameStateService.CurrentState != GameState.Warehouse)
+        {
+            Debug.LogWarning("[Возврат к клиенту] Нельзя: вы не на складе (цель «к клиенту» доступна только со склада).");
+            return false;
+        }
+
+        return false;
+    }
+
+    private void ResolveTravelZones()
+    {
+        _travelZones.Clear();
+        TravelZone[] all = FindObjectsByType<TravelZone>(FindObjectsSortMode.None);
+        for (int i = 0; i < all.Length; i++)
+        {
+            if (all[i] != null && all[i].gameObject.activeInHierarchy && all[i].enabled)
+                _travelZones.Add(all[i]);
+        }
+        if (_travelZones.Count > 0)
+            Debug.LogWarning($"[Телепорт] ResolveTravelZones: найдено зон={_travelZones.Count} (имена: {string.Join(", ", _travelZones.Select(z => z.gameObject.name))})");
+    }
+
+    private bool IsPlayerInZoneTo(TravelTarget target)
+    {
+        if (_travelZones.Count == 0)
+            ResolveTravelZones();
+        bool onWarehouse = GameStateService.CurrentState == GameState.Warehouse;
+        if (target == TravelTarget.Client && !onWarehouse) return false;
+        if (target == TravelTarget.Warehouse && onWarehouse) return false;
+        return _travelZones.Any(z => z.Destination == target && z.PlayerInside);
+    }
+
+    public bool IsWaitingForWarehouseStoryZoneExit()
+    {
+        return _storyDirector != null && _storyDirector.IsWaitingForWarehouseStoryZoneExit;
+    }
+
     /// <summary>
     /// Свободная телепортация (независимо от сюжета): в зоне перехода показываем подсказку и даём по F телепортироваться.
+    /// Учитываем все TravelZone; на складе разрешаем цель «к клиенту» также по близости к двери (5 м), если триггер не сработал.
     /// </summary>
     private void TickFreeTeleportZones()
     {
-        if (_travelToWarehouseTrigger == null && _exitTrigger == null) return;
+        if (_travelZones.Count == 0)
+            ResolveTravelZones();
+        if (_travelZones.Count == 0)
+        {
+            Debug.LogWarning("[Телепорт] TickZones: зон нет (_travelZones.Count=0), цель не выставляется.");
+            return;
+        }
+
+        bool onWarehouse = GameStateService.CurrentState == GameState.Warehouse;
+        bool inZoneToClient = IsPlayerInZoneTo(TravelTarget.Client);
+        bool inZoneToWarehouse = IsPlayerInZoneTo(TravelTarget.Warehouse);
 
         if (_travelTarget == TravelTarget.None)
         {
-            if (GameStateService.CurrentState != GameState.Warehouse && _travelToWarehouseTrigger != null && _travelToWarehouseTrigger.PlayerInside)
+            // Во время диалога с клиентом не выставляем цель телепорта (исключение из свободного перемещения).
+            bool inClientDialogue = GameStateService.CurrentState == GameState.ClientDialog && DialogueManager.isConversationActive;
+            bool canSetWarehouseTarget = !onWarehouse
+                && !inClientDialogue
+                && GameStateService.CurrentState != GameState.Phone
+                && (Time.time - _lastTeleportToClientTime) >= 2f
+                && (_storyDirector == null || !string.Equals(_storyDirector.CurrentStepId, "go_to_phone", StringComparison.OrdinalIgnoreCase))
+                && (_storyDirector == null || _storyDirector.IsStepAllowingTravelToWarehouse);
+            if (canSetWarehouseTarget && inZoneToWarehouse)
             {
                 _freeTeleportTargetActive = true;
                 _travelTarget = TravelTarget.Warehouse;
+                Debug.LogWarning("[Телепорт] TickZones: выставлена цель Warehouse (в зоне «на склад»).");
             }
-            else if (GameStateService.CurrentState == GameState.Warehouse && _exitTrigger != null && _exitTrigger.PlayerInside)
+            else if (onWarehouse)
             {
-                _freeTeleportTargetActive = true;
-                _travelTarget = TravelTarget.Client;
+                bool nearExitDoor = _warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= 5f;
+                if (inZoneToClient || nearExitDoor)
+                {
+                    string blockReason = GetWhyCannotReturnToClient();
+                    if (blockReason == null)
+                    {
+                        _freeTeleportTargetActive = true;
+                        _travelTarget = TravelTarget.Client;
+                        _lastLoggedReturnBlockReason = null;
+                        Debug.LogWarning($"[Телепорт] TickZones: выставлена цель Client (onWarehouse=true, inZoneToClient={inZoneToClient}, nearExitDoor={nearExitDoor}).");
+                        LogWhyCanReturnToClientIfNeeded();
+                    }
+                    else
+                        LogWhyCannotReturnToClientIfNeeded(blockReason);
+                }
+                else
+                    LogWhyNotInReturnAreaIfNeeded(inZoneToClient, nearExitDoor);
             }
             return;
         }
 
         if (!_freeTeleportTargetActive) return;
 
-        if (_travelTarget == TravelTarget.Warehouse && (_travelToWarehouseTrigger == null || !_travelToWarehouseTrigger.PlayerInside))
+        if (_travelTarget == TravelTarget.Warehouse && !inZoneToWarehouse)
         {
             _travelTarget = TravelTarget.None;
             _freeTeleportTargetActive = false;
             _tutorialHint?.Hide();
+            Debug.LogWarning("[Телепорт] TickZones: цель сброшена (вышли из зоны «на склад»).");
         }
-        else if (_travelTarget == TravelTarget.Client && (_exitTrigger == null || !_exitTrigger.PlayerInside))
+        else if (_travelTarget == TravelTarget.Client)
         {
-            _travelTarget = TravelTarget.None;
-            _freeTeleportTargetActive = false;
-            _tutorialHint?.Hide();
+            bool nearExitDoor = _warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= 5f;
+            if (!inZoneToClient && !nearExitDoor)
+            {
+                _travelTarget = TravelTarget.None;
+                _freeTeleportTargetActive = false;
+                _tutorialHint?.Hide();
+                Debug.LogWarning("[Телепорт] TickZones: цель Client сброшена (вышли из зоны/от двери).");
+            }
         }
     }
 
@@ -355,17 +553,28 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_clientInteraction == null || _input == null) return;
         if (!GameConfig.StoryStartOnClientInteract) return;
-        if (_clientInteraction.IsPlayerInside && !_clientInteraction.IsActive && _input.InteractPressed)
+        if (!_clientInteraction.IsPlayerInside || _clientInteraction.IsActive || !_input.InteractPressed)
+            return;
+
+        // Прежде чем говорить с клиентом (Client_Day1), игрок обязан послушать радио (Radio_Tutorial). Покинуть склад можно, к клиенту — нельзя.
+        if (!HasCompletedRadioTutorial())
         {
-            ExpireAllRadioAvailable();
-            _storyDirector.StartStory();
+            string hint = GetUIText(GameConfig.Tutorial.radioBeforeClientKey);
+            if (string.IsNullOrEmpty(hint)) hint = "Сначала послушайте радио (Radio_Tutorial).";
+            ShowHintRaw(hint);
+            return;
         }
+
+        ExpireAllRadioAvailable();
+        if (_storyDirector != null && _storyDirector.CanStartFromAfterRadio())
+            _storyDirector.StartStoryFromAfterRadio();
+        else
+            _storyDirector.StartStory();
     }
 
     private void SetDialogueControlsLocked(bool isLocked)
     {
         _controller?.SetBlock(isLocked);
-        Debug.Log("[Tutorial] SetDialogueControlsLocked → обучение скрыто");
         HideHint();
 
         Cursor.visible = isLocked;
@@ -374,7 +583,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void LockPlayerForDialogue(bool isLocked)
     {
-        Debug.Log("[Tutorial] LockPlayerForDialogue → обучение скрыто");
         HideHint();
 
         bool clientDialogue = GameStateService.CurrentState == GameState.ClientDialog;
@@ -391,10 +599,15 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             {
                 _player.transform.position = look.position;
                 _player.transform.rotation = Quaternion.Euler(Vector3.zero);
-
                 if (_player.PlayerCamera != null)
                     _player.PlayerCamera.transform.rotation = Quaternion.Euler(0, 17, 0);
+                _player.ApplyDialogueCameraOffset();
             }
+        }
+        else
+        {
+            if (_player != null)
+                _player.ClearDialogueCameraOffset();
         }
 
         Cursor.visible = isLocked;
@@ -411,11 +624,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void EnterClientDialogueState(bool isLocked, bool movePlayerToClient = true)
     {
-        // #region agent log
-        AgentDebugLog.Log("GameFlowController.cs:EnterClientDialogueState", "entry", "{\"isLocked\":" + isLocked.ToString().ToLowerInvariant() + ",\"movePlayerToClient\":" + movePlayerToClient.ToString().ToLowerInvariant() + ",\"controllerNotNull\":" + (_controller != null).ToString().ToLowerInvariant() + "}", "H_block");
-        // #endregion
         _controller?.SetBlock(isLocked);
-        Debug.Log("[Tutorial] EnterClientDialogueState → обучение скрыто");
         HideHint();
 
         if (isLocked && movePlayerToClient)
@@ -425,10 +634,14 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             {
                 _player.transform.position = look.position;
                 _player.transform.rotation = Quaternion.Euler(Vector3.zero);
-
                 if (_player.PlayerCamera != null)
                     _player.PlayerCamera.transform.rotation = Quaternion.Euler(0, 17, 0);
+                _player.ApplyDialogueCameraOffset();
             }
+        }
+        else if (!isLocked && _player != null)
+        {
+            _player.ClearDialogueCameraOffset();
         }
 
         Cursor.visible = isLocked;
@@ -440,9 +653,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     /// </summary>
     public void RefreshWarehouseDeliveryNote()
     {
-        // #region agent log
-        AgentDebugLog.Log("GameFlowController.cs:RefreshWarehouseDeliveryNote", "entry", "{\"deliveryNotNull\":" + (_delivery != null).ToString().ToLowerInvariant() + ",\"currentState\":\"" + GameStateService.CurrentState + "\",\"requiredNum\":" + (_delivery != null ? _delivery.RequiredNumber : -1) + "}", "H_state");
-        // #endregion
         if (_delivery != null && GameStateService.CurrentState == GameState.Warehouse)
         {
             int num = _delivery.RequiredNumber;
@@ -450,9 +660,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             {
                 _delivery.ShowNoteForNumber(num);
                 GameStateService.SetRequiredPackage(num, enforceOnly: false);
-                // #region agent log
-                AgentDebugLog.Log("GameFlowController.cs:RefreshWarehouseDeliveryNote", "note shown", "{\"num\":" + num + "}", "H_state");
-                // #endregion
             }
         }
     }
@@ -484,7 +691,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        Debug.Log("[Tutorial] OnClientDialogueFinishedByKey (F) → обучение скрыто, телепорт на склад");
         HideHint();
 
         ExpireAllRadioAvailable();
@@ -533,29 +739,27 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         {
             case TutorialStep.PressSpace:
                 _tutorialHint.Show(GetUIText(t.pressSpaceKey));
-                Debug.Log("[Tutorial] SetTutorialStep: PressSpace → подсказка показана (tutorial.press_space)");
                 break;
 
             case TutorialStep.GoToRouter:
                 _tutorialHint.Show(GetUIText(t.routerHintKey));
-                Debug.Log("[Tutorial] SetTutorialStep: GoToRouter → подсказка показана (tutorial.router_hint)");
                 break;
 
             case TutorialStep.GoToPhone:
                 _tutorialHint.Show(GetUIText(t.phoneHintKey));
-                Debug.Log("[Tutorial] SetTutorialStep: GoToPhone → подсказка показана (tutorial.phone_hint)");
                 break;
 
             case TutorialStep.None:
             default:
                 _tutorialHint.Hide();
-                Debug.Log("[Tutorial] SetTutorialStep: None → обучение скрыто");
                 break;
         }
     }
 
     public void ShowPhonePutHintOnce()
     {
+        if (_phonePutHintShownOnce) return;
+        _phonePutHintShownOnce = true;
         _preferEmptyOverMeetClient = false;
         _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.phonePutKey));
     }
@@ -587,6 +791,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private void OnClientDialogueStepCompleted(ClientDialogueStepCompletionData data)
     {
+        _player?.ClearDialogueCameraOffset();
+
         if (string.IsNullOrEmpty(_awaitingPostVideoDialogueComplete)) return;
         if (!string.Equals(data.ConversationTitle, _awaitingPostVideoDialogueComplete, StringComparison.OrdinalIgnoreCase))
             return;
@@ -627,17 +833,28 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         hands.DestroyCurrentItem();
     }
 
+    /// <summary> Подсказка «позвонить провайдеру» — только один раз при первом взятии телефона; при повторном взятии не показываем. </summary>
     public void ShowPhoneCallHint()
     {
-        if (_tutorialHint == null) return;
+        if (_tutorialHint == null || _phoneCallHintShownOnce) return;
+        _phoneCallHintShownOnce = true;
         _preferEmptyOverMeetClient = false;
         _tutorialHint.Show(GetUIText(GameConfig.Tutorial.phoneCallProviderKey));
     }
 
     public void ShowRadioHintOnce()
     {
+        // Подсказку «радио» показываем один раз после опускания телефона в NotifyPhonePutDown, не при входе на шаг
+    }
+
+    public void NotifyPhonePutDown()
+    {
         if (_tutorialHint == null) return;
+        if (_radioHintShownOnce) return;
+        if (!_providerCallDone) return;
+        _radioHintShownOnce = true;
         _preferEmptyOverMeetClient = false;
+        // Сразу после выполнения действия «положить телефон» показываем подсказку «радио»
         _tutorialHint.Show(GetUIText(GameConfig.Tutorial.radioUseKey));
     }
 
@@ -671,13 +888,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (string.IsNullOrEmpty(text))
         {
             _tutorialHint.Hide();
-            Debug.Log("[Tutorial] ShowHintRaw: пустой текст → обучение скрыто");
             return;
         }
         _preferEmptyOverMeetClient = false;
         _tutorialHint.Show(text);
         string preview = text.Length > 50 ? text.Substring(0, 50) + "..." : text;
-        Debug.Log($"[Tutorial] ShowHintRaw: показана подсказка \"{preview.Replace("\n", " ")}\"");
     }
 
     public void SetTravelTarget(TravelTarget target, string hintText, bool useFreeTeleportPointForClient = false)
@@ -688,7 +903,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (string.IsNullOrEmpty(hintText))
         {
             _tutorialHint?.Hide();
-            Debug.Log($"[Tutorial] SetTravelTarget: {target}, hint пустой → обучение скрыто");
         }
         else
         {
@@ -696,7 +910,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 _preferEmptyOverMeetClient = false;
             _tutorialHint?.Show(hintText);
             string preview = hintText.Length > 50 ? hintText.Substring(0, 50) + "..." : hintText;
-            Debug.Log($"[Tutorial] SetTravelTarget: {target}, показана подсказка \"{preview.Replace("\n", " ")}\"");
         }
     }
 
@@ -757,11 +970,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public void ActivateRadioEvent(string id)
     {
         if (string.IsNullOrEmpty(id)) return;
-        if (_radioPlayed.Contains(id)) { Debug.Log($"[Flow] ActivateRadioEvent: {id} already played, skip."); return; }
-        if (_radioExpired.Contains(id)) { Debug.Log($"[Flow] ActivateRadioEvent: {id} expired, skip."); return; }
+        if (_radioPlayed.Contains(id)) return;
+        if (_radioExpired.Contains(id)) return;
 
         _radioAvailable.Add(id);
-        Debug.Log($"[Flow] Activated radio event: {id}. Available: {string.Join(", ", _radioAvailable)}");
         OnRadioEventActivated?.Invoke(id);
     }
 
@@ -779,16 +991,13 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _radioAvailable.Remove(id);
         _radioPlayed.Add(id);
         _currentRadioEventId = id;
-        Debug.Log($"[Flow] Consumed radio event: {id}.");
     }
 
     public void ExpireAllRadioAvailable()
     {
-        int count = _radioAvailable.Count;
         foreach (string id in _radioAvailable)
             _radioExpired.Add(id);
         _radioAvailable.Clear();
-        Debug.Log($"[Flow] Expired {count} radio events.");
     }
 
     private bool PerformTravel(TravelTarget target, bool ignoreClientRequirements, bool freeTeleport = false)
@@ -825,6 +1034,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         if (target == TravelTarget.Client)
         {
+            Debug.LogWarning($"[Телепорт] PerformTravel(Client): ignoreClientReq={ignoreClientRequirements}");
             if (!ignoreClientRequirements)
             {
                 if (!CanLeaveWarehouseToClient())
@@ -832,7 +1042,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                     if (_pendingDialogueReturnPackage > 0 && CanLeaveWarehouseWithPendingPackage())
                         _pendingDialogueReturnPackage = 0;
                     else
+                    {
+                        Debug.LogWarning("[Телепорт] PerformTravel(Client): отказ — CanLeaveWarehouseToClient=false.");
                         return false;
+                    }
                 }
             }
 
@@ -849,19 +1062,94 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             GameStateService.SetState(GameState.ClientDialog);
 
             _travelTarget = TravelTarget.None;
+            _lastTeleportToClientTime = Time.time;
             OnTeleportedToClient?.Invoke();
             _clientInteraction?.CloseUI();
+
+            if (!string.IsNullOrEmpty(_pendingDialogueOnArriveAtClient))
+            {
+                string conv = _pendingDialogueOnArriveAtClient;
+                _pendingDialogueOnArriveAtClient = null;
+                _awaitingPostVideoDialogueComplete = conv;
+                EnterClientDialogueState(true, movePlayerToClient: false);
+                _clientInteraction?.StartClientDialogWithSpecificStep("", conv);
+            }
+
+            Debug.LogWarning("[Телепорт] PerformTravel(Client): выполнено успешно.");
             return true;
         }
 
+        Debug.LogWarning("[Телепорт] PerformTravel: неизвестная цель или отказ.");
         return false;
+    }
+
+    /// <summary> Игрок смотрит в сторону объекта (направление камеры, горизонтальная плоскость). Если target не задан — считаем true. </summary>
+    private bool IsPlayerLookingAt(Transform target)
+    {
+        if (target == null || _player == null || _player.PlayerCamera == null) return true;
+        Vector3 toTarget = (target.position - _player.transform.position).normalized;
+        toTarget.y = 0f;
+        if (toTarget.sqrMagnitude < 0.0001f) return true;
+        toTarget.Normalize();
+        Vector3 camForward = _player.PlayerCamera.transform.forward;
+        camForward.y = 0f;
+        if (camForward.sqrMagnitude < 0.0001f) return false;
+        camForward.Normalize();
+        return Vector3.Dot(camForward, toTarget) >= 0.5f;
+    }
+
+    /// <summary> Причина, по которой нельзя вернуться к клиенту (цель не выставляется в TickFreeTeleportZones). null = можно. Вызывать только когда игрок на складе и (в зоне выхода или у двери). </summary>
+    private string GetWhyCannotReturnToClient()
+    {
+        if (BlockReturnUntilPlayerDay1_2ReplicaDone)
+            return "ждётся реплика Player_Day1_2_Replica (до конца диалога на радио)";
+        if (_storyDirector != null && _storyDirector.IsRunning && !_storyDirector.IsStepAllowingTravelToClient)
+            return "сценарий не разрешает возврат к клиенту (текущий шаг: " + (_storyDirector.CurrentStepId ?? "?") + ")";
+        // Посылку требуем только на шагах «вернуться с посылкой» (ReturnToClient / GoWarehouseWaitReturn). На радио и свободном перемещении — возврат без посылки разрешён.
+        if (_storyDirector != null && _storyDirector.DoesCurrentStepRequirePackageForReturn && GameStateService.RequiredPackageNumber > 0 && !CanLeaveWarehouseToClient())
+            return "нужна посылка в руках (требуется №" + GameStateService.RequiredPackageNumber + ")";
+        return null;
+    }
+
+    private void LogWhyCannotReturnToClientIfNeeded(string reason)
+    {
+        if (string.IsNullOrEmpty(reason)) return;
+        if (reason == _lastLoggedReturnBlockReason && (Time.time - _lastLoggedReturnBlockTime) < ReturnBlockLogInterval)
+            return;
+        _lastLoggedReturnBlockReason = reason;
+        _lastLoggedReturnBlockTime = Time.time;
+        Debug.LogWarning("[Возврат к клиенту] Нельзя: " + reason);
+    }
+
+    private float _lastLoggedReturnAllowTime = -999f;
+    private float _lastLoggedNotInReturnAreaTime = -999f;
+
+    private void LogWhyNotInReturnAreaIfNeeded(bool inZoneToClient, bool nearExitDoor)
+    {
+        if ((Time.time - _lastLoggedNotInReturnAreaTime) < ReturnBlockLogInterval)
+            return;
+        _lastLoggedNotInReturnAreaTime = Time.time;
+        float dist = _warehouseExitDoor != null && _player != null ? Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) : -1f;
+        Debug.LogWarning($"[Телепорт] На складе, но цель Client не выставляется: не в зоне выхода (inZoneToClient={inZoneToClient}) и не у двери 5м (nearExitDoor={nearExitDoor}, dist={dist:F1}). Подойдите к двери «к клиенту» или в зону выхода.");
+    }
+
+    private void LogWhyCanReturnToClientIfNeeded()
+    {
+        if ((Time.time - _lastLoggedReturnAllowTime) < ReturnBlockLogInterval)
+            return;
+        _lastLoggedReturnAllowTime = Time.time;
+        Debug.LogWarning("[Возврат к клиенту] Можно: вы в зоне выхода/у двери, условия выполнены — смотрите на дверь «к клиенту» и нажмите F.");
     }
 
     private bool CanLeaveWarehouseToClient()
     {
-        bool inExitZone = _exitTrigger == null || _exitTrigger.PlayerInside;
+        bool inExitZone = IsPlayerInZoneTo(TravelTarget.Client) || (_warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= 5f);
         if (!inExitZone)
             return false;
+
+        // На шагах радио/свободного перемещения посылка не требуется
+        if (_storyDirector != null && !_storyDirector.DoesCurrentStepRequirePackageForReturn)
+            return true;
 
         PlayerHands hands = HandsRegistry.Hands;
 
@@ -886,24 +1174,14 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         int packageNumber = 0;
         if (_pendingDialogueReturnPackage <= 0)
-        {
-            AgentDebugLog.Log("GameFlowController.cs:CanLeaveWarehouseWithPendingPackage", "fail", "{\"reason\":\"pendingDialogueReturnPackage<=0\",\"pending\":" + _pendingDialogueReturnPackage + "}", "H2");
             return false;
-        }
-        bool exitInside = _exitTrigger == null || _exitTrigger.PlayerInside;
-        if (_exitTrigger != null && !_exitTrigger.PlayerInside)
+        bool exitInside = IsPlayerInZoneTo(TravelTarget.Client) || (_warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= 5f);
+        if (!exitInside)
             return false;
         PlayerHands hands = HandsRegistry.Hands;
         if (hands == null || hands.Current is not PackageHoldable pkg)
-        {
-            AgentDebugLog.Log("GameFlowController.cs:CanLeaveWarehouseWithPendingPackage", "fail", "{\"reason\":\"noPackageInHands\",\"handsNull\":" + (hands == null) + ",\"exitInside\":" + exitInside + "}", "H3");
             return false;
-        }
         packageNumber = pkg.Number;
-        bool ok = packageNumber == _pendingDialogueReturnPackage;
-        // #region agent log
-        AgentDebugLog.Log("GameFlowController.cs:CanLeaveWarehouseWithPendingPackage", ok ? "ok" : "fail", "{\"packageNumber\":" + packageNumber + ",\"pending\":" + _pendingDialogueReturnPackage + ",\"exitInside\":" + exitInside + ",\"result\":" + (ok ? "true" : "false") + "}", "H3");
-        // #endregion
-        return ok;
+        return packageNumber == _pendingDialogueReturnPackage;
     }
 }

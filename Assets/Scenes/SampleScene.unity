@@ -190,7 +190,7 @@ MonoBehaviour:
   _windowView: {fileID: 2029519913}
   _eventCameraCanvas: {fileID: 1318942673}
   _clientInteraction: {fileID: 1282888856}
-  _warehouseExit: {fileID: 314435459}
+  _warehouseExit: {fileID: 0}
   _gameFlowController: {fileID: 1644325939}
   _phoneItemView: {fileID: 975431278}
   _phoneUIView: {fileID: 1510581951}
@@ -454,73 +454,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f0f67c843c78c564e85668c4de24eca4, type: 3}
   m_PrefabInstance: {fileID: 21269806}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &24721139
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 24721142}
-  - component: {fileID: 24721141}
-  - component: {fileID: 24721140}
-  m_Layer: 0
-  m_Name: WarehouseStoryTriggerZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &24721140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 24721139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af4e09ed0146e3745a3631b868fb391e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WarehouseStoryTriggerZone
-  _zoneId: warehouse_story_zone_exited
---- !u!65 &24721141
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 24721139}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 8.59, y: 1, z: 7.06}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &24721142
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 24721139}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.64, y: -0.186, z: -3.53}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &27938649
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1254,6 +1187,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2732,7 +2666,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.95587665, y: 1.9098289, z: 0.05923698}
   m_Center: {x: -0.012725145, y: 0.95491457, z: 0.015511762}
@@ -3720,7 +3654,7 @@ GameObject:
   - component: {fileID: 314435462}
   - component: {fileID: 314435461}
   - component: {fileID: 314435460}
-  - component: {fileID: 314435459}
+  - component: {fileID: 314435464}
   m_Layer: 0
   m_Name: Teleport
   m_TagString: Untagged
@@ -3728,18 +3662,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &314435459
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 314435458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c06b5bac40ba67546a9aba283c11c988, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WarehouseExitTrigger
 --- !u!65 &314435460
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3831,6 +3753,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &314435464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314435458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c493972b361f9a949bb02a11b16ccb89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TravelZone
+  _destination: 2
+  _notifyExitZoneIdOnExit: 
+  _notifyExitZoneIdOnEnter: 
 --- !u!1 &316956800 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 846311f6029ede44db2fb7bd9eb83b0f, type: 3}
@@ -4650,6 +4587,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5940,6 +5878,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7315,6 +7254,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8665,6 +8605,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10142,6 +10083,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15476,6 +15418,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -16692,6 +16635,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17150,6 +17094,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19410,8 +19355,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46f3cc6462e72c24fb0f8208f09fb9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowController
-  _exitTrigger: {fileID: 314435459}
-  _travelToWarehouseTrigger: {fileID: 1976049430}
   _warehousePoint: {fileID: 888203572}
   _clientPoint: {fileID: 510495462}
   _postVideoTablePoint: {fileID: 72206394}
@@ -19424,6 +19367,8 @@ MonoBehaviour:
   _delivery: {fileID: 1255302249}
   _freeTeleportToWarehousePoint: {fileID: 888203572}
   _freeTeleportToClientPoint: {fileID: 878373952}
+  _warehouseEntranceDoor: {fileID: 207294881}
+  _warehouseExitDoor: {fileID: 207294881}
   _storyDirector: {fileID: 1407435833}
   _dialogueLookPoint: {fileID: 510495462}
   _skepticPhoneNoteObject: {fileID: 406965943}
@@ -20430,6 +20375,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -21299,6 +21245,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -22674,6 +22621,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -22852,7 +22800,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1976049432}
   - component: {fileID: 1976049431}
-  - component: {fileID: 1976049430}
+  - component: {fileID: 1976049433}
   m_Layer: 0
   m_Name: TravelZone
   m_TagString: Untagged
@@ -22860,18 +22808,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1976049430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1976049429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ce77b3e73ae5bc49bc3d52891a60484, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TravelToWarehouseTrigger
 --- !u!65 &1976049431
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22908,6 +22844,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1976049433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976049429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c493972b361f9a949bb02a11b16ccb89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TravelZone
+  _destination: 1
+  _notifyExitZoneIdOnExit: 
+  _notifyExitZoneIdOnEnter: 
 --- !u!1001 &1999823679
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23211,7 +23162,7 @@ Transform:
   m_GameObject: {fileID: 2043106375}
   serializedVersion: 2
   m_LocalRotation: {x: -0.20701812, y: -0.28852102, z: 0.5449792, w: 0.7595372}
-  m_LocalPosition: {x: 0.32, y: -0.789, z: 3.113}
+  m_LocalPosition: {x: 0, y: -0.705, z: 2.651706}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -23957,73 +23908,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PackageItem
   _numberText: {fileID: 0}
   _registry: {fileID: 710741040}
---- !u!1 &2092620797
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2092620800}
-  - component: {fileID: 2092620799}
-  - component: {fileID: 2092620798}
-  m_Layer: 0
-  m_Name: ExitCheckZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2092620798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092620797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aad9d3103f6e83b479f33942402931d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExitCheckZone
-  _zoneId: warehouse_exit_passed
---- !u!65 &2092620799
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092620797}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &2092620800
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092620797}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.64, y: -0.186, z: -0.058}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2100603677
 GameObject:
   m_ObjectHideFlags: 0
@@ -26165,8 +26049,6 @@ SceneRoots:
   - {fileID: 1282888860}
   - {fileID: 314435463}
   - {fileID: 1976049432}
-  - {fileID: 2092620800}
-  - {fileID: 24721142}
   - {fileID: 2101623660}
   - {fileID: 331285086}
   - {fileID: 1797215799}

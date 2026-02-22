@@ -80,7 +80,7 @@ public sealed class PlayerInteractionController
     private bool IsHoldableAllowed(IHoldable holdable)
     {
         if (holdable is IHandPointProvider hp && hp.HandPointType == HandPointType.Phone)
-            return true;
+            return _flow != null && _flow.IsPhonePickupAllowed();
         if (holdable is PhoneItemView && !GameStateService.PhoneUnlocked)
             return false;
         // Посылки — только по сюжету, когда задан номер требуемой посылки.

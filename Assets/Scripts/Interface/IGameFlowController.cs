@@ -19,8 +19,9 @@ public interface IGameFlowController
     void MarkProviderCallDone();
     void HidePhoneHint();
     void ShowPhoneCallHint(); // <--- ?????????
-    void ShowRadioHintOnce(); // <--- ?????????
-    void ShowMeetClientHintOnce(); // <--- ?????????
+    void ShowRadioHintOnce(); // <--- ????????? 
+    void NotifyPhonePutDown();
+    void ShowMeetClientHintOnce(); // <--- ????????? 
     void ShowHintRaw(string text);
     void LockPlayerForDialogue(bool isLocked);
     event System.Action OnPlayerReturnedFromWarehouse;
@@ -51,6 +52,7 @@ public interface IGameFlowController
     event Action<string> OnTriggerFired;
     void NotifyTrigger(string triggerId);
     bool IsStoryExpectingTrigger(string triggerId);
+    bool IsPhonePickupAllowed();
     event Action<string> OnExitZonePassed;
     void NotifyExitZonePassed(string zoneId);
     void TeleportToTableAndFixPosition(string postVideoConversation = null);

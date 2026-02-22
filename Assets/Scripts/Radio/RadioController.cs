@@ -39,12 +39,18 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private bool _storyPlaying;
     private bool _waitingStoryEnd;
     private bool _waitingPlayerReplica;
-    private bool _waitingExitZone;
+    /// <summary> Ждём: игрок телепортировался на склад, затем вышел (телепорт к клиенту) — тогда запускаем видео. </summary>
+    private bool _waitingForLeaveWarehouseBeforeVideo;
+    private bool _playerWasOnWarehouse;
+    /// <summary> При следующем телепорте к клиенту (со склада) запустить видео day1_2 — прослушана Player_Day1_2_Replica. </summary>
+    private bool _playDay12VideoOnNextTeleportToClient;
+    private string _day12PostVideoConversation;
+    /// <summary> Для FinishVideoPlayback, когда видео запущено из сценария «телепорт к клиенту» (без _phasedStory). </summary>
+    private string _pendingPostVideoConversationForPlayback;
     private bool _waitingVideoEnd;
     private bool _staticPlaying;
     private CustomDialogueUI _customDialogueUI;
     private RadioEventData _phasedStory;
-    private string _phasedExitZoneId;
     private bool _teleportToTableAfterVideo;
     private bool _playerReplicaPlayed;
 
@@ -70,10 +76,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
         GameFlowController gfc = GameFlowController.Instance;
         if (gfc != null)
-        {
             gfc.OnRadioEventActivated += OnRadioEventActivated;
-            gfc.OnExitZonePassed += OnExitZonePassed;
-        }
         else
         {
             Debug.LogWarning("[Radio] GameFlowController.Instance is null at Start, will not receive static signal.");
@@ -92,7 +95,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         if (gfc != null)
         {
             gfc.OnRadioEventActivated -= OnRadioEventActivated;
-            gfc.OnExitZonePassed -= OnExitZonePassed;
+            UnsubscribeTeleportForVideo();
         }
         if (_videoPlayer != null)
         {
@@ -171,9 +174,9 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             Debug.Log("[Radio] Ignored E: story dialogue in progress.");
             return;
         }
-        if (_waitingExitZone)
+        if (_waitingForLeaveWarehouseBeforeVideo)
         {
-            Debug.Log("[Radio] Ignored E: waiting for exit zone.");
+            Debug.Log("[Radio] Ignored E: waiting for teleport to warehouse then to client.");
             return;
         }
         if (_waitingVideoEnd)
@@ -283,6 +286,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             _waitingStoryEnd = true;
             SetRadioDialogueAutoAdvance(true);
             DialogueManager.instance.conversationEnded += OnStoryEnded;
+            if (string.Equals(story.conversationTitle, "Radio_Day1_2", System.StringComparison.OrdinalIgnoreCase))
+                GameFlowController.Instance?.NotifyRadioDay1_2Started();
             DialogueManager.StartConversation(story.conversationTitle);
             Debug.Log($"[Radio] Started conversation: {story.conversationTitle}");
             return;
@@ -321,17 +326,56 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         OnStoryEnded(actor);
     }
 
-    private void OnExitZonePassed(string zoneId)
+    private void OnTeleportedToWarehouseForVideo()
     {
-        if (!_waitingExitZone || _phasedStory == null) return;
-        string expected = string.IsNullOrEmpty(_phasedExitZoneId) ? "warehouse_exit_passed" : _phasedExitZoneId;
-        if (!string.Equals(zoneId, expected, System.StringComparison.OrdinalIgnoreCase))
-            return;
+        if (_waitingForLeaveWarehouseBeforeVideo)
+            _playerWasOnWarehouse = true;
+    }
 
-        _waitingExitZone = false;
-        GameFlowController.Instance.OnExitZonePassed -= OnExitZonePassed;
-        Debug.Log("[Radio] Exit zone passed. Playing video.");
+    /// <summary> Условия: Player_Day1_2_Replica просмотрен и сделан переход со склада к локации (F). Тогда: спавн в PostVideoTablePoint → видео по id day1_2_radio_video (Event videos в инспекторе) → по завершении видео диалог PostVideo_Day1_2. </summary>
+    private void OnTeleportedToClientForDay12Video()
+    {
+        if (!_playDay12VideoOnNextTeleportToClient) return;
+        _playDay12VideoOnNextTeleportToClient = false;
+        GameFlowController flow = GameFlowController.Instance;
+        if (flow != null)
+            flow.OnTeleportedToClient -= OnTeleportedToClientForDay12Video;
+        VideoClip video = GetEventVideo("day1_2_radio_video");
+        if (video == null || _videoPlayer == null)
+        {
+            Debug.LogWarning("[Radio] Day1_2 video or player missing (проверьте Event videos в инспекторе, id=day1_2_radio_video).");
+            return;
+        }
+        _pendingPostVideoConversationForPlayback = !string.IsNullOrEmpty(_day12PostVideoConversation) ? _day12PostVideoConversation : "PostVideo_Day1_2";
+        _day12PostVideoConversation = null;
+        GameFlowController.Instance?.TeleportToClientCounter();
+        Debug.Log("[Radio] Условия выполнены: Player_Day1_2_Replica просмотрен, переход со склада к клиенту. Спавн в PostVideoTablePoint, запуск видео day1_2_radio_video.");
+        PlayEventVideo("day1_2_radio_video", video, teleportToTableAfter: true);
+    }
+
+    private void OnTeleportedToClientForVideo()
+    {
+        if (!_waitingForLeaveWarehouseBeforeVideo || !_playerWasOnWarehouse || _phasedStory == null) return;
+        UnsubscribeTeleportForVideo();
+        _waitingForLeaveWarehouseBeforeVideo = false;
+        _playerWasOnWarehouse = false;
+        // Игрок при телепорте к клиенту по умолчанию оказывается у двери; для сценария «радио → видео» нужен у стойки клиента, чтобы после ролика стоять там же и запустить PostVideo_Day1_2.
+        GameFlowController.Instance?.TeleportToClientCounter();
+        Debug.Log("[Radio] Teleported to warehouse then to client. Playing video.");
         PlayPhasedVideo();
+    }
+
+    private void UnsubscribeTeleportForVideo()
+    {
+        GameFlowController flow = GameFlowController.Instance;
+        if (flow != null)
+        {
+            flow.OnTeleportedToWarehouse -= OnTeleportedToWarehouseForVideo;
+            flow.OnTeleportedToClient -= OnTeleportedToClientForVideo;
+            flow.OnTeleportedToClient -= OnTeleportedToClientForDay12Video;
+        }
+        _playDay12VideoOnNextTeleportToClient = false;
+        _day12PostVideoConversation = null;
     }
 
     private void AdvancePhasedFlow()
@@ -359,12 +403,30 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
         if (needsExitZone && hasVideo)
         {
-            _phasedExitZoneId = string.IsNullOrEmpty(_phasedStory.exitZoneId) ? "warehouse_exit_passed" : _phasedStory.exitZoneId;
-            _waitingExitZone = true;
+            if (string.Equals(_phasedStory.eventId, "day1_2_radio_video", System.StringComparison.OrdinalIgnoreCase))
+            {
+                // Разрешаем возврат; видео запустится при телепорте со склада к клиенту, диалог — после видео.
+                GameFlowController.Instance?.NotifyPlayerDay1_2ReplicaCompleted(null);
+                string postConv = !string.IsNullOrEmpty(_phasedStory.postVideoConversation) ? _phasedStory.postVideoConversation : "PostVideo_Day1_2";
+                PhasedCleanup(); // не вызывать до сохранения postConv: внутри сбрасывает флаги и отписывает
+                _playDay12VideoOnNextTeleportToClient = true;
+                _day12PostVideoConversation = postConv;
+                var gfc = GameFlowController.Instance;
+                if (gfc != null)
+                    gfc.OnTeleportedToClient += OnTeleportedToClientForDay12Video;
+                Debug.Log("[Radio] Day1_2: Player_Day1_2_Replica завершён. При следующем телепорте к клиенту (F со склада) запустится видео, управление будет заблокировано на время ролика.");
+                return;
+            }
+            // Видео запустится после: телепорт на склад → телепорт к клиенту (выход со склада).
+            _waitingForLeaveWarehouseBeforeVideo = true;
+            _playerWasOnWarehouse = false;
             GameFlowController flow = GameFlowController.Instance;
             if (flow != null)
-                flow.OnExitZonePassed += OnExitZonePassed;
-            Debug.Log("[Radio] Waiting for exit zone. No teleport.");
+            {
+                flow.OnTeleportedToWarehouse += OnTeleportedToWarehouseForVideo;
+                flow.OnTeleportedToClient += OnTeleportedToClientForVideo;
+            }
+            Debug.Log("[Radio] Waiting for: teleport to warehouse then teleport to client → then play video.");
             return;
         }
 
@@ -391,7 +453,11 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     private void PhasedCleanup()
     {
+        UnsubscribeTeleportForVideo();
+        _waitingForLeaveWarehouseBeforeVideo = false;
+        _playerWasOnWarehouse = false;
         _phasedStory = null;
+        _pendingPostVideoConversationForPlayback = null;
         _playerReplicaPlayed = false;
         _storyPlaying = false;
         StopStatic();
@@ -409,7 +475,11 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         _waitingVideoEnd = true;
         _teleportToTableAfterVideo = teleportToTableAfter;
         SetVideoControlLock(true);
-        if (_videoRoot != null) _videoRoot.SetActive(true);
+        Debug.Log($"[Radio] Воспроизведение видео (eventId={eventId}). Управление заблокировано на время ролика.");
+        if (_videoRoot != null)
+            _videoRoot.SetActive(true);
+        else
+            Debug.LogWarning("[Radio] Video Root не назначен в инспекторе на радио — назначьте объект (например RadioVideo), иначе экран видео не появится.");
 
         StopStatic();
         if (_currentStationIndex >= 0 && _currentStationIndex < _stations.Length)
@@ -431,7 +501,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     {
         if (!_waitingVideoEnd) return;
         source.Play();
-        Debug.Log("[Radio] Event video playback started.");
+        Debug.Log("[Radio] Видео началось — управление заблокировано до конца ролика.");
     }
 
     private void OnVideoError(VideoPlayer source, string message)
@@ -456,11 +526,11 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             _videoRoot.SetActive(false);
 
         bool teleportToTable = _teleportToTableAfterVideo;
-        string postVideoConv = _phasedStory?.postVideoConversation;
+        string postVideoConv = _phasedStory?.postVideoConversation ?? _pendingPostVideoConversationForPlayback;
         _teleportToTableAfterVideo = false;
         _phasedStory = null;
+        _pendingPostVideoConversationForPlayback = null;
 
-        SetVideoControlLock(false);
         _storyPlaying = false;
         if (_storyAudioSource != null && _storyAudioSource.isPlaying)
             _storyAudioSource.Stop();
@@ -469,7 +539,14 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         PlayCurrentStation();
 
         if (teleportToTable)
-            GameFlowController.Instance?.TeleportToTableAndFixPosition(postVideoConv);
+        {
+            string dialogueToStart = !string.IsNullOrEmpty(postVideoConv) ? postVideoConv : "PostVideo_Day1_2";
+            Debug.Log($"[Radio] Видео закончилось — разблокировка управления, игрок в PostVideoTablePoint, запуск диалога {dialogueToStart}.");
+            SetVideoControlLock(false);
+            GameFlowController.Instance?.TeleportToTableAndFixPosition(dialogueToStart);
+        }
+        else
+            SetVideoControlLock(false);
         if (notifyStoryCompletion)
             GameFlowController.Instance?.NotifyRadioStoryCompleted();
     }
@@ -488,6 +565,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         GameFlowController flow = GameFlowController.Instance;
         if (flow == null) return;
         flow.SetPlayerControlBlocked(isLocked);
+        Debug.Log($"[Radio] Управление игроком: {(isLocked ? "заблокировано" : "разблокировано")} (видео/радио).");
     }
 
     private void SwitchToNextStation()

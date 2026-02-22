@@ -123,7 +123,7 @@ public sealed class PhoneController
         if (ConversationActive())
             return;
 
-        CloseUI();
+        CloseUI(restorePosition: true);
     }
 
     private void OnDropped()
@@ -131,14 +131,27 @@ public sealed class PhoneController
         if (ConversationActive())
             return;
 
+        // Сохраняем направление камеры «с телефоном в руках», чтобы после закрытия UI его не перезаписало
+        Quaternion cameraRotWhileHolding = _playerView != null && _playerView.PlayerCamera != null
+            ? _playerView.PlayerCamera.transform.rotation
+            : Quaternion.identity;
+
         bool providerCallWasDone = _flow != null && _flow.ProviderCallDone;
-        CloseUI();
+        CloseUI(restorePosition: false);
+
+        if (_playerView != null && _playerView.PlayerCamera != null)
+        {
+            _playerView.PlayerCamera.transform.rotation = cameraRotWhileHolding;
+            _playerView.SyncRotationFromCamera();
+        }
+
+        _flow?.NotifyPhonePutDown();
         if (providerCallWasDone)
             _flow?.NotifyTrigger("provider_call");
     }
 
 
-    private void CloseUI()
+    private void CloseUI(bool restorePosition = true)
     {
         if (!IsOpen) return;
         IsOpen = false;
@@ -154,11 +167,13 @@ public sealed class PhoneController
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        if (_playerView != null && _returnOnClose)
+        if (_playerView != null && _returnOnClose && restorePosition)
         {
+            // Сохраняем направление камеры «с телефоном в руках», чтобы после возврата позиции камера смотрела туда же
+            Quaternion cameraRotWhileHolding = _playerView.PlayerCamera != null ? _playerView.PlayerCamera.transform.rotation : _prevCameraRot;
             _playerView.TeleportTo(_prevPos, _prevRot);
             if (_playerView.PlayerCamera != null)
-                _playerView.PlayerCamera.transform.rotation = _prevCameraRot;
+                _playerView.PlayerCamera.transform.rotation = cameraRotWhileHolding;
         }
     }
 

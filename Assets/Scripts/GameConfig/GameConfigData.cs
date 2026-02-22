@@ -36,6 +36,8 @@ public class TutorialConfig
     public string phoneCallProviderKey = "tutorial.phone_call_provider";
     public string phonePutKey = "tutorial.phone_put";
     public string radioUseKey = "tutorial.radio_use";
+    /// <summary> Подсказка, если игрок пытается говорить с клиентом до прослушивания Radio_Tutorial. </summary>
+    public string radioBeforeClientKey = "tutorial.radio_before_client";
     public string meetClientKey = "tutorial.meet_client";
     public string goWarehouseKey = "tutorial.go_warehouse";
     public string returnToClientKey = "tutorial.return_to_client";

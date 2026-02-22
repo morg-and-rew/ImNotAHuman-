@@ -24,7 +24,7 @@ public sealed class StoryDirector : MonoBehaviour
     private bool _pendingRemovePackageAfterDialogue;
     private Step _currentStep;
 
-    private enum WaitMode { Idle, WaitingDialogueEnd, WaitingWarehouseConfirm, WaitingReturnToClientArea, WaitingClientConfirm, WaitingClientReturnForDialogue, WaitingRadioComplete, WaitingTrigger, WaitingFreeRoamClientConfirm, WaitingKnockThenWarehouse, WaitingWarehouseStoryZoneExit, WaitingClientPortraitOnlySpace, WaitingComputerVideo, WaitingFadeToBlack, WaitingTeleportToWarehouse, WaitingTeleportToClient }
+    private enum WaitMode { Idle, WaitingDialogueEnd, WaitingWarehouseConfirm, WaitingReturnToClientArea, WaitingClientConfirm, WaitingClientReturnForDialogue, WaitingRadioComplete, WaitingTrigger, WaitingFreeRoamClientConfirm, WaitingKnockThenWarehouse, WaitingClientPortraitOnlySpace, WaitingComputerVideo, WaitingFadeToBlack, WaitingTeleportToWarehouse, WaitingTeleportToClient }
     private WaitMode _wait = WaitMode.Idle;
     private string _pendingDialogueAfterReturn;
     private Coroutine _knockDelayCoroutine;
@@ -34,6 +34,26 @@ public sealed class StoryDirector : MonoBehaviour
 
     public string CurrentStepId => (_index >= 0 && _index < _steps.Count) ? _steps[_index].stepId : "";
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
+    public bool IsWaitingForRadioComplete => _wait == WaitMode.WaitingRadioComplete;
+    /// <summary> Всегда false: логика «выйти из зоны склада» заменена на «телепорт на склад → телепорт к клиенту». </summary>
+    public bool IsWaitingForWarehouseStoryZoneExit => false;
+
+    /// <summary> Телепорт на склад разрешён: после туториала (free_roam_before_clients) — всегда; во время туториала — только на шагах перехода на склад/радио. Исключение: во время диалога с клиентом не проверяется здесь (игрок в диалоге). </summary>
+    public bool IsStepAllowingTravelToWarehouse =>
+        IsAtOrPastStep("free_roam_before_clients")
+        || (_currentStep != null && (_currentStep.type == StepType.GoToDoorWarehouse || _currentStep.type == StepType.GoWarehouse || _currentStep.type == StepType.GoWarehouseWaitReturn || _currentStep.type == StepType.GoToRadio));
+
+    /// <summary> Телепорт к клиенту (со склада) разрешён: после туториала — всегда; во время туториала — только на шагах возврата/радио/ожидания. Исключение: когда с клиентом говорят и посылают за посылкой — проверка посылки в руках в GameFlowController. </summary>
+    public bool IsStepAllowingTravelToClient =>
+        IsAtOrPastStep("free_roam_before_clients")
+        || (_currentStep != null && (_currentStep.type == StepType.ReturnFromWarehouse || _currentStep.type == StepType.ReturnToClient))
+        || _wait == WaitMode.WaitingRadioComplete
+        || (_currentStep != null && _currentStep.type == StepType.GoWarehouse && _wait == WaitMode.WaitingClientConfirm)
+        || (_currentStep != null && _currentStep.type == StepType.GoToRadio);
+
+    /// <summary> True, если текущий шаг сценария — «вернуться к клиенту с посылкой»; только в этом случае при возврате со склада проверяется наличие нужной посылки. На шагах радио/свободного перемещения посылка не требуется. </summary>
+    public bool DoesCurrentStepRequirePackageForReturn =>
+        _currentStep != null && (_currentStep.type == StepType.ReturnToClient || _currentStep.type == StepType.GoWarehouseWaitReturn);
 
     /// <summary> True, если сценарий ждёт триггер с указанным id (игрок может выполнить действие только на нужном шаге). </summary>
     public bool IsExpectingTrigger(string triggerId)
@@ -41,6 +61,24 @@ public sealed class StoryDirector : MonoBehaviour
         if (string.IsNullOrEmpty(triggerId)) return false;
         return _currentStep != null && _wait == WaitMode.WaitingTrigger
             && string.Equals(_currentStep.triggerId, triggerId, System.StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary> True, если обучение не идёт или текущий шаг — указанный или любой после него (по порядку в списке шагов). </summary>
+    public bool IsAtOrPastStep(string stepId)
+    {
+        if (string.IsNullOrEmpty(stepId)) return true;
+        if (_steps == null || _steps.Count == 0 || _index < 0) return true;
+        int targetIndex = -1;
+        for (int i = 0; i < _steps.Count; i++)
+        {
+            if (string.Equals(_steps[i].stepId, stepId, StringComparison.OrdinalIgnoreCase))
+            {
+                targetIndex = i;
+                break;
+            }
+        }
+        if (targetIndex < 0) return false;
+        return _index >= targetIndex;
     }
 
     public void Initialize(IGameFlowController flow, IPlayerInput input, IPlayerBlocker controller, DeliveryNoteView deliveryNoteView)
@@ -65,7 +103,6 @@ public sealed class StoryDirector : MonoBehaviour
         {
             gfc.OnRadioStoryCompleted += OnRadioStoryCompleted;
             gfc.OnTriggerFired += OnTriggerFired;
-            gfc.OnExitZonePassed += OnExitZonePassed;
             gfc.OnComputerVideoEnded += OnComputerVideoEnded;
         }
 
@@ -125,19 +162,7 @@ public sealed class StoryDirector : MonoBehaviour
         {
             gfc.OnRadioStoryCompleted -= OnRadioStoryCompleted;
             gfc.OnTriggerFired -= OnTriggerFired;
-            gfc.OnExitZonePassed -= OnExitZonePassed;
         }
-    }
-
-    private void OnExitZonePassed(string zoneId)
-    {
-        // #region agent log
-        AgentDebugLog.Log("StoryDirector.cs:OnExitZonePassed", "entry", "{\"zoneId\":\"" + (zoneId ?? "") + "\",\"wait\":" + (int)_wait + ",\"expectedWait\":10}", "H3");
-        // #endregion
-        if (_wait != WaitMode.WaitingWarehouseStoryZoneExit) return;
-        if (!string.Equals(zoneId, WarehouseStoryTriggerZone.ZoneIdExited, StringComparison.OrdinalIgnoreCase)) return;
-
-        _flow?.ForceTravel(TravelTarget.Client);
     }
 
     private void StartKnockThenWarehouseFlow()
@@ -163,6 +188,41 @@ public sealed class StoryDirector : MonoBehaviour
     public void StartStory()
     {
         _index = -1;
+        _wait = WaitMode.Idle;
+        Advance();
+    }
+
+    /// <summary> True, если сюжет ещё не запущен и можно стартовать с шага после go_to_radio (игрок уже прослушал Radio_Tutorial). </summary>
+    public bool CanStartFromAfterRadio()
+    {
+        if (_steps == null || _steps.Count == 0) return false;
+        if (_index >= 0) return false;
+        for (int i = 0; i < _steps.Count; i++)
+        {
+            if (string.Equals(_steps[i].stepId, "go_to_radio", StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
+    }
+
+    /// <summary> Запуск сюжета с шага после go_to_radio (free_roam_before_clients). Вызывать только если игрок уже прослушал Radio_Tutorial. </summary>
+    public void StartStoryFromAfterRadio()
+    {
+        int goToRadioIndex = -1;
+        for (int i = 0; i < _steps.Count; i++)
+        {
+            if (string.Equals(_steps[i].stepId, "go_to_radio", StringComparison.OrdinalIgnoreCase))
+            {
+                goToRadioIndex = i;
+                break;
+            }
+        }
+        if (goToRadioIndex < 0)
+        {
+            StartStory();
+            return;
+        }
+        _index = goToRadioIndex;
         _wait = WaitMode.Idle;
         Advance();
     }
@@ -222,6 +282,8 @@ public sealed class StoryDirector : MonoBehaviour
         {
             _wait = WaitMode.Idle;
             Advance();
+            // Радио на складе: игрок физически на складе, но Advance() запустил free_roam_before_clients и FreeRoamNone выставил state=None. Восстанавливаем Warehouse, чтобы можно было вернуться к клиенту по F.
+            GameStateService.SetState(GameState.Warehouse);
             return;
         }
         if (_currentStep != null && _currentStep.type == StepType.ActivateRadioEvent)
@@ -310,7 +372,10 @@ public sealed class StoryDirector : MonoBehaviour
                 hint = _flow?.ResolveHintText(null, GameConfig.Tutorial.pressSpaceKey) ?? "";
                 break;
             case StepType.GoToDoorWarehouse:
-                hint = _flow?.ResolveHintText(null, GameConfig.Tutorial.doorWarehouseKey) ?? "";
+                // go_to_warehouse_for_radio: не показываем туториал «идите на склад» — игрок уже умеет перемещаться
+                hint = string.Equals(step.stepId, "go_to_warehouse_for_radio", StringComparison.OrdinalIgnoreCase)
+                    ? ""
+                    : (_flow?.ResolveHintText(null, GameConfig.Tutorial.doorWarehouseKey) ?? "");
                 break;
             case StepType.ReturnFromWarehouse:
                 hint = _flow?.ResolveHintText(null, GameConfig.Tutorial.returnPressFKey) ?? "";
@@ -322,6 +387,7 @@ public sealed class StoryDirector : MonoBehaviour
                 hint = _flow?.ResolveHintText(null, GameConfig.Tutorial.phoneHintKey) ?? "";
                 break;
             case StepType.GoToRadio:
+                // Подсказку «радио» показываем при входе на шаг (игрок уже на складе после go_to_warehouse_for_radio)
                 hint = _flow?.ResolveHintText(null, GameConfig.Tutorial.radioUseKey) ?? "";
                 break;
             case StepType.GoWarehouseWaitReturn:
@@ -379,7 +445,9 @@ public sealed class StoryDirector : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         _wait = WaitMode.WaitingTeleportToWarehouse;
         _flow?.SetTutorialWarehouseVisit(true);
-        string hint = _flow?.ResolveHintText(null, GameConfig.Tutorial.doorWarehouseKey) ?? "";
+        // go_to_warehouse_for_radio: цель «склад» ставим без подсказки — игрок уже умеет перемещаться
+        bool silent = string.Equals(step.stepId, "go_to_warehouse_for_radio", StringComparison.OrdinalIgnoreCase);
+        string hint = silent ? "" : (_flow?.ResolveHintText(null, GameConfig.Tutorial.doorWarehouseKey) ?? "");
         _flow?.SetTravelTarget(TravelTarget.Warehouse, hint);
     }
 
@@ -413,15 +481,8 @@ public sealed class StoryDirector : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        if (step.optional)
-        {
-            _wait = WaitMode.Idle;
-            Advance();
-        }
-        else
-        {
-            _wait = WaitMode.WaitingRadioComplete;
-        }
+        // Даже для optional (например optional_radio_video_after_day1_2): ждём завершения радио, иначе игрок может уйти со склада к клиенту и сломать логику.
+        _wait = WaitMode.WaitingRadioComplete;
     }
 
     private void StartDialogue(Step step)
@@ -445,15 +506,28 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void GoWarehouse(Step step)
     {
-        // go_warehouse_day1_5: игрок сам заходит в зону склада и выходит (без F, без подсказок). После выхода из зоны — телепорт к клиенту и Client_Day1.5.
+        // go_warehouse_day1_5: спустя 10 сек после free_roam_after_day1_4. Игрок может уже быть на складе или пойти туда; по возврате к клиенту — Client_Day1.5. Не сбрасываем state в None, иначе «не на складе» и нельзя вернуться.
         if (string.Equals(step.stepId, "go_warehouse_day1_5", StringComparison.OrdinalIgnoreCase))
         {
             _controller?.SetBlock(false);
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            GameStateService.SetState(GameState.None);
             _pendingDialogueAfterReturn = "Client_Day1.5";
-            _wait = WaitMode.WaitingWarehouseStoryZoneExit;
+            if (GameStateService.CurrentState == GameState.Warehouse)
+            {
+                // Игрок уже на складе — сразу даём цель «вернуться к клиенту», можно жать F.
+                _wait = WaitMode.WaitingClientConfirm;
+                string returnHint = _flow != null && _flow.PreferEmptyOverMeetClient
+                    ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
+                    : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
+                _flow?.SetTravelTarget(TravelTarget.Client, returnHint);
+                Debug.Log("[Tutorial] go_warehouse_day1_5: игрок уже на складе — подсказка «вернуться к клиенту», по F запустится Client_Day1.5.");
+            }
+            else
+            {
+                _wait = WaitMode.WaitingWarehouseConfirm;
+                Debug.Log("[Tutorial] go_warehouse_day1_5: ожидание перехода на склад, затем возврат к клиенту → Client_Day1.5.");
+            }
             return;
         }
 
@@ -667,9 +741,13 @@ public sealed class StoryDirector : MonoBehaviour
         if (_currentStep != null && string.Equals(_currentStep.stepId, "go_warehouse_day1_5", StringComparison.OrdinalIgnoreCase))
         {
             _pendingDialogueAfterReturn = "Client_Day1.5";
-            _wait = WaitMode.WaitingWarehouseStoryZoneExit;
+            _wait = WaitMode.WaitingClientConfirm;
+            string hint = _flow != null && _flow.PreferEmptyOverMeetClient
+                ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
+                : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
+            _flow?.SetTravelTarget(TravelTarget.Client, hint);
             // #region agent log
-            AgentDebugLog.Log("StoryDirector.cs:OnTeleportedToWarehouse", "set WaitingWarehouseStoryZoneExit", "{}", "H1");
+            AgentDebugLog.Log("StoryDirector.cs:OnTeleportedToWarehouse", "set WaitingClientConfirm + travel target Client", "{}", "H1");
             // #endregion
             return;
         }
@@ -726,6 +804,9 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void OnTeleportedToClient()
     {
+        // Radio_Tutorial обязателен: не продвигаем сценарий при телепорте к клиенту — только после реального прослушивания радио (OnRadioStoryCompleted).
+        if (_wait == WaitMode.WaitingRadioComplete)
+            return;
         if (_wait == WaitMode.WaitingTeleportToClient)
         {
             Debug.Log($"[Tutorial] Действие выполнено: телепорт к клиенту → шаг \"{_currentStep?.stepId}\" завершён, переход к следующему");
@@ -733,7 +814,7 @@ public sealed class StoryDirector : MonoBehaviour
             Advance();
             return;
         }
-        bool pendingReturnDialogue = _wait == WaitMode.WaitingClientReturnForDialogue || _wait == WaitMode.WaitingWarehouseStoryZoneExit;
+        bool pendingReturnDialogue = _wait == WaitMode.WaitingClientReturnForDialogue || _wait == WaitMode.WaitingClientConfirm;
         // #region agent log
         AgentDebugLog.Log("StoryDirector.cs:OnTeleportedToClient", "entry", "{\"wait\":" + (int)_wait + ",\"pendingReturnDialogue\":" + pendingReturnDialogue + ",\"pendingConv\":\"" + (_pendingDialogueAfterReturn ?? "") + "\"}", "H5");
         // #endregion
