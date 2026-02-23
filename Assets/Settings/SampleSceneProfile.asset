@@ -109,10 +109,10 @@ MonoBehaviour:
     m_Value: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.464
+    m_Value: 1
   response:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   texture:
     m_OverrideState: 0
     m_Value: {fileID: 0}
@@ -356,6 +356,30 @@ MonoBehaviour:
   - {fileID: -5830901855079754760}
   - {fileID: 1190586148918424763}
   - {fileID: -6439133688117800758}
+  - {fileID: 1718659508837112963}
+  - {fileID: 349944352434446031}
+--- !u!114 &349944352434446031
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5485954d14dfb9a4c8ead8edb0ded5b1, type: 3}
+  m_Name: LiftGammaGain
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.LiftGammaGain
+  active: 1
+  lift:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 1, z: 1, w: 0}
+  gamma:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 1, z: 1, w: 0}
+  gain:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 1, z: 1, w: -0.020790018}
 --- !u!114 &849379129802519247
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -430,6 +454,34 @@ MonoBehaviour:
   highlightsEnd:
     m_OverrideState: 0
     m_Value: 1
+--- !u!114 &1718659508837112963
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
+  m_Name: LensDistortion
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.LensDistortion
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.36
+  xMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  yMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  center:
+    m_OverrideState: 0
+    m_Value: {x: 0.5, y: 0.5}
+  scale:
+    m_OverrideState: 0
+    m_Value: 2.4
 --- !u!114 &4251639005191404373
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -463,10 +515,10 @@ MonoBehaviour:
     m_Value: 2
   aperture:
     m_OverrideState: 1
-    m_Value: 30.2
+    m_Value: 24.3
   focalLength:
     m_OverrideState: 1
-    m_Value: 136
+    m_Value: 300
   bladeCount:
     m_OverrideState: 0
     m_Value: 3
