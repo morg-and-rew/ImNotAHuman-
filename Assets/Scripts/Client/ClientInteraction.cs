@@ -26,7 +26,6 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     [SerializeField] private Canvas _uiRoot;
     [Tooltip("Панель только с портретами клиента (левый/правый). Если задана — скрываем только её, не весь _uiRoot (PlayerCanvas), чтобы не затронуть подсказки обучения и другой UI.")]
     [SerializeField] private GameObject _clientPortraitsPanel;
-    [SerializeField] private Canvas _hintCanvas;
 
     [Header("Portraits (Left/Right)")]
     [SerializeField] private RectTransform _leftRoot;
@@ -44,6 +43,14 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     [Header("Debug")]
     [SerializeField] private bool _debugPortraits;
+
+    [Header("Hint")]
+    [SerializeField] private Sprite _hintSprite;
+
+    [Header("Look at (для начала диалога нужно смотреть в эту точку)")]
+    [SerializeField] private Transform _lookAtPoint;
+    [Tooltip("Макс. расстояние до точки (м). 0 = без ограничения.")]
+    [SerializeField, Min(0f)] private float _maxLookDistance = 0f;
 
     public bool IsActive { get; private set; }
     public bool IsPlayerInside { get; private set; }
@@ -98,8 +105,6 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         }
 
         SetClientPortraitsRootActive(false);
-        if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
-        LookAtCamera.Ensure(_hintCanvas != null ? _hintCanvas.gameObject : null);
     }
 
     private void Awake()
@@ -118,8 +123,6 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         }
 
         SetClientPortraitsRootActive(false);
-        if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
-        LookAtCamera.Ensure(_hintCanvas != null ? _hintCanvas.gameObject : null);
 
         HidePortraits();
     }
@@ -158,10 +161,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<PlayerView>(out _))
-        {
             IsPlayerInside = true;
-            if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(true);
-        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -169,10 +169,37 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (other.TryGetComponent<PlayerView>(out _))
         {
             IsPlayerInside = false;
-            if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
+            if (PlayerHintView.Instance != null)
+                PlayerHintView.Instance.SetClientHint(null);
             if (!IsActive)
                 StopDialogUIOnly();
         }
+    }
+
+    public bool IsPlayerLookingAtClient(PlayerView player)
+    {
+        if (player == null || player.PlayerCamera == null) return false;
+        Transform point = _lookAtPoint != null ? _lookAtPoint : transform;
+        Vector3 toPoint = point.position - player.transform.position;
+        if (_maxLookDistance > 0f && toPoint.sqrMagnitude > _maxLookDistance * _maxLookDistance) return false;
+        toPoint.y = 0f;
+        if (toPoint.sqrMagnitude < 0.0001f) return true;
+        toPoint.Normalize();
+        Vector3 camForward = player.PlayerCamera.transform.forward;
+        camForward.y = 0f;
+        if (camForward.sqrMagnitude < 0.0001f) return false;
+        camForward.Normalize();
+        return Vector3.Dot(camForward, toPoint) >= 0.5f;
+    }
+
+    private void Update()
+    {
+        if (PlayerHintView.Instance == null) return;
+        PlayerView player = GameFlowController.Instance != null ? GameFlowController.Instance.Player : null;
+        bool holdingPhone = HandsRegistry.Hands != null && HandsRegistry.Hands.HasItem && HandsRegistry.Hands.Current is PhoneItemView;
+        bool canInteract = player != null && IsPlayerLookingAtClient(player) && !IsActive && !holdingPhone;
+        Sprite sprite = canInteract ? _hintSprite : null;
+        PlayerHintView.Instance.SetClientHint(sprite);
     }
 
     public void StartClientDialog()
@@ -185,7 +212,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (DialogueManager.isConversationActive) return;
 
         IsActive = true;
-        if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
+        if (PlayerHintView.Instance != null) PlayerHintView.Instance.SetClientHint(null);
         _waitingForContinue = false;
         _stepIndex = Mathf.Max(_stepIndex, 0);
         _isUsingOverrides = false;
@@ -203,7 +230,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
             DialogueManager.StopConversation();
 
         IsActive = true;
-        if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
+        if (PlayerHintView.Instance != null) PlayerHintView.Instance.SetClientHint(null);
         _waitingForContinue = false;
         _isUsingOverrides = true;
         _currentClientIdOverride = clientId;

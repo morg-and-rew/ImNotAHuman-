@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using PixelCrushers.DialogueSystem;
 using static IGameFlowController;
+using TutorialPendingAction = IGameFlowController.TutorialPendingAction;
 
 public sealed class StoryDirector : MonoBehaviour
 {
@@ -252,7 +253,14 @@ public sealed class StoryDirector : MonoBehaviour
 
         if (_wait == WaitMode.WaitingTrigger && _currentStep != null && _input.NextPressed)
         {
-            if (_currentStep.type == StepType.PressSpace || _currentStep.type == StepType.GoToDoorWarehouse || _currentStep.type == StepType.ReturnFromWarehouse)
+            if (_currentStep.type == StepType.PressSpace)
+            {
+                _flow?.NotifyTutorialActionCompleted(TutorialPendingAction.PressSpace);
+                _wait = WaitMode.Idle;
+                Advance();
+                return;
+            }
+            if (_currentStep.type == StepType.GoToDoorWarehouse || _currentStep.type == StepType.ReturnFromWarehouse)
             {
                 _wait = WaitMode.Idle;
                 Advance();
@@ -260,7 +268,7 @@ public sealed class StoryDirector : MonoBehaviour
             }
         }
 
-        if (_currentStep != null && _currentStep.optional && _client != null && _client.IsPlayerInside && _input.InteractPressed)
+        if (_currentStep != null && _currentStep.optional && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed)
         {
             _wait = WaitMode.Idle;
             Advance();
@@ -268,7 +276,7 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
-        if (_wait == WaitMode.WaitingFreeRoamClientConfirm && _client != null && _client.IsPlayerInside && _input.InteractPressed)
+        if (_wait == WaitMode.WaitingFreeRoamClientConfirm && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed)
         {
             _wait = WaitMode.Idle;
             Advance();

@@ -514,6 +514,22 @@ MonoBehaviour:
       customRightAnchoredPos: {x: -13, y: 73, z: 191.5}
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 2
+      leftSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 1
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 0.8
+      useCustomPositionAndSize: 0
+      customLeftAnchoredPos: {x: 71, y: 65, z: 277}
+      customLeftScale: {x: 1.1, y: 0.9, z: 0}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 191.5}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
     removePackageFromHandsAfterEntryID: 2
   - conversation: Client_Day1.2
     rules:
@@ -709,7 +725,7 @@ MonoBehaviour:
       customRightAnchoredPos: {x: 0, y: 0, z: 0}
       customRightScale: {x: 0, y: 0, z: 0}
       customRightRotation: {x: 0, y: 0, z: 0}
-    removePackageFromHandsAfterEntryID: 20
+    removePackageFromHandsAfterEntryID: 25
   - conversation: Client_Day1.3
     rules:
     - entryID: 2

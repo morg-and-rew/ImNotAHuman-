@@ -28,8 +28,9 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     [Header("Gate")]
     [SerializeField] private bool _requireProviderCallForDefault = true;
 
-    [Header("UI")]
-    [SerializeField] private Canvas _hintCanvas;
+    [Header("Hint")]
+    [SerializeField] private Sprite _hintSprite;
+
     [Header("Radio Dialogue Auto-Advance")]
     [SerializeField, Min(0.1f)] private float _radioDialogueAutoAdvanceSeconds = 10f;
     [SerializeField] private CustomDialogueUI _customDialogueUIRef;
@@ -51,11 +52,10 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private bool _teleportToTableAfterVideo;
     private bool _playerReplicaPlayed;
 
-    public Canvas hint => _hintCanvas;
+    public Sprite HintSprite => _hintSprite;
 
     private void Start()
     {
-        LookAtCamera.Ensure(_hintCanvas != null ? _hintCanvas.gameObject : null);
         _storyEvents = new List<RadioEventData>(GameConfig.RadioEvents);
         _customDialogueUI = _customDialogueUIRef ?? GameFlowController.Instance?.CustomDialogueUI;
 

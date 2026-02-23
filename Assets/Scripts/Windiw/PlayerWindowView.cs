@@ -20,6 +20,13 @@ public sealed class PlayerWindowView
     {
         UpdateCurrentWindow();
 
+        if (PlayerHintView.Instance != null)
+        {
+            bool showWindow = _currentWindowView != null && !_isViewing && _currentWindowView.IsPlayerLookingAtMe(_playerView);
+            Sprite sprite = showWindow ? _currentWindowView.HintSprite : null;
+            PlayerHintView.Instance.SetWindowHint(sprite);
+        }
+
         if (_input != null && _currentWindowView != null && _input.InteractPressed)
         {
             bool toggled = _currentWindowView.ToggleView();

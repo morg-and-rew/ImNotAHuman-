@@ -2,7 +2,6 @@ using UnityEngine;
 
 public interface IWorldInteractable
 {
-    public void Interact(IPlayerInput input);
-
-    Canvas hint { get; }
+    void Interact(IPlayerInput input);
+    Sprite HintSprite { get; }
 }

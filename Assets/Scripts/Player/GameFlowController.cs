@@ -55,6 +55,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private IPlayerInput _input;
 
     private TutorialStep _tutorialStep = TutorialStep.None;
+    private TutorialPendingAction _tutorialPendingAction = TutorialPendingAction.None;
     private bool _initialized;
 
     private IClientInteraction _clientInteraction;
@@ -109,10 +110,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public TravelTarget CurrentTravelTarget => _travelTarget;
     public CustomDialogueUI CustomDialogueUI => _customDialogueUI;
     public Camera PlayerCamera => _player != null ? _player.PlayerCamera : null;
+    public PlayerView Player => _player;
 
     public bool ShouldShowDoorHintFor(TravelTarget target)
     {
-        return _travelTarget == target && CanConfirmTravelToCurrentTarget();
+        return _travelTarget == target && IsPlayerInZoneTo(target);
     }
 
     public void NotifyRadioStoryCompleted()
@@ -316,19 +318,20 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         }
 
         TickFreeTeleportZones();
+        ApplyDoorHintFromZones();
 
-        if (_freeTeleportTargetActive && _travelTarget != TravelTarget.None && _tutorialHint != null)
+        if (_freeTeleportTargetActive && _travelTarget != TravelTarget.None && _tutorialHint != null && CanConfirmTravelToCurrentTarget())
         {
-            if (CanConfirmTravelToCurrentTarget())
+            string key = _travelTarget == TravelTarget.Warehouse
+                ? GameConfig.Tutorial.doorWarehouseKey
+                : GameConfig.Tutorial.returnPressFKey;
+            if (!_hintKeysShownOnce.Contains(key))
             {
-                string text = _travelTarget == TravelTarget.Warehouse
-                    ? GetUIText(GameConfig.Tutorial.doorWarehouseKey)
-                    : GetUIText(GameConfig.Tutorial.returnPressFKey);
+                _hintKeysShownOnce.Add(key);
+                string text = GetUIText(key);
                 if (!string.IsNullOrEmpty(text))
                     _tutorialHint.Show(text);
             }
-            else
-                _tutorialHint.Hide();
         }
 
         if (_storyDirector != null && _storyDirector.IsRunning)
@@ -432,15 +435,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             }
             else if (onWarehouse)
             {
-                bool nearExitDoor = _warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= _doorTeleportMaxDistance;
-                if (inZoneToClient || nearExitDoor)
+                string blockReason = GetWhyCannotReturnToClient();
+                if (blockReason == null)
                 {
-                    string blockReason = GetWhyCannotReturnToClient();
-                    if (blockReason == null)
-                    {
-                        _freeTeleportTargetActive = true;
-                        _travelTarget = TravelTarget.Client;
-                    }
+                    _freeTeleportTargetActive = true;
+                    _travelTarget = TravelTarget.Client;
                 }
             }
             return;
@@ -452,7 +451,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         {
             _travelTarget = TravelTarget.None;
             _freeTeleportTargetActive = false;
-            _tutorialHint?.Hide();
+            HideHint();
         }
         else if (_travelTarget == TravelTarget.Client)
         {
@@ -461,16 +460,34 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             {
                 _travelTarget = TravelTarget.None;
                 _freeTeleportTargetActive = false;
-                _tutorialHint?.Hide();
+                HideHint();
             }
         }
+    }
+
+    private void ApplyDoorHintFromZones()
+    {
+        if (PlayerHintView.Instance == null || _travelZones.Count == 0) return;
+        Sprite doorHint = null;
+        if (CanConfirmTravelToCurrentTarget() && _travelTarget != TravelTarget.None)
+        {
+            foreach (TravelZone zone in _travelZones)
+            {
+                if (zone != null && zone.Destination == _travelTarget)
+                {
+                    doorHint = zone.GetDoorHintSprite();
+                    break;
+                }
+            }
+        }
+        PlayerHintView.Instance.SetDoorHint(doorHint);
     }
 
     private void HandleClientDialog()
     {
         if (_clientInteraction == null || _input == null) return;
         if (!GameConfig.StoryStartOnClientInteract) return;
-        if (_clientInteraction.IsPlayerInside && !_clientInteraction.IsActive && _input.InteractPressed)
+        if (_clientInteraction.IsPlayerLookingAtClient(_player) && !_clientInteraction.IsActive && _input.InteractPressed)
         {
             ExpireAllRadioAvailable();
             _storyDirector.StartStory();
@@ -628,6 +645,14 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         return text.Replace("\\r\\n", "\n").Replace("\r\n", "\n").Replace("\r", "\n");
     }
 
+    public void NotifyTutorialActionCompleted(TutorialPendingAction action)
+    {
+        if (_tutorialPendingAction != action) return;
+        _tutorialPendingAction = TutorialPendingAction.None;
+        _tutorialStep = TutorialStep.None;
+        _tutorialHint?.Hide();
+    }
+
     public void SetTutorialStep(TutorialStep step)
     {
         _tutorialStep = step;
@@ -653,7 +678,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
             case TutorialStep.None:
             default:
-                _tutorialHint.Hide();
+                if (_tutorialPendingAction != TutorialPendingAction.None)
+                    return;
+                _tutorialHint?.Hide();
                 break;
         }
     }
@@ -665,26 +692,33 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     }
 
     public void ShowPhoneHint() => SetTutorialStep(TutorialStep.GoToPhone);
-    public void HideHint() => SetTutorialStep(TutorialStep.None);
+    public void HideHint()
+    {
+        if (_tutorialPendingAction != TutorialPendingAction.None)
+            return;
+        SetTutorialStep(TutorialStep.None);
+    }
 
     public void ShowEmptyHint()
     {
         if (_tutorialHint == null) return;
-        _tutorialHint.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+        if (_tutorialPendingAction != TutorialPendingAction.None) return;
+        _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
     }
 
     public void ShowEmptyHintAfterPackagePick()
     {
         if (_tutorialHint == null) return;
+        if (_tutorialPendingAction != TutorialPendingAction.None) return;
         _preferEmptyOverMeetClient = true;
-        _tutorialHint.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+        _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
     }
 
     public void MarkProviderCallDone() => _providerCallDone = true;
 
     public void HidePhoneHint()
     {
-        _tutorialHint?.Hide();
+                _tutorialHint?.Hide();
     }
 
     private void OnClientDialogueStepCompleted(ClientDialogueStepCompletionData data)
@@ -747,6 +781,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_tutorialHint == null) return;
         if (!_providerCallDone) return;
         _preferEmptyOverMeetClient = false;
+        if (_hintKeysShownOnce.Contains(GameConfig.Tutorial.radioUseKey))
+            return;
         ShowHintOnceByKey(GameConfig.Tutorial.radioUseKey);
     }
 
@@ -760,8 +796,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void ShowMeetClientHintOnce()
     {
-        if (_tutorialHint == null)
-            return;
+        if (_tutorialHint == null) return;
+        if (_tutorialPendingAction != TutorialPendingAction.None) return;
 
         if (_preferEmptyOverMeetClient || _meetClientHintShown)
         {
@@ -778,31 +814,39 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public void ShowHintRaw(string text)
     {
         if (_tutorialHint == null) return;
+        if (_tutorialPendingAction != TutorialPendingAction.None) return;
         if (string.IsNullOrEmpty(text))
         {
-            _tutorialHint.Hide();
+            _tutorialHint?.Hide();
             return;
         }
         _preferEmptyOverMeetClient = false;
-        _tutorialHint.Show(text);
+        _tutorialHint?.Show(text);
     }
 
     public void ShowHintOnceByKey(string key)
     {
         if (_tutorialHint == null) return;
+        if (_tutorialPendingAction != TutorialPendingAction.None) return;
         if (string.IsNullOrEmpty(key))
         {
-            _tutorialHint.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+            _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
             return;
         }
         if (_hintKeysShownOnce.Contains(key))
         {
-            _tutorialHint.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+            _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
             return;
         }
         _hintKeysShownOnce.Add(key);
         _preferEmptyOverMeetClient = false;
-        _tutorialHint.Show(GetUIText(key));
+        string pressSpaceKey = GameConfig.Tutorial.pressSpaceKey;
+        string warehousePickKey = GameConfig.Tutorial.warehousePickKey;
+        if (key == pressSpaceKey)
+            _tutorialPendingAction = TutorialPendingAction.PressSpace;
+        else if (key == warehousePickKey)
+            _tutorialPendingAction = TutorialPendingAction.WarehousePick;
+        _tutorialHint?.Show(GetUIText(key));
     }
 
     public void SetTravelTarget(TravelTarget target, string hintText, bool useFreeTeleportPointForClient = false)
@@ -812,12 +856,18 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _travelTarget = target;
         if (string.IsNullOrEmpty(hintText))
         {
-            _tutorialHint?.Hide();
+            if (_tutorialPendingAction == TutorialPendingAction.None)
+                _tutorialHint?.Hide();
         }
         else
         {
+            if (_tutorialPendingAction != TutorialPendingAction.None) return;
             if (target != TravelTarget.Client)
                 _preferEmptyOverMeetClient = false;
+            string key = target == TravelTarget.Warehouse ? GameConfig.Tutorial.doorWarehouseKey : GameConfig.Tutorial.returnPressFKey;
+            if (_hintKeysShownOnce.Contains(key))
+                return;
+            _hintKeysShownOnce.Add(key);
             _tutorialHint?.Show(hintText);
         }
     }

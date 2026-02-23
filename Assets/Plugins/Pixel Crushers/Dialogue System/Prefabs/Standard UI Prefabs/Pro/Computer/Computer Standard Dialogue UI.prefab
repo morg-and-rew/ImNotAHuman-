@@ -312,6 +312,7 @@ MonoBehaviour:
   npcSubtitleImage: {fileID: 114953859756868412}
   npcSubtitleText: {fileID: 7805976817640531624}
   npcSubtitleTextVerticalLayoutGroup: {fileID: 114051017484292834}
+  npcSubtitlePanelBaseColor: {r: 1, g: 0.827451, b: 0.6745098, a: 1}
   normalAnchoredPos: {x: 0, y: -430}
   normalSizeDelta: {x: 1, y: 1}
   normalSizeText: {x: 1, y: 1}

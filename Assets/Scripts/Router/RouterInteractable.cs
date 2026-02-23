@@ -4,16 +4,11 @@ using UnityEngine;
 public sealed class RouterInteractable : MonoBehaviour, IWorldInteractable
 {
     [SerializeField] private GameFlowController _flow;
-    [SerializeField] private Canvas _hintCanvas;
+    [SerializeField] private Sprite _hintSprite;
 
     private bool _used;
 
-    public Canvas hint => _hintCanvas;
-
-    private void Awake()
-    {
-        LookAtCamera.Ensure(_hintCanvas != null ? _hintCanvas.gameObject : null);
-    }
+    public Sprite HintSprite => _hintSprite;
 
     public void Interact(IPlayerInput input)
     {
@@ -21,9 +16,6 @@ public sealed class RouterInteractable : MonoBehaviour, IWorldInteractable
         if (!_flow.IsStoryExpectingTrigger("router"))
             return;
         _used = true;
-
-        if (_hintCanvas != null && _hintCanvas.gameObject != null)
-            _hintCanvas.gameObject.SetActive(false);
 
         DialogueManager.instance.conversationStarted += OnConversationStarted;
         DialogueManager.instance.conversationEnded += OnConversationEnded;

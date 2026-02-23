@@ -11,6 +11,7 @@ public interface IClientInteraction
     int CurrentStepIndex { get; }
     bool IsActive { get; }
     bool IsPlayerInside { get; }
+    bool IsPlayerLookingAtClient(PlayerView player);
     void Initialize(Canvas uiRoot, Image leftImage, Image rightImage, ICustomDialogueUI customDialogueUI);
     void StartClientDialog();
     void StartClientDialogWithSpecificStep(string clientId, string conversationTitle);

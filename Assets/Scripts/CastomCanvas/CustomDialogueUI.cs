@@ -35,6 +35,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [SerializeField] private Image npcSubtitleImage;
     [SerializeField] private Text npcSubtitleText;
     [SerializeField] private VerticalLayoutGroup npcSubtitleTextVerticalLayoutGroup;
+    [Tooltip("Базовый цвет панели NPC Subtitle (Image).")]
+    [SerializeField] private Color npcSubtitlePanelBaseColor = Color.white;
 
     [Header("NPC Subtitle - Normal State")]
     [SerializeField] private Vector2 normalAnchoredPos;
@@ -515,7 +517,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
         if (npcSubtitleImage != null)
         {
-            npcSubtitleImage.color = Color.white;
+            npcSubtitleImage.color = npcSubtitlePanelBaseColor;
             if (normalSprite != null) npcSubtitleImage.sprite = normalSprite;
         }
     }

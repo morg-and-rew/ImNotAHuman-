@@ -61,7 +61,13 @@ public sealed class PlayerController : IPlayerBlocker
 
         _model.ApplyGravity(Time.deltaTime);
 
+        float yBefore = _view.transform.position.y;
         controller.Move(_model.Velocity * Time.deltaTime);
+        if (_view.transform.position.y > yBefore)
+        {
+            Vector3 p = _view.transform.position;
+            _view.transform.position = new Vector3(p.x, yBefore, p.z);
+        }
     }
 
     public void SetBlock(bool isMoving)

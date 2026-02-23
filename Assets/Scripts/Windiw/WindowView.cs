@@ -15,7 +15,7 @@ public sealed class WindowView : MonoBehaviour
     [Header("Day replicas")]
     [SerializeField] private WindowDayReplicaEntry[] _dayReplicas = new WindowDayReplicaEntry[0];
     [Header("Hint")]
-    [SerializeField] private GameObject _hintCanvas;
+    [SerializeField] private Sprite _hintSprite;
     [Header("Look at")]
     [SerializeField] private Transform _lookAtPoint;
 
@@ -26,6 +26,7 @@ public sealed class WindowView : MonoBehaviour
     private int _originalCanvasSortOrder;
 
     public bool IsPlayerInZone => _isPlayerInZone;
+    public Sprite HintSprite => _hintSprite;
 
     public bool IsPlayerLookingAtMe(PlayerView player)
     {
@@ -52,10 +53,6 @@ public sealed class WindowView : MonoBehaviour
             SetImageAlpha(0f);
         }
 
-        if (_hintCanvas != null)
-            _hintCanvas.SetActive(false);
-
-        LookAtCamera.Ensure(_hintCanvas);
         WindowViewManager.Instance?.RegisterWindow(this);
     }
 
@@ -127,18 +124,9 @@ public sealed class WindowView : MonoBehaviour
         {
             _isPlayerInZone = false;
             _playerInZone = null;
-            if (_hintCanvas != null)
-                _hintCanvas.SetActive(false);
             if (_isViewing && !DialogueManager.isConversationActive)
                 ExitView();
         }
-    }
-
-    private void Update()
-    {
-        if (_hintCanvas == null) return;
-        bool show = _isPlayerInZone && !_isViewing && _playerInZone != null && IsPlayerLookingAtMe(_playerInZone);
-        _hintCanvas.SetActive(show);
     }
 
     public bool ToggleView()
@@ -169,9 +157,6 @@ public sealed class WindowView : MonoBehaviour
         if (_fullScreenSprite != null)
             _fullScreenImage.sprite = _fullScreenSprite;
         _fullScreenImage.gameObject.SetActive(true);
-
-        if (_hintCanvas != null)
-            _hintCanvas.SetActive(false);
 
         Canvas canvas = _fullScreenImage.GetComponentInParent<Canvas>();
         if (canvas != null)
@@ -214,9 +199,6 @@ public sealed class WindowView : MonoBehaviour
             SetImageAlpha(0f);
             _fullScreenImage.gameObject.SetActive(false);
         }
-
-        if (_hintCanvas != null && _isPlayerInZone)
-            _hintCanvas.SetActive(true);
     }
 
     public void ApplyDayVisual(int day)

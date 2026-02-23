@@ -11,30 +11,16 @@ public sealed class TravelZone : MonoBehaviour
     [SerializeField] private string _notifyExitZoneIdOnExit = "";
     [SerializeField] private string _notifyExitZoneIdOnEnter = "";
     [Header("Hint")]
-    [SerializeField] private GameObject _hintCanvas;
-
+    [SerializeField] private Sprite _doorWarehouseSprite;
+    [SerializeField] private Sprite _doorReturnSprite;
     public TravelTarget Destination => _destination;
     public bool PlayerInside { get; private set; }
+
+    public Sprite GetDoorHintSprite() => _destination == TravelTarget.Warehouse ? _doorWarehouseSprite : _doorReturnSprite;
 
     private void Awake()
     {
         EnsureTriggerReceivesEvents();
-    }
-
-    private void Start()
-    {
-        if (_hintCanvas != null)
-            _hintCanvas.SetActive(false);
-        LookAtCamera.Ensure(_hintCanvas);
-    }
-
-    private void Update()
-    {
-        if (_hintCanvas == null) return;
-        bool show = PlayerInside
-            && GameFlowController.Instance != null
-            && GameFlowController.Instance.ShouldShowDoorHintFor(_destination);
-        _hintCanvas.SetActive(show);
     }
 
     private void OnTriggerEnter(Collider other)

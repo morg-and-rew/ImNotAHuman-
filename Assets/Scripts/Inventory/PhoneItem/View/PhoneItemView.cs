@@ -10,9 +10,8 @@ public sealed class PhoneItemView : HoldableViewBase, IHandPointProvider, IWorld
     public event Action Dropped;
 
     [Header("Hint")]
-    [SerializeField] private Canvas _hint;
-    public Canvas hint => _hint;
-
+    [SerializeField] private Sprite _hintSprite;
+    public Sprite HintSprite => _hintSprite;
     public Func<bool> CanDrop { get; internal set; }
 
     [Header("Physics")]

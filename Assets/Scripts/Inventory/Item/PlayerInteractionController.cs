@@ -10,9 +10,6 @@ public sealed class PlayerInteractionController
     private readonly InteractionRaycastCache _raycastCache;
     private readonly IGameFlowController _flow;
 
-    private IWorldInteractable _currentWorldInteractable;
-    private PackageHoldable _currentPackageHint;
-
     public PlayerInteractionController(
         PlayerView playerView,
         IPlayerInput input,
@@ -34,8 +31,7 @@ public sealed class PlayerInteractionController
         IHoldable holdable = _raycastCache.GetHoldable();
         IWorldInteractable worldInteractable = _raycastCache.GetWorldInteractable();
 
-        UpdateWorldHint(worldInteractable);
-        UpdatePackageHint(holdable);
+        UpdateInteractionHint(holdable, worldInteractable);
 
         if (!_input.InteractPressed)
             return;
@@ -60,30 +56,16 @@ public sealed class PlayerInteractionController
             worldInteractable.Interact(_input);
     }
 
-    private void UpdateWorldHint(IWorldInteractable interactable)
+    private void UpdateInteractionHint(IHoldable holdable, IWorldInteractable worldInteractable)
     {
-        if (_currentWorldInteractable == interactable)
-            return;
+        Sprite sprite = null;
+        if (worldInteractable != null)
+            sprite = worldInteractable.HintSprite;
+        else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg))
+            sprite = pkg.HintSprite;
 
-        if (_currentWorldInteractable?.hint != null)
-            _currentWorldInteractable.hint.gameObject.SetActive(false);
-
-        _currentWorldInteractable = interactable;
-
-        if (_currentWorldInteractable?.hint != null)
-            _currentWorldInteractable.hint.gameObject.SetActive(true);
-    }
-
-    private void UpdatePackageHint(IHoldable holdable)
-    {
-        PackageHoldable packageHint = (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg)) ? pkg : null;
-        if (_currentPackageHint == packageHint)
-            return;
-        if (_currentPackageHint?.HintCanvas != null)
-            _currentPackageHint.HintCanvas.SetActive(false);
-        _currentPackageHint = packageHint;
-        if (_currentPackageHint?.HintCanvas != null)
-            _currentPackageHint.HintCanvas.SetActive(true);
+        if (PlayerHintView.Instance != null)
+            PlayerHintView.Instance.SetRaycastHint(sprite);
     }
 
     private bool IsHoldableAllowed(IHoldable holdable)
@@ -122,7 +104,10 @@ public sealed class PlayerInteractionController
 
         Transform handPoint = ResolveHandPoint(holdable);
         if (_hands.TryTake(holdable, handPoint) && holdable is PackageHoldable)
+        {
+            _flow?.NotifyTutorialActionCompleted(IGameFlowController.TutorialPendingAction.WarehousePick);
             _flow?.ShowEmptyHintAfterPackagePick();
+        }
     }
 
     private Transform ResolveHandPoint(IHoldable holdable)

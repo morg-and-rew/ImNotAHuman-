@@ -42,6 +42,7 @@ public class TutorialConfig
     public string returnToClientKey = "tutorial.return_to_client";
     public string warehousePickKey = "tutorial.warehouse_pick";
     public string warehouseReturnKey = "tutorial.warehouse_return";
+    public string windowLookKey = "tutorial.window_look";
     public string emptyKey = "tutorial.empty";
     public string routerConversation = "Hero_AfterRouterReboot";
     public string providerNumber = "123456";

@@ -9,6 +9,7 @@ public interface IGameFlowController
     event Action<string> OnClientEncountered;
     void Init(PlayerView player, IPlayerBlocker controller, IPlayerInput input, IClientInteraction clientInteraction, DeliveryNoteView deliveryNoteView, CustomDialogueUI customDialogueUI = null);
     void SetTutorialStep(TutorialStep step);
+    void NotifyTutorialActionCompleted(TutorialPendingAction action);
     void ShowPhonePutHintOnce();
     void ShowPhoneHint();
     void HideHint();
@@ -29,6 +30,15 @@ public interface IGameFlowController
     event System.Action OnPlayerReturnedToClient;
     bool ProviderCallDone { get; }
     bool IsInClientDialogState { get; }
+    PlayerView Player { get; }
+
+    /// <summary> Действие, которое должен выполнить игрок, чтобы туториал исчез и мог смениться другим. </summary>
+    public enum TutorialPendingAction
+    {
+        None,
+        PressSpace,
+        WarehousePick
+    }
 
     public enum TravelTarget
     {
