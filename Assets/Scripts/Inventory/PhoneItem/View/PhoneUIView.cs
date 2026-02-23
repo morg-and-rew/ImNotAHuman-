@@ -59,8 +59,6 @@ public sealed class PhoneUIView : MonoBehaviour
             db.Button.onClick.AddListener(() => DigitPressed?.Invoke(d));
         }
 
-        if (digitButtons.Length == 0)
-            Debug.LogWarning("PhoneUIView: no PhoneDigitButton found. Digit buttons will not work.");
     }
 
     public void Show()

@@ -23,7 +23,6 @@ public interface IGameFlowController
     void NotifyPhonePutDown();
     void ShowMeetClientHintOnce();
     void ShowHintRaw(string text);
-    /// <summary> Показать подсказку по ключу один раз за сессию; при повторном вызове с тем же ключом показывается пусто. </summary>
     void ShowHintOnceByKey(string key);
     void LockPlayerForDialogue(bool isLocked);
     event System.Action OnPlayerReturnedFromWarehouse;

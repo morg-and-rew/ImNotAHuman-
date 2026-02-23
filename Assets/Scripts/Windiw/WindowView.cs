@@ -14,13 +14,33 @@ public sealed class WindowView : MonoBehaviour
     [SerializeField] private WindowDaySpriteEntry[] _daySprites = new WindowDaySpriteEntry[0];
     [Header("Day replicas")]
     [SerializeField] private WindowDayReplicaEntry[] _dayReplicas = new WindowDayReplicaEntry[0];
+    [Header("Hint")]
+    [SerializeField] private GameObject _hintCanvas;
+    [Header("Look at")]
+    [SerializeField] private Transform _lookAtPoint;
 
     private bool _isPlayerInZone = false;
+    private PlayerView _playerInZone;
     private bool _isViewing = false;
     private Coroutine _fadeRoutine;
     private int _originalCanvasSortOrder;
 
     public bool IsPlayerInZone => _isPlayerInZone;
+
+    public bool IsPlayerLookingAtMe(PlayerView player)
+    {
+        if (player == null || player.PlayerCamera == null) return false;
+        Transform point = _lookAtPoint != null ? _lookAtPoint : transform;
+        Vector3 toWindow = (point.position - player.transform.position);
+        toWindow.y = 0f;
+        if (toWindow.sqrMagnitude < 0.0001f) return true;
+        toWindow.Normalize();
+        Vector3 camForward = player.PlayerCamera.transform.forward;
+        camForward.y = 0f;
+        if (camForward.sqrMagnitude < 0.0001f) return false;
+        camForward.Normalize();
+        return Vector3.Dot(camForward, toWindow) >= 0.5f;
+    }
 
     private void Start()
     {
@@ -32,6 +52,10 @@ public sealed class WindowView : MonoBehaviour
             SetImageAlpha(0f);
         }
 
+        if (_hintCanvas != null)
+            _hintCanvas.SetActive(false);
+
+        LookAtCamera.Ensure(_hintCanvas);
         WindowViewManager.Instance?.RegisterWindow(this);
     }
 
@@ -43,7 +67,10 @@ public sealed class WindowView : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out PlayerView playerView))
+        {
             _isPlayerInZone = true;
+            _playerInZone = playerView;
+        }
     }
 
     private void TryPlayDayReplica()
@@ -99,29 +126,31 @@ public sealed class WindowView : MonoBehaviour
         if (other.TryGetComponent(out PlayerView playerView))
         {
             _isPlayerInZone = false;
-            // Не закрывать окно при выходе из зоны, пока диалог не прочитан
+            _playerInZone = null;
+            if (_hintCanvas != null)
+                _hintCanvas.SetActive(false);
             if (_isViewing && !DialogueManager.isConversationActive)
-            {
                 ExitView();
-            }
         }
     }
 
-    /// <summary>
-    /// Открывает или закрывает окно. Возвращает true, если состояние изменилось; false, если закрытие заблокировано (диалог ещё не дочитан).
-    /// </summary>
+    private void Update()
+    {
+        if (_hintCanvas == null) return;
+        bool show = _isPlayerInZone && !_isViewing && _playerInZone != null && IsPlayerLookingAtMe(_playerInZone);
+        _hintCanvas.SetActive(show);
+    }
+
     public bool ToggleView()
     {
         if (_isViewing)
         {
-            // Не закрывать окно по E, пока не прочитан весь диалог
             if (DialogueManager.isConversationActive)
                 return false;
             ExitView();
             return true;
         }
 
-        // Не открывать окно во время любого диалога (радио, Client_Day1.5.1 и т.д.)
         if (DialogueManager.isConversationActive)
             return false;
         EnterView();
@@ -140,6 +169,9 @@ public sealed class WindowView : MonoBehaviour
         if (_fullScreenSprite != null)
             _fullScreenImage.sprite = _fullScreenSprite;
         _fullScreenImage.gameObject.SetActive(true);
+
+        if (_hintCanvas != null)
+            _hintCanvas.SetActive(false);
 
         Canvas canvas = _fullScreenImage.GetComponentInParent<Canvas>();
         if (canvas != null)
@@ -182,6 +214,9 @@ public sealed class WindowView : MonoBehaviour
             SetImageAlpha(0f);
             _fullScreenImage.gameObject.SetActive(false);
         }
+
+        if (_hintCanvas != null && _isPlayerInZone)
+            _hintCanvas.SetActive(true);
     }
 
     public void ApplyDayVisual(int day)

@@ -39,6 +39,8 @@ public sealed class PlayerWindowView
     {
         Vector3 playerPosition = _playerView.transform.position;
         WindowView closestWindow = WindowViewManager.Instance?.GetClosestWindow(playerPosition);
+        if (closestWindow != null && !_isViewing && !closestWindow.IsPlayerLookingAtMe(_playerView))
+            closestWindow = null;
 
         if (_currentWindowView != null && !_currentWindowView.IsPlayerInZone && closestWindow == null)
         {

@@ -17,7 +17,5 @@ public sealed class AttitudeChoiceRecorder : MonoBehaviour
             PlayerAttitude.Neutral;
 
         Stats.Add(attitude);
-
-        Debug.Log($"[Attitude] +{attitude}  (N={Stats.NeutralCount}, M={Stats.MysticalCount}, S={Stats.SkepticalCount})");
     }
 }

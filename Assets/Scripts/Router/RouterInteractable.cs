@@ -10,17 +10,18 @@ public sealed class RouterInteractable : MonoBehaviour, IWorldInteractable
 
     public Canvas hint => _hintCanvas;
 
+    private void Awake()
+    {
+        LookAtCamera.Ensure(_hintCanvas != null ? _hintCanvas.gameObject : null);
+    }
+
     public void Interact(IPlayerInput input)
     {
         if (_used) return;
         if (!_flow.IsStoryExpectingTrigger("router"))
-        {
-            Debug.Log("[Tutorial] Игрок нажал E у роутера, но текущий шаг не go_to_router — взаимодействие игнорируется");
             return;
-        }
         _used = true;
 
-        // Не Destroy — иначе может уничтожиться общий канвас с TutorialHintView. Только скрываем подсказку роутера.
         if (_hintCanvas != null && _hintCanvas.gameObject != null)
             _hintCanvas.gameObject.SetActive(false);
 
@@ -33,7 +34,6 @@ public sealed class RouterInteractable : MonoBehaviour, IWorldInteractable
     private void OnConversationStarted(Transform actor)
     {
         DialogueManager.instance.conversationStarted -= OnConversationStarted;
-        Debug.Log("[Tutorial] Диалог у роутера запущен → tutorial.router_hint скрыт");
         _flow.HideHint();
     }
 
@@ -43,8 +43,6 @@ public sealed class RouterInteractable : MonoBehaviour, IWorldInteractable
         DialogueManager.instance.conversationEnded -= OnConversationEnded;
 
         GameStateService.UnlockPhone();
-        // Не переключаем в Phone — остаёмся в Warehouse, чтобы игрок мог вернуться к клиенту по F до нажатия E на радио.
-
         _flow.NotifyTrigger("router");
     }
 }

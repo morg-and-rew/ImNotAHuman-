@@ -8,8 +8,11 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private Collider _col;
     [SerializeField] private PackageItem _packageItem;
+    [Header("Hint")]
+    [SerializeField] private GameObject _hintCanvas;
 
     public int Number => _packageItem != null ? _packageItem.Number : 0;
+    public GameObject HintCanvas => _hintCanvas;
 
     private void Reset()
     {
@@ -22,11 +25,16 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
     {
         if (_packageItem == null)
             _packageItem = GetComponentInParent<PackageItem>();
+        if (_hintCanvas != null)
+            _hintCanvas.SetActive(false);
+        LookAtCamera.Ensure(_hintCanvas);
     }
 
     public override void OnTaken(Transform handPoint)
     {
         if (handPoint == null) return;
+        if (_hintCanvas != null)
+            _hintCanvas.SetActive(false);
 
         _packageItem?.NotifyTakenFromWarehouse();
 

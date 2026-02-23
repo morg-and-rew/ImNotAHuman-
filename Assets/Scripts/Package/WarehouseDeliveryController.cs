@@ -37,24 +37,17 @@ public sealed class WarehouseDeliveryController : MonoBehaviour
         GameStateService.SetRequiredPackage(RequiredNumber, enforceOnlyAfterWrong);
         GameStateService.SetPackageDropLocked(false);
         _noteView?.ShowNumber(RequiredNumber);
-        Debug.Log($"[WarehouseDelivery] Fixed task: RequiredNumber={RequiredNumber}");
     }
 
     public void StartNewDeliveryTask(bool enforceOnlyAfterWrong = false)
     {
         if (_registry == null)
-        {
-            Debug.LogError("[WarehouseDelivery] PackageRegistry is missing");
             return;
-        }
 
         RebuildRotation();
 
         if (_rotation.Count == 0)
-        {
-            Debug.LogError("[WarehouseDelivery] No packages to pick (rotation empty)");
             return;
-        }
 
         int number = _rotation[_rotationIndex];
         _rotationIndex++;
@@ -82,8 +75,6 @@ public sealed class WarehouseDeliveryController : MonoBehaviour
         GameStateService.SetPackageDropLocked(false);
 
         _noteView?.ShowNumber(RequiredNumber);
-
-        Debug.Log($"[WarehouseDelivery] New task: RequiredNumber={RequiredNumber} (registryCount={_registry.DebugCount})");
     }
 
     private void RebuildRotation()
@@ -108,8 +99,6 @@ public sealed class WarehouseDeliveryController : MonoBehaviour
             int swapIndex = 1;
             (_rotation[0], _rotation[swapIndex]) = (_rotation[swapIndex], _rotation[0]);
         }
-
-        Debug.Log($"[WarehouseDelivery] Rotation rebuilt: count={_rotation.Count}");
     }
 
     public bool IsCorrectPackage(PackageHoldable package)

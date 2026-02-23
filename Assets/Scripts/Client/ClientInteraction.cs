@@ -31,7 +31,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     [Header("Portraits (Left/Right)")]
     [SerializeField] private RectTransform _leftRoot;
     [SerializeField] private RectTransform _rightRoot;
-    [SerializeField] private Image _leftImage;    //перемещение вот тут делать
+    [SerializeField] private Image _leftImage;
     [SerializeField] private Image _rightImage;
 
     [Header("Positioning")]
@@ -99,6 +99,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
         SetClientPortraitsRootActive(false);
         if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
+        LookAtCamera.Ensure(_hintCanvas != null ? _hintCanvas.gameObject : null);
     }
 
     private void Awake()
@@ -118,6 +119,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
         SetClientPortraitsRootActive(false);
         if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
+        LookAtCamera.Ensure(_hintCanvas != null ? _hintCanvas.gameObject : null);
 
         HidePortraits();
     }
@@ -168,7 +170,6 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         {
             IsPlayerInside = false;
             if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
-            // Не отключать канвас с клиентами при выходе из зоны, если идёт диалог — игрока могли переместить к точке диалога (EnterClientDialogueState).
             if (!IsActive)
                 StopDialogUIOnly();
         }
@@ -184,6 +185,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (DialogueManager.isConversationActive) return;
 
         IsActive = true;
+        if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
         _waitingForContinue = false;
         _stepIndex = Mathf.Max(_stepIndex, 0);
         _isUsingOverrides = false;
@@ -195,18 +197,13 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     public void StartClientDialogWithSpecificStep(string clientId, string conversationTitle)
     {
         if (string.IsNullOrEmpty(conversationTitle))
-        {
-            Debug.LogError("[ClientInteraction] Cannot start specific step: conversationTitle is null or empty.");
             return;
-        }
 
         if (DialogueManager.isConversationActive)
-        {
-            Debug.LogWarning("[ClientInteraction] Dialogue already active. Stopping current dialogue before starting new one.");
             DialogueManager.StopConversation();
-        }
 
         IsActive = true;
+        if (_hintCanvas != null) _hintCanvas.gameObject.SetActive(false);
         _waitingForContinue = false;
         _isUsingOverrides = true;
         _currentClientIdOverride = clientId;
@@ -247,54 +244,30 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     public void CloseUI()
     {
-        // #region agent log
-        var caller = new System.Diagnostics.StackTrace(1).GetFrame(0).GetMethod()?.Name ?? "?";
-        Debug.Log($"[ClientInteraction] CloseUI (caller={caller})");
-        // #endregion
         SetClientPortraitsRootActive(false);
         HidePortraits();
     }
 
     private void ShowUI()
     {
-        // #region agent log
-        var caller = new System.Diagnostics.StackTrace(1).GetFrame(0).GetMethod()?.Name ?? "?";
-        Debug.Log($"[ClientInteraction] ShowUI (caller={caller})");
-        // #endregion
         SetClientPortraitsRootActive(true);
     }
 
     private void StopDialogUIOnly()
     {
-        // #region agent log
-        Debug.Log("[ClientInteraction] StopDialogUIOnly");
-        // #endregion
         SetClientPortraitsRootActive(false);
         HidePortraits();
     }
 
-    /// <summary> Включает/выключает только панель с портретами. Если нет _clientPortraitsPanel — при показе включаем _uiRoot, при скрытии не трогаем канвас (чтобы не гасить TutorialHintView._root на том же Canvas). </summary>
     private void SetClientPortraitsRootActive(bool active)
     {
         if (_clientPortraitsPanel != null)
         {
-            // #region agent log
-            Debug.Log($"[ClientInteraction] SetClientPortraitsRootActive active={active} target=clientPortraitsPanel name={_clientPortraitsPanel.name}");
-            // #endregion
             _clientPortraitsPanel.SetActive(active);
             return;
         }
-        if (_uiRoot != null)
-        {
-            if (active)
-            {
-                // #region agent log
-                Debug.Log($"[ClientInteraction] SetClientPortraitsRootActive active=true target=uiRoot(PlayerCanvas) name={_uiRoot.gameObject.name}");
-                // #endregion
-                _uiRoot.gameObject.SetActive(true);
-            }
-            // При active=false не выключаем весь _uiRoot — на нём же висит подсказка обучения (TutorialHintView._root). Скрываем только портреты через HidePortraits().
-        }
+        if (_uiRoot != null && active)
+            _uiRoot.gameObject.SetActive(true);
     }
 
     private void HidePortraits()
@@ -309,10 +282,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
         string conv = _portraitMap.GetConversation(_stepIndex);
         if (string.IsNullOrWhiteSpace(conv))
-        {
-            Debug.LogError($"[ClientInteraction] Empty conversation at step {_stepIndex}");
             return;
-        }
 
         DialogueManager.StartConversation(conv);
         ClientConversationStarted?.Invoke();
@@ -321,10 +291,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     private void StartCurrentStepWithOverride()
     {
         if (string.IsNullOrEmpty(_currentConversationOverride))
-        {
-            Debug.LogError("[ClientInteraction] Cannot start override step: conversation override is null or empty.");
             return;
-        }
 
         DialogueManager.StartConversation(_currentConversationOverride);
         ClientConversationStarted?.Invoke();
@@ -369,19 +336,11 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
         int mapStepIndex = _isUsingOverrides ? _overrideStepIndex : GetStepIndexFromConversation(conversationID);
         if (mapStepIndex < 0)
-        {
-            if (_debugPortraits) Debug.Log($"[ClientInteraction] No step for conversationID={conversationID}, entryID={entryID}");
             return;
-        }
 
         ClientPortraitMap.PortraitRule rule;
         if (!_portraitMap.TryGetRule(mapStepIndex, entryID, out rule))
-        {
-            if (_debugPortraits) Debug.Log($"[ClientInteraction] No rule for step={mapStepIndex}, entryID={entryID}");
             return;
-        }
-
-        if (_debugPortraits) Debug.Log($"[ClientInteraction] Applying portraits step={mapStepIndex} entryID={entryID} L={rule.leftSprite != null} R={rule.rightSprite != null}");
 
         if (_leftRoot != null)
         {

@@ -11,6 +11,7 @@ public sealed class PlayerInteractionController
     private readonly IGameFlowController _flow;
 
     private IWorldInteractable _currentWorldInteractable;
+    private PackageHoldable _currentPackageHint;
 
     public PlayerInteractionController(
         PlayerView playerView,
@@ -34,6 +35,7 @@ public sealed class PlayerInteractionController
         IWorldInteractable worldInteractable = _raycastCache.GetWorldInteractable();
 
         UpdateWorldHint(worldInteractable);
+        UpdatePackageHint(holdable);
 
         if (!_input.InteractPressed)
             return;
@@ -48,17 +50,8 @@ public sealed class PlayerInteractionController
             return;
         }
 
-        // #region agent log
-        if (holdable is PackageHoldable pkgDenied && !IsHoldableAllowed(holdable))
-            AgentDebugLog.Log("PlayerInteractionController.cs:Tick", "package denied", "{\"state\":\"" + GameStateService.CurrentState + "\",\"isWarehouse\":" + GameStateService.IsWarehouse.ToString().ToLowerInvariant() + ",\"requiredNum\":" + GameStateService.RequiredPackageNumber + ",\"packageNum\":" + pkgDenied.Number + "}", "H_pickup");
-        // #endregion
-
         if (holdable != null && IsHoldableAllowed(holdable))
         {
-            // #region agent log
-            if (holdable is PackageHoldable pkg)
-                AgentDebugLog.Log("PlayerInteractionController.cs:Tick", "pick attempt package", "{\"state\":\"" + GameStateService.CurrentState + "\",\"isWarehouse\":" + GameStateService.IsWarehouse.ToString().ToLowerInvariant() + ",\"requiredNum\":" + GameStateService.RequiredPackageNumber + ",\"packageNum\":" + pkg.Number + ",\"allowed\":" + IsHoldableAllowed(holdable).ToString().ToLowerInvariant() + "}", "H_pickup");
-            // #endregion
             TryPickItem(holdable);
             return;
         }
@@ -79,6 +72,18 @@ public sealed class PlayerInteractionController
 
         if (_currentWorldInteractable?.hint != null)
             _currentWorldInteractable.hint.gameObject.SetActive(true);
+    }
+
+    private void UpdatePackageHint(IHoldable holdable)
+    {
+        PackageHoldable packageHint = (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg)) ? pkg : null;
+        if (_currentPackageHint == packageHint)
+            return;
+        if (_currentPackageHint?.HintCanvas != null)
+            _currentPackageHint.HintCanvas.SetActive(false);
+        _currentPackageHint = packageHint;
+        if (_currentPackageHint?.HintCanvas != null)
+            _currentPackageHint.HintCanvas.SetActive(true);
     }
 
     private bool IsHoldableAllowed(IHoldable holdable)

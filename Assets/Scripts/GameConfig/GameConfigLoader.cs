@@ -21,7 +21,6 @@ public static class GameConfig
         TextAsset asset = Resources.Load<TextAsset>(Path);
         if (asset == null)
         {
-            Debug.LogError("[Config] GameConfig.json not found in Resources.");
             _data = new GameConfigData();
             return;
         }
@@ -29,7 +28,6 @@ public static class GameConfig
         _data = JsonUtility.FromJson<GameConfigData>(asset.text);
         if (_data == null)
         {
-            Debug.LogError("[Config] Failed to parse GameConfig.json");
             _data = new GameConfigData();
             return;
         }
@@ -40,8 +38,6 @@ public static class GameConfig
         if (_data.story.tutorial == null) _data.story.tutorial = new TutorialConfig();
         if (_data.story.steps == null) _data.story.steps = new StoryStepData[0];
         if (_data.radio.events == null) _data.radio.events = new RadioEventData[0];
-
-        Debug.Log($"[Config] Loaded. Story: {_data.story.steps.Length} steps, start={_data.story.startTrigger}. Radio: {_data.radio.events.Length} events.");
     }
 
     public static IntroConfig Intro => Data.story.intro ?? new IntroConfig();

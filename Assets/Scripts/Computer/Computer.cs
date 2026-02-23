@@ -26,12 +26,10 @@ public sealed class Computer : MonoBehaviour
     private bool _computerOpen;
     private bool _videoPlaying;
 
-    /// <summary> Общее для всех экземпляров: какую кнопку разрешил сюжет (чтобы кнопки на любом компе работали). </summary>
     private static string s_allowedVideoKind;
 
     public bool IsPlayerInZone => _isPlayerInZone;
 
-    /// <summary> Для обратной совместимости со старыми ComputerButtonZone; сейчас используются UI-кнопки. </summary>
     public void SetPlayerInButtonZone(string kind, bool inside) { }
 
     public void Initialize(UnityEngine.Camera mainCamera) { }
@@ -102,10 +100,6 @@ public sealed class Computer : MonoBehaviour
         RefreshButtonStates();
     }
 
-    /// <summary>
-    /// Разрешить нажатие одной из кнопок. kind: "street" (улица), "indoor" (запись) или null — обе неактивны.
-    /// Состояние общее для всех Computer в сцене (кнопки могут быть на другом объекте).
-    /// </summary>
     public void SetAllowedVideoKind(string kind)
     {
         s_allowedVideoKind = string.IsNullOrEmpty(kind) ? null : kind.Trim().ToLowerInvariant();
@@ -122,9 +116,6 @@ public sealed class Computer : MonoBehaviour
             _indoorButton.interactable = s_allowedVideoKind == KindIndoor;
     }
 
-    /// <summary>
-    /// Открытие по E больше не требуется; оставлено для совместимости с PlayerCameraBob (вызов при E в зоне просто возвращает true).
-    /// </summary>
     public bool TryOpenOrInteract()
     {
         return _isPlayerInZone && _computerOpen;
@@ -141,50 +132,34 @@ public sealed class Computer : MonoBehaviour
 
     private void OnStreetButtonClicked()
     {
-        Debug.Log("[Computer] Street button clicked.");
         TryPlayVideo(KindStreet);
     }
 
     private void OnIndoorButtonClicked()
     {
-        Debug.Log("[Computer] Indoor button clicked.");
         TryPlayVideo(KindIndoor);
     }
 
     private void TryPlayVideo(string kind)
     {
         if (_videoPlaying)
-        {
-            Debug.Log("[Computer] TryPlayVideo skipped: already playing.");
             return;
-        }
         if (s_allowedVideoKind != kind)
-        {
-            Debug.Log($"[Computer] TryPlayVideo skipped: kind={kind}, allowed={s_allowedVideoKind ?? "null"}.");
             return;
-        }
         VideoClip clip = kind == KindStreet ? _streetClip : _indoorClip;
         if (clip == null || _videoPlayer == null)
-        {
-            Debug.LogWarning($"[Computer] Video clip for '{kind}' or VideoPlayer not assigned (clip={clip != null}, player={_videoPlayer != null}).");
             return;
-        }
 
         _videoPlaying = true;
         GameFlowController.Instance?.SetPlayerControlBlocked(true);
         if (_videoRoot != null)
             _videoRoot.SetActive(true);
-        else
-            Debug.LogWarning("[Computer] Video Root not assigned — экран видео не включится.");
         _videoPlayer.Stop();
         _videoPlayer.clip = clip;
         _videoPlayer.isLooping = false;
         _videoPlayer.prepareCompleted += OnVideoPrepared;
-        if (_videoPlayer.targetCamera == null && _videoPlayer.targetTexture == null)
-            Debug.LogWarning("[Computer] VideoPlayer has no targetCamera and no targetTexture — видео может не отображаться. Назначьте в инспекторе Render Mode и цель отрисовки.");
         _videoPlayer.Prepare();
         StartCoroutine(PlayVideoWhenReady());
-        Debug.Log("[Computer] Preparing " + kind + " video (clip: " + clip.name + ").");
     }
 
     private IEnumerator PlayVideoWhenReady()
@@ -197,22 +172,17 @@ public sealed class Computer : MonoBehaviour
             t += Time.deltaTime;
         }
         if (_videoPlaying && _videoPlayer != null && !_videoPlayer.isPlaying)
-        {
-            Debug.Log("[Computer] Starting playback (fallback).");
             _videoPlayer.Play();
-        }
     }
 
     private void OnVideoPrepared(VideoPlayer source)
     {
         _videoPlayer.prepareCompleted -= OnVideoPrepared;
-        Debug.Log("[Computer] Video prepared, playing.");
         source.Play();
     }
 
     private void OnVideoError(VideoPlayer source, string message)
     {
-        Debug.LogError($"[Computer] Video error: {message}");
         FinishVideo();
     }
 
@@ -231,7 +201,6 @@ public sealed class Computer : MonoBehaviour
             _videoRoot.SetActive(false);
         CloseComputer();
         GameFlowController.Instance?.NotifyComputerVideoEnded();
-        Debug.Log("[Computer] Video finished.");
     }
 
     public void SwitchCamera() { }

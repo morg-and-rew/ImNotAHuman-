@@ -1,10 +1,6 @@
 using UnityEngine;
 using static IGameFlowController;
 
-/// <summary>
-/// Универсальная зона телепорта: при входе/выходе игрока можно уведомлять сценарий (NotifyExitZonePassed).
-/// Направление телепорта задаётся Destination (Warehouse / Client). GameFlowController собирает все включённые TravelZone и определяет, в какой зоне игрок.
-/// </summary>
 [RequireComponent(typeof(Collider))]
 public sealed class TravelZone : MonoBehaviour
 {
@@ -12,10 +8,10 @@ public sealed class TravelZone : MonoBehaviour
     public const string ZoneIdWarehouseExitPassed = "warehouse_exit_passed";
 
     [SerializeField] private TravelTarget _destination = TravelTarget.Warehouse;
-    [Tooltip("Если задан — при выходе игрока из зоны вызывается NotifyExitZonePassed с этим id (только если сценарий ждёт warehouse_story_zone_exited).")]
     [SerializeField] private string _notifyExitZoneIdOnExit = "";
-    [Tooltip("Если задан — при входе игрока в зону вызывается NotifyExitZonePassed с этим id.")]
     [SerializeField] private string _notifyExitZoneIdOnEnter = "";
+    [Header("Hint")]
+    [SerializeField] private GameObject _hintCanvas;
 
     public TravelTarget Destination => _destination;
     public bool PlayerInside { get; private set; }
@@ -23,6 +19,22 @@ public sealed class TravelZone : MonoBehaviour
     private void Awake()
     {
         EnsureTriggerReceivesEvents();
+    }
+
+    private void Start()
+    {
+        if (_hintCanvas != null)
+            _hintCanvas.SetActive(false);
+        LookAtCamera.Ensure(_hintCanvas);
+    }
+
+    private void Update()
+    {
+        if (_hintCanvas == null) return;
+        bool show = PlayerInside
+            && GameFlowController.Instance != null
+            && GameFlowController.Instance.ShouldShowDoorHintFor(_destination);
+        _hintCanvas.SetActive(show);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -46,7 +58,6 @@ public sealed class TravelZone : MonoBehaviour
 
         if (string.IsNullOrEmpty(_notifyExitZoneIdOnExit)) return;
 
-        // warehouse_story_zone_exited — только когда сценарий реально ждёт выхода из зоны
         if (string.Equals(_notifyExitZoneIdOnExit, ZoneIdWarehouseStoryExited, System.StringComparison.OrdinalIgnoreCase))
         {
             GameFlowController flow = GameFlowController.Instance;

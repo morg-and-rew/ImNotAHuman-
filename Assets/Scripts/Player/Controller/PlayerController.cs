@@ -66,13 +66,6 @@ public sealed class PlayerController : IPlayerBlocker
 
     public void SetBlock(bool isMoving)
     {
-        // #region agent log
-        Debug.Log($"[Day1.5.1] PlayerController.SetBlock: value=" + isMoving + " (движение/взор " + (isMoving ? "заблокированы" : "разблокированы") + ")");
-        if (isMoving)
-            AgentDebugLog.Log("PlayerController.SetBlock", "block", "{\"value\":true}", "H_block");
-        if (!isMoving && _movementBlocked)
-            AgentDebugLog.Log("PlayerController.cs:SetBlock", "unblock", "{\"value\":false}", "H_block_reset");
-        // #endregion
         _movementBlocked = isMoving;
         _lookBlocked = isMoving;
     }

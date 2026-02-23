@@ -34,19 +34,15 @@ public sealed class StoryDirector : MonoBehaviour
     private string _waitingRadioStyleConversation;
     private CustomDialogueUI _customDialogueUI;
     public string CurrentStepId => (_index >= 0 && _index < _steps.Count) ? _steps[_index].stepId : "";
-    /// <summary> True, если сюжет уже запущен (хотя бы один шаг был активирован). </summary>
     public bool HasStoryStarted => _index >= 0;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
     public bool IsWaitingForRadioComplete => _wait == WaitMode.WaitingRadioComplete;
-    /// <summary> Всегда false: логика «выйти из зоны склада» заменена на «телепорт на склад → телепорт к клиенту». </summary>
     public bool IsWaitingForWarehouseStoryZoneExit => false;
 
-    /// <summary> Телепорт на склад разрешён: после туториала (free_roam_before_clients) — всегда; во время туториала — только на шагах перехода на склад/радио. Исключение: во время диалога с клиентом не проверяется здесь (игрок в диалоге). </summary>
     public bool IsStepAllowingTravelToWarehouse =>
         IsAtOrPastStep("free_roam_before_clients")
         || (_currentStep != null && (_currentStep.type == StepType.GoToDoorWarehouse || _currentStep.type == StepType.GoWarehouse || _currentStep.type == StepType.GoWarehouseWaitReturn || _currentStep.type == StepType.GoToRadio));
 
-    /// <summary> Телепорт к клиенту (со склада) разрешён: после туториала — всегда; во время туториала — только на шагах возврата/радио/ожидания. Исключение: когда с клиентом говорят и посылают за посылкой — проверка посылки в руках в GameFlowController. </summary>
     public bool IsStepAllowingTravelToClient =>
         IsAtOrPastStep("free_roam_before_clients")
         || (_currentStep != null && (_currentStep.type == StepType.ReturnFromWarehouse || _currentStep.type == StepType.ReturnToClient))
@@ -54,11 +50,9 @@ public sealed class StoryDirector : MonoBehaviour
         || (_currentStep != null && _currentStep.type == StepType.GoWarehouse && _wait == WaitMode.WaitingClientConfirm)
         || (_currentStep != null && _currentStep.type == StepType.GoToRadio);
 
-    /// <summary> True, если текущий шаг сценария — «вернуться к клиенту с посылкой»; только в этом случае при возврате со склада проверяется наличие нужной посылки. На шагах радио/свободного перемещения посылка не требуется. </summary>
     public bool DoesCurrentStepRequirePackageForReturn =>
         _currentStep != null && (_currentStep.type == StepType.ReturnToClient || _currentStep.type == StepType.GoWarehouseWaitReturn);
 
-    /// <summary> True, если сценарий ждёт триггер с указанным id (игрок может выполнить действие только на нужном шаге). </summary>
     public bool IsExpectingTrigger(string triggerId)
     {
         if (string.IsNullOrEmpty(triggerId)) return false;
@@ -66,7 +60,6 @@ public sealed class StoryDirector : MonoBehaviour
             && string.Equals(_currentStep.triggerId, triggerId, System.StringComparison.OrdinalIgnoreCase);
     }
 
-    /// <summary> True, если обучение не идёт или текущий шаг — указанный или любой после него (по порядку в списке шагов). </summary>
     public bool IsAtOrPastStep(string stepId)
     {
         if (string.IsNullOrEmpty(stepId)) return true;
@@ -95,10 +88,7 @@ public sealed class StoryDirector : MonoBehaviour
 
         _steps = BuildStepsFromConfig();
         if (_steps.Count == 0)
-        {
-            Debug.LogError("[Story] No steps in GameConfig.json. Check story.steps.");
             return;
-        }
 
         if (_client != null)
             _client.ClientDialogueStepCompleted += OnDialogueCompleted;
@@ -110,8 +100,6 @@ public sealed class StoryDirector : MonoBehaviour
             gfc.OnTriggerFired += OnTriggerFired;
             gfc.OnComputerVideoEnded += OnComputerVideoEnded;
         }
-
-        Debug.Log($"[Story] Loaded {_steps.Count} steps from GameConfig.");
     }
 
     private static List<Step> BuildStepsFromConfig()
@@ -124,7 +112,6 @@ public sealed class StoryDirector : MonoBehaviour
             if (d == null) continue;
             if (!Enum.TryParse(d.stepType, true, out StepType t))
             {
-                Debug.LogWarning($"[Story] Unknown stepType '{d.stepType}' at index {i}");
                 continue;
             }
             List<string> ids = (d.activateRadioEventIds ?? Array.Empty<string>())
@@ -267,26 +254,22 @@ public sealed class StoryDirector : MonoBehaviour
         {
             if (_currentStep.type == StepType.PressSpace || _currentStep.type == StepType.GoToDoorWarehouse || _currentStep.type == StepType.ReturnFromWarehouse)
             {
-                Debug.Log($"[Tutorial] Действие выполнено: нажат пробел (Next) → шаг \"{_currentStep.stepId}\" завершён, переход к следующему");
                 _wait = WaitMode.Idle;
                 Advance();
                 return;
             }
         }
 
-        // Необязательный шаг (например Radio_Day1_2): игрок может не идти на склад, а подойти к клиенту и нажать E — пропускаем шаг и сразу запускаем следующий диалог (Client_Day1.3).
         if (_currentStep != null && _currentStep.optional && _client != null && _client.IsPlayerInside && _input.InteractPressed)
         {
-            Debug.Log($"[Tutorial] Опциональный шаг \"{_currentStep.stepId}\" пропущен (E у клиента) → переход к Client_Day1.3.");
             _wait = WaitMode.Idle;
-            Advance(); // optional_radio → free_roam_before_client_day1_3
-            Advance(); // free_roam → client_day1_3 (StartDialogue)
+            Advance();
+            Advance();
             return;
         }
 
         if (_wait == WaitMode.WaitingFreeRoamClientConfirm && _client != null && _client.IsPlayerInside && _input.InteractPressed)
         {
-            Debug.Log($"[Tutorial] Действие выполнено: E у стойки клиента → шаг \"{_currentStep?.stepId}\" завершён, переход к следующему");
             _wait = WaitMode.Idle;
             Advance();
             return;
@@ -294,7 +277,6 @@ public sealed class StoryDirector : MonoBehaviour
 
         if (_wait == WaitMode.WaitingClientPortraitOnlySpace && (_input.ConfirmPressed || _input.NextPressed))
         {
-            Debug.Log($"[Tutorial] Действие выполнено: Space/F у портрета клиента → шаг \"{_currentStep?.stepId}\" завершён, переход к следующему");
             _client?.HidePortraitOnly();
             _flow?.RemovePackageFromHands();
             GameStateService.SetState(GameState.None);
@@ -311,7 +293,6 @@ public sealed class StoryDirector : MonoBehaviour
 
         if (_wait == WaitMode.WaitingReturnToClientArea && _client != null && _client.IsPlayerInside)
         {
-            Debug.Log($"[Tutorial] Действие выполнено: игрок в зоне стойки клиента → шаг \"{_currentStep?.stepId}\" завершён, переход к следующему");
             _wait = WaitMode.Idle;
             Advance();
             return;
@@ -324,7 +305,6 @@ public sealed class StoryDirector : MonoBehaviour
         {
             _wait = WaitMode.Idle;
             Advance();
-            // Радио на складе: игрок физически на складе, но Advance() запустил free_roam_before_clients и FreeRoamNone выставил state=None. Восстанавливаем Warehouse, чтобы можно было вернуться к клиенту по F.
             GameStateService.SetState(GameState.Warehouse);
             return;
         }
@@ -339,7 +319,6 @@ public sealed class StoryDirector : MonoBehaviour
         if (_wait != WaitMode.WaitingTrigger) return;
         if (_currentStep == null || string.IsNullOrEmpty(_currentStep.triggerId)) return;
         if (!string.Equals(_currentStep.triggerId, triggerId, System.StringComparison.OrdinalIgnoreCase)) return;
-        Debug.Log($"[Tutorial] Действие выполнено: триггер \"{triggerId}\" → шаг \"{_currentStep.stepId}\" завершён, переход к следующему");
         _wait = WaitMode.Idle;
         Advance();
     }
@@ -353,7 +332,6 @@ public sealed class StoryDirector : MonoBehaviour
             _controller?.SetBlock(false);
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            Debug.Log("[Tutorial] Обучение завершено: все шаги пройдены.");
             return;
         }
 
@@ -364,7 +342,6 @@ public sealed class StoryDirector : MonoBehaviour
             bool condition = DialogueLua.GetVariable(_currentStep.skipIfLuaConditionFalse).AsBool;
             if (!condition)
             {
-                Debug.Log($"[Tutorial] Шаг \"{_currentStep.stepId}\" пропущен (Lua {_currentStep.skipIfLuaConditionFalse}=false), переход к следующему");
                 Advance();
                 return;
             }
@@ -372,7 +349,6 @@ public sealed class StoryDirector : MonoBehaviour
 
         ShowHintForStep(_currentStep);
         ApplyDirectives(_currentStep);
-        Debug.Log($"[Tutorial] Шаг запущен: {_index + 1}/{_steps.Count} stepId=\"{_currentStep.stepId}\" type={_currentStep.type} wait={_wait}");
 
         switch (_currentStep.type)
         {
@@ -399,7 +375,6 @@ public sealed class StoryDirector : MonoBehaviour
         }
     }
 
-    /// <summary> Показываем подсказку только из таблицы (ключи tutorial.*), каждый ключ — один раз за сессию. </summary>
     private void ShowHintForStep(Step step)
     {
         if (step.type == StepType.None)
@@ -435,10 +410,7 @@ public sealed class StoryDirector : MonoBehaviour
                 break;
         }
         if (!string.IsNullOrEmpty(key))
-        {
-            Debug.Log($"[Tutorial] Подсказка для шага \"{step.stepId}\" (type={step.type}), ключ: \"{key}\" (один раз за сессию)");
             _flow?.ShowHintOnceByKey(key);
-        }
     }
 
     private void ApplyDirectives(Step step)
@@ -481,7 +453,6 @@ public sealed class StoryDirector : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         _wait = WaitMode.WaitingTeleportToWarehouse;
         _flow?.SetTutorialWarehouseVisit(true);
-        // go_to_warehouse_for_radio: цель «склад» ставим без подсказки — игрок уже умеет перемещаться
         bool silent = string.Equals(step.stepId, "go_to_warehouse_for_radio", StringComparison.OrdinalIgnoreCase);
         string hint = silent ? "" : (_flow?.ResolveHintText(null, GameConfig.Tutorial.doorWarehouseKey) ?? "");
         _flow?.SetTravelTarget(TravelTarget.Warehouse, hint);
@@ -518,7 +489,6 @@ public sealed class StoryDirector : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         _wait = WaitMode.WaitingRadioComplete;
-        // Опциональное радио: посылка не нужна, можно в любой момент вернуться к клиенту (F) и поговорить (E) вместо радио.
         if (step.optional && _flow is GameFlowController gfc)
             gfc.SetRequiredPackageForReturn(0);
     }
@@ -544,7 +514,6 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void GoWarehouse(Step step)
     {
-        // go_warehouse_day1_5: спустя 10 сек после free_roam_after_day1_4. Игрок может уже быть на складе или пойти туда; по возврате к клиенту — Client_Day1.5.
         if (string.Equals(step.stepId, "go_warehouse_day1_5", StringComparison.OrdinalIgnoreCase))
         {
             if (_flow is GameFlowController gfcDay15)
@@ -634,7 +603,6 @@ public sealed class StoryDirector : MonoBehaviour
     {
         if (string.IsNullOrEmpty(step.conversationTitle))
         {
-            Debug.LogWarning("[Story] DialogueRadioStyle step has no conversationTitle.");
             Advance();
             return;
         }
@@ -669,7 +637,6 @@ public sealed class StoryDirector : MonoBehaviour
         _controller?.SetBlock(true);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        Debug.Log("[Tutorial] StartFadeToBlack → обучение скрыто");
         _flow?.HideHint();
         _wait = WaitMode.WaitingFadeToBlack;
         float duration = step.fadeToBlackDuration > 0f ? step.fadeToBlackDuration : 3f;
@@ -693,7 +660,6 @@ public sealed class StoryDirector : MonoBehaviour
 
         string conv = data.ConversationTitle ?? "";
 
-        // Client_Day1.4.1 закончился → посылка отдана, убрать из рук, свободное хождение (Advance)
         if (string.Equals(conv, "Client_Day1.4.1", StringComparison.OrdinalIgnoreCase))
         {
             _flow?.RemovePackageFromHands();
@@ -704,7 +670,6 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
-        // Client_Day1.5 закончился → перебрасываем на склад (go_warehouse_after_day1_5), запись, взять посылку, возврат к клиенту
         if (string.Equals(conv, "Client_Day1.5", StringComparison.OrdinalIgnoreCase))
         {
             GameStateService.SetState(GameState.None);
@@ -714,7 +679,6 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
-        // Client_Day1.4 закончился: если не отдали посылку — свободное хождение; иначе — на склад за посылкой 5577, по возвращении Client_Day1.4.1
         if (string.Equals(conv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase))
         {
             DialogueLua.SetVariable("RunWarehouse5577Steps", false);
@@ -727,7 +691,6 @@ public sealed class StoryDirector : MonoBehaviour
                 Advance();
                 return;
             }
-            // Решил отдать посылку — перенос на склад, взять 5577, по возвращении запустить Client_Day1.4.1
             _pendingDialogueAfterReturn = "Client_Day1.4.1";
             _wait = WaitMode.WaitingWarehouseConfirm;
             GameStateService.SetState(GameState.None);
@@ -740,7 +703,6 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
-        // Остальные диалоги — как раньше
         GameStateService.SetState(GameState.None);
         ((GameFlowController)_flow).EnterClientDialogueState(false);
         _wait = WaitMode.Idle;
@@ -749,17 +711,12 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void OnTeleportedToWarehouse()
     {
-        // #region agent log
-        AgentDebugLog.Log("StoryDirector.cs:OnTeleportedToWarehouse", "entry", "{\"wait\":" + (int)_wait + ",\"pendingDialogueAfterReturn\":\"" + (_pendingDialogueAfterReturn ?? "") + "\"}", "H4");
-        // #endregion
         if (_wait == WaitMode.WaitingTeleportToWarehouse)
         {
-            Debug.Log($"[Tutorial] Действие выполнено: телепорт на склад → шаг \"{_currentStep?.stepId}\" завершён, переход к следующему");
             _wait = WaitMode.Idle;
             Advance();
             return;
         }
-        // Опциональное радио: игрок пришёл на склад — даём цель «к клиенту» (телепорт у двери, не к стойке)
         if (_wait == WaitMode.WaitingRadioComplete)
         {
             string hint = _flow != null && _flow.PreferEmptyOverMeetClient
@@ -770,20 +727,13 @@ public sealed class StoryDirector : MonoBehaviour
         }
         if (_wait != WaitMode.WaitingWarehouseConfirm) return;
 
-        // Визит на склад до истечения 10 сек (шаг free_roam_after_day1_4) — посылку брать не нужно.
         if (_currentStep != null && string.Equals(_currentStep.stepId, "free_roam_after_day1_4", StringComparison.OrdinalIgnoreCase) && _flow is GameFlowController gfcFree)
         {
             gfcFree.SetRequiredPackageForReturn(0);
         }
 
-        // Зашли на склад в рамках шага go_warehouse_day1_5: ждём выхода из триггерной зоны склада → телепорт к клиенту и диалог Client_Day1.5
-        string stepId = _currentStep != null ? _currentStep.stepId : "";
-        // #region agent log
-        AgentDebugLog.Log("StoryDirector.cs:OnTeleportedToWarehouse", "check go_warehouse_day1_5", "{\"stepId\":\"" + stepId + "\",\"match\":" + (string.Equals(stepId, "go_warehouse_day1_5", StringComparison.OrdinalIgnoreCase) ? "true" : "false") + "}", "H1");
-        // #endregion
         if (_currentStep != null && string.Equals(_currentStep.stepId, "go_warehouse_day1_5", StringComparison.OrdinalIgnoreCase))
         {
-            // Визит «в течение 10 сек» после 1.4/1.4.1 — посылку брать не нужно, только потом вернуться к клиенту на Client_Day1.5.
             if (_flow is GameFlowController gfcDay15)
                 gfcDay15.SetRequiredPackageForReturn(0);
             _pendingDialogueAfterReturn = "Client_Day1.5";
@@ -795,7 +745,6 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
-        // go_warehouse_after_day1_5: телепорт на склад → сразу записка в руках, нужно взять посылку (диалог Client_Day1.5.1 временно отключён).
         if (_currentStep != null && string.Equals(_currentStep.stepId, "go_warehouse_after_day1_5", StringComparison.OrdinalIgnoreCase))
         {
             _wait = WaitMode.Idle;
@@ -820,9 +769,6 @@ public sealed class StoryDirector : MonoBehaviour
                 ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
                 : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
             _flow?.SetTravelTarget(TravelTarget.Client, hint);
-            // #region agent log
-            AgentDebugLog.Log("StoryDirector.cs:OnTeleportedToWarehouse", "set pending return and travel target Client", "{\"pendingConv\":\"" + _pendingDialogueAfterReturn + "\"}", "H4");
-            // #endregion
             return;
         }
         _wait = WaitMode.Idle;
@@ -831,7 +777,6 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void OnTeleportedToClient()
     {
-        // Опциональное радио: вернулись к клиенту без прослушивания — не продвигаем шаг, даём возможность нажать E и поговорить с клиентом (пропуск радио). Не вызываем EnterClientDialogueState(false): камера не поднималась, ClearDialogueCameraOffset испортит позицию.
         if (_wait == WaitMode.WaitingRadioComplete)
         {
             GameStateService.SetState(GameState.None);
@@ -839,20 +784,13 @@ public sealed class StoryDirector : MonoBehaviour
         }
         if (_wait == WaitMode.WaitingTeleportToClient)
         {
-            Debug.Log($"[Tutorial] Действие выполнено: телепорт к клиенту → шаг \"{_currentStep?.stepId}\" завершён, переход к следующему");
             _wait = WaitMode.Idle;
             Advance();
             return;
         }
         bool pendingReturnDialogue = _wait == WaitMode.WaitingClientReturnForDialogue || _wait == WaitMode.WaitingClientConfirm;
-        // #region agent log
-        AgentDebugLog.Log("StoryDirector.cs:OnTeleportedToClient", "entry", "{\"wait\":" + (int)_wait + ",\"pendingReturnDialogue\":" + pendingReturnDialogue + ",\"pendingConv\":\"" + (_pendingDialogueAfterReturn ?? "") + "\"}", "H5");
-        // #endregion
         if (pendingReturnDialogue && !string.IsNullOrEmpty(_pendingDialogueAfterReturn))
         {
-            // #region agent log
-            AgentDebugLog.Log("StoryDirector.cs:OnTeleportedToClient", "starting dialogue", "{\"conv\":\"" + _pendingDialogueAfterReturn + "\"}", "H5");
-            // #endregion
             if (_flow is GameFlowController gfc)
                 gfc.SetPendingDialogueReturnPackage(0);
             string convToStart = _pendingDialogueAfterReturn;
@@ -867,7 +805,6 @@ public sealed class StoryDirector : MonoBehaviour
         }
         if (_wait == WaitMode.WaitingClientConfirm)
         {
-            // return_to_client_day1_5: вернулись к клиенту с посылкой — только спрайт клиентки (без диалога), по Space выходим
             if (_currentStep != null && string.Equals(_currentStep.stepId, "return_to_client_day1_5", StringComparison.OrdinalIgnoreCase))
             {
                 _wait = WaitMode.WaitingClientPortraitOnlySpace;
@@ -875,7 +812,6 @@ public sealed class StoryDirector : MonoBehaviour
                 _controller?.SetBlock(true);
                 ((GameFlowController)_flow).EnterClientDialogueState(true);
                 _client?.ShowPortraitOnly("Client_Day1.5");
-                Debug.Log("[Tutorial] return_to_client_day1_5: показан портрет клиентки (без диалога). Нажмите Space для выхода.");
                 return;
             }
             _wait = WaitMode.Idle;
