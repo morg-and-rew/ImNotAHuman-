@@ -25,6 +25,10 @@ public interface IGameFlowController
     void ShowMeetClientHintOnce();
     void ShowHintRaw(string text);
     void ShowHintOnceByKey(string key);
+    /// <summary> Флаг: если шаг туториала уже выполнен игроком — принудительно не показываем снова. </summary>
+    bool IsTutorialStepAlreadyShown(string key);
+    /// <summary> Пометить шаг туториала как выполненный (игрок совершил действие). </summary>
+    void MarkTutorialStepCompleted(string key);
     void LockPlayerForDialogue(bool isLocked);
     event System.Action OnPlayerReturnedFromWarehouse;
     event System.Action OnPlayerReturnedToClient;

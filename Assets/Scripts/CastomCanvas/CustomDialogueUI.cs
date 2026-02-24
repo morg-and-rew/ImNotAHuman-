@@ -15,7 +15,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [Header("Forced Auto Advance")]
     [SerializeField, Min(0.1f)] private float autoAdvanceIntervalSeconds = 10f;
     [SerializeField] private GameObject[] hideOnForcedAutoAdvanceMode;
-    [Tooltip("Диалоги, которые должны сами пролистываться (как радио). Client_Day1.5.1 включается сюжетом (StoryDirector), здесь можно добавить другие при необходимости.")]
+    [Tooltip("Диалоги, которые должны сами пролистываться (как радио). Добавь сюда название conversation при необходимости.")]
     [SerializeField] private string[] autoAdvanceConversations = new string[0];
     [SerializeField, Min(0.1f)] private float autoAdvanceIntervalForList = 8f;
 

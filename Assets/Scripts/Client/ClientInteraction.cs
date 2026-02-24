@@ -366,7 +366,8 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
             return;
 
         ClientPortraitMap.PortraitRule rule;
-        if (!_portraitMap.TryGetRule(mapStepIndex, entryID, out rule))
+        // Для диалогов вроде Client_Day1.5.2 первая реплика с текстом может иметь id 1 (id 0 = START без текста), в мапе задано правило для entryID 0 — используем его как fallback
+        if (!_portraitMap.TryGetRule(mapStepIndex, entryID, out rule) && !_portraitMap.TryGetRule(mapStepIndex, 0, out rule))
             return;
 
         if (_leftRoot != null)

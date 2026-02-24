@@ -91,8 +91,21 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _tutorialWarehouseVisit;
     private bool _useFreeTeleportPointForNextClientTravel;
     private float _lastTeleportToClientTime = -999f;
+    /// <summary> Ключи туториалов, которые игрок уже выполнил — больше не показываем. </summary>
     private readonly HashSet<string> _hintKeysShownOnce = new HashSet<string>();
+    /// <summary> Ключи туториалов, которые уже показаны, но игрок ещё не выполнил шаг — не спамим показом. </summary>
+    private readonly HashSet<string> _hintKeysDisplayed = new HashSet<string>();
     private List<TravelZone> _travelZones = new List<TravelZone>();
+
+    /// <summary> Флаг туториала: шаг с этим ключом уже выполнен игроком — принудительно не показываем снова. </summary>
+    public bool IsTutorialStepAlreadyShown(string key) => !string.IsNullOrEmpty(key) && _hintKeysShownOnce.Contains(key);
+
+    /// <summary> Пометить шаг туториала как выполненный (игрок совершил действие). После этого этот шаг больше не показывается. </summary>
+    public void MarkTutorialStepCompleted(string key)
+    {
+        if (string.IsNullOrEmpty(key)) return;
+        _hintKeysShownOnce.Add(key);
+    }
 
     public event Action OnTeleportedToWarehouse;
     public event Action OnTeleportedToClient;
@@ -104,6 +117,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void NotifyComputerVideoEnded()
     {
+        MarkTutorialStepCompleted(GameConfig.Tutorial.watchVideoKey);
+        _tutorialHint?.Hide();
         OnComputerVideoEnded?.Invoke();
     }
 
@@ -226,7 +241,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private void OnClientConversationStarted()
     {
-        ShowEmptyHint();
+        // Туториал meet_client исчезает, когда игрок нажал E и начался диалог
+        _tutorialHint?.Hide();
     }
 
     public void Init(PlayerView player, IPlayerBlocker controller, IPlayerInput input, IClientInteraction clientInteraction, DeliveryNoteView deliveryNoteView, CustomDialogueUI customDialogueUI = null)
@@ -311,6 +327,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 bool ignoreClientReq = freeTeleport && _travelTarget == TravelTarget.Client;
                 if (PerformTravel(_travelTarget, ignoreClientRequirements: ignoreClientReq, freeTeleport: freeTeleport))
                 {
+                    string doorKey = _travelTarget == TravelTarget.Warehouse ? GameConfig.Tutorial.doorWarehouseKey : GameConfig.Tutorial.returnPressFKey;
+                    MarkTutorialStepCompleted(doorKey);
+                    if (_travelTarget == TravelTarget.Client)
+                        MarkTutorialStepCompleted(GameConfig.Tutorial.returnToClientKey);
                     _freeTeleportTargetActive = false;
                     return;
                 }
@@ -320,14 +340,15 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         TickFreeTeleportZones();
         ApplyDoorHintFromZones();
 
-        if (_freeTeleportTargetActive && _travelTarget != TravelTarget.None && _tutorialHint != null && CanConfirmTravelToCurrentTarget())
+        if (_freeTeleportTargetActive && _travelTarget != TravelTarget.None && _tutorialHint != null && CanConfirmTravelToCurrentTarget()
+            && _tutorialPendingAction == TutorialPendingAction.None)
         {
             string key = _travelTarget == TravelTarget.Warehouse
                 ? GameConfig.Tutorial.doorWarehouseKey
                 : GameConfig.Tutorial.returnPressFKey;
-            if (!_hintKeysShownOnce.Contains(key))
+            if (!IsTutorialStepAlreadyShown(key) && !_hintKeysDisplayed.Contains(key))
             {
-                _hintKeysShownOnce.Add(key);
+                _hintKeysDisplayed.Add(key);
                 string text = GetUIText(key);
                 if (!string.IsNullOrEmpty(text))
                     _tutorialHint.Show(text);
@@ -344,10 +365,24 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             HandleClientDialog();
     }
 
+    private static bool IsRadioTutorialPlaying()
+    {
+        return DialogueManager.isConversationActive
+            && string.Equals(DialogueManager.lastConversationStarted, "Radio_Tutorial", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary> True, если сюжет в процессе и ждёт действия игрока (например, «иди к радио», «возьми телефон»). </summary>
+    private bool HasActiveTutorial()
+    {
+        return _storyDirector != null && _storyDirector.IsRunning;
+    }
+
     private bool CanConfirmTravelToCurrentTarget()
     {
         if (_travelTarget == TravelTarget.Warehouse)
         {
+            if (IsRadioTutorialPlaying())
+                return false;
             if (GameStateService.CurrentState == GameState.Warehouse)
                 return false;
             if (!IsPlayerLookingAt(_warehouseEntranceDoor))
@@ -359,6 +394,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         if (_travelTarget == TravelTarget.Client && GameStateService.CurrentState == GameState.Warehouse)
         {
+            if (IsRadioTutorialPlaying())
+                return false;
             bool inZoneToClient = IsPlayerInZoneTo(TravelTarget.Client);
             bool nearExitDoor = _warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= _doorTeleportMaxDistance;
             if (!inZoneToClient && !nearExitDoor)
@@ -417,6 +454,19 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_travelZones.Count == 0)
             return;
 
+        if (_travelTarget == TravelTarget.Warehouse && IsRadioTutorialPlaying())
+        {
+            _travelTarget = TravelTarget.None;
+            _freeTeleportTargetActive = false;
+            HideHint();
+        }
+        if (_travelTarget == TravelTarget.Client && IsRadioTutorialPlaying())
+        {
+            _travelTarget = TravelTarget.None;
+            _freeTeleportTargetActive = false;
+            HideHint();
+        }
+
         bool onWarehouse = GameStateService.CurrentState == GameState.Warehouse;
         bool inZoneToClient = IsPlayerInZoneTo(TravelTarget.Client);
         bool inZoneToWarehouse = IsPlayerInZoneTo(TravelTarget.Warehouse);
@@ -424,6 +474,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_travelTarget == TravelTarget.None)
         {
             bool canSetWarehouseTarget = !onWarehouse
+                && !IsRadioTutorialPlaying()
                 && GameStateService.CurrentState != GameState.Phone
                 && (Time.time - _lastTeleportToClientTime) >= 2f
                 && (_storyDirector == null || !string.Equals(_storyDirector.CurrentStepId, "go_to_phone", StringComparison.OrdinalIgnoreCase))
@@ -433,7 +484,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 _freeTeleportTargetActive = true;
                 _travelTarget = TravelTarget.Warehouse;
             }
-            else if (onWarehouse)
+            else if (onWarehouse && !IsRadioTutorialPlaying())
             {
                 string blockReason = GetWhyCannotReturnToClient();
                 if (blockReason == null)
@@ -487,6 +538,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_clientInteraction == null || _input == null) return;
         if (!GameConfig.StoryStartOnClientInteract) return;
+        // Если в руках предмет (телефон и т.д.) — E должен сначала положить его, а не запускать диалог с клиентом
+        if (HandsRegistry.Hands != null && HandsRegistry.Hands.HasItem)
+            return;
         if (_clientInteraction.IsPlayerLookingAtClient(_player) && !_clientInteraction.IsActive && _input.InteractPressed)
         {
             ExpireAllRadioAvailable();
@@ -597,6 +651,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
+        if (_tutorialPendingAction != TutorialPendingAction.None)
+            return;
         _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.goWarehouseKey));
     }
 
@@ -616,6 +672,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         Teleport(_warehousePoint);
         GameStateService.SetState(GameState.Warehouse);
+
+        // На складе показываем туториал: подойдите к посылке и нажмите E (tutorial.return_to_client)
+        ShowHintOnceByKey(GameConfig.Tutorial.returnToClientKey);
     }
 
     private void Teleport(Transform point)
@@ -647,7 +706,17 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void NotifyTutorialActionCompleted(TutorialPendingAction action)
     {
+        if (action == TutorialPendingAction.WarehousePick)
+        {
+            MarkTutorialStepCompleted(GameConfig.Tutorial.warehousePickKey);
+            _tutorialPendingAction = TutorialPendingAction.None;
+            _tutorialStep = TutorialStep.None;
+            _tutorialHint?.Hide();
+            return;
+        }
         if (_tutorialPendingAction != action) return;
+        if (action == TutorialPendingAction.PressSpace)
+            MarkTutorialStepCompleted(GameConfig.Tutorial.pressSpaceKey);
         _tutorialPendingAction = TutorialPendingAction.None;
         _tutorialStep = TutorialStep.None;
         _tutorialHint?.Hide();
@@ -703,6 +772,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_tutorialHint == null) return;
         if (_tutorialPendingAction != TutorialPendingAction.None) return;
+        if (HasActiveTutorial()) return;
         _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
     }
 
@@ -710,6 +780,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_tutorialHint == null) return;
         if (_tutorialPendingAction != TutorialPendingAction.None) return;
+        if (HasActiveTutorial()) return;
         _preferEmptyOverMeetClient = true;
         _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
     }
@@ -718,7 +789,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void HidePhoneHint()
     {
-                _tutorialHint?.Hide();
+        HideHint();
     }
 
     private void OnClientDialogueStepCompleted(ClientDialogueStepCompletionData data)
@@ -774,14 +845,23 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void ShowRadioHintOnce()
     {
+        if (_tutorialHint == null) return;
+        if (_tutorialPendingAction != TutorialPendingAction.None) return;
+        _preferEmptyOverMeetClient = false;
+        if (IsTutorialStepAlreadyShown(GameConfig.Tutorial.radioUseKey))
+            return;
+        ShowHintOnceByKey(GameConfig.Tutorial.radioUseKey);
     }
 
     public void NotifyPhonePutDown()
     {
         if (_tutorialHint == null) return;
-        if (!_providerCallDone) return;
+        MarkTutorialStepCompleted(GameConfig.Tutorial.phonePutKey);
+        // Показать tutorial.radio_use сразу после tutorial.phone_put: если игрок уже видел phone_put — показываем radio_use при опускании телефона
+        bool phonePutWasShown = IsTutorialStepAlreadyShown(GameConfig.Tutorial.phonePutKey);
+        if (!_providerCallDone && !phonePutWasShown) return;
         _preferEmptyOverMeetClient = false;
-        if (_hintKeysShownOnce.Contains(GameConfig.Tutorial.radioUseKey))
+        if (IsTutorialStepAlreadyShown(GameConfig.Tutorial.radioUseKey))
             return;
         ShowHintOnceByKey(GameConfig.Tutorial.radioUseKey);
     }
@@ -801,7 +881,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         if (_preferEmptyOverMeetClient || _meetClientHintShown)
         {
-            ShowHintOnceByKey(GameConfig.Tutorial.emptyKey);
+            if (!HasActiveTutorial())
+                ShowHintOnceByKey(GameConfig.Tutorial.emptyKey);
             GameStateService.SetState(GameState.ClientDialog);
             return;
         }
@@ -824,21 +905,52 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _tutorialHint?.Show(text);
     }
 
+    /// <summary> Подсказки router / return F / phone / radio_use всегда показываем для текущего шага сюжета, иначе при переходе шага или телепорте (HasActiveTutorial==false) показывался бы tutorial.empty. </summary>
+    private bool IsCurrentStoryStepHint(string key)
+    {
+        if (_storyDirector == null || string.IsNullOrEmpty(key)) return false;
+        string stepId = _storyDirector.CurrentStepId;
+        if (string.IsNullOrEmpty(stepId)) return false;
+        TutorialConfig t = GameConfig.Tutorial;
+        if (key == t.routerHintKey) return string.Equals(stepId, "go_to_router", StringComparison.OrdinalIgnoreCase);
+        if (key == t.returnPressFKey) return string.Equals(stepId, "return_from_warehouse", StringComparison.OrdinalIgnoreCase);
+        if (key == t.phoneHintKey) return string.Equals(stepId, "go_to_phone", StringComparison.OrdinalIgnoreCase);
+        if (key == t.radioUseKey) return string.Equals(stepId, "go_to_radio", StringComparison.OrdinalIgnoreCase);
+        return false;
+    }
+
     public void ShowHintOnceByKey(string key)
     {
         if (_tutorialHint == null) return;
         if (_tutorialPendingAction != TutorialPendingAction.None) return;
         if (string.IsNullOrEmpty(key))
         {
-            _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+            if (!HasActiveTutorial())
+                _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
             return;
         }
-        if (_hintKeysShownOnce.Contains(key))
+        // Шаг уже выполнен игроком — не показываем снова (кроме подсказок текущего шага сюжета).
+        if (IsTutorialStepAlreadyShown(key))
         {
-            _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+            if (IsCurrentStoryStepHint(key))
+            {
+                _hintKeysDisplayed.Add(key);
+                _tutorialHint?.Show(GetUIText(key));
+            }
+            else if (!HasActiveTutorial())
+                _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
             return;
         }
-        _hintKeysShownOnce.Add(key);
+        // Уже показали этот шаг, ждём выполнения — не спамим (кроме подсказок текущего шага сюжета).
+        if (_hintKeysDisplayed.Contains(key))
+        {
+            if (IsCurrentStoryStepHint(key))
+                _tutorialHint?.Show(GetUIText(key));
+            else if (!HasActiveTutorial())
+                _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+            return;
+        }
+        _hintKeysDisplayed.Add(key);
         _preferEmptyOverMeetClient = false;
         string pressSpaceKey = GameConfig.Tutorial.pressSpaceKey;
         string warehousePickKey = GameConfig.Tutorial.warehousePickKey;
@@ -853,21 +965,50 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         _freeTeleportTargetActive = false;
         _useFreeTeleportPointForNextClientTravel = useFreeTeleportPointForClient && target == TravelTarget.Client;
+        if (target == TravelTarget.Warehouse && IsRadioTutorialPlaying())
+        {
+            _travelTarget = TravelTarget.None;
+            _tutorialHint?.Hide();
+            return;
+        }
+        if (target == TravelTarget.Client && IsRadioTutorialPlaying())
+        {
+            _travelTarget = TravelTarget.None;
+            _tutorialHint?.Hide();
+            return;
+        }
         _travelTarget = target;
         if (string.IsNullOrEmpty(hintText))
         {
             if (_tutorialPendingAction == TutorialPendingAction.None)
-                _tutorialHint?.Hide();
+            {
+                // Не скрывать туториал при шаге "идти на склад к радио" — оставляем подсказку radio_use видимой
+                bool keepRadioTutorialVisible = _storyDirector != null
+                    && string.Equals(_storyDirector.CurrentStepId, "go_to_warehouse_for_radio", StringComparison.OrdinalIgnoreCase);
+                if (!keepRadioTutorialVisible)
+                    _tutorialHint?.Hide();
+            }
         }
         else
         {
             if (_tutorialPendingAction != TutorialPendingAction.None) return;
             if (target != TravelTarget.Client)
                 _preferEmptyOverMeetClient = false;
-            string key = target == TravelTarget.Warehouse ? GameConfig.Tutorial.doorWarehouseKey : GameConfig.Tutorial.returnPressFKey;
-            if (_hintKeysShownOnce.Contains(key))
-                return;
-            _hintKeysShownOnce.Add(key);
+            // Радио приоритетно: пока ждём нажатия E у радио — показываем подсказку только если шаг ещё не показывался.
+            bool forceShowForRadio = target == TravelTarget.Client && _storyDirector != null && _storyDirector.IsWaitingForRadioComplete;
+            if (!forceShowForRadio)
+            {
+                string key = target == TravelTarget.Warehouse ? GameConfig.Tutorial.doorWarehouseKey : GameConfig.Tutorial.returnPressFKey;
+                if (IsTutorialStepAlreadyShown(key))
+                    return;
+                if (_hintKeysDisplayed.Contains(key))
+                    return;
+                _hintKeysDisplayed.Add(key);
+            }
+            else if (IsTutorialStepAlreadyShown(GameConfig.Tutorial.radioUseKey))
+            {
+                hintText = GetUIText(GameConfig.Tutorial.emptyKey);
+            }
             _tutorialHint?.Show(hintText);
         }
     }
@@ -959,6 +1100,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _radioAvailable.Remove(id);
         _radioPlayed.Add(id);
         _currentRadioEventId = id;
+        // Игрок нажал E у радио — шаг туториала «подойдите к радио» выполнен.
+        MarkTutorialStepCompleted(GameConfig.Tutorial.radioUseKey);
     }
 
     public void ExpireAllRadioAvailable()
@@ -972,6 +1115,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (target == TravelTarget.Warehouse)
         {
+            if (IsRadioTutorialPlaying())
+                return false;
             RemovePackageFromHands();
             Transform point = freeTeleport && _freeTeleportToWarehousePoint != null ? _freeTeleportToWarehousePoint : _warehousePoint;
             Teleport(point);

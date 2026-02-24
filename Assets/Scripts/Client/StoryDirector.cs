@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -33,11 +34,18 @@ public sealed class StoryDirector : MonoBehaviour
     private string _pendingDialogueAfterReturn;
     private Coroutine _knockDelayCoroutine;
     private string _waitingRadioStyleConversation;
+    private bool _warehousePickHintShown;
     private CustomDialogueUI _customDialogueUI;
     public string CurrentStepId => (_index >= 0 && _index < _steps.Count) ? _steps[_index].stepId : "";
     public bool HasStoryStarted => _index >= 0;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
     public bool IsWaitingForRadioComplete => _wait == WaitMode.WaitingRadioComplete;
+    public bool IsCurrentStepGoToRadio => _currentStep != null && _currentStep.type == StepType.GoToRadio;
+    /// <summary> True, если текущий шаг — интро «go_to_radio»: пришли на склад после того как положили телефон (go_to_phone → go_to_warehouse_for_radio → go_to_radio). Иначе не показывать tutorial.radio_use. </summary>
+    public bool IsIntroGoToRadioStep => IsCurrentStepGoToRadio
+        && _index >= 2
+        && string.Equals(_steps[_index - 1].stepId, "go_to_warehouse_for_radio", StringComparison.OrdinalIgnoreCase)
+        && string.Equals(_steps[_index - 2].stepId, "go_to_phone", StringComparison.OrdinalIgnoreCase);
     public bool IsWaitingForWarehouseStoryZoneExit => false;
 
     public bool IsStepAllowingTravelToWarehouse =>
@@ -268,7 +276,9 @@ public sealed class StoryDirector : MonoBehaviour
             }
         }
 
-        if (_currentStep != null && _currentStep.optional && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed)
+        // Если в руках предмет (телефон) — E сначала должен убрать его, а не запускать диалог с клиентом
+        if (_currentStep != null && _currentStep.optional && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed
+            && (HandsRegistry.Hands == null || !HandsRegistry.Hands.HasItem))
         {
             _wait = WaitMode.Idle;
             Advance();
@@ -276,7 +286,8 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
-        if (_wait == WaitMode.WaitingFreeRoamClientConfirm && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed)
+        if (_wait == WaitMode.WaitingFreeRoamClientConfirm && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed
+            && (HandsRegistry.Hands == null || !HandsRegistry.Hands.HasItem))
         {
             _wait = WaitMode.Idle;
             Advance();
@@ -287,10 +298,12 @@ public sealed class StoryDirector : MonoBehaviour
         {
             _client?.HidePortraitOnly();
             _flow?.RemovePackageFromHands();
-            GameStateService.SetState(GameState.None);
-            ((GameFlowController)_flow).EnterClientDialogueState(false);
-            _wait = WaitMode.Idle;
-            Advance();
+            GameStateService.SetState(GameState.ClientDialog);
+            _controller?.SetBlock(true);
+            // Уже у клиента (только что был ShowPortraitOnly) — не телепортировать к _dialogueLookPoint, иначе камера «улетает» вверх
+            ((GameFlowController)_flow).EnterClientDialogueState(true, movePlayerToClient: false);
+            _wait = WaitMode.WaitingDialogueEnd;
+            _client?.StartClientDialogWithSpecificStep("", "Client_Day1.5.2");
             return;
         }
 
@@ -411,7 +424,9 @@ public sealed class StoryDirector : MonoBehaviour
                 key = GameConfig.Tutorial.phoneHintKey;
                 break;
             case StepType.GoToRadio:
-                key = GameConfig.Tutorial.radioUseKey;
+                // tutorial.radio_use только для интро-шага "go_to_radio" (после того как положили телефон); не показывать при переходе с go_to_warehouse_for_radio (Radio_Day1_2).
+                if (string.Equals(step.stepId, "go_to_radio", StringComparison.OrdinalIgnoreCase) && IsIntroGoToRadioStep)
+                    key = GameConfig.Tutorial.radioUseKey;
                 break;
             case StepType.GoWarehouseWaitReturn:
                 key = GameConfig.Tutorial.warehouseReturnKey;
@@ -432,7 +447,9 @@ public sealed class StoryDirector : MonoBehaviour
                     _flow?.ActivateRadioEvent(id);
             }
         }
-        if (step.showRadioHintOnEnter) _flow?.ShowRadioHintOnce();
+        // Показывать «подойдите к радио» только после того как положил телефон (IsIntroGoToRadioStep). Для Radio_Day1_2 не показывать.
+        bool skipRadioHint = string.Equals(step.stepId, "go_to_radio", StringComparison.OrdinalIgnoreCase) && !IsIntroGoToRadioStep;
+        if (step.showRadioHintOnEnter && !skipRadioHint) _flow?.ShowRadioHintOnce();
     }
 
     private void PressSpace(Step step)
@@ -533,7 +550,7 @@ public sealed class StoryDirector : MonoBehaviour
             if (GameStateService.CurrentState == GameState.Warehouse)
             {
                 _wait = WaitMode.WaitingClientConfirm;
-                string returnHint = _flow != null && _flow.PreferEmptyOverMeetClient
+                string returnHint = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
                     ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
                     : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
                 _flow?.SetTravelTarget(TravelTarget.Client, returnHint);
@@ -586,7 +603,7 @@ public sealed class StoryDirector : MonoBehaviour
         }
 
         _wait = WaitMode.WaitingClientConfirm;
-        string hint = _flow != null && _flow.PreferEmptyOverMeetClient
+        string hint = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
             ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
             : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
         _flow?.SetTravelTarget(TravelTarget.Client, hint);
@@ -682,6 +699,18 @@ public sealed class StoryDirector : MonoBehaviour
         {
             GameStateService.SetState(GameState.None);
             ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            _wait = WaitMode.Idle;
+            Advance();
+            return;
+        }
+
+        if (string.Equals(conv, "Client_Day1.5.2", StringComparison.OrdinalIgnoreCase))
+        {
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            _flow?.ShowHintOnceByKey(GameConfig.Tutorial.watchVideoKey);
             _wait = WaitMode.Idle;
             Advance();
             return;
@@ -727,9 +756,8 @@ public sealed class StoryDirector : MonoBehaviour
         }
         if (_wait == WaitMode.WaitingRadioComplete)
         {
-            string hint = _flow != null && _flow.PreferEmptyOverMeetClient
-                ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
-                : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
+            // Радио приоритетно: подсказка остаётся «иди к радио / нажми E», пока игрок не нажал E у радио
+            string hint = _flow?.ResolveHintText(null, GameConfig.Tutorial.radioUseKey) ?? "";
             _flow?.SetTravelTarget(TravelTarget.Client, hint, useFreeTeleportPointForClient: true);
             return;
         }
@@ -746,7 +774,7 @@ public sealed class StoryDirector : MonoBehaviour
                 gfcDay15.SetRequiredPackageForReturn(0);
             _pendingDialogueAfterReturn = "Client_Day1.5";
             _wait = WaitMode.WaitingClientConfirm;
-            string hint = _flow != null && _flow.PreferEmptyOverMeetClient
+            string hint = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
                 ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
                 : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
             _flow?.SetTravelTarget(TravelTarget.Client, hint);
@@ -761,7 +789,11 @@ public sealed class StoryDirector : MonoBehaviour
             var gfc = _flow as GameFlowController;
             gfc?.StartRandomDeliveryTaskAndSetRequiredForReturn();
             gfc?.RefreshWarehouseDeliveryNote();
-            gfc?.ShowWarehousePickHint();
+            if (!_warehousePickHintShown)
+            {
+                _warehousePickHintShown = true;
+                gfc?.ShowWarehousePickHint();
+            }
             return;
         }
 
@@ -773,7 +805,7 @@ public sealed class StoryDirector : MonoBehaviour
                 gfc.SetRequiredPackageForReturn(5577);
                 gfc.SetPendingDialogueReturnPackage(5577);
             }
-            string hint = _flow != null && _flow.PreferEmptyOverMeetClient
+            string hint = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
                 ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
                 : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
             _flow?.SetTravelTarget(TravelTarget.Client, hint);
@@ -806,9 +838,7 @@ public sealed class StoryDirector : MonoBehaviour
             _wait = WaitMode.WaitingDialogueEnd;
             _controller?.SetBlock(true);
             GameStateService.SetState(GameState.ClientDialog);
-            ((GameFlowController)_flow).EnterClientDialogueState(true);
-            if (_client != null)
-                _client.StartClientDialogWithSpecificStep("", convToStart);
+            StartCoroutine(ShowClientDialogueNextFrame(convToStart));
             return;
         }
         if (_wait == WaitMode.WaitingClientConfirm)
@@ -818,13 +848,29 @@ public sealed class StoryDirector : MonoBehaviour
                 _wait = WaitMode.WaitingClientPortraitOnlySpace;
                 GameStateService.SetState(GameState.ClientDialog);
                 _controller?.SetBlock(true);
-                ((GameFlowController)_flow).EnterClientDialogueState(true);
-                _client?.ShowPortraitOnly("Client_Day1.5");
+                StartCoroutine(ShowPortraitOnlyNextFrame());
                 return;
             }
             _wait = WaitMode.Idle;
             Advance();
         }
+    }
+
+    /// <summary> Показать диалог с клиентом со следующего кадра после телепорта, чтобы UI успел отрисоваться. </summary>
+    private IEnumerator ShowClientDialogueNextFrame(string conversationTitle)
+    {
+        yield return null;
+        if (string.IsNullOrEmpty(conversationTitle)) yield break;
+        ((GameFlowController)_flow).EnterClientDialogueState(true);
+        _client?.StartClientDialogWithSpecificStep("", conversationTitle);
+    }
+
+    /// <summary> Показать только портрет клиента со следующего кадра после телепорта, чтобы спрайт и плашка не были пустыми. </summary>
+    private IEnumerator ShowPortraitOnlyNextFrame()
+    {
+        yield return null;
+        _client?.ShowPortraitOnly("Client_Day1.5");
+        ((GameFlowController)_flow).EnterClientDialogueState(true);
     }
 }
 

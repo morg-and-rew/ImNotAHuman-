@@ -941,6 +941,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1112,6 +1113,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &75729064
 MeshFilter:
@@ -1208,6 +1210,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &90947203
 MeshFilter:
@@ -1753,12 +1756,12 @@ MonoBehaviour:
   _fadeInDuration: 1
   _windowSortOrder: -50
   _daySprites:
-  - day: 0
-    sprite: {fileID: 21300000, guid: 772741e6104193e4eb3413849c439687, type: 3}
   - day: 1
+    sprite: {fileID: 21300000, guid: 772741e6104193e4eb3413849c439687, type: 3}
+  - day: 2
     sprite: {fileID: 21300000, guid: 563ac11163a1276408f957e4b5f9dbfd, type: 3}
   _dayReplicas:
-  - day: 0
+  - day: 1
     conversationTitle: Window_Day1.2
   _hintSprite: {fileID: 21300000, guid: 3c204f045647a4a4281c6ed91b46c103, type: 3}
   _lookAtPoint: {fileID: 160417895}
@@ -2281,6 +2284,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &207294880
 MeshFilter:
@@ -2713,6 +2717,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &262903874
 MeshFilter:
@@ -2803,6 +2808,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &265493247
 MeshFilter:
@@ -3288,6 +3294,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &314435462
 MeshFilter:
@@ -3460,6 +3467,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &337506778
 MeshFilter:
@@ -4016,6 +4024,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &374338572
 MeshFilter:
@@ -4156,6 +4165,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5720,7 +5730,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 05b96eebeb8b098469a67c250706d353, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -6409,7 +6419,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1273045302}
   m_Father: {fileID: 778332672}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -7045,6 +7056,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &654691517
 MeshFilter:
@@ -7816,7 +7828,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &756827800
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7909,6 +7921,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8050,7 +8063,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1488325313}
-  - {fileID: 1273045302}
   - {fileID: 613144410}
   - {fileID: 807404166}
   m_Father: {fileID: 0}
@@ -8332,6 +8344,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &784019748
 MeshFilter:
@@ -9399,6 +9412,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -10447,12 +10461,12 @@ MonoBehaviour:
   _fadeInDuration: 1
   _windowSortOrder: -50
   _daySprites:
-  - day: 0
-    sprite: {fileID: 21300000, guid: 63235e8e142edcf47a69b224531ab0a1, type: 3}
   - day: 1
+    sprite: {fileID: 21300000, guid: 63235e8e142edcf47a69b224531ab0a1, type: 3}
+  - day: 2
     sprite: {fileID: 21300000, guid: d9e3fe829b9d16244b4af7f11df04521, type: 3}
   _dayReplicas:
-  - day: 0
+  - day: 1
     conversationTitle: Window_Day1.3
   _hintSprite: {fileID: 21300000, guid: 3c204f045647a4a4281c6ed91b46c103, type: 3}
   _lookAtPoint: {fileID: 931493371}
@@ -10474,9 +10488,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RadioInteractable
   _stations:
-  - {fileID: 406402611}
-  - {fileID: 920066928}
-  _storyAudioSource: {fileID: 901337741}
+  - {fileID: 537490301}
+  - {fileID: 406127310}
+  _storyAudioSource: {fileID: 902295042}
   _eventClips:
   - eventId: tutorial_radio
     clip: {fileID: 8300000, guid: 60ecb8ff0fc22b24aadfb18d6ee08a29, type: 3}
@@ -10486,10 +10500,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 60ecb8ff0fc22b24aadfb18d6ee08a29, type: 3}
   _eventVideos:
   - eventId: day1_2_radio_video
-    clip: {fileID: 32900000, guid: 37b8a0f6c69b3b9498ac9161573cc7ee, type: 3}
+    clip: {fileID: 32900000, guid: c7373f4302985ff46b2a8d3942ee02a3, type: 3}
   _videoPlayer: {fileID: 832575520}
   _videoRoot: {fileID: 1359877861}
-  _staticAudioSource: {fileID: 1589219477}
+  _staticAudioSource: {fileID: 1315333785}
   _staticClip: {fileID: 8300000, guid: 26cae6b3546801d4c897e9ad8f598943, type: 3}
   _staticClipPathOverride: 
   _requireProviderCallForDefault: 1
@@ -10583,6 +10597,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &940443522
 MeshFilter:
@@ -10708,6 +10723,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &941921711
 MeshFilter:
@@ -11022,6 +11038,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &970916334
 MeshFilter:
@@ -11492,6 +11509,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1003709388
 MeshFilter:
@@ -11567,6 +11585,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1005782111
 MeshFilter:
@@ -11677,6 +11696,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1007033698
 MeshFilter:
@@ -12355,6 +12375,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1050687369
 MeshFilter:
@@ -13226,6 +13247,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1121116628
 MeshFilter:
@@ -13802,6 +13824,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1192815915
 MeshFilter:
@@ -14819,11 +14842,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 778332672}
+  m_Father: {fileID: 613144410}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 612.5155, y: 328.9925}
+  m_AnchoredPosition: {x: 598, y: 346}
   m_SizeDelta: {x: 674.2859, y: 180.9245}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1273045303
@@ -14884,6 +14907,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15095,6 +15119,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1282888859
 MeshFilter:
@@ -15647,8 +15672,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 16.204, y: 16.366}
-  m_SizeDelta: {x: 1994.4519, y: 1112.7}
+  m_AnchoredPosition: {x: 16.204, y: -47.35312}
+  m_SizeDelta: {x: 1994.5, y: 1786.8796}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1359877865
 MonoBehaviour:
@@ -16598,6 +16623,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1466077641
 MeshFilter:
@@ -17180,6 +17206,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1509323969
 MeshFilter:
@@ -18385,6 +18412,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1637996773
 MeshFilter:
@@ -18994,6 +19022,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1707969250
 MeshFilter:
@@ -20047,6 +20076,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20640,6 +20670,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1885574387
 MeshFilter:
@@ -21945,12 +21976,12 @@ MonoBehaviour:
   _fadeInDuration: 1
   _windowSortOrder: -50
   _daySprites:
-  - day: 0
-    sprite: {fileID: 21300000, guid: 2c1a0d128e359404b98c3441c7195768, type: 3}
   - day: 1
+    sprite: {fileID: 21300000, guid: 2c1a0d128e359404b98c3441c7195768, type: 3}
+  - day: 2
     sprite: {fileID: 21300000, guid: de0e17c2f579962478c918e9edc6c0c0, type: 3}
   _dayReplicas:
-  - day: 0
+  - day: 1
     conversationTitle: Window_Day1.1
   _hintSprite: {fileID: 21300000, guid: 3c204f045647a4a4281c6ed91b46c103, type: 3}
   _lookAtPoint: {fileID: 2029519917}
@@ -22101,6 +22132,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &2047559844
 MeshFilter:
@@ -22337,6 +22369,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &2050041971
 MeshFilter:
@@ -22844,6 +22877,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &2100603680
 MeshFilter:
@@ -22955,6 +22989,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &2101623659
 MeshFilter:
@@ -23247,6 +23282,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &2116263605
 MeshFilter:

@@ -61,7 +61,7 @@ public sealed class PlayerInteractionController
         Sprite sprite = null;
         if (worldInteractable != null)
             sprite = worldInteractable.HintSprite;
-        else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg))
+        else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
             sprite = pkg.HintSprite;
 
         if (PlayerHintView.Instance != null)

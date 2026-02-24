@@ -1106,6 +1106,25 @@ MonoBehaviour:
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
     removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_Day1.5.2
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 553d1abe3a6228142838f8b29536e3ab, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -13, y: 73, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
   wrongPackageConversation: Warehouse_WrongPackage
   enforceCorrectAfterFirstWrong: 1
   centeredRightAnchoredPos: {x: 145.6, y: 73, z: 191.5}
