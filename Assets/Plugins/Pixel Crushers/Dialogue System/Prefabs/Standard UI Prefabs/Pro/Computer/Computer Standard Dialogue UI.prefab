@@ -292,7 +292,8 @@ MonoBehaviour:
   advanceKey: 32
   advanceOnlyWhenNoResponses: 1
   autoAdvanceIntervalSeconds: 10
-  hideOnForcedAutoAdvanceMode: []
+  hideOnForcedAutoAdvanceMode:
+  - {fileID: 5972125699115874149}
   autoAdvanceConversations: []
   autoAdvanceIntervalForList: 8
   finishKey: 102

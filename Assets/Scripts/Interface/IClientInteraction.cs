@@ -11,6 +11,8 @@ public interface IClientInteraction
     int CurrentStepIndex { get; }
     bool IsActive { get; }
     bool IsPlayerInside { get; }
+    /// <summary> true, когда диалог в паузе и ждёт продолжения — подсказка «поговорить с клиентом» должна показываться. </summary>
+    bool IsWaitingForContinue { get; }
     bool IsPlayerLookingAtClient(PlayerView player);
     void Initialize(Canvas uiRoot, Image leftImage, Image rightImage, ICustomDialogueUI customDialogueUI);
     void StartClientDialog();

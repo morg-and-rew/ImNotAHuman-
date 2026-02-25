@@ -51,6 +51,9 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private RadioEventData _phasedStory;
     private bool _teleportToTableAfterVideo;
     private bool _playerReplicaPlayed;
+    private bool _radioAdvanceByTimestamps;
+    private float[] _radioAdvanceTimestamps;
+    private int _radioAdvanceIndex;
 
     public Sprite HintSprite => _hintSprite;
 
@@ -58,6 +61,11 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     {
         _storyEvents = new List<RadioEventData>(GameConfig.RadioEvents);
         _customDialogueUI = _customDialogueUIRef ?? GameFlowController.Instance?.CustomDialogueUI;
+
+        // При старте играет только станция; статик включается только после ActivateRadioEvent (подсказка «послушай радио»).
+        _staticPlaying = false;
+        if (_staticAudioSource != null)
+            _staticAudioSource.Stop();
 
         EnsureStationsLoop();
         if (_stations != null && _stations.Length > 0)
@@ -74,6 +82,20 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         {
             _videoPlayer.prepareCompleted += OnVideoPrepared;
             _videoPlayer.errorReceived += OnVideoError;
+        }
+    }
+
+    private void Update()
+    {
+        if (!_radioAdvanceByTimestamps || !_waitingStoryEnd || _storyAudioSource == null || !_storyAudioSource.isPlaying
+            || _customDialogueUI == null || _radioAdvanceTimestamps == null || _radioAdvanceIndex >= _radioAdvanceTimestamps.Length)
+            return;
+
+        float t = _storyAudioSource.time;
+        while (_radioAdvanceIndex < _radioAdvanceTimestamps.Length && t >= _radioAdvanceTimestamps[_radioAdvanceIndex])
+        {
+            _customDialogueUI.OnContinueConversation();
+            _radioAdvanceIndex++;
         }
     }
 
@@ -226,9 +248,10 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
         if (!string.IsNullOrEmpty(story.conversationTitle))
         {
+            RadioEventClipEntry clipEntry = GetEventClipEntry(story.eventId);
             if (_storyAudioSource != null)
             {
-                AudioClip clip = GetEventClip(story.eventId);
+                AudioClip clip = clipEntry != null ? clipEntry.clip : null;
                 if (clip == null && !string.IsNullOrEmpty(story.audioPath))
                     clip = Resources.Load<AudioClip>(story.audioPath);
                 if (clip != null)
@@ -240,7 +263,19 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             }
 
             _waitingStoryEnd = true;
-            SetRadioDialogueAutoAdvance(true);
+            if (clipEntry != null && clipEntry.advanceAtSeconds != null && clipEntry.advanceAtSeconds.Length > 0)
+            {
+                _radioAdvanceByTimestamps = true;
+                _radioAdvanceTimestamps = clipEntry.advanceAtSeconds;
+                _radioAdvanceIndex = 0;
+                SetRadioDialogueAutoAdvance(false);
+                _customDialogueUI?.SetManualAdvanceBlocked(true);
+            }
+            else
+            {
+                _radioAdvanceByTimestamps = false;
+                SetRadioDialogueAutoAdvance(true);
+            }
             DialogueManager.instance.conversationEnded += OnStoryEnded;
             if (string.Equals(story.conversationTitle, "Radio_Day1_2", System.StringComparison.OrdinalIgnoreCase))
                 GameFlowController.Instance?.NotifyRadioDay1_2Started();
@@ -266,6 +301,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             DialogueManager.instance.conversationEnded -= OnPlayerReplicaEnded;
         }
         SetRadioDialogueAutoAdvance(false);
+        _radioAdvanceByTimestamps = false;
+        _customDialogueUI?.SetManualAdvanceBlocked(false);
 
         if (_storyAudioSource != null && _storyAudioSource.isPlaying)
             _storyAudioSource.Stop();
@@ -520,10 +557,15 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         if (s != null) s.Play();
     }
 
-    private AudioClip GetEventClip(string eventId)
+    private RadioEventClipEntry GetEventClipEntry(string eventId)
     {
         if (_eventClips == null || string.IsNullOrEmpty(eventId)) return null;
-        var entry = _eventClips.FirstOrDefault(e => e != null && string.Equals(e.eventId, eventId, System.StringComparison.OrdinalIgnoreCase));
+        return _eventClips.FirstOrDefault(e => e != null && string.Equals(e.eventId, eventId, System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    private AudioClip GetEventClip(string eventId)
+    {
+        var entry = GetEventClipEntry(eventId);
         return entry?.clip;
     }
 
@@ -540,6 +582,8 @@ public class RadioEventClipEntry
 {
     public string eventId;
     public AudioClip clip;
+    [Tooltip("Секунды на таймлайне озвучки, в которые переключать реплику диалога: [0] — переход с 1-й на 2-ю реплику, [1] — со 2-й на 3-ю и т.д. Если пусто — используется фиксированный интервал авто-листания.")]
+    public float[] advanceAtSeconds = new float[0];
 }
 
 [System.Serializable]

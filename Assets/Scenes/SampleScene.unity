@@ -4402,7 +4402,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &406127309
 Transform:
   m_ObjectHideFlags: 0
@@ -5732,7 +5732,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 05b96eebeb8b098469a67c250706d353, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.231
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -10493,11 +10493,31 @@ MonoBehaviour:
   _storyAudioSource: {fileID: 902295042}
   _eventClips:
   - eventId: tutorial_radio
-    clip: {fileID: 8300000, guid: 60ecb8ff0fc22b24aadfb18d6ee08a29, type: 3}
+    clip: {fileID: 8300000, guid: aac2965326d08d84793d573413df04ed, type: 3}
+    advanceAtSeconds:
+    - 5
+    - 13
+    - 15.5
+    - 22
+    - 28
+    - 35.5
+    - 42
+    - 46
+    - 53
+    - 56
+    - 59
   - eventId: day1_2_radio_video
-    clip: {fileID: 8300000, guid: 60ecb8ff0fc22b24aadfb18d6ee08a29, type: 3}
+    clip: {fileID: 8300000, guid: 224bb0780d438274ea945d07919882dc, type: 3}
+    advanceAtSeconds:
+    - 2
+    - 7
+    - 11.2
+    - 16
+    - 20
+    - 28
   - eventId: day1_6_radio
-    clip: {fileID: 8300000, guid: 60ecb8ff0fc22b24aadfb18d6ee08a29, type: 3}
+    clip: {fileID: 8300000, guid: 852a85545b92c1b4f998b13f85652591, type: 3}
+    advanceAtSeconds: []
   _eventVideos:
   - eventId: day1_2_radio_video
     clip: {fileID: 32900000, guid: c7373f4302985ff46b2a8d3942ee02a3, type: 3}
@@ -14023,8 +14043,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.93, y: 0.9, z: 1.1136668}
-  m_Center: {x: -0.23, y: 0, z: 0}
+  m_Size: {x: 1.93, y: 0.72, z: 1.1136668}
+  m_Center: {x: -0.23, y: -0.34, z: 0}
 --- !u!1001 &1229230313
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15672,8 +15692,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 16.204, y: -47.35312}
-  m_SizeDelta: {x: 1994.5, y: 1786.8796}
+  m_AnchoredPosition: {x: 16.204, y: -29.67}
+  m_SizeDelta: {x: 1994.5, y: 1139}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1359877865
 MonoBehaviour:

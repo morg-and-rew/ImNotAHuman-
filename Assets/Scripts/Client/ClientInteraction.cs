@@ -1,5 +1,6 @@
 using PixelCrushers.DialogueSystem;
 using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -54,6 +55,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     public bool IsActive { get; private set; }
     public bool IsPlayerInside { get; private set; }
+    public bool IsWaitingForContinue => _waitingForContinue;
 
     private int _stepIndex = -1;
     private bool _waitingForContinue;
@@ -127,6 +129,23 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         HidePortraits();
     }
 
+    private void Start()
+    {
+        // #region agent log
+        try
+        {
+            var logPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "debug-ffa72b.log"));
+            var line = "{\"sessionId\":\"ffa72b\",\"hypothesisId\":\"H0\",\"location\":\"ClientInteraction.Start\",\"message\":\"ClientInteraction started\",\"data\":{\"logPath\":\"" + logPath.Replace("\\", "\\\\") + "\"},\"timestamp\":" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + "}\n";
+            File.AppendAllText(logPath, line);
+            Debug.Log("[Hint] ClientInteraction.Start | logPath=" + logPath);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("[Hint] ClientInteraction.Start log failed: " + e.Message);
+        }
+        // #endregion
+    }
+
     private void OnEnable()
     {
         if (_customDialogueUI != null)
@@ -161,7 +180,19 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<PlayerView>(out _))
+        {
             IsPlayerInside = true;
+            // #region agent log
+            try
+            {
+                var logPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "debug-ffa72b.log"));
+                var line = "{\"sessionId\":\"ffa72b\",\"hypothesisId\":\"H1\",\"location\":\"ClientInteraction.OnTriggerEnter\",\"message\":\"Player entered client zone\",\"data\":{\"isPlayerInside\":true},\"timestamp\":" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + "}\n";
+                File.AppendAllText(logPath, line);
+            }
+            catch (Exception ex) { Debug.LogWarning("[Hint] OnTriggerEnter log: " + ex.Message); }
+            Debug.Log("[Hint] Player ENTERED client zone (IsPlayerInside=true)");
+            // #endregion
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -169,8 +200,16 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (other.TryGetComponent<PlayerView>(out _))
         {
             IsPlayerInside = false;
-            if (PlayerHintView.Instance != null)
-                PlayerHintView.Instance.SetClientHint(null);
+            // #region agent log
+            try
+            {
+                var logPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "debug-ffa72b.log"));
+                var line = "{\"sessionId\":\"ffa72b\",\"hypothesisId\":\"H1\",\"location\":\"ClientInteraction.OnTriggerExit\",\"message\":\"Player left client zone\",\"data\":{\"isPlayerInside\":false},\"timestamp\":" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + "}\n";
+                File.AppendAllText(logPath, line);
+            }
+            catch (Exception ex) { Debug.LogWarning("[Hint] OnTriggerExit log: " + ex.Message); }
+            Debug.Log("[Hint] Player LEFT client zone (IsPlayerInside=false)");
+
             if (!IsActive)
                 StopDialogUIOnly();
         }
@@ -194,12 +233,33 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private void Update()
     {
-        if (PlayerHintView.Instance == null) return;
+        if (PlayerHintView.Instance == null)
+        {
+            // #region agent log
+            if (IsPlayerInside) { try { var logPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "debug-ffa72b.log")); var line = "{\"sessionId\":\"ffa72b\",\"hypothesisId\":\"H4\",\"location\":\"ClientInteraction.Update\",\"message\":\"PlayerHintView.Instance is null\",\"data\":{\"isPlayerInside\":true},\"timestamp\":" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + "}\n"; File.AppendAllText(logPath, line); } catch (Exception ex) { Debug.LogWarning("[Hint] log: " + ex.Message); } Debug.LogWarning("[Hint] PlayerHintView.Instance is NULL"); }
+            // #endregion
+            return;
+        }
         PlayerView player = GameFlowController.Instance != null ? GameFlowController.Instance.Player : null;
         bool holdingPhone = HandsRegistry.Hands != null && HandsRegistry.Hands.HasItem && HandsRegistry.Hands.Current is PhoneItemView;
-        bool canInteract = player != null && IsPlayerLookingAtClient(player) && !IsActive && !holdingPhone;
+        bool isLooking = player != null && IsPlayerLookingAtClient(player);
+        // Показывать подсказку когда можно начать диалог (!IsActive) или продолжить (_waitingForContinue)
+        bool canInteract = player != null && isLooking && !holdingPhone && (!IsActive || _waitingForContinue);
         Sprite sprite = canInteract ? _hintSprite : null;
         PlayerHintView.Instance.SetClientHint(sprite);
+        // #region agent log
+        if (Time.frameCount % 120 == 0)
+        {
+            try
+            {
+                var logPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "debug-ffa72b.log"));
+                var line = "{\"sessionId\":\"ffa72b\",\"hypothesisId\":\"H1\",\"location\":\"ClientInteraction.Update\",\"message\":\"heartbeat\",\"data\":{\"isPlayerInside\":\"" + IsPlayerInside + "\",\"isLooking\":\"" + isLooking + "\",\"canInteract\":\"" + canInteract + "\",\"spriteSet\":\"" + (sprite != null) + "\"},\"timestamp\":" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + "}\n";
+                File.AppendAllText(logPath, line);
+            }
+            catch (Exception ex) { Debug.LogWarning("[Hint] log ex: " + ex.Message); }
+            Debug.Log("[Hint] Client heartbeat | inZone=" + IsPlayerInside + " look=" + isLooking + " canInteract=" + canInteract + " sprite=" + (sprite != null));
+        }
+        // #endregion
     }
 
     public void StartClientDialog()
@@ -212,7 +272,6 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (DialogueManager.isConversationActive) return;
 
         IsActive = true;
-        if (PlayerHintView.Instance != null) PlayerHintView.Instance.SetClientHint(null);
         _waitingForContinue = false;
         _stepIndex = Mathf.Max(_stepIndex, 0);
         _isUsingOverrides = false;
@@ -230,7 +289,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
             DialogueManager.StopConversation();
 
         IsActive = true;
-        if (PlayerHintView.Instance != null) PlayerHintView.Instance.SetClientHint(null);
+
         _waitingForContinue = false;
         _isUsingOverrides = true;
         _currentClientIdOverride = clientId;
@@ -343,6 +402,8 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
             _isUsingOverrides = false;
             _currentClientIdOverride = null;
             _currentConversationOverride = null;
+            // Иначе IsActive остаётся true и canInteract всегда false — подсказка больше не показывается
+            IsActive = false;
         }
         else
         {

@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using PixelCrushers.DialogueSystem;
 using UnityEngine;
 
@@ -58,14 +60,37 @@ public sealed class PlayerInteractionController
 
     private void UpdateInteractionHint(IHoldable holdable, IWorldInteractable worldInteractable)
     {
+        bool holdingPhone = _hands.HasItem && _hands.Current is PhoneItemView;
+        bool preferClientHint = _client != null && _client.IsPlayerInside
+            && _client.IsPlayerLookingAtClient(_playerView)
+            && !holdingPhone
+            && (!_client.IsActive || _client.IsWaitingForContinue);
+
         Sprite sprite = null;
-        if (worldInteractable != null)
-            sprite = worldInteractable.HintSprite;
-        else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
-            sprite = pkg.HintSprite;
+        if (!preferClientHint)
+        {
+            if (worldInteractable != null)
+                sprite = worldInteractable.HintSprite;
+            else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
+                sprite = pkg.HintSprite;
+        }
 
         if (PlayerHintView.Instance != null)
             PlayerHintView.Instance.SetRaycastHint(sprite);
+
+        // #region agent log
+        if (_client != null && _client.IsPlayerInside && Time.frameCount % 30 == 0)
+        {
+            try
+            {
+                var logPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "debug-ffa72b.log"));
+                var line = "{\"sessionId\":\"ffa72b\",\"hypothesisId\":\"H3\",\"location\":\"PlayerInteractionController.UpdateInteractionHint\",\"message\":\"raycast hint\",\"data\":{\"preferClientHint\":\"" + preferClientHint + "\",\"raycastSpriteSet\":\"" + (sprite != null) + "\"},\"timestamp\":" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + "}\n";
+                File.AppendAllText(logPath, line);
+            }
+            catch (Exception ex) { Debug.LogWarning("[Hint] Raycast log: " + ex.Message); }
+            Debug.Log("[Hint] Raycast: preferClient=" + preferClientHint + " raycastSpriteSet=" + (sprite != null));
+        }
+        // #endregion
     }
 
     private bool IsHoldableAllowed(IHoldable holdable)

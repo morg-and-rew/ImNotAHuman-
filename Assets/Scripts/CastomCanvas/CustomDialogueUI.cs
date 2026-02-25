@@ -99,6 +99,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     private float _forcedAutoAdvanceDelay;
     private float _nextForcedAutoAdvanceAt;
     private bool _subtitlePanelHiddenByChoiceRule;
+    private bool _manualAdvanceBlocked;
 
     public event Action<Subtitle> OnSubtitleShown;
     public event Action OnClientDialogueFinishedByKey;
@@ -224,6 +225,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
         if (advanceOnlyWhenNoResponses && _inChoiceMode) return;
         if (!_subtitleVisible) return;
+        if (_manualAdvanceBlocked) return;
 
         if (Input.GetKeyDown(advanceKey))
         {
@@ -341,6 +343,21 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         _nextForcedAutoAdvanceAt = Time.unscaledTime + _forcedAutoAdvanceDelay;
         RefreshChoiceModeHiddenObjectsVisibility();
         SetAutoAdvanceHiddenObjectsVisible(!enabled);
+    }
+
+    /// <summary> Блокирует ручное перелистывание (пробел, кнопка). Используется для радио: листается только по таймлайну озвучки. Скрывает плашку Space (hideOnForcedAutoAdvanceMode). </summary>
+    public void SetManualAdvanceBlocked(bool blocked)
+    {
+        _manualAdvanceBlocked = blocked;
+        if (blocked)
+        {
+            HideContinueButtons();
+            SetAutoAdvanceHiddenObjectsVisible(false);
+        }
+        else
+        {
+            SetAutoAdvanceHiddenObjectsVisible(true);
+        }
     }
 
     private bool IsLastEntry(Subtitle subtitle)
