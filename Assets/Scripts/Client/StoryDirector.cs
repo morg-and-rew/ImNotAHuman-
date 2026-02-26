@@ -299,19 +299,6 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
-        if (_wait == WaitMode.WaitingClientPortraitOnlySpace && (_input.ConfirmPressed || _input.NextPressed))
-        {
-            _client?.HidePortraitOnly();
-            _flow?.RemovePackageFromHands();
-            GameStateService.SetState(GameState.ClientDialog);
-            _controller?.SetBlock(true);
-            // Уже у клиента (только что был ShowPortraitOnly) — не телепортировать к _dialogueLookPoint, иначе камера «улетает» вверх
-            ((GameFlowController)_flow).EnterClientDialogueState(true, movePlayerToClient: false);
-            _wait = WaitMode.WaitingDialogueEnd;
-            _client?.StartClientDialogWithSpecificStep("", "Client_Day1.5.2");
-            return;
-        }
-
         if (!_input.ConfirmPressed) return;
 
         if (_wait == WaitMode.WaitingClientReturnForDialogue && _flow != null && _flow.TryPerformPendingReturnToClient())
@@ -682,9 +669,9 @@ public sealed class StoryDirector : MonoBehaviour
     private void OnDialogueCompleted(ClientDialogueStepCompletionData data)
     {
         string conv = data.ConversationTitle ?? "";
-        // Client_Day1.4 обрабатываем всегда (разблокировка, телепорт по ChoseToGivePackage5577), даже если сюжет не в WaitingDialogueEnd.
         bool isClientDay14 = string.Equals(conv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase);
-        if (_wait != WaitMode.WaitingDialogueEnd && !isClientDay14)
+        bool isClientDay152 = string.Equals(conv, "Client_Day1.5.2", StringComparison.OrdinalIgnoreCase);
+        if (_wait != WaitMode.WaitingDialogueEnd && !isClientDay14 && !isClientDay152)
             return;
 
         _attitudeRecorder?.RecordFromLua();
@@ -714,10 +701,14 @@ public sealed class StoryDirector : MonoBehaviour
 
         if (string.Equals(conv, "Client_Day1.5.2", StringComparison.OrdinalIgnoreCase))
         {
+            _flow?.RemovePackageFromHands();
             GameStateService.SetState(GameState.None);
             ((GameFlowController)_flow).EnterClientDialogueState(false);
             _controller?.SetBlock(false);
-            _flow?.ShowHintOnceByKey(GameConfig.Tutorial.watchVideoKey);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            string watchKey = GameConfig.Tutorial?.watchVideoKey;
+            if (!string.IsNullOrEmpty(watchKey)) _flow?.ShowHintOnceByKey(watchKey);
             _wait = WaitMode.Idle;
             Advance();
             return;
@@ -897,10 +888,12 @@ public sealed class StoryDirector : MonoBehaviour
         {
             if (_currentStep != null && string.Equals(_currentStep.stepId, "return_to_client_day1_5", StringComparison.OrdinalIgnoreCase))
             {
-                _wait = WaitMode.WaitingClientPortraitOnlySpace;
-                GameStateService.SetState(GameState.ClientDialog);
+                // Запускаем Client_Day1.5.2 как обычный диалог (без портрета и F)
+                string convToStart = "Client_Day1.5.2";
+                _wait = WaitMode.WaitingDialogueEnd;
                 _controller?.SetBlock(true);
-                StartCoroutine(ShowPortraitOnlyNextFrame());
+                GameStateService.SetState(GameState.ClientDialog);
+                StartCoroutine(ShowClientDialogueNextFrame(convToStart));
                 return;
             }
             _wait = WaitMode.Idle;

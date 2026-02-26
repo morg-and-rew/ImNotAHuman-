@@ -77,20 +77,6 @@ public sealed class PlayerInteractionController
 
         if (PlayerHintView.Instance != null)
             PlayerHintView.Instance.SetRaycastHint(sprite);
-
-        // #region agent log
-        if (_client != null && _client.IsPlayerInside && Time.frameCount % 30 == 0)
-        {
-            try
-            {
-                var logPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "debug-ffa72b.log"));
-                var line = "{\"sessionId\":\"ffa72b\",\"hypothesisId\":\"H3\",\"location\":\"PlayerInteractionController.UpdateInteractionHint\",\"message\":\"raycast hint\",\"data\":{\"preferClientHint\":\"" + preferClientHint + "\",\"raycastSpriteSet\":\"" + (sprite != null) + "\"},\"timestamp\":" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + "}\n";
-                File.AppendAllText(logPath, line);
-            }
-            catch (Exception ex) { Debug.LogWarning("[Hint] Raycast log: " + ex.Message); }
-            Debug.Log("[Hint] Raycast: preferClient=" + preferClientHint + " raycastSpriteSet=" + (sprite != null));
-        }
-        // #endregion
     }
 
     private bool IsHoldableAllowed(IHoldable holdable)
