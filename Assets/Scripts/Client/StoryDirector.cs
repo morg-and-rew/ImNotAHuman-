@@ -26,8 +26,7 @@ public sealed class StoryDirector : MonoBehaviour
     private IPlayerBlocker _controller;
     private bool _pendingRemovePackageAfterDialogue;
     private Step _currentStep;
-
-
+    private bool _clientDay14HandledByConversationEnded;
 
     private enum WaitMode { Idle, WaitingDialogueEnd, WaitingWarehouseConfirm, WaitingReturnToClientArea, WaitingClientConfirm, WaitingClientReturnForDialogue, WaitingRadioComplete, WaitingTrigger, WaitingFreeRoamClientConfirm, WaitingKnockThenWarehouse, WaitingClientPortraitOnlySpace, WaitingComputerVideo, WaitingFadeToBlack, WaitingTeleportToWarehouse, WaitingTeleportToClient }
     private WaitMode _wait = WaitMode.Idle;
@@ -47,6 +46,8 @@ public sealed class StoryDirector : MonoBehaviour
         && string.Equals(_steps[_index - 1].stepId, "go_to_warehouse_for_radio", StringComparison.OrdinalIgnoreCase)
         && string.Equals(_steps[_index - 2].stepId, "go_to_phone", StringComparison.OrdinalIgnoreCase);
     public bool IsWaitingForWarehouseStoryZoneExit => false;
+    /// <summary> True, если сюжет ждёт подтверждения перехода на склад (например после Client_Day1.4 с ChoseToGivePackage5577). </summary>
+    public bool IsWaitingForWarehouseConfirm => _wait == WaitMode.WaitingWarehouseConfirm;
 
     public bool IsStepAllowingTravelToWarehouse =>
         IsAtOrPastStep("free_roam_before_clients")
@@ -101,6 +102,8 @@ public sealed class StoryDirector : MonoBehaviour
 
         if (_client != null)
             _client.ClientDialogueStepCompleted += OnDialogueCompleted;
+        if (DialogueManager.instance != null)
+            DialogueManager.instance.conversationEnded += OnDialogueSystemConversationEnded;
         _flow.OnTeleportedToWarehouse += OnTeleportedToWarehouse;
         _flow.OnTeleportedToClient += OnTeleportedToClient;
         if (_flow is GameFlowController gfc)
@@ -157,6 +160,8 @@ public sealed class StoryDirector : MonoBehaviour
         if (_knockDelayCoroutine != null)
             StopCoroutine(_knockDelayCoroutine);
         if (_client != null) _client.ClientDialogueStepCompleted -= OnDialogueCompleted;
+        if (DialogueManager.instance != null)
+            DialogueManager.instance.conversationEnded -= OnDialogueSystemConversationEnded;
         _flow.OnTeleportedToWarehouse -= OnTeleportedToWarehouse;
         _flow.OnTeleportedToClient -= OnTeleportedToClient;
         if (_flow is GameFlowController gfc)
@@ -676,14 +681,16 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void OnDialogueCompleted(ClientDialogueStepCompletionData data)
     {
-        if (_wait != WaitMode.WaitingDialogueEnd) return;
+        string conv = data.ConversationTitle ?? "";
+        // Client_Day1.4 обрабатываем всегда (разблокировка, телепорт по ChoseToGivePackage5577), даже если сюжет не в WaitingDialogueEnd.
+        bool isClientDay14 = string.Equals(conv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase);
+        if (_wait != WaitMode.WaitingDialogueEnd && !isClientDay14)
+            return;
 
         _attitudeRecorder?.RecordFromLua();
         _phoneUnlock?.TryUnlockFromDialogue();
         if (_pendingRemovePackageAfterDialogue) { _pendingRemovePackageAfterDialogue = false; _flow?.RemovePackageFromHands(); }
         if (_currentStep?.hideDeliveryNote == true && _deliveryNoteView != null) _deliveryNoteView.Hide();
-
-        string conv = data.ConversationTitle ?? "";
 
         if (string.Equals(conv, "Client_Day1.4.1", StringComparison.OrdinalIgnoreCase))
         {
@@ -716,34 +723,72 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
-        if (string.Equals(conv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(conv, "Client_Day1.2", StringComparison.OrdinalIgnoreCase))
         {
-            DialogueLua.SetVariable("RunWarehouse5577Steps", false);
-            bool choseToGive = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
-            if (!choseToGive)
-            {
-                GameStateService.SetState(GameState.None);
-                ((GameFlowController)_flow).EnterClientDialogueState(false);
-                _wait = WaitMode.Idle;
-                Advance();
-                return;
-            }
-            _pendingDialogueAfterReturn = "Client_Day1.4.1";
-            _wait = WaitMode.WaitingWarehouseConfirm;
             GameStateService.SetState(GameState.None);
             ((GameFlowController)_flow).EnterClientDialogueState(false);
-            if (_flow is GameFlowController gfc)
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            _wait = WaitMode.Idle;
+            Advance();
+            return;
+        }
+
+        if (string.Equals(conv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase))
+        {
+            if (_clientDay14HandledByConversationEnded)
             {
-                gfc.SetFixedPackageForNextWarehouse(5577);
-                gfc.ForceTravel(TravelTarget.Warehouse);
+                _clientDay14HandledByConversationEnded = false;
+                return;
             }
+            HandleClientDay14Completed();
             return;
         }
 
         GameStateService.SetState(GameState.None);
         ((GameFlowController)_flow).EnterClientDialogueState(false);
+        _controller?.SetBlock(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         _wait = WaitMode.Idle;
         Advance();
+    }
+
+    private void OnDialogueSystemConversationEnded(Transform actor)
+    {
+        if (DialogueManager.instance == null) return;
+        string lastConv = DialogueManager.lastConversationStarted ?? "";
+        if (!string.Equals(lastConv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase)) return;
+        _clientDay14HandledByConversationEnded = true;
+        HandleClientDay14Completed();
+    }
+
+    private void HandleClientDay14Completed()
+    {
+        _client?.CloseUI();
+        DialogueLua.SetVariable("RunWarehouse5577Steps", false);
+        bool choseToGive = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+        GameStateService.SetState(GameState.None);
+        ((GameFlowController)_flow).EnterClientDialogueState(false);
+        _controller?.SetBlock(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        if (!choseToGive)
+        {
+            bool wasInStoryFlow = _wait == WaitMode.WaitingDialogueEnd;
+            _wait = WaitMode.Idle;
+            if (wasInStoryFlow) Advance();
+            return;
+        }
+        // ChoseToGivePackage5577 == true: F на последней реплике уже нажат (диалог из finishByKeyConversations) — сразу телепорт на склад.
+        _pendingDialogueAfterReturn = "Client_Day1.4.1";
+        _wait = WaitMode.WaitingWarehouseConfirm;
+        if (_flow is GameFlowController gfc)
+        {
+            gfc.SetFixedPackageForNextWarehouse(5577);
+            _flow.ForceTravel(TravelTarget.Warehouse);
+        }
     }
 
     private void OnTeleportedToWarehouse()
@@ -762,6 +807,11 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
         if (_wait != WaitMode.WaitingWarehouseConfirm) return;
+
+        // После авто-телепорта на склад (например после Client_Day1.1) всегда разблокируем управление.
+        _controller?.SetBlock(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
         if (_currentStep != null && string.Equals(_currentStep.stepId, "free_roam_after_day1_4", StringComparison.OrdinalIgnoreCase) && _flow is GameFlowController gfcFree)
         {
@@ -812,6 +862,8 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
         _wait = WaitMode.Idle;
+        if (_flow is GameFlowController gfcDefault)
+            gfcDefault.RefreshWarehouseDeliveryNote();
         Advance();
     }
 

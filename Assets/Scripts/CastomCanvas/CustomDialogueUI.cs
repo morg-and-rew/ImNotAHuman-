@@ -12,6 +12,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [Header("Advance")]
     [SerializeField] private KeyCode advanceKey = KeyCode.Space;
     [SerializeField] private bool advanceOnlyWhenNoResponses = true;
+    [Tooltip("Минимальная задержка между нажатиями пробела (сек). 0 = без задержки.")]
+    [SerializeField, Min(0f)] private float manualAdvanceMinInterval = 2f;
     [Header("Forced Auto Advance")]
     [SerializeField, Min(0.1f)] private float autoAdvanceIntervalSeconds = 10f;
     [SerializeField] private GameObject[] hideOnForcedAutoAdvanceMode;
@@ -98,6 +100,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     private bool _forcedAutoAdvanceEnabled;
     private float _forcedAutoAdvanceDelay;
     private float _nextForcedAutoAdvanceAt;
+    private float _nextManualAdvanceAllowedAt;
     private bool _subtitlePanelHiddenByChoiceRule;
     private bool _manualAdvanceBlocked;
 
@@ -173,6 +176,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     private void OnConversationEnded(Transform actor)
     {
         SetForcedAutoAdvance(false);
+        _awaitFinish = false;
+        RefreshAwaitingFinishKeyUI();
     }
 
     private void Start()
@@ -207,6 +212,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             {
                 DialogueManager.StopConversation();
                 _awaitFinish = false;
+                RefreshAwaitingFinishKeyUI();
                 OnClientDialogueFinishedByKey?.Invoke();
             }
             return;
@@ -226,17 +232,37 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         if (advanceOnlyWhenNoResponses && _inChoiceMode) return;
         if (!_subtitleVisible) return;
         if (_manualAdvanceBlocked) return;
+        if (manualAdvanceMinInterval > 0f && Time.unscaledTime < _nextManualAdvanceAllowedAt) return;
 
         if (Input.GetKeyDown(advanceKey))
         {
-            if (_finishByKeyAllowed && _currentIsLastEntry && !_inChoiceMode)
-            {
-                _awaitFinish = true;
-                return;
-            }
-
-            OnContinueConversation();
+            if (TryAdvanceOrRequireFinishKey()) return;
+            base.OnContinueConversation();
         }
+    }
+
+    /// <summary>
+    /// Вызывается при нажатии пробела или при вызове OnContinue из кнопки/Submit.
+    /// Для диалогов из finishByKeyConversations на последней реплике не листаем — только F завершает (через _awaitFinish).
+    /// Иначе пробел мог бы закрывать диалог через другой обработчик (например Submit у кнопки), и сюжет не переходил бы на склад.
+    /// </summary>
+    public override void OnContinueConversation()
+    {
+        if (TryAdvanceOrRequireFinishKey())
+            return;
+        base.OnContinueConversation();
+    }
+
+    /// <returns>true, если продолжать не нужно (ожидаем F).</returns>
+    private bool TryAdvanceOrRequireFinishKey()
+    {
+        if (_finishByKeyAllowed && _currentIsLastEntry && !_inChoiceMode)
+        {
+            _awaitFinish = true;
+            RefreshAwaitingFinishKeyUI();
+            return true;
+        }
+        return false;
     }
 
     public override void ShowSubtitle(Subtitle subtitle)
@@ -244,10 +270,16 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         base.ShowSubtitle(subtitle);
 
         _subtitleVisible = true;
-        _awaitFinish = false;
 
         _finishByKeyAllowed = IsFinishByKeyConversation(subtitle);
         _currentIsLastEntry = IsLastEntry(subtitle);
+        // Как только показана последняя реплика диалога «только F» — сразу ждём F, чтобы по F перейти на склад без лишнего пробела.
+        _awaitFinish = _finishByKeyAllowed && _currentIsLastEntry && !_inChoiceMode;
+        RefreshAwaitingFinishKeyUI();
+
+        if (manualAdvanceMinInterval > 0f && !_forcedAutoAdvanceEnabled && !_manualAdvanceBlocked)
+            _nextManualAdvanceAllowedAt = Time.unscaledTime + manualAdvanceMinInterval;
+
         if (_forcedAutoAdvanceEnabled)
             _nextForcedAutoAdvanceAt = Time.unscaledTime + _forcedAutoAdvanceDelay;
 
@@ -342,7 +374,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             : Mathf.Max(0.1f, autoAdvanceIntervalSeconds);
         _nextForcedAutoAdvanceAt = Time.unscaledTime + _forcedAutoAdvanceDelay;
         RefreshChoiceModeHiddenObjectsVisibility();
-        SetAutoAdvanceHiddenObjectsVisible(!enabled);
+        RefreshSpacePlaqueVisibility();
     }
 
     /// <summary> Блокирует ручное перелистывание (пробел, кнопка). Используется для радио: листается только по таймлайну озвучки. Скрывает плашку Space (hideOnForcedAutoAdvanceMode). </summary>
@@ -356,7 +388,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         }
         else
         {
-            SetAutoAdvanceHiddenObjectsVisible(true);
+            RefreshSpacePlaqueVisibility();
         }
     }
 
@@ -365,7 +397,17 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         if (subtitle?.dialogueEntry == null) return false;
 
         List<Link> links = subtitle.dialogueEntry.outgoingLinks;
-        return (links == null || links.Count == 0);
+        if (links == null || links.Count == 0) return true;
+        // В Dialogue System последняя реплика часто имеет одну ссылку на ноду 0 (START/конец) — тогда пробел не должен завершать диалог, только F.
+        // Учитываем и случай одной ссылки на 0, и случай нескольких ссылок, среди которых есть переход в конец (чтобы не было "раз через раз").
+        int convId = subtitle.dialogueEntry.conversationID;
+        for (int i = 0; i < links.Count; i++)
+        {
+            Link link = links[i];
+            if (link.destinationConversationID == convId && link.destinationDialogueID == 0)
+                return true;
+        }
+        return false;
     }
 
     private IEnumerator HideSubtitlePanelNextFrame()
@@ -478,21 +520,24 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
     private bool IsFinishByKeyConversation(Subtitle subtitle)
     {
-        if (finishByKeyConversations == null || finishByKeyConversations.Length == 0)
-            return false;
-
         if (subtitle?.dialogueEntry == null)
             return false;
-
-        int conversationID = subtitle.dialogueEntry.conversationID;
 
         DialogueDatabase db = DialogueManager.masterDatabase;
         if (db == null) return false;
 
-        Conversation conv = db.GetConversation(conversationID);
+        Conversation conv = db.GetConversation(subtitle.dialogueEntry.conversationID);
         if (conv == null) return false;
 
         string title = conv.Title;
+
+        // Только Client_Day1.4: правила отдельно, без влияния на остальные диалоги. Если выбрал «отдать посылку» — завершать по F, иначе — пробелом.
+        if (string.Equals(title, "Client_Day1.4", StringComparison.OrdinalIgnoreCase))
+            return DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+
+        if (finishByKeyConversations == null || finishByKeyConversations.Length == 0)
+            return false;
+
         return finishByKeyConversations.Any(s =>
             !string.IsNullOrEmpty(s) && string.Equals(s.Trim(), title, StringComparison.OrdinalIgnoreCase));
     }
@@ -605,6 +650,33 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             GameObject go = hideOnForcedAutoAdvanceMode[i];
             if (go != null)
                 go.SetActive(visible);
+        }
+    }
+
+    /// <summary>
+    /// Плашка Space видна только когда не радио и не ожидаем F. При прослушивании радио (авто-лист или блок по таймлайну) и при «нажми F» — скрыта.
+    /// </summary>
+    private void RefreshSpacePlaqueVisibility()
+    {
+        bool visible = !_forcedAutoAdvanceEnabled && !_awaitFinish && !_manualAdvanceBlocked;
+        SetAutoAdvanceHiddenObjectsVisible(visible);
+    }
+
+    /// <summary>
+    /// Когда ждём F для перехода на склад: скрываем плашку Space, показываем плашку F на игроке.
+    /// Когда не ждём F — обновляем видимость плашки Space (учитывая радио) и скрываем плашку F.
+    /// </summary>
+    private void RefreshAwaitingFinishKeyUI()
+    {
+        if (_awaitFinish)
+        {
+            RefreshSpacePlaqueVisibility();
+            PressFToWarehouseHintView.Instance?.Show();
+        }
+        else
+        {
+            RefreshSpacePlaqueVisibility();
+            PressFToWarehouseHintView.Instance?.Hide();
         }
     }
 

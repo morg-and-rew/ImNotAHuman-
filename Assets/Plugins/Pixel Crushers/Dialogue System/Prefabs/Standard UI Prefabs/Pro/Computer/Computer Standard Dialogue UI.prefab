@@ -300,7 +300,6 @@ MonoBehaviour:
   finishByKeyConversations:
   - Client_Day1
   - Client_Day1.1
-  - Client_Day1.1
   - Client_Day1.3
   - Client_Day1.5
   npcSubtitlePanel: {fileID: 1046714570033430}

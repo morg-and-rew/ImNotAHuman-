@@ -88,6 +88,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _acceptAnyPackageForReturn;
 
     private bool _freeTeleportTargetActive;
+    /// <summary> True, если переход на склад подтверждается нажатием F из зоны клиента (без подхода к двери). Например после Client_Day1.4 ChoseToGivePackage5577. </summary>
+    private bool _allowWarehouseConfirmFromClientArea;
     private bool _tutorialWarehouseVisit;
     private bool _useFreeTeleportPointForNextClientTravel;
     private float _lastTeleportToClientTime = -999f;
@@ -332,6 +334,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                     if (_travelTarget == TravelTarget.Client)
                         MarkTutorialStepCompleted(GameConfig.Tutorial.returnToClientKey);
                     _freeTeleportTargetActive = false;
+                    _allowWarehouseConfirmFromClientArea = false;
                     return;
                 }
             }
@@ -385,6 +388,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 return false;
             if (GameStateService.CurrentState == GameState.Warehouse)
                 return false;
+            // Подтверждение из зоны клиента (напр. после Client_Day1.4 «отдать посылку 5577») — F без подхода к двери.
+            if (_allowWarehouseConfirmFromClientArea)
+                return true;
+            // Отдельная проверка: после Client_Day1.4 с ChoseToGivePackage5577 = true — F из зоны клиента без подхода к двери.
+            if (_storyDirector != null && _storyDirector.IsWaitingForWarehouseConfirm && DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool)
+                return true;
             if (!IsPlayerLookingAt(_warehouseEntranceDoor))
                 return false;
             if (_warehouseEntranceDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseEntranceDoor.position) > _doorTeleportMaxDistance)
@@ -498,7 +507,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         if (!_freeTeleportTargetActive) return;
 
-        if (_travelTarget == TravelTarget.Warehouse && !inZoneToWarehouse)
+        // Не сбрасывать цель «склад», если подтверждение по F из зоны клиента (без подхода к двери).
+        bool warehouseConfirmFromClientAllowed = _allowWarehouseConfirmFromClientArea
+            || (_storyDirector != null && _storyDirector.IsWaitingForWarehouseConfirm && DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool);
+        if (_travelTarget == TravelTarget.Warehouse && !inZoneToWarehouse && !warehouseConfirmFromClientAllowed)
         {
             _travelTarget = TravelTarget.None;
             _freeTeleportTargetActive = false;
@@ -670,11 +682,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         ExpireAllRadioAvailable();
 
-        Teleport(_warehousePoint);
-        GameStateService.SetState(GameState.Warehouse);
-
-        // На складе показываем туториал: подойдите к посылке и нажмите E (tutorial.return_to_client)
-        ShowHintOnceByKey(GameConfig.Tutorial.returnToClientKey);
+        // Не телепортируем здесь: StopConversation вызовет conversationEnded → ClientDialogueStepCompleted → StoryDirector.Advance() → ForceTravel(Warehouse).
+        // Так сработает OnTeleportedToWarehouse, разблокируется управление, покажется записка и закроется UI клиента.
     }
 
     private void Teleport(Transform point)
@@ -961,9 +970,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _tutorialHint?.Show(GetUIText(key));
     }
 
-    public void SetTravelTarget(TravelTarget target, string hintText, bool useFreeTeleportPointForClient = false)
+    public void SetTravelTarget(TravelTarget target, string hintText, bool useFreeTeleportPointForClient = false, bool allowWarehouseConfirmFromClient = false)
     {
         _freeTeleportTargetActive = false;
+        _allowWarehouseConfirmFromClientArea = allowWarehouseConfirmFromClient && target == TravelTarget.Warehouse;
+        if (_allowWarehouseConfirmFromClientArea)
+            _freeTeleportTargetActive = true;
         _useFreeTeleportPointForNextClientTravel = useFreeTeleportPointForClient && target == TravelTarget.Client;
         if (target == TravelTarget.Warehouse && IsRadioTutorialPlaying())
         {
@@ -1117,8 +1129,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         {
             if (IsRadioTutorialPlaying())
                 return false;
-            RemovePackageFromHands();
             Transform point = freeTeleport && _freeTeleportToWarehousePoint != null ? _freeTeleportToWarehousePoint : _warehousePoint;
+            if (_player == null || point == null)
+                return false;
+            RemovePackageFromHands();
             Teleport(point);
             GameStateService.SetState(GameState.Warehouse);
 
@@ -1140,6 +1154,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             _travelTarget = TravelTarget.None;
             OnTeleportedToWarehouse?.Invoke();
             _clientInteraction?.CloseUI();
+            ShowHintOnceByKey(GameConfig.Tutorial.returnToClientKey);
             return true;
         }
 

@@ -54,7 +54,7 @@ public interface IGameFlowController
     event Action OnTeleportedToWarehouse;
     event Action OnTeleportedToClient;
 
-    void SetTravelTarget(TravelTarget target, string hintText, bool useFreeTeleportPointForClient = false);
+    void SetTravelTarget(TravelTarget target, string hintText, bool useFreeTeleportPointForClient = false, bool allowWarehouseConfirmFromClient = false);
     void SetTutorialWarehouseVisit(bool isTutorial);
     void ForceTravel(TravelTarget target);
     void SetAllowReturnToClientWithoutExitZone(bool allow);
