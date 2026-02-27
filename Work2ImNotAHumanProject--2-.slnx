@@ -20,8 +20,8 @@
   <Project Path="UnityEngine.TestRunner.csproj" />
   <Project Path="Unity.RenderPipelines.HighDefinition.Editor.csproj" />
   <Project Path="Unity.Burst.csproj" />
-  <Project Path="Unity.VisualScripting.Flow.Editor.csproj" />
   <Project Path="Unity.RenderPipelines.HighDefinition.Runtime.csproj" />
+  <Project Path="Unity.VisualScripting.Flow.Editor.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
   <Project Path="Unity.InputSystem.csproj" />
   <Project Path="PPv2URPConverters.csproj" />
@@ -33,8 +33,8 @@
   <Project Path="Unity.UnifiedRayTracing.Runtime.csproj" />
   <Project Path="Unity.AI.Navigation.Editor.ConversionSystem.csproj" />
   <Project Path="Unity.VisualScripting.State.Editor.csproj" />
-  <Project Path="Unity.VisualEffectGraph.Runtime.csproj" />
   <Project Path="Autodesk.Fbx.csproj" />
+  <Project Path="Unity.VisualEffectGraph.Runtime.csproj" />
   <Project Path="Unity.Burst.CodeGen.csproj" />
   <Project Path="Unity.VisualScripting.Flow.csproj" />
   <Project Path="Unity.PerformanceTesting.csproj" />
