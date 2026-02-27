@@ -1125,6 +1125,57 @@ MonoBehaviour:
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
     removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.1
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 376cafa4204a9a44cb7a59f83f637b70, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 73, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 4
+      leftSprite: {fileID: 21300000, guid: a2e5da62598f9fc49bfd50bbb7259d88, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 73, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 14
+      leftSprite: {fileID: 21300000, guid: a2e5da62598f9fc49bfd50bbb7259d88, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 73, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
   wrongPackageConversation: Warehouse_WrongPackage
   enforceCorrectAfterFirstWrong: 1
   centeredRightAnchoredPos: {x: 145.6, y: 73, z: 191.5}

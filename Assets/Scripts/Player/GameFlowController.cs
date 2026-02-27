@@ -15,6 +15,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [SerializeField] private Transform _clientPoint;
     [SerializeField] private Transform _postVideoTablePoint;
     [SerializeField] private float _postVideoCameraPitchDown = -25f;
+    [Tooltip("Точка спавна игрока в начале второго дня.")]
+    [SerializeField] private Transform _playerSpawnPoint;
 
     [Header("Intro")]
     [SerializeField] private IntroView _introView;
@@ -83,6 +85,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public static GameFlowController Instance;
 
     private TravelTarget _travelTarget = TravelTarget.None;
+    /// <summary> Последняя зона, в которую телепортировались — чтобы не телепортировать повторно в ту же (глюк «остаёшься на месте»). </summary>
+    private TravelTarget _lastTeleportDestination = TravelTarget.None;
     private int _fixedPackageForNextWarehouse;
     private int _pendingDialogueReturnPackage;
     private bool _acceptAnyPackageForReturn;
@@ -107,6 +111,32 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (string.IsNullOrEmpty(key)) return;
         _hintKeysShownOnce.Add(key);
+    }
+
+    /// <summary> Пометить туториалы дня 1 как пройденные (для второго дня не показывать подсказки туториала). </summary>
+    public void MarkDay1TutorialCompleted()
+    {
+        if (GameConfig.Tutorial == null) return;
+        TutorialConfig t = GameConfig.Tutorial;
+        MarkTutorialStepCompleted(t.doorWarehouseKey);
+        MarkTutorialStepCompleted(t.returnPressFKey);
+        MarkTutorialStepCompleted(t.returnToClientKey);
+        MarkTutorialStepCompleted(t.goWarehouseKey);
+        MarkTutorialStepCompleted(t.pressSpaceKey);
+        MarkTutorialStepCompleted(t.routerHintKey);
+        MarkTutorialStepCompleted(t.phoneHintKey);
+        MarkTutorialStepCompleted(t.phoneCallProviderKey);
+        MarkTutorialStepCompleted(t.phonePutKey);
+        MarkTutorialStepCompleted(t.radioUseKey);
+        MarkTutorialStepCompleted(t.radioBeforeClientKey);
+        MarkTutorialStepCompleted(t.meetClientKey);
+        MarkTutorialStepCompleted(t.warehousePickKey);
+        MarkTutorialStepCompleted(t.warehouseReturnKey);
+        MarkTutorialStepCompleted(t.windowLookKey);
+        MarkTutorialStepCompleted(t.watchVideoKey);
+        MarkTutorialStepCompleted(t.emptyKey);
+        _meetClientHintShown = true;
+        _tutorialHint?.Hide();
     }
 
     public event Action OnTeleportedToWarehouse;
@@ -217,6 +247,28 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             onComplete?.Invoke();
     }
 
+    /// <summary> Начало второго дня: телепорт в PlayerSpawnPoint, интро из чёрного в прозрачный (после показа интро скрываем fade-to-black). </summary>
+    public void PlayDay2Intro(Action onComplete)
+    {
+        if (_playerSpawnPoint != null && _player != null)
+        {
+            Teleport(_playerSpawnPoint);
+            _lastTeleportDestination = TravelTarget.None;
+        }
+
+        float duration = GameConfig.Intro != null ? GameConfig.Intro.fadeDuration : 3f;
+        if (_introView != null)
+        {
+            _introView.PlayFadeFromBlack(duration, onComplete);
+            _fadeToBlackView?.Hide();
+        }
+        else
+        {
+            _fadeToBlackView?.Hide();
+            onComplete?.Invoke();
+        }
+    }
+
     private void OnEnable()
     {
         Instance = this;
@@ -229,6 +281,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_customDialogueUI != null)
             _customDialogueUI.OnClientDialogueFinishedByKey -= OnClientDialogueFinishedByKey;
+
+        if (DialogueManager.instance != null)
+            DialogueManager.instance.conversationStarted -= OnDialogueSystemConversationStarted;
 
         if (_clientInteraction != null)
         {
@@ -247,11 +302,26 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _tutorialHint?.Hide();
     }
 
+    /// <summary> Во время разговора по радио игрок может свободно ходить — не блокируем управление. </summary>
+    private void OnDialogueSystemConversationStarted(Transform _)
+    {
+        string title = DialogueManager.lastConversationStarted ?? "";
+        if (string.IsNullOrEmpty(title)) return;
+        bool isRadioConversation = title.StartsWith("Radio_", StringComparison.OrdinalIgnoreCase)
+            || title.StartsWith("Hero_Replic", StringComparison.OrdinalIgnoreCase);
+        if (isRadioConversation)
+            _controller?.SetBlock(false);
+    }
+
     public void Init(PlayerView player, IPlayerBlocker controller, IPlayerInput input, IClientInteraction clientInteraction, DeliveryNoteView deliveryNoteView, CustomDialogueUI customDialogueUI = null)
     {
         if (_initialized) return;
 
         _initialized = true;
+
+        // Интро только в 1-й день при старте с нуля; при загрузке сохранения не показываем
+        if (_introView != null)
+            _introView.gameObject.SetActive(false);
 
         _player = player;
         _controller = controller;
@@ -271,11 +341,43 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             _clientInteraction.RequestRemovePackageFromHands += OnRequestRemovePackageFromHands;
         }
 
+        if (DialogueManager.instance != null)
+        {
+            DialogueManager.instance.conversationStarted -= OnDialogueSystemConversationStarted;
+            DialogueManager.instance.conversationStarted += OnDialogueSystemConversationStarted;
+        }
+
         _storyDirector.Initialize(this, _input, controller, deliveryNoteView);
 
         DialogueManager.SetLanguage(_language);
 
+        if (GameSaveSystem.LoadFromSaveAtStart && GameSaveSystem.LoadDay1() != null)
+        {
+            StartCoroutine(StartFromSavedGameDelayed());
+            return;
+        }
+
         EnterIntro();
+    }
+
+    private System.Collections.IEnumerator StartFromSavedGameDelayed()
+    {
+        if (_introView != null)
+            _introView.gameObject.SetActive(false);
+        yield return null;
+        _controller.SetBlock(false);
+        GameStateService.SetState(GameState.None);
+        Day1SaveData loaded = GameSaveSystem.LoadDay1();
+        if (loaded != null)
+        {
+            _storyDirector.ApplyDay1Save(loaded);
+            MarkDay1TutorialCompleted();
+            _storyDirector.StartStoryFromStepId("fade_to_black_day1_end");
+        }
+        else
+        {
+            _storyDirector.StartStory();
+        }
     }
 
     private void EnterIntro()
@@ -309,6 +411,19 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private System.Collections.IEnumerator StartStoryDelayed(float seconds)
     {
         yield return WaitForSecondsCache.Get(seconds);
+
+        if (GameSaveSystem.LoadFromSaveAtStart)
+        {
+            Day1SaveData loaded = GameSaveSystem.LoadDay1();
+            if (loaded != null)
+            {
+                _storyDirector.ApplyDay1Save(loaded);
+                MarkDay1TutorialCompleted();
+                _storyDirector.StartStoryFromStepId("fade_to_black_day1_end");
+                yield break;
+            }
+        }
+
         _storyDirector.StartStory();
     }
 
@@ -318,7 +433,14 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         if (_travelTarget != TravelTarget.None && _input.ConfirmPressed)
         {
-            if (CanConfirmTravelToCurrentTarget())
+            // Не телепортировать в ту же зону: на складе — только в зону выдачи, в зоне выдачи — только на склад
+            bool onWarehouseNow = GameStateService.CurrentState == GameState.Warehouse;
+            if (onWarehouseNow && _travelTarget == TravelTarget.Warehouse)
+                _travelTarget = TravelTarget.None;
+            else if (!onWarehouseNow && _travelTarget == TravelTarget.Client)
+                _travelTarget = TravelTarget.None;
+
+            if (_travelTarget != TravelTarget.None && CanConfirmTravelToCurrentTarget())
             {
                 if (_travelTarget == TravelTarget.Client && _pendingDialogueReturnPackage > 0)
                 {
@@ -364,7 +486,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             return;
         }
 
-        if (GameStateService.CurrentState == GameState.ClientDialog && GameConfig.StoryStartOnClientInteract)
+        // День 2: в шаге day2_start разрешаем взаимодействие с клиентом (Client_day2.1); вызываем HandleClientDialog даже при startTrigger=auto
+        bool isDay2StartStep = _storyDirector != null && string.Equals(_storyDirector.CurrentStepId, "day2_start", StringComparison.OrdinalIgnoreCase);
+        if (isDay2StartStep && _clientInteraction != null && _clientInteraction.IsPlayerInside && _clientInteraction.IsPlayerLookingAtClient(_player))
+            GameStateService.SetState(GameState.ClientDialog);
+
+        if ((GameStateService.CurrentState == GameState.ClientDialog && GameConfig.StoryStartOnClientInteract) || isDay2StartStep)
             HandleClientDialog();
     }
 
@@ -480,8 +607,23 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         bool inZoneToClient = IsPlayerInZoneTo(TravelTarget.Client);
         bool inZoneToWarehouse = IsPlayerInZoneTo(TravelTarget.Warehouse);
 
+        // Не предлагать переход в ту же зону: на складе — только в зону выдачи, в зоне выдачи — только на склад
+        if (onWarehouse && _travelTarget == TravelTarget.Warehouse)
+        {
+            _travelTarget = TravelTarget.None;
+            _freeTeleportTargetActive = false;
+            HideHint();
+        }
+        else if (!onWarehouse && _travelTarget == TravelTarget.Client)
+        {
+            _travelTarget = TravelTarget.None;
+            _freeTeleportTargetActive = false;
+            HideHint();
+        }
+
         if (_travelTarget == TravelTarget.None)
         {
+            // На складе — цель только зона выдачи; в зоне выдачи — цель только склад
             bool canSetWarehouseTarget = !onWarehouse
                 && !IsRadioTutorialPlaying()
                 && GameStateService.CurrentState != GameState.Phone
@@ -549,12 +691,21 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private void HandleClientDialog()
     {
         if (_clientInteraction == null || _input == null) return;
-        if (!GameConfig.StoryStartOnClientInteract) return;
+        bool isDay2Start = _storyDirector != null && string.Equals(_storyDirector.CurrentStepId, "day2_start", StringComparison.OrdinalIgnoreCase);
+        // Для обычного старта сюжета проверяем StoryStartOnClientInteract; для дня 2 (day2_start) всегда разрешаем
+        if (!isDay2Start && !GameConfig.StoryStartOnClientInteract) return;
         // Если в руках предмет (телефон и т.д.) — E должен сначала положить его, а не запускать диалог с клиентом
         if (HandsRegistry.Hands != null && HandsRegistry.Hands.HasItem)
             return;
         if (_clientInteraction.IsPlayerLookingAtClient(_player) && !_clientInteraction.IsActive && _input.InteractPressed)
         {
+            // День 2: выбор «сразу к клиентам» — запускаем Client_day2.1 и переходим к шагу day2_after_radio
+            if (isDay2Start)
+            {
+                ExpireAllRadioAvailable();
+                _storyDirector.AdvanceFromDay2StartToClient();
+                return;
+            }
             ExpireAllRadioAvailable();
             _storyDirector.StartStory();
         }
@@ -1125,6 +1276,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private bool PerformTravel(TravelTarget target, bool ignoreClientRequirements, bool freeTeleport = false)
     {
+        // Не телепортировать в ту же зону, где уже находимся (отслеживаем последний телепорт)
+        if (_lastTeleportDestination != TravelTarget.None && _lastTeleportDestination == target)
+            return false;
+
         if (target == TravelTarget.Warehouse)
         {
             if (IsRadioTutorialPlaying())
@@ -1152,6 +1307,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             _tutorialWarehouseVisit = false;
 
             _travelTarget = TravelTarget.None;
+            _lastTeleportDestination = TravelTarget.Warehouse;
             OnTeleportedToWarehouse?.Invoke();
             _clientInteraction?.CloseUI();
             ShowHintOnceByKey(GameConfig.Tutorial.returnToClientKey);
@@ -1184,6 +1340,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             GameStateService.SetState(GameState.ClientDialog);
 
             _travelTarget = TravelTarget.None;
+            _lastTeleportDestination = TravelTarget.Client;
             _lastTeleportToClientTime = Time.time;
             OnTeleportedToClient?.Invoke();
             _clientInteraction?.CloseUI();

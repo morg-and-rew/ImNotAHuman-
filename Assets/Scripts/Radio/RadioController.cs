@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -315,6 +316,13 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         OnStoryEnded(actor);
     }
 
+    private IEnumerator StartPlayerReplicaNextFrame(string conversationTitle)
+    {
+        yield return null;
+        if (_waitingPlayerReplica && !string.IsNullOrEmpty(conversationTitle) && DialogueManager.instance != null)
+            DialogueManager.StartConversation(conversationTitle);
+    }
+
     private void OnTeleportedToWarehouseForVideo()
     {
         if (_waitingForLeaveWarehouseBeforeVideo)
@@ -378,7 +386,9 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             _waitingPlayerReplica = true;
             SetRadioDialogueAutoAdvance(false);
             DialogueManager.instance.conversationEnded += OnPlayerReplicaEnded;
-            DialogueManager.StartConversation(_phasedStory.playerReplicaConversation);
+            // Запуск реплики героя на следующий кадр, чтобы Dialogue System успел завершить предыдущий разговор
+            string replicaConv = _phasedStory.playerReplicaConversation;
+            StartCoroutine(StartPlayerReplicaNextFrame(replicaConv));
             return;
         }
 

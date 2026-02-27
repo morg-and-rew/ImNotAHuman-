@@ -221,7 +221,6 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         if (_forcedAutoAdvanceEnabled)
         {
             if (advanceOnlyWhenNoResponses && _inChoiceMode) return;
-            if (!_subtitleVisible) return;
             if (Time.unscaledTime < _nextForcedAutoAdvanceAt) return;
 
             _nextForcedAutoAdvanceAt = Time.unscaledTime + _forcedAutoAdvanceDelay;
@@ -230,7 +229,6 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         }
 
         if (advanceOnlyWhenNoResponses && _inChoiceMode) return;
-        if (!_subtitleVisible) return;
         if (_manualAdvanceBlocked) return;
         if (manualAdvanceMinInterval > 0f && Time.unscaledTime < _nextManualAdvanceAllowedAt) return;
 

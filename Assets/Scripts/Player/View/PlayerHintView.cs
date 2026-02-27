@@ -13,6 +13,8 @@ public sealed class PlayerHintView : MonoBehaviour
     private Sprite _doorSprite;
     private Sprite _clientSprite;
 
+    private bool _suspended;
+
     private void Awake()
     {
         if (Instance != null)
@@ -53,8 +55,27 @@ public sealed class PlayerHintView : MonoBehaviour
         _clientSprite = sprite;
     }
 
+    /// <summary>Включить/выключить временное скрытие всех подсказок (например, во время просмотра видео на мониторе).</summary>
+    public void SetSuspended(bool value)
+    {
+        _suspended = value;
+        if (_suspended && _root != null)
+        {
+            _root.SetActive(false);
+        }
+    }
+
     private void LateUpdate()
     {
+        if (_suspended)
+        {
+            if (_root != null)
+                _root.SetActive(false);
+            if (_image != null)
+                _image.enabled = false;
+            return;
+        }
+
         // Оператор ?? (null-coalescing): берём первый не-null спрайт в порядке приоритета.
         // client → raycast (луч по предметам) → window → door. Если все четыре null, showSprite = null и рут не включится.
         // showSprite будет null, если: ClientInteraction не вызвал SetClientHint(спрайт), или вызвал SetClientHint(null);

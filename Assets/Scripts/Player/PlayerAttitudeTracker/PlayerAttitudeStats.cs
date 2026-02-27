@@ -36,4 +36,12 @@ public sealed class PlayerAttitudeStats
 
         Changed?.Invoke();
     }
+
+    public void SetCounts(int neutral, int mystical, int skeptical)
+    {
+        NeutralCount = Mathf.Max(0, neutral);
+        MysticalCount = Mathf.Max(0, mystical);
+        SkepticalCount = Mathf.Max(0, skeptical);
+        Changed?.Invoke();
+    }
 }

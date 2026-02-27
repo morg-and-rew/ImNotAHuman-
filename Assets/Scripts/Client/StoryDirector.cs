@@ -260,6 +260,24 @@ public sealed class StoryDirector : MonoBehaviour
         Advance();
     }
 
+    /// <summary> День 2: игрок выбрал «сразу к клиентам» — переходим к day2_after_radio и сразу запускаем Client_day2.1 (игрок уже у клиента). </summary>
+    public void AdvanceFromDay2StartToClient()
+    {
+        if (!string.Equals(CurrentStepId, "day2_start", StringComparison.OrdinalIgnoreCase)) return;
+        _wait = WaitMode.Idle;
+        Advance();
+        // Игрок уже подошёл к клиенту и нажал E — сразу запускаем диалог, без второго нажатия
+        if (_currentStep != null && string.Equals(_currentStep.stepId, "day2_after_radio", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(_currentStep.conversationTitle))
+        {
+            _pendingRemovePackageAfterDialogue = _currentStep.removePackageAfterDialogue;
+            _controller?.SetBlock(true);
+            GameStateService.SetState(GameState.ClientDialog);
+            ((GameFlowController)_flow).EnterClientDialogueState(true);
+            _wait = WaitMode.WaitingDialogueEnd;
+            _client?.StartClientDialogWithSpecificStep("", _currentStep.conversationTitle);
+        }
+    }
+
     public void Tick()
     {
         if (_input == null) return;
@@ -294,6 +312,18 @@ public sealed class StoryDirector : MonoBehaviour
         if (_wait == WaitMode.WaitingFreeRoamClientConfirm && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed
             && (HandsRegistry.Hands == null || !HandsRegistry.Hands.HasItem))
         {
+            // День 2: после радио ждём, пока игрок сам подойдёт к клиенту и нажмёт E — тогда запускаем Client_day2.1
+            if (_currentStep != null && !string.IsNullOrEmpty(_currentStep.conversationTitle)
+                && string.Equals(_currentStep.stepId, "day2_after_radio", StringComparison.OrdinalIgnoreCase))
+            {
+                _pendingRemovePackageAfterDialogue = _currentStep.removePackageAfterDialogue;
+                _controller?.SetBlock(true);
+                GameStateService.SetState(GameState.ClientDialog);
+                ((GameFlowController)_flow).EnterClientDialogueState(true);
+                _wait = WaitMode.WaitingDialogueEnd;
+                _client.StartClientDialogWithSpecificStep("", _currentStep.conversationTitle);
+                return;
+            }
             _wait = WaitMode.Idle;
             Advance();
             return;
@@ -459,7 +489,9 @@ public sealed class StoryDirector : MonoBehaviour
         _controller?.SetBlock(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        GameStateService.SetState(GameState.None);
+        // day2_after_radio: игрок пришёл с радио (остаётся на складе) — не сбрасывать состояние в None, иначе зоны решат, что цель «склад», и F телепортирует на склад повторно
+        if (!string.Equals(step.stepId, "day2_after_radio", StringComparison.OrdinalIgnoreCase))
+            GameStateService.SetState(GameState.None);
         _wait = WaitMode.WaitingFreeRoamClientConfirm;
     }
 
@@ -662,6 +694,87 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void OnFadeToBlackComplete()
     {
+        if (_currentStep != null && string.Equals(_currentStep.stepId, "fade_to_black_day1_end", StringComparison.OrdinalIgnoreCase))
+        {
+            TrySaveDay1Progress();
+            if (_flow is GameFlowController gfc)
+            {
+                gfc.PlayDay2Intro(OnDay2IntroComplete);
+                return;
+            }
+        }
+        _wait = WaitMode.Idle;
+        Advance();
+    }
+
+    private void OnDay2IntroComplete()
+    {
+        if (_flow is GameFlowController gfc)
+            gfc.MarkDay1TutorialCompleted();
+        _controller?.SetBlock(false);
+        _wait = WaitMode.Idle;
+        Advance();
+    }
+
+    private void TrySaveDay1Progress()
+    {
+        bool choseToGive = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+        bool gotPhoneNumber = _phoneUnlock != null && _phoneUnlock.HasSpawnedNote;
+        string savedPhoneNumber = _phoneUnlock != null ? _phoneUnlock.GetSavedPhoneNumber() : "";
+
+        int neutral = 0, mystical = 0, skeptical = 0;
+        if (_attitudeRecorder != null && _attitudeRecorder.Stats != null)
+        {
+            neutral = _attitudeRecorder.Stats.NeutralCount;
+            mystical = _attitudeRecorder.Stats.MysticalCount;
+            skeptical = _attitudeRecorder.Stats.SkepticalCount;
+        }
+
+        var data = new Day1SaveData
+        {
+            ChoseToGivePackage5577 = choseToGive,
+            GotPhoneNumberFromGuy = gotPhoneNumber,
+            SavedPhoneNumber = savedPhoneNumber ?? "",
+            NeutralChoicesCount = neutral,
+            MysticalChoicesCount = mystical,
+            SkepticalChoicesCount = skeptical
+        };
+        GameSaveSystem.SaveDay1(data);
+    }
+
+    /// <summary>Восстановить состояние после загрузки сохранения (Lua, аттитюды, телефон). Вызывать до старта сюжета.</summary>
+    public void ApplyDay1Save(Day1SaveData data)
+    {
+        if (data == null) return;
+
+        DialogueLua.SetVariable("ChoseToGivePackage5577", data.ChoseToGivePackage5577);
+        DialogueLua.SetVariable("RunWarehouse5577Steps", false);
+
+        if (_attitudeRecorder != null && _attitudeRecorder.Stats != null)
+            _attitudeRecorder.Stats.SetCounts(data.NeutralChoicesCount, data.MysticalChoicesCount, data.SkepticalChoicesCount);
+
+        if (data.GotPhoneNumberFromGuy)
+        {
+            GameStateService.UnlockPhone();
+            _phoneUnlock?.SpawnNoteFromSave(data.SavedPhoneNumber ?? "");
+        }
+    }
+
+    /// <summary>Запустить сюжет с указанного шага — выполнить этот шаг (для загрузки: отыграть fade_to_black_day1_end и интро 2-го дня).</summary>
+    public void StartStoryFromStepId(string stepId)
+    {
+        if (_steps == null || _steps.Count == 0 || string.IsNullOrEmpty(stepId)) return;
+        int idx = -1;
+        for (int i = 0; i < _steps.Count; i++)
+        {
+            if (string.Equals(_steps[i].stepId, stepId, StringComparison.OrdinalIgnoreCase))
+            {
+                idx = i;
+                break;
+            }
+        }
+        if (idx < 0) return;
+        _index = idx - 1;
         _wait = WaitMode.Idle;
         Advance();
     }
@@ -671,7 +784,8 @@ public sealed class StoryDirector : MonoBehaviour
         string conv = data.ConversationTitle ?? "";
         bool isClientDay14 = string.Equals(conv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase);
         bool isClientDay152 = string.Equals(conv, "Client_Day1.5.2", StringComparison.OrdinalIgnoreCase);
-        if (_wait != WaitMode.WaitingDialogueEnd && !isClientDay14 && !isClientDay152)
+        bool isClientDay153 = string.Equals(conv, "Client_Day1.5.3", StringComparison.OrdinalIgnoreCase);
+        if (_wait != WaitMode.WaitingDialogueEnd && !isClientDay14 && !isClientDay152 && !isClientDay153)
             return;
 
         _attitudeRecorder?.RecordFromLua();
@@ -702,13 +816,23 @@ public sealed class StoryDirector : MonoBehaviour
         if (string.Equals(conv, "Client_Day1.5.2", StringComparison.OrdinalIgnoreCase))
         {
             _flow?.RemovePackageFromHands();
+            // После Client_Day1.5.2 автоматически запускаем Client_Day1.5.3; во время 1.5.3 игрок может передвигаться
+            _wait = WaitMode.WaitingDialogueEnd;
+            _controller?.SetBlock(false);
+            GameStateService.SetState(GameState.ClientDialog);
+            StartCoroutine(ShowClientDialogueNextFrame("Client_Day1.5.3", lockMovement: false));
+            return;
+        }
+
+        if (string.Equals(conv, "Client_Day1.5.3", StringComparison.OrdinalIgnoreCase))
+        {
             GameStateService.SetState(GameState.None);
             ((GameFlowController)_flow).EnterClientDialogueState(false);
             _controller?.SetBlock(false);
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            string watchKey = GameConfig.Tutorial?.watchVideoKey;
-            if (!string.IsNullOrEmpty(watchKey)) _flow?.ShowHintOnceByKey(watchKey);
+            // После окончания Client_Day1.5.3 показываем туториал tutorial.watch_video
+            _flow?.ShowHintOnceByKey(GameConfig.Tutorial?.watchVideoKey ?? "tutorial.watch_video");
             _wait = WaitMode.Idle;
             Advance();
             return;
@@ -902,11 +1026,12 @@ public sealed class StoryDirector : MonoBehaviour
     }
 
     /// <summary> Показать диалог с клиентом со следующего кадра после телепорта, чтобы UI успел отрисоваться. </summary>
-    private IEnumerator ShowClientDialogueNextFrame(string conversationTitle)
+    /// <param name="lockMovement">Если false, игрок может передвигаться во время диалога (например Client_Day1.5.3).</param>
+    private IEnumerator ShowClientDialogueNextFrame(string conversationTitle, bool lockMovement = true)
     {
         yield return null;
         if (string.IsNullOrEmpty(conversationTitle)) yield break;
-        ((GameFlowController)_flow).EnterClientDialogueState(true);
+        ((GameFlowController)_flow).EnterClientDialogueState(lockMovement);
         _client?.StartClientDialogWithSpecificStep("", conversationTitle);
     }
 

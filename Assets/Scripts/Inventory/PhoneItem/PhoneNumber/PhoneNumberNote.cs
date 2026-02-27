@@ -9,4 +9,6 @@ public sealed class PhoneNumberNote : MonoBehaviour
     {
         if (_text != null) _text.text = number;
     }
+
+    public string GetNumber() => _text != null ? _text.text ?? "" : "";
 }

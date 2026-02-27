@@ -52,6 +52,21 @@ public sealed class FadeToBlackView : MonoBehaviour
         }
     }
 
+    /// <summary> Скрыть чёрный оверлей (например перед интро второго дня). </summary>
+    public void Hide()
+    {
+        Stop();
+        if (_overlayImage != null)
+        {
+            _overlayImage.color = new Color(0f, 0f, 0f, 0f);
+            _overlayImage.raycastTarget = false;
+        }
+        if (_canvas != null)
+            _canvas.gameObject.SetActive(false);
+        else if (_overlayImage != null)
+            _overlayImage.gameObject.SetActive(false);
+    }
+
     private IEnumerator FadeRoutine(float duration, Action onComplete)
     {
         if (_overlayImage == null)

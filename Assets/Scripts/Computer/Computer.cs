@@ -151,6 +151,8 @@ public sealed class Computer : MonoBehaviour
             return;
 
         _videoPlaying = true;
+        if (PlayerHintView.Instance != null)
+            PlayerHintView.Instance.SetSuspended(true);
         GameFlowController.Instance?.SetPlayerControlBlocked(true);
         if (_videoRoot != null)
             _videoRoot.SetActive(true);
@@ -200,6 +202,8 @@ public sealed class Computer : MonoBehaviour
         if (_videoRoot != null)
             _videoRoot.SetActive(false);
         CloseComputer();
+        if (PlayerHintView.Instance != null)
+            PlayerHintView.Instance.SetSuspended(false);
         GameFlowController.Instance?.NotifyComputerVideoEnded();
     }
 
