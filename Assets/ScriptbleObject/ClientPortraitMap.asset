@@ -495,7 +495,7 @@ MonoBehaviour:
       customLeftAnchoredPos: {x: 71, y: 65, z: 277}
       customLeftScale: {x: 1.1, y: 0.9, z: 0}
       customLeftRotation: {x: 0, y: 0, z: 0}
-      customRightAnchoredPos: {x: -13, y: 73, z: 191.5}
+      customRightAnchoredPos: {x: -19, y: 77, z: 191.5}
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 2
@@ -511,12 +511,12 @@ MonoBehaviour:
       customLeftAnchoredPos: {x: 71, y: 65, z: 277}
       customLeftScale: {x: 1.1, y: 0.9, z: 0}
       customLeftRotation: {x: 0, y: 0, z: 0}
-      customRightAnchoredPos: {x: -13, y: 73, z: 191.5}
+      customRightAnchoredPos: {x: -19, y: 77, z: 191.5}
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
-    - entryID: 2
-      leftSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
-      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+    - entryID: 3
+      leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      rightSprite: {fileID: 21300000, guid: 9ad51a2527e06484c929250578fc84fe, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       priority: 1
