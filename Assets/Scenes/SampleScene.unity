@@ -27509,7 +27509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e414d44ee46248c45a75833db50b21fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameSaveSystem
-  _loadFromSaveAtStart: 0
+  _loadFromSaveAtStart: 1
   _fileName: save.json
 --- !u!4 &2122532601
 Transform:
