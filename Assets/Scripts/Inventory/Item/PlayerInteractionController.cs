@@ -11,6 +11,7 @@ public sealed class PlayerInteractionController
     private readonly ClientInteraction _client;
     private readonly InteractionRaycastCache _raycastCache;
     private readonly IGameFlowController _flow;
+    private InteractableOutline _lastOutlineTarget;
 
     public PlayerInteractionController(
         PlayerView playerView,
@@ -34,6 +35,7 @@ public sealed class PlayerInteractionController
         IWorldInteractable worldInteractable = _raycastCache.GetWorldInteractable();
 
         UpdateInteractionHint(holdable, worldInteractable);
+        UpdateHoverOutline(holdable, worldInteractable);
 
         if (!_input.InteractPressed)
             return;
@@ -77,6 +79,37 @@ public sealed class PlayerInteractionController
 
         if (PlayerHintView.Instance != null)
             PlayerHintView.Instance.SetRaycastHint(sprite);
+    }
+
+    private void UpdateHoverOutline(IHoldable holdable, IWorldInteractable worldInteractable)
+    {
+        InteractableOutline current = GetHighlightTarget(holdable, worldInteractable);
+        if (_lastOutlineTarget == current)
+            return;
+        _lastOutlineTarget?.SetHighlight(false);
+        _lastOutlineTarget = current;
+        current?.SetHighlight(true);
+    }
+
+    private InteractableOutline GetHighlightTarget(IHoldable holdable, IWorldInteractable worldInteractable)
+    {
+        bool holdingPhone = _hands.HasItem && _hands.Current is PhoneItemView;
+        bool preferClientHint = _client != null && _client.IsPlayerInside
+            && _client.IsPlayerLookingAtClient(_playerView)
+            && !holdingPhone
+            && (!_client.IsActive || _client.IsWaitingForContinue);
+        if (preferClientHint)
+            return null;
+        if (worldInteractable != null)
+            return (worldInteractable as MonoBehaviour)?.GetComponent<InteractableOutline>()
+                ?? (worldInteractable as MonoBehaviour)?.GetComponentInParent<InteractableOutline>();
+        if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
+            return (pkg as MonoBehaviour)?.GetComponent<InteractableOutline>()
+                ?? (pkg as MonoBehaviour)?.GetComponentInParent<InteractableOutline>();
+        if (holdable is PhoneItemView && IsHoldableAllowed(holdable))
+            return (holdable as MonoBehaviour)?.GetComponent<InteractableOutline>()
+                ?? (holdable as MonoBehaviour)?.GetComponentInParent<InteractableOutline>();
+        return null;
     }
 
     private bool IsHoldableAllowed(IHoldable holdable)
