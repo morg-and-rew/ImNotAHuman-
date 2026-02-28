@@ -29,6 +29,12 @@ public sealed class ClientPortraitMap : ScriptableObject
         [Tooltip("Цвет правого портрета (белый = без изменений). (0,0,0,0) = белый.")]
         public Color rightSpriteColor;
 
+        [Header("Имя говорящего")]
+        [Tooltip("Спрайт с именем того, кто говорит (например плашка «Бабушка», «Клиент»). null — не показывать.")]
+        public Sprite nameSprite;
+        [Tooltip("Цвет спрайта имени (белый = без изменений). (0,0,0,0) = белый.")]
+        public Color nameSpriteColor;
+
         [Tooltip("Кто поверх: левый или правый портрет")]
         public SpeakerPriority priority;
 
