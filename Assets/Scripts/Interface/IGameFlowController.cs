@@ -23,7 +23,7 @@ public interface IGameFlowController
     void ShowRadioHintOnce();
     void NotifyPhonePutDown();
     void ShowMeetClientHintOnce();
-    void ShowHintRaw(string text);
+    void ShowHintRaw(string key);
     void ShowHintOnceByKey(string key);
     /// <summary> Флаг: если шаг туториала уже выполнен игроком — принудительно не показываем снова. </summary>
     bool IsTutorialStepAlreadyShown(string key);
@@ -54,7 +54,7 @@ public interface IGameFlowController
     event Action OnTeleportedToWarehouse;
     event Action OnTeleportedToClient;
 
-    void SetTravelTarget(TravelTarget target, string hintText, bool useFreeTeleportPointForClient = false, bool allowWarehouseConfirmFromClient = false);
+    void SetTravelTarget(TravelTarget target, string hintKey, bool useFreeTeleportPointForClient = false, bool allowWarehouseConfirmFromClient = false);
     void SetTutorialWarehouseVisit(bool isTutorial);
     void ForceTravel(TravelTarget target);
     void SetAllowReturnToClientWithoutExitZone(bool allow);

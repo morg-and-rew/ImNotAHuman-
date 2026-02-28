@@ -503,8 +503,8 @@ public sealed class StoryDirector : MonoBehaviour
         _wait = WaitMode.WaitingTeleportToWarehouse;
         _flow?.SetTutorialWarehouseVisit(true);
         bool silent = string.Equals(step.stepId, "go_to_warehouse_for_radio", StringComparison.OrdinalIgnoreCase);
-        string hint = silent ? "" : (_flow?.ResolveHintText(null, GameConfig.Tutorial.doorWarehouseKey) ?? "");
-        _flow?.SetTravelTarget(TravelTarget.Warehouse, hint);
+        string hintKey = silent ? "" : (GameConfig.Tutorial.doorWarehouseKey ?? "");
+        _flow?.SetTravelTarget(TravelTarget.Warehouse, hintKey);
     }
 
     private void ReturnFromWarehouse(Step step)
@@ -513,8 +513,8 @@ public sealed class StoryDirector : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         _wait = WaitMode.WaitingTeleportToClient;
-        string hint = _flow?.ResolveHintText(null, GameConfig.Tutorial.returnPressFKey) ?? "";
-        _flow?.SetTravelTarget(TravelTarget.Client, hint, useFreeTeleportPointForClient: true);
+        string hintKey = GameConfig.Tutorial.returnPressFKey ?? "";
+        _flow?.SetTravelTarget(TravelTarget.Client, hintKey, useFreeTeleportPointForClient: true);
     }
 
     private void GoToRouter(Step step)
@@ -574,10 +574,10 @@ public sealed class StoryDirector : MonoBehaviour
             if (GameStateService.CurrentState == GameState.Warehouse)
             {
                 _wait = WaitMode.WaitingClientConfirm;
-                string returnHint = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
-                    ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
-                    : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
-                _flow?.SetTravelTarget(TravelTarget.Client, returnHint);
+                string returnHintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
+                    ? (GameConfig.Tutorial.emptyKey ?? "")
+                    : (GameConfig.Tutorial.returnToClientKey ?? "");
+                _flow?.SetTravelTarget(TravelTarget.Client, returnHintKey);
             }
             else
             {
@@ -602,8 +602,8 @@ public sealed class StoryDirector : MonoBehaviour
         }
 
         _wait = WaitMode.WaitingWarehouseConfirm;
-        string warehouseHint = _flow?.ResolveHintText(null, GameConfig.Tutorial.goWarehouseKey) ?? "";
-        _flow?.SetTravelTarget(TravelTarget.Warehouse, warehouseHint);
+        string warehouseHintKey = GameConfig.Tutorial.goWarehouseKey ?? "";
+        _flow?.SetTravelTarget(TravelTarget.Warehouse, warehouseHintKey);
     }
 
     private void ReturnToClient(Step step)
@@ -627,10 +627,10 @@ public sealed class StoryDirector : MonoBehaviour
         }
 
         _wait = WaitMode.WaitingClientConfirm;
-        string hint = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
-            ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
-            : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
-        _flow?.SetTravelTarget(TravelTarget.Client, hint);
+        string hintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
+            ? (GameConfig.Tutorial.emptyKey ?? "")
+            : (GameConfig.Tutorial.returnToClientKey ?? "");
+        _flow?.SetTravelTarget(TravelTarget.Client, hintKey);
     }
 
     private void WatchComputerVideo(Step step)
@@ -917,8 +917,8 @@ public sealed class StoryDirector : MonoBehaviour
         if (_wait == WaitMode.WaitingRadioComplete)
         {
             // Радио приоритетно: подсказка остаётся «иди к радио / нажми E», пока игрок не нажал E у радио
-            string hint = _flow?.ResolveHintText(null, GameConfig.Tutorial.radioUseKey) ?? "";
-            _flow?.SetTravelTarget(TravelTarget.Client, hint, useFreeTeleportPointForClient: true);
+            string hintKey = GameConfig.Tutorial.radioUseKey ?? "";
+            _flow?.SetTravelTarget(TravelTarget.Client, hintKey, useFreeTeleportPointForClient: true);
             return;
         }
         if (_wait != WaitMode.WaitingWarehouseConfirm) return;
@@ -939,10 +939,10 @@ public sealed class StoryDirector : MonoBehaviour
                 gfcDay15.SetRequiredPackageForReturn(0);
             _pendingDialogueAfterReturn = "Client_Day1.5";
             _wait = WaitMode.WaitingClientConfirm;
-            string hint = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
-                ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
-                : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
-            _flow?.SetTravelTarget(TravelTarget.Client, hint);
+            string hintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
+                ? (GameConfig.Tutorial.emptyKey ?? "")
+                : (GameConfig.Tutorial.returnToClientKey ?? "");
+            _flow?.SetTravelTarget(TravelTarget.Client, hintKey);
             return;
         }
 
@@ -970,10 +970,10 @@ public sealed class StoryDirector : MonoBehaviour
                 gfc.SetRequiredPackageForReturn(5577);
                 gfc.SetPendingDialogueReturnPackage(5577);
             }
-            string hint = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
-                ? (_flow.ResolveHintText(null, GameConfig.Tutorial.emptyKey) ?? "")
-                : (_flow?.ResolveHintText(null, GameConfig.Tutorial.returnToClientKey) ?? "");
-            _flow?.SetTravelTarget(TravelTarget.Client, hint);
+            string hintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
+                ? (GameConfig.Tutorial.emptyKey ?? "")
+                : (GameConfig.Tutorial.returnToClientKey ?? "");
+            _flow?.SetTravelTarget(TravelTarget.Client, hintKey);
             return;
         }
         _wait = WaitMode.Idle;

@@ -474,9 +474,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             if (!IsTutorialStepAlreadyShown(key) && !_hintKeysDisplayed.Contains(key))
             {
                 _hintKeysDisplayed.Add(key);
-                string text = GetUIText(key);
-                if (!string.IsNullOrEmpty(text))
-                    _tutorialHint.Show(text);
+                _tutorialHint.Show(key);
             }
         }
 
@@ -816,7 +814,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         if (_tutorialPendingAction != TutorialPendingAction.None)
             return;
-        _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.goWarehouseKey));
+        _tutorialHint?.Show(GameConfig.Tutorial.goWarehouseKey);
     }
 
     private void OnClientDialogueFinishedByKey()
@@ -933,7 +931,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_tutorialHint == null) return;
         if (_tutorialPendingAction != TutorialPendingAction.None) return;
         if (HasActiveTutorial()) return;
-        _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+        _tutorialHint?.Show(GameConfig.Tutorial.emptyKey);
     }
 
     public void ShowEmptyHintAfterPackagePick()
@@ -942,7 +940,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_tutorialPendingAction != TutorialPendingAction.None) return;
         if (HasActiveTutorial()) return;
         _preferEmptyOverMeetClient = true;
-        _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+        _tutorialHint?.Show(GameConfig.Tutorial.emptyKey);
     }
 
     public void MarkProviderCallDone() => _providerCallDone = true;
@@ -1052,17 +1050,18 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         GameStateService.SetState(GameState.ClientDialog);
     }
 
-    public void ShowHintRaw(string text)
+    /// <summary> Показать подсказку по ключу (для туториала показывается спрайт по ключу в TutorialHintView). </summary>
+    public void ShowHintRaw(string key)
     {
         if (_tutorialHint == null) return;
         if (_tutorialPendingAction != TutorialPendingAction.None) return;
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(key))
         {
             _tutorialHint?.Hide();
             return;
         }
         _preferEmptyOverMeetClient = false;
-        _tutorialHint?.Show(text);
+        _tutorialHint?.Show(key);
     }
 
     /// <summary> Подсказки router / return F / phone / radio_use всегда показываем для текущего шага сюжета, иначе при переходе шага или телепорте (HasActiveTutorial==false) показывался бы tutorial.empty. </summary>
@@ -1086,7 +1085,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (string.IsNullOrEmpty(key))
         {
             if (!HasActiveTutorial())
-                _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+                _tutorialHint?.Show(GameConfig.Tutorial.emptyKey);
             return;
         }
         // Шаг уже выполнен игроком — не показываем снова (кроме подсказок текущего шага сюжета).
@@ -1095,19 +1094,19 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             if (IsCurrentStoryStepHint(key))
             {
                 _hintKeysDisplayed.Add(key);
-                _tutorialHint?.Show(GetUIText(key));
+                _tutorialHint?.Show(key);
             }
             else if (!HasActiveTutorial())
-                _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+                _tutorialHint?.Show(GameConfig.Tutorial.emptyKey);
             return;
         }
         // Уже показали этот шаг, ждём выполнения — не спамим (кроме подсказок текущего шага сюжета).
         if (_hintKeysDisplayed.Contains(key))
         {
             if (IsCurrentStoryStepHint(key))
-                _tutorialHint?.Show(GetUIText(key));
+                _tutorialHint?.Show(key);
             else if (!HasActiveTutorial())
-                _tutorialHint?.Show(GetUIText(GameConfig.Tutorial.emptyKey));
+                _tutorialHint?.Show(GameConfig.Tutorial.emptyKey);
             return;
         }
         _hintKeysDisplayed.Add(key);
@@ -1118,10 +1117,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             _tutorialPendingAction = TutorialPendingAction.PressSpace;
         else if (key == warehousePickKey)
             _tutorialPendingAction = TutorialPendingAction.WarehousePick;
-        _tutorialHint?.Show(GetUIText(key));
+        _tutorialHint?.Show(key);
     }
 
-    public void SetTravelTarget(TravelTarget target, string hintText, bool useFreeTeleportPointForClient = false, bool allowWarehouseConfirmFromClient = false)
+    public void SetTravelTarget(TravelTarget target, string hintKey, bool useFreeTeleportPointForClient = false, bool allowWarehouseConfirmFromClient = false)
     {
         _freeTeleportTargetActive = false;
         _allowWarehouseConfirmFromClientArea = allowWarehouseConfirmFromClient && target == TravelTarget.Warehouse;
@@ -1141,14 +1140,16 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             return;
         }
         _travelTarget = target;
-        if (string.IsNullOrEmpty(hintText))
+        if (string.IsNullOrEmpty(hintKey))
         {
             if (_tutorialPendingAction == TutorialPendingAction.None)
             {
                 // Не скрывать туториал при шаге "идти на склад к радио" — оставляем подсказку radio_use видимой
                 bool keepRadioTutorialVisible = _storyDirector != null
                     && string.Equals(_storyDirector.CurrentStepId, "go_to_warehouse_for_radio", StringComparison.OrdinalIgnoreCase);
-                if (!keepRadioTutorialVisible)
+                // Не скрывать подсказку meet_client, пока ждём нажатия E у клиента
+                bool keepMeetClientHintVisible = _meetClientHintShown && GameStateService.CurrentState == GameState.ClientDialog;
+                if (!keepRadioTutorialVisible && !keepMeetClientHintVisible)
                     _tutorialHint?.Hide();
             }
         }
@@ -1170,9 +1171,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             }
             else if (IsTutorialStepAlreadyShown(GameConfig.Tutorial.radioUseKey))
             {
-                hintText = GetUIText(GameConfig.Tutorial.emptyKey);
+                hintKey = GameConfig.Tutorial.emptyKey; // показать пустую подсказку по ключу
             }
-            _tutorialHint?.Show(hintText);
+            _tutorialHint?.Show(hintKey);
         }
     }
 
