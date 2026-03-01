@@ -29,6 +29,17 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [Header("Panels")]
     [SerializeField] private GameObject npcSubtitlePanel;
     [SerializeField] private GameObject[] hideOnChoiceMode;
+    [Header("Name Plate (плашки имён — только во время разговора с клиентом, когда говорят двое — две плашки)")]
+    [Tooltip("Канвас плашек имени со сцены. Виден только во время диалога с клиентом, спрайты из мапы. Скрывается при выборе (Hide On choice mode).")]
+    [SerializeField] private Canvas namePlateHideOnChoiceCanvas;
+    [Tooltip("Image для имени левого говорящего — nameSprite из Client Portrait Map.")]
+    [SerializeField] private Image namePlateImageLeft;
+    [Tooltip("Image для имени правого говорящего — nameSpriteRight из мапы.")]
+    [SerializeField] private Image namePlateImageRight;
+    [Tooltip("Client Portrait Map: по нему определяем, что диалог «клиентский», и берём спрайт имени (nameSprite).")]
+    [SerializeField] private ClientPortraitMap clientPortraitMap;
+    [Tooltip("Sorting Order для канваса имени (если задан). Чем больше — тем выше слой.")]
+    [SerializeField] private int namePlateCanvasSortOrder = 100;
     [SerializeField] private string[] hideSubtitlePanelOnChoiceConversations;
     [SerializeField] private RectTransform responseMenuRect;
 
@@ -106,6 +117,11 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
     public event Action<Subtitle> OnSubtitleShown;
     public event Action OnClientDialogueFinishedByKey;
+    public event Action OnResponseMenuShown;
+    public event Action OnResponseMenuHidden;
+
+    private readonly List<GameObject> _hideOnChoiceModeRuntime = new List<GameObject>();
+    private bool _namePlateVisibleByClientConversation;
 
     public bool IsDialogueActive => DialogueManager.isConversationActive;
 
@@ -121,6 +137,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         if (npcSubtitleImage == null && npcSubtitlePanel != null)
             npcSubtitleImage = npcSubtitlePanel.GetComponent<Image>();
 
+        if (namePlateHideOnChoiceCanvas != null)
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
         if (npcSubtitlePanel != null) npcSubtitlePanel.SetActive(false);
         RefreshChoiceModeHiddenObjectsVisibility();
         SetAutoAdvanceHiddenObjectsVisible(true);
@@ -175,6 +193,9 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
     private void OnConversationEnded(Transform actor)
     {
+        _namePlateVisibleByClientConversation = false;
+        if (namePlateHideOnChoiceCanvas != null)
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
         SetForcedAutoAdvance(false);
         _awaitFinish = false;
         RefreshAwaitingFinishKeyUI();
@@ -287,6 +308,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         if (!_inChoiceMode && npcSubtitlePanel != null)
             npcSubtitlePanel.SetActive(true);
 
+        UpdateNamePlateFromClientMap(subtitle);
+
         OnSubtitleShown?.Invoke(subtitle);
     }
 
@@ -296,6 +319,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         _subtitleVisible = true;
         _awaitFinish = false;
         RefreshChoiceModeHiddenObjectsVisibility();
+        OnResponseMenuShown?.Invoke();
         _isThreeChoicesMode = useThreeChoicesPanelLayout && responses != null && responses.Length == 3;
 
         _finishByKeyAllowed = IsFinishByKeyConversation(subtitle);
@@ -338,6 +362,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         _inChoiceMode = false;
         _isThreeChoicesMode = false;
         RefreshChoiceModeHiddenObjectsVisibility();
+        OnResponseMenuHidden?.Invoke();
         RestorePanelDefaults();
 
         ApplyNormalState();
@@ -625,13 +650,114 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
     private void SetChoiceModeHiddenObjectsVisible(bool visible)
     {
-        if (hideOnChoiceMode == null) return;
-        for (int i = 0; i < hideOnChoiceMode.Length; i++)
+        if (hideOnChoiceMode != null)
         {
-            GameObject go = hideOnChoiceMode[i];
+            for (int i = 0; i < hideOnChoiceMode.Length; i++)
+            {
+                GameObject go = hideOnChoiceMode[i];
+                if (go != null)
+                    go.SetActive(visible);
+            }
+        }
+        if (namePlateHideOnChoiceCanvas != null)
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(visible && _namePlateVisibleByClientConversation);
+        for (int i = 0; i < _hideOnChoiceModeRuntime.Count; i++)
+        {
+            GameObject go = _hideOnChoiceModeRuntime[i];
             if (go != null)
                 go.SetActive(visible);
         }
+    }
+
+    public void AddToHideOnChoiceMode(GameObject go)
+    {
+        if (go != null && !_hideOnChoiceModeRuntime.Contains(go))
+            _hideOnChoiceModeRuntime.Add(go);
+    }
+
+    public void AddToHideOnChoiceMode(Image image)
+    {
+        if (image != null)
+            AddToHideOnChoiceMode(image.gameObject);
+    }
+
+    private void UpdateNamePlateFromClientMap(Subtitle subtitle)
+    {
+        if (clientPortraitMap == null || namePlateHideOnChoiceCanvas == null) return;
+        if (subtitle?.dialogueEntry == null)
+        {
+            _namePlateVisibleByClientConversation = false;
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
+            return;
+        }
+
+        string conversationTitle = null;
+        if (DialogueManager.masterDatabase != null)
+        {
+            var conv = DialogueManager.masterDatabase.GetConversation(subtitle.dialogueEntry.conversationID);
+            if (conv != null) conversationTitle = conv.Title;
+        }
+        if (string.IsNullOrEmpty(conversationTitle))
+        {
+            _namePlateVisibleByClientConversation = false;
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
+            return;
+        }
+
+        int stepIndex = FindStepIndexByConversation(clientPortraitMap, conversationTitle);
+        if (stepIndex < 0)
+        {
+            _namePlateVisibleByClientConversation = false;
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
+            return;
+        }
+
+        int entryID = subtitle.dialogueEntry.id;
+        if (!clientPortraitMap.TryGetRule(stepIndex, entryID, out var rule) && !clientPortraitMap.TryGetRule(stepIndex, 0, out rule))
+        {
+            _namePlateVisibleByClientConversation = false;
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
+            return;
+        }
+
+        bool showLeft = rule.nameSprite != null;
+        bool showRight = rule.nameSpriteRight != null;
+        bool showAny = showLeft || showRight;
+        _namePlateVisibleByClientConversation = showAny;
+        namePlateHideOnChoiceCanvas.gameObject.SetActive(showAny);
+        if (showAny)
+        {
+            if (namePlateImageLeft != null)
+            {
+                namePlateImageLeft.gameObject.SetActive(showLeft);
+                if (showLeft)
+                {
+                    namePlateImageLeft.sprite = rule.nameSprite;
+                    namePlateImageLeft.color = rule.nameSpriteColor.a < 0.001f ? Color.white : rule.nameSpriteColor;
+                }
+            }
+            if (namePlateImageRight != null)
+            {
+                namePlateImageRight.gameObject.SetActive(showRight);
+                if (showRight)
+                {
+                    namePlateImageRight.sprite = rule.nameSpriteRight;
+                    namePlateImageRight.color = rule.nameSpriteColorRight.a < 0.001f ? Color.white : rule.nameSpriteColorRight;
+                }
+            }
+            namePlateHideOnChoiceCanvas.sortingOrder = namePlateCanvasSortOrder;
+        }
+    }
+
+    private static int FindStepIndexByConversation(ClientPortraitMap map, string conversation)
+    {
+        if (map == null || map.steps == null) return -1;
+        for (int i = 0; i < map.steps.Count; i++)
+        {
+            if (string.Equals(map.steps[i].conversation, conversation, StringComparison.OrdinalIgnoreCase))
+                return i;
+        }
+        return -1;
     }
 
     private void RefreshChoiceModeHiddenObjectsVisibility()

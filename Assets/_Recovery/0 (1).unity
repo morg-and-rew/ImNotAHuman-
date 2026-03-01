@@ -8468,7 +8468,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &613144410
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8516,13 +8516,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 613144409}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9539f81e034aee643b10451bfa86b2a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialHintView
-  _root: {fileID: 613144409}
-  _image: {fileID: 543361090}
+  _root: {fileID: 0}
+  _image: {fileID: 0}
   _hintKeys:
   - tutorial.press_space
   - tutorial.door_warehouse

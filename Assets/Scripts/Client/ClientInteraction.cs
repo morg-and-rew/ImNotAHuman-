@@ -34,14 +34,6 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     [SerializeField] private Image _leftImage;
     [SerializeField] private Image _rightImage;
 
-    [Header("Имя говорящего (из ClientPortraitMap)")]
-    [SerializeField] private RectTransform _nameRoot;
-    [SerializeField] private Image _nameImage;
-    [Tooltip("Если имя должно быть поверх плашки диалога: создай отдельный Canvas только для имени, назначь сюда. У этого Canvas будет выставлен Sorting Order выше, чем у плашки диалога.")]
-    [SerializeField] private Canvas _nameCanvas;
-    [Tooltip("Sorting Order для Canvas имени (используется если задан Name Canvas). Чем больше — тем выше слой. Плашка диалога обычно 0–10, поставь например 50 или 100.")]
-    [SerializeField] private int _nameCanvasSortOrder = 100;
-
     [Header("Positioning")]
     [SerializeField] private Vector2 _originalLeftAnchoredPosition;
     [SerializeField] private Vector2 _originalRightAnchoredPosition;
@@ -158,7 +150,8 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private void OnDisable()
     {
-        if (_customDialogueUI != null) _customDialogueUI.OnSubtitleShown -= OnSubtitleShown;
+        if (_customDialogueUI != null)
+            _customDialogueUI.OnSubtitleShown -= OnSubtitleShown;
 
         if (DialogueManager.instance != null)
         {
@@ -405,23 +398,6 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
             }
         }
 
-        if (_nameRoot != null)
-        {
-            bool showName = rule.nameSprite != null;
-            _nameRoot.gameObject.SetActive(showName);
-            if (showName)
-            {
-                _nameRoot.SetAsLastSibling();
-                if (_nameImage != null)
-                {
-                    _nameImage.sprite = rule.nameSprite;
-                    _nameImage.color = rule.nameSpriteColor.a < 0.001f ? Color.white : rule.nameSpriteColor;
-                }
-                if (_nameCanvas != null)
-                    _nameCanvas.sortingOrder = _nameCanvasSortOrder;
-            }
-        }
-
         ApplyPriority(rule.priority);
         ApplyPositioningOverride(rule);
 
@@ -533,22 +509,6 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
             {
                 _rightImage.sprite = rule.rightSprite;
                 _rightImage.color = rule.rightSpriteColor.a < 0.001f ? Color.white : rule.rightSpriteColor;
-            }
-        }
-        if (_nameRoot != null)
-        {
-            bool showName = rule.nameSprite != null;
-            _nameRoot.gameObject.SetActive(showName);
-            if (showName)
-            {
-                _nameRoot.SetAsLastSibling();
-                if (_nameImage != null)
-                {
-                    _nameImage.sprite = rule.nameSprite;
-                    _nameImage.color = rule.nameSpriteColor.a < 0.001f ? Color.white : rule.nameSpriteColor;
-                }
-                if (_nameCanvas != null)
-                    _nameCanvas.sortingOrder = _nameCanvasSortOrder;
             }
         }
         ApplyPriority(rule.priority);

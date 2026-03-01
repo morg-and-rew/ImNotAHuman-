@@ -11,6 +11,8 @@ public sealed class PlayerView : MonoBehaviour
     [SerializeField] private Image _playerDialogLeftClient;
     [SerializeField] private Image _playerDialogRightClient;
     [SerializeField] private float _lookSpeed = 3f;
+    [Tooltip("Максимальный угол наклона камеры вниз по оси X (градусы). Камера не опустится ниже этого значения.")]
+    [SerializeField] private float _maxPitchDown = 30f;
     [SerializeField] private Transform _handPoint;
     [SerializeField] private Transform _dropPoint;
     [SerializeField] private Transform _phoneHandPoint;
@@ -37,7 +39,7 @@ public sealed class PlayerView : MonoBehaviour
 
         transform.Rotate(Vector3.up, yaw, Space.Self);
 
-        _pitch = Mathf.Clamp(_pitch + pitchDelta, -90f, 90f);
+        _pitch = Mathf.Clamp(_pitch + pitchDelta, -90f, _maxPitchDown);
         _cameraHolder.localEulerAngles = new Vector3(_pitch, 0f, 0f);
     }
 
@@ -56,7 +58,7 @@ public sealed class PlayerView : MonoBehaviour
 
     public void SetCameraPitch(float pitchDegrees)
     {
-        _pitch = Mathf.Clamp(pitchDegrees, -90f, 90f);
+        _pitch = Mathf.Clamp(pitchDegrees, -90f, _maxPitchDown);
         if (_cameraHolder != null)
             _cameraHolder.localEulerAngles = new Vector3(_pitch, 0f, 0f);
     }
@@ -94,7 +96,7 @@ public sealed class PlayerView : MonoBehaviour
         Vector3 forward = _playerCamera.transform.forward;
         float pitchFromForward = Mathf.Asin(Mathf.Clamp(forward.y, -1f, 1f)) * Mathf.Rad2Deg;
         float yawDeg = Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg;
-        _pitch = Mathf.Clamp(-pitchFromForward, -90f, 90f);
+        _pitch = Mathf.Clamp(-pitchFromForward, -90f, _maxPitchDown);
         transform.rotation = Quaternion.Euler(0f, yawDeg, 0f);
         _cameraHolder.localEulerAngles = new Vector3(_pitch, 0f, 0f);
     }

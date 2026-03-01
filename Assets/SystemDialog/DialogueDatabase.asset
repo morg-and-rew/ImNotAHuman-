@@ -1157,13 +1157,7 @@ MonoBehaviour:
       delaySimStatus: 0
       falseConditionAction: Block
       conditionPriority: 2
-      outgoingLinks:
-      - originConversationID: 6
-        originDialogueID: 1
-        destinationConversationID: 6
-        destinationDialogueID: 2
-        isConnector: 0
-        priority: 2
+      outgoingLinks: []
       conditionsString: 
       userScript: 
       onExecute:
@@ -1956,8 +1950,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 34.99997, y: 0}
-    canvasZoom: 0.64000034
+    canvasScrollPosition: {x: 0, y: 0}
+    canvasZoom: 0.46000046
   - id: 7
     fields:
     - title: Title
@@ -2129,8 +2123,8 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 200
-        y: 55
+        x: 199.99995
+        y: 58.26532
         width: 160
         height: 30
     - id: 2
@@ -4071,8 +4065,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 453.75, y: 5}
-    canvasZoom: 0.64
+    canvasScrollPosition: {x: 4643.9175, y: 8.027038}
+    canvasZoom: 0.66999996
   - id: 8
     fields:
     - title: Title
@@ -6142,8 +6136,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 1771.7544, y: 0}
-    canvasZoom: 0.85000026
+    canvasScrollPosition: {x: 1844.4072, y: 0}
+    canvasZoom: 0.8200003
   - id: 11
     fields:
     - title: Title
@@ -11352,7 +11346,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
+    canvasScrollPosition: {x: 525.0002, y: 0}
     canvasZoom: 0.6399999
   - id: 20
     fields:
@@ -11638,7 +11632,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 55.384613, y: 0}
+    canvasScrollPosition: {x: 0, y: 0}
     canvasZoom: 0.9100001
   - id: 21
     fields:
