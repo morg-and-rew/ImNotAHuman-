@@ -962,6 +962,15 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
+        if (_currentStep != null && string.Equals(_currentStep.stepId, "go_warehouse_day2_1", StringComparison.OrdinalIgnoreCase))
+        {
+            _wait = WaitMode.Idle;
+            Advance();
+            var gfc = _flow as GameFlowController;
+            gfc?.RefreshWarehouseDeliveryNote();
+            return;
+        }
+
         if (!string.IsNullOrEmpty(_pendingDialogueAfterReturn))
         {
             _wait = WaitMode.WaitingClientReturnForDialogue;

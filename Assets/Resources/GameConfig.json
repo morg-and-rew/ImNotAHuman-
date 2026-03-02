@@ -536,6 +536,51 @@
         "expireRadioOnEnter": false,
         "activateRadioEventIds": [],
         "showRadioHintOnEnter": false
+      },
+      {
+        "stepId": "go_warehouse_day2_1",
+        "stepType": "GoWarehouse",
+        "conversationTitle": "",
+        "hintText": "",
+        "triggerId": "",
+        "autoTravel": true,
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 5574,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false
+      },
+      {
+        "stepId": "return_to_client_day2_1",
+        "stepType": "ReturnToClient",
+        "conversationTitle": "",
+        "hintText": "",
+        "triggerId": "",
+        "autoTravel": false,
+        "removePackageAfterDialogue": false,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 5574,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false
+      },
+      {
+        "stepId": "client_day2_1_2",
+        "stepType": "Dialogue",
+        "conversationTitle": "Client_day2.1.2",
+        "hintText": "",
+        "triggerId": "",
+        "autoTravel": false,
+        "removePackageAfterDialogue": true,
+        "showDeliveryNote": false,
+        "deliveryNoteNumber": 0,
+        "hideDeliveryNote": false,
+        "expireRadioOnEnter": false,
+        "activateRadioEventIds": [],
+        "showRadioHintOnEnter": false
       }
     ]
   },

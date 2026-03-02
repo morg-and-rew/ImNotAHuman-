@@ -21,20 +21,28 @@ public sealed class GameSaveData
 
 /// <summary>
 /// JSON-сохранение прогресса. Файл всегда пишется при окончании дня.
-/// Один флаг в инспекторе: false = игра стартует с нуля, true = при старте загружается последнее сохранение (чтобы смотреть ветки дня 2+).
+/// Режим старта: с 1-го дня или сразу со 2-го (с выбранным слотом дня 1). Слоты позволяют тестировать день 2 с разными исходами дня 1 без перепрохождения.
 /// </summary>
 public sealed class GameSaveSystem : MonoBehaviour
 {
     private static GameSaveSystem _instance;
 
     [Header("Save Settings")]
-    [Tooltip("False = каждый запуск с нуля (прогресс всё равно сохраняется в JSON в конце дня). True = при старте загрузить последнее сохранение и продолжить с него (для просмотра разных веток дня 2 и т.д.).")]
-    [SerializeField] private bool _loadFromSaveAtStart = false;
-
-    [Tooltip("Имя файла сохранения в папке Application.persistentDataPath.")]
+    [Tooltip("Имя основного файла сохранения в Application.persistentDataPath. Слоты 1–3 пишутся как save_slot1.json, save_slot2.json, save_slot3.json.")]
     [SerializeField] private string _fileName = "save.json";
 
-    /// <summary>При старте игры загружать сохранение и продолжать с него (галочка в инспекторе).</summary>
+    [Header("Start Mode (для тестирования)")]
+    [Tooltip("Старт с 1-го дня (интро + все диалоги) или сразу со 2-го дня с загруженным состоянием дня 1.")]
+    [SerializeField] private bool _loadFromSaveAtStart = false;
+
+    [Tooltip("С какого слота загружать при старте: 0 = основной файл (save.json), 1–3 = слот 1–3. Имеет смысл только при включённом Load From Save At Start.")]
+    [SerializeField] [Range(0, 3)] private int _loadSlot = 0;
+
+    [Header("При сохранении в конце дня 1")]
+    [Tooltip("Дополнительно записать текущий исход дня 1 в этот слот (0 = не записывать). Удобно: прошёл день 1 «мистический» → выбери 1, прошёл «скептический» → выбери 2, потом при старте выбирай слот и смотри день 2.")]
+    [SerializeField] [Range(0, 3)] private int _alsoSaveToSlot = 0;
+
+    /// <summary>При старте игры загружать сохранение и продолжать со 2-го дня (галочка в инспекторе).</summary>
     public static bool LoadFromSaveAtStart => _instance != null && _instance._loadFromSaveAtStart;
 
     private void Awake()
@@ -49,42 +57,57 @@ public sealed class GameSaveSystem : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private static string GetSavePath()
+    private static string GetSavePath(int slot = 0)
     {
-        string fileName = (_instance != null && !string.IsNullOrWhiteSpace(_instance._fileName))
-            ? _instance._fileName
-            : "save.json";
+        string fileName;
+        if (slot >= 1 && slot <= 3)
+            fileName = $"save_slot{slot}.json";
+        else
+            fileName = (_instance != null && !string.IsNullOrWhiteSpace(_instance._fileName))
+                ? _instance._fileName
+                : "save.json";
 
         return Path.Combine(Application.persistentDataPath, fileName);
     }
 
-    /// <summary>Сохранить данные первого дня. JSON всегда пишется на диск (флаг в инспекторе влияет только на загрузку при старте).</summary>
+    /// <summary>Сохранить данные первого дня. Всегда пишется в основной файл; при _alsoSaveToSlot > 0 — также в выбранный слот.</summary>
     public static void SaveDay1(Day1SaveData day1)
     {
         if (day1 == null)
             return;
 
-        string path = GetSavePath();
-        GameSaveData data = new GameSaveData
-        {
-            Day1 = day1
-        };
+        var data = new GameSaveData { Day1 = day1 };
 
         try
         {
             string json = JsonUtility.ToJson(data, true);
-            File.WriteAllText(path, json);
+            string mainPath = GetSavePath(0);
+            File.WriteAllText(mainPath, json);
+
+            int alsoSlot = _instance != null ? _instance._alsoSaveToSlot : 0;
+            if (alsoSlot >= 1 && alsoSlot <= 3)
+            {
+                string slotPath = GetSavePath(alsoSlot);
+                File.WriteAllText(slotPath, json);
+            }
         }
         catch (Exception e)
         {
-            Debug.LogError($"Failed to save game data to '{path}': {e}");
+            Debug.LogError($"Failed to save game data: {e}");
         }
     }
 
-    /// <summary>Загрузить данные первого дня. Если файла нет или он повреждён, вернёт null.</summary>
+    /// <summary>Загрузить данные первого дня из настроенного слота (при старте). Если файла нет или он повреждён, вернёт null.</summary>
     public static Day1SaveData LoadDay1()
     {
-        string path = GetSavePath();
+        int slot = (_instance != null) ? _instance._loadSlot : 0;
+        return LoadDay1FromSlot(slot);
+    }
+
+    /// <summary>Загрузить данные первого дня из указанного слота (0 = основной файл, 1–3 = слоты).</summary>
+    public static Day1SaveData LoadDay1FromSlot(int slot)
+    {
+        string path = GetSavePath(slot);
         if (!File.Exists(path))
             return null;
 

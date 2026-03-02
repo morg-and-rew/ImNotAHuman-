@@ -9,7 +9,7 @@ public sealed class PackageRegistry : MonoBehaviour
     [SerializeField] private int _minNumber = 100;
     [SerializeField] private int _maxNumber = 999;
     [Tooltip("Сюжетные номера — есть на сцене с начала, но клиенты их не называют. Только по сюжету.")]
-    [SerializeField] private int[] _storyReservedNumbers = { 8335, 5577 };
+    [SerializeField] private int[] _storyReservedNumbers = { 8335, 5577, 5574 };
 
     private void Start()
     {

@@ -183,6 +183,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private bool BlockReturnUntilPlayerDay1_2ReplicaDone => _radioDay1_2ConversationStarted && !_playerDay1_2ReplicaCompleted;
 
+    /// <summary> Текущий шаг — опциональное радио после Day1.2: игрок на складе может вернуться в зону выдачи в любой момент (не блокируем репликой Day1_2). </summary>
+    private bool IsOptionalRadioVideoAfterDay12Step =>
+        _storyDirector != null && string.Equals(_storyDirector.CurrentStepId, "optional_radio_video_after_day1_2", StringComparison.OrdinalIgnoreCase);
+
     public void NotifyTrigger(string triggerId)
     {
         if (string.IsNullOrEmpty(triggerId)) return;
@@ -538,9 +542,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 return false;
             if (!IsPlayerLookingAt(_warehouseExitDoor))
                 return false;
-            if (DialogueManager.isConversationActive && string.Equals(DialogueManager.lastConversationStarted, "Radio_Day1_2", StringComparison.OrdinalIgnoreCase))
+            if (!IsOptionalRadioVideoAfterDay12Step && DialogueManager.isConversationActive && string.Equals(DialogueManager.lastConversationStarted, "Radio_Day1_2", StringComparison.OrdinalIgnoreCase))
                 return false;
-            if (BlockReturnUntilPlayerDay1_2ReplicaDone)
+            if (!IsOptionalRadioVideoAfterDay12Step && BlockReturnUntilPlayerDay1_2ReplicaDone)
                 return false;
             if (_storyDirector != null && _storyDirector.IsRunning && !_storyDirector.IsStepAllowingTravelToClient)
                 return false;
@@ -1377,7 +1381,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private string GetWhyCannotReturnToClient()
     {
-        if (BlockReturnUntilPlayerDay1_2ReplicaDone)
+        // Опциональное радио: на шаге optional_radio_video_after_day1_2 игрок уже на складе, может не слушать или уйти в зону выдачи в любой момент.
+        if (BlockReturnUntilPlayerDay1_2ReplicaDone && !IsOptionalRadioVideoAfterDay12Step)
             return "ждётся реплика Player_Day1_2_Replica (до конца диалога на радио)";
         if (_storyDirector != null && _storyDirector.IsRunning && !_storyDirector.IsStepAllowingTravelToClient)
             return "сценарий не разрешает возврат к клиенту (текущий шаг: " + (_storyDirector.CurrentStepId ?? "?") + ")";
