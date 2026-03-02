@@ -22,7 +22,7 @@ public sealed class PhoneStoryWiring
         _flow = flow;
 
         string providerNum = GameConfig.Tutorial.providerNumber;
-        _callService.Register(string.IsNullOrEmpty(providerNum) ? "123456" : providerNum, OnCallProvider);
+        _callService.Register(string.IsNullOrEmpty(providerNum) ? "156190" : providerNum, OnCallProvider);
 
         Lua.RegisterFunction(LuaUnlockFunc, this,
             SymbolExtensions.GetMethodInfo(() => UnlockSkepticPhone()));

@@ -26,7 +26,7 @@
       "watchVideoKey": "tutorial.watch_video",
       "emptyKey": "tutorial.empty",
       "routerConversation": "Hero_AfterRouterReboot",
-      "providerNumber": "123456",
+      "providerNumber": "156190",
       "providerBeepsConversation": "Phone_CallProvider_Beeps",
       "providerAfterConversation": "Hero_AfterProviderCall"
     },

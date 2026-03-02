@@ -3261,6 +3261,7 @@ MonoBehaviour:
   _playerDialogLeftClient: {fileID: 2463748786423805210}
   _playerDialogRightClient: {fileID: 8831953642262700463}
   _lookSpeed: 0.4
+  _maxPitchDown: 45
   _handPoint: {fileID: 567520103855228753}
   _dropPoint: {fileID: 3010027653379915635}
   _phoneHandPoint: {fileID: 7576925068503218848}

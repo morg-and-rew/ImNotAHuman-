@@ -46,7 +46,7 @@ public class TutorialConfig
     public string watchVideoKey = "tutorial.watch_video";
     public string emptyKey = "tutorial.empty";
     public string routerConversation = "Hero_AfterRouterReboot";
-    public string providerNumber = "123456";
+    public string providerNumber = "150190";
     public string providerBeepsConversation = "Phone_CallProvider_Beeps";
     public string providerAfterConversation = "Hero_AfterProviderCall";
 }
