@@ -303,6 +303,13 @@ MonoBehaviour:
   - Client_Day1.1
   - Client_Day1.3
   - Client_Day1.5
+  keyHintPlaqueImage: {fileID: 126639180057814539}
+  keyHintSpaceSprite: {fileID: 21300000, guid: 63ea0c0b6088fb7498770da7a1da7185, type: 3}
+  keyHintFinishSprite: {fileID: 21300000, guid: 3568d7ae1d0d675468c3992a727540c2, type: 3}
+  keyHintPlaqueChoiceColor: {r: 0.32156864, g: 0.30980393, b: 0.050980393, a: 1}
+  keyHintPlaqueNormalColor: {r: 1, g: 1, b: 1, a: 1}
+  keyHintPlaqueText: {fileID: 0}
+  keyHintPlaqueTextNormalColor: {r: 0.9411765, g: 0.81960785, b: 0.52156866, a: 1}
   npcSubtitlePanel: {fileID: 1046714570033430}
   hideOnChoiceMode:
   - {fileID: 5972125699115874149}
@@ -340,6 +347,9 @@ MonoBehaviour:
   applyResponseButtonTextSize: 1
   applyResponseButtonImageColor: 1
   responseButtonImageColor: {r: 0.05490196, g: 0.05490196, b: 0.011764706, a: 1}
+  responseButtonHoverTextColor: {r: 1, g: 1, b: 1, a: 1}
+  responseButtonHoverImageColor: {r: 1, g: 1, b: 1, a: 0.85}
+  responseButtonHoverSprite: {fileID: 21300000, guid: 94ff445fb7bfca94280bbc8a920dc580, type: 3}
   useThreeChoicesPanelLayout: 1
   threeChoicesNpcLeft: 450
   threeChoicesNpcTop: 47
@@ -598,7 +608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3326,7 +3336,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1741886089831530}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -3339,7 +3349,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: cda8836034e83204db6013f51ac4b9b2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4118,15 +4128,15 @@ RectTransform:
   m_GameObject: {fileID: 5972125699115874149}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 224087908662240786}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 963, y: -561}
-  m_SizeDelta: {x: 712, y: 712}
+  m_AnchoredPosition: {x: 1028.16, y: -561}
+  m_SizeDelta: {x: 391.125, y: 245.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4069421125523210683
 CanvasRenderer:
@@ -4149,7 +4159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.8235294}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

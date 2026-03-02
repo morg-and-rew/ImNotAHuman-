@@ -2,18 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using PixelCrushers;
 using PixelCrushers.DialogueSystem;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+#if TMP_PRESENT
+using TMPro;
+#endif
 
 public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 {
     [Header("Advance")]
     [SerializeField] private KeyCode advanceKey = KeyCode.Space;
     [SerializeField] private bool advanceOnlyWhenNoResponses = true;
-    [Tooltip("Минимальная задержка между нажатиями пробела (сек). 0 = без задержки.")]
-    [SerializeField, Min(0f)] private float manualAdvanceMinInterval = 2f;
+    [Tooltip("Минимальная задержка между нажатиями пробела (сек). 0 = без задержки. Плашка Space появляется после этой задержки.")]
+    [SerializeField, Min(0f)] private float manualAdvanceMinInterval = 1f;
     [Header("Forced Auto Advance")]
     [SerializeField, Min(0.1f)] private float autoAdvanceIntervalSeconds = 10f;
     [SerializeField] private GameObject[] hideOnForcedAutoAdvanceMode;
@@ -25,6 +29,23 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [SerializeField] private KeyCode finishKey = KeyCode.F;
 
     [SerializeField] private string[] finishByKeyConversations;
+
+    [Header("Key Hint Plaque (одна плашка внизу — меняем спрайт Space / F)")]
+    [Tooltip("Image плашки внизу диалога. Если задан, спрайт переключается между Space и F в зависимости от состояния. Не добавляй этот объект в Hide On Forced Auto Advance Mode.")]
+    [SerializeField] private Image keyHintPlaqueImage;
+    [Tooltip("Спрайт для «перелистнуть» (пробел).")]
+    [SerializeField] private Sprite keyHintSpaceSprite;
+    [Tooltip("Спрайт для «завершить и на склад» (F).")]
+    [SerializeField] private Sprite keyHintFinishSprite;
+    [Header("Key Hint Plaque — режим выбора (цвет плашки и текст белый)")]
+    [Tooltip("Цвет Image плашки при возможности выбора. Если alpha = 0, смена цвета не применяется.")]
+    [SerializeField] private Color keyHintPlaqueChoiceColor = new Color(82f / 255f, 79f / 255f, 13f / 255f, 1f);
+    [Tooltip("Цвет Image плашки в обычное время (когда нет выбора) — белый = без подкрашивания, как в префабе.")]
+    [SerializeField] private Color keyHintPlaqueNormalColor = Color.white;
+    [Tooltip("Текст на плашке (UI Text). В режиме выбора становится белым.")]
+    [SerializeField] private Text keyHintPlaqueText;
+    [Tooltip("Цвет текста плашки в обычное время (когда нет выбора) — белый, как обычно у подсказки клавиши.")]
+    [SerializeField] private Color keyHintPlaqueTextNormalColor = Color.white;
 
     [Header("Panels")]
     [SerializeField] private GameObject npcSubtitlePanel;
@@ -75,9 +96,16 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [SerializeField] private bool applyResponseButtonTextColor = true;
     [SerializeField] private int responseButtonTextSize = 28;
     [SerializeField] private bool applyResponseButtonTextSize = true;
-    [Tooltip("Цвет фона (Image) кнопок ответа. По умолчанию как у панели выбора (choiceImageColor).")]
-    [SerializeField] private bool applyResponseButtonImageColor = true;
+    [Tooltip("Если включено — подставляем цвет фона (Image) кнопок. Если выключено — цвет берётся из шаблона (один Image, цвет уже верный).")]
+    [SerializeField] private bool applyResponseButtonImageColor = false;
     [SerializeField] private Color responseButtonImageColor = new Color(82f / 255f, 79f / 255f, 13f / 255f, 1f);
+    [Header("Response Buttons — при наведении (кнопки из шаблона, настройки только здесь)")]
+    [Tooltip("Цвет текста при наведении на кнопку ответа. Обычный цвет текста — выше, «Response Button Text Color».")]
+    [SerializeField] private Color responseButtonHoverTextColor = Color.white;
+    [Tooltip("Цвет Image при наведении — полностью белый и немного прозрачный.")]
+    [SerializeField] private Color responseButtonHoverImageColor = new Color(1f, 1f, 1f, 0.85f);
+    [Tooltip("Спрайт Image кнопки при наведении — картинка кнопки меняется полностью (опционально).")]
+    [SerializeField] private Sprite responseButtonHoverSprite;
 
     [Header("Three Choices Layout (Panels)")]
     [SerializeField] private bool useThreeChoicesPanelLayout = true;
@@ -249,6 +277,10 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             return;
         }
 
+        // Обновляем видимость плашки Space, чтобы она появилась сразу после истечения задержки
+        if (!_inChoiceMode && !_manualAdvanceBlocked && manualAdvanceMinInterval > 0f)
+            RefreshSpacePlaqueVisibility();
+
         if (advanceOnlyWhenNoResponses && _inChoiceMode) return;
         if (_manualAdvanceBlocked) return;
         if (manualAdvanceMinInterval > 0f && Time.unscaledTime < _nextManualAdvanceAllowedAt) return;
@@ -319,6 +351,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         _subtitleVisible = true;
         _awaitFinish = false;
         RefreshChoiceModeHiddenObjectsVisibility();
+        ApplyKeyHintPlaqueChoiceState(true);
         OnResponseMenuShown?.Invoke();
         _isThreeChoicesMode = useThreeChoicesPanelLayout && responses != null && responses.Length == 3;
 
@@ -361,6 +394,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
         _inChoiceMode = false;
         _isThreeChoicesMode = false;
+        ApplyKeyHintPlaqueChoiceState(false);
         RefreshChoiceModeHiddenObjectsVisibility();
         OnResponseMenuHidden?.Invoke();
         RestorePanelDefaults();
@@ -500,7 +534,12 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
     private void ApplyResponseButtonStyleToSingle(StandardUIResponseButton rb)
     {
-        if (rb.label == null) return;
+        bool wasNull = rb != null && rb.label != null && UITextField.IsNull(rb.label);
+        EnsureResponseButtonLabelAssigned(rb);
+        if (UITextField.IsNull(rb.label)) return;
+        // Если label только что подставили — текст из диалога ещё не попал в компонент, выставляем из response
+        if (wasNull && rb.response != null)
+            rb.SetFormattedText(rb.response.formattedText);
 
         if (applyResponseButtonTextColor)
             rb.label.color = responseButtonTextColor;
@@ -515,14 +554,44 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 #endif
         }
 
-        if (applyResponseButtonImageColor)
+        Image plaqueImage = rb.transform.Find("Background")?.GetComponent<Image>();
+        if (plaqueImage == null && rb.button != null)
+            plaqueImage = rb.button.image;
+        if (applyResponseButtonImageColor && plaqueImage != null)
+            plaqueImage.color = responseButtonImageColor;
+
+        // Наведение: текст меняет цвет, Image меняется полностью (спрайт)
+        Graphic textGraphic = rb.label.uiText;
+#if TMP_PRESENT
+        if (textGraphic == null && rb.label.textMeshProUGUI != null) textGraphic = rb.label.textMeshProUGUI;
+#endif
+        if (textGraphic != null || plaqueImage != null)
         {
-            Image plaqueImage = rb.transform.Find("Background")?.GetComponent<Image>();
-            if (plaqueImage == null && rb.button != null)
-                plaqueImage = rb.button.image;
-            if (plaqueImage != null)
-                plaqueImage.color = responseButtonImageColor;
+            var hover = rb.GetComponent<ResponseButtonHoverColors>();
+            if (hover == null) hover = rb.gameObject.AddComponent<ResponseButtonHoverColors>();
+            hover.Setup(textGraphic, plaqueImage, responseButtonTextColor, responseButtonHoverTextColor, responseButtonHoverImageColor, responseButtonHoverSprite);
         }
+    }
+
+    /// <summary>
+    /// Если у кнопки ответа не задан Label (текст создаётся из шаблона и ссылку некуда перенести) — ищем Text или TextMeshPro среди дочерних и подставляем в label.
+    /// </summary>
+    private static void EnsureResponseButtonLabelAssigned(StandardUIResponseButton rb)
+    {
+        if (rb == null || rb.label == null) return;
+        if (!UITextField.IsNull(rb.label)) return;
+
+        Text uiText = rb.GetComponentInChildren<Text>(true);
+        if (uiText != null)
+        {
+            rb.label.uiText = uiText;
+            return;
+        }
+#if TMP_PRESENT
+        TextMeshProUGUI tmp = rb.GetComponentInChildren<TextMeshProUGUI>(true);
+        if (tmp != null)
+            rb.label.textMeshProUGUI = tmp;
+#endif
     }
 
     private bool IsHideSubtitlePanelOnChoiceConversation(Subtitle subtitle)
@@ -778,17 +847,20 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     }
 
     /// <summary>
-    /// Плашка Space видна только когда не радио и не ожидаем F. При прослушивании радио (авто-лист или блок по таймлайну) и при «нажми F» — скрыта.
+    /// Плашка Space видна только когда можно перелистнуть: не радио, не выбор ответа, не ожидаем F, и прошла задержка manualAdvanceMinInterval.
+    /// Если задан keyHintPlaqueImage — одна плашка внизу переключает спрайт (Space / F) и показывается когда можно листать или ждём F.
     /// </summary>
     private void RefreshSpacePlaqueVisibility()
     {
-        bool visible = !_forcedAutoAdvanceEnabled && !_awaitFinish && !_manualAdvanceBlocked;
-        SetAutoAdvanceHiddenObjectsVisible(visible);
+        bool canAdvanceNow = manualAdvanceMinInterval <= 0f || Time.unscaledTime >= _nextManualAdvanceAllowedAt;
+        bool spaceVisible = !_forcedAutoAdvanceEnabled && !_awaitFinish && !_manualAdvanceBlocked && !_inChoiceMode && canAdvanceNow;
+        SetAutoAdvanceHiddenObjectsVisible(spaceVisible);
+        RefreshKeyHintPlaqueSprite(canAdvanceNow);
     }
 
     /// <summary>
-    /// Когда ждём F для перехода на склад: скрываем плашку Space, показываем плашку F на игроке.
-    /// Когда не ждём F — обновляем видимость плашки Space (учитывая радио) и скрываем плашку F.
+    /// Когда ждём F: плашка внизу переключается на спрайт F (если задан keyHintPlaqueImage), показываем плашку F на игроке.
+    /// Когда не ждём F — обновляем видимость плашки Space / ключа и скрываем плашку F на игроке.
     /// </summary>
     private void RefreshAwaitingFinishKeyUI()
     {
@@ -802,6 +874,35 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             RefreshSpacePlaqueVisibility();
             PressFToWarehouseHintView.Instance?.Hide();
         }
+    }
+
+    /// <summary>
+    /// Одна плашка внизу: показываем когда можно листать, ждём F или режим выбора; спрайт — Space или F; в режиме выбора — цвет и текст по настройкам.
+    /// </summary>
+    private void RefreshKeyHintPlaqueSprite(bool canAdvanceNow)
+    {
+        if (keyHintPlaqueImage == null) return;
+        bool visible = !_forcedAutoAdvanceEnabled && !_manualAdvanceBlocked && (canAdvanceNow || _awaitFinish || _inChoiceMode);
+        keyHintPlaqueImage.gameObject.SetActive(visible);
+        if (visible)
+        {
+            if (_awaitFinish && keyHintFinishSprite != null)
+                keyHintPlaqueImage.sprite = keyHintFinishSprite;
+            else if (!_awaitFinish && keyHintSpaceSprite != null)
+                keyHintPlaqueImage.sprite = keyHintSpaceSprite;
+            ApplyKeyHintPlaqueChoiceState(_inChoiceMode);
+        }
+    }
+
+    /// <summary>
+    /// В режиме выбора: цвет плашки по keyHintPlaqueChoiceColor, текст — белый. Иначе — нормальные цвета.
+    /// </summary>
+    private void ApplyKeyHintPlaqueChoiceState(bool isChoiceMode)
+    {
+        if (keyHintPlaqueImage != null && keyHintPlaqueChoiceColor.a > 0.001f)
+            keyHintPlaqueImage.color = isChoiceMode ? keyHintPlaqueChoiceColor : keyHintPlaqueNormalColor;
+        if (keyHintPlaqueText != null)
+            keyHintPlaqueText.color = isChoiceMode ? Color.white : keyHintPlaqueTextNormalColor;
     }
 
     private void CachePanelDefaults()

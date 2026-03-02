@@ -3236,10 +3236,10 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.03
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.98, z: 0}
 --- !u!114 &6255698505278340310
@@ -3274,7 +3274,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7503758515935958579}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!114 &2374186919174384306
 MonoBehaviour:
   m_ObjectHideFlags: 0
