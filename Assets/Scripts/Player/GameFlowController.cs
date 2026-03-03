@@ -142,7 +142,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public event Action OnTeleportedToWarehouse;
     public event Action OnTeleportedToClient;
     public event Action OnRadioStoryCompleted;
-    public event Action<string> OnRadioEventActivated;
+    public event Action<string, float?> OnRadioEventActivated;
+    public event Action<float> OnRadioStaticVolumeRequested;
     public event Action<string> OnTriggerFired;
     public event Action<string> OnExitZonePassed;
     public event Action OnComputerVideoEnded;
@@ -1244,14 +1245,19 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             _skepticPhoneNoteObject.SetActive(true);
     }
 
-    public void ActivateRadioEvent(string id)
+    public void ActivateRadioEvent(string id, float? staticVolumeOverride = null)
     {
         if (string.IsNullOrEmpty(id)) return;
         if (_radioPlayed.Contains(id)) return;
         if (_radioExpired.Contains(id)) return;
 
         _radioAvailable.Add(id);
-        OnRadioEventActivated?.Invoke(id);
+        OnRadioEventActivated?.Invoke(id, staticVolumeOverride);
+    }
+
+    public void SetRadioStaticVolume(float volume)
+    {
+        OnRadioStaticVolumeRequested?.Invoke(volume);
     }
 
     public bool IsRadioEventAvailable(string id)

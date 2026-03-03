@@ -112,7 +112,8 @@
         "deliveryNoteNumber": 0,
         "hideDeliveryNote": false,
         "expireRadioOnEnter": false,
-        "activateRadioEventIds": [],
+        "activateRadioEventIds": [ "tutorial_radio" ],
+        "radioStaticVolume": 0.1,
         "showRadioHintOnEnter": false
       },
       {
@@ -127,6 +128,7 @@
         "hideDeliveryNote": false,
         "expireRadioOnEnter": false,
         "activateRadioEventIds": [ "tutorial_radio" ],
+        "radioStaticVolumeWhenEnter": 0.2,
         "showRadioHintOnEnter": true
       },
       {

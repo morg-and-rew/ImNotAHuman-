@@ -6,12 +6,10 @@ public sealed class InteractionRaycastCache
     private const float Distance = 0.65f;
     /// <summary> Настройка: начало луча сдвинуто вперёд от камеры (метры), чтобы луч стартовал уже за пределами CharacterController. Меняй здесь при необходимости. </summary>
     private const float OriginOffset = 0.75f;
-    /// <summary> Радиус «толщины» луча — предметы чуть в стороне тоже попадают. </summary>
-    private const float RayRadius = 0.025f;
+    /// <summary> Радиус для отладочной отрисовки (на попадание не влияет — используем Raycast, не SphereCast). </summary>
+    private const float DebugRayRadius = 0.02f;
     /// <summary> Количество колец по длине луча при отладочной отрисовке (0 = только линия и сфера). </summary>
     private const int DebugRings = 5;
-    /// <summary> Углы вниз от направления камеры (градусы) — чтобы брать предметы ниже с разных поз. </summary>
-    private static readonly float[] RayPitchDownDegrees = { 0f, 15f, 30f, 45f };
 
     private Camera _camera;
     private int _lastRefreshFrame = -1;
@@ -60,27 +58,18 @@ public sealed class InteractionRaycastCache
         _camera = camera;
 
         Vector3 forward = camera.transform.forward;
-        Vector3 right = camera.transform.right;
         Vector3 origin = camera.transform.position + forward * OriginOffset;
 
         _debugOrigin = origin;
         _debugDirections.Clear();
+        _debugDirections.Add(forward);
 
         _hasHit = false;
-        float bestDistance = float.MaxValue;
-
-        for (int i = 0; i < RayPitchDownDegrees.Length; i++)
+        Ray ray = new Ray(origin, forward);
+        if (Physics.Raycast(ray, out RaycastHit h, Distance))
         {
-            float angle = -RayPitchDownDegrees[i];
-            Vector3 dir = Quaternion.AngleAxis(angle, right) * forward;
-            _debugDirections.Add(dir);
-            Ray ray = new Ray(origin, dir);
-            if (Physics.SphereCast(ray, RayRadius, out RaycastHit h, Distance) && h.distance < bestDistance)
-            {
-                bestDistance = h.distance;
-                _hit = h;
-                _hasHit = true;
-            }
+            _hit = h;
+            _hasHit = true;
         }
 
         if (!_hasHit)
@@ -102,7 +91,7 @@ public sealed class InteractionRaycastCache
     private void DrawSphereCastDebug(Vector3 origin, Vector3 dir, float dist, bool hitAny, Vector3 endOrHitPoint)
     {
         const float duration = 2f;
-        float radius = Mathf.Max(RayRadius, 0.05f);
+        float radius = DebugRayRadius;
 
         DrawWireSphere(origin, radius * 0.8f, Color.yellow, duration);
         Debug.DrawLine(origin, origin + dir * dist, hitAny ? Color.green : Color.red, duration);

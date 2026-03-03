@@ -23,7 +23,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     [Header("Static и озвучка сюжета — один источник, клипы задаются здесь и в Event clips")]
     [SerializeField] private AudioSource _voiceSource;
     [SerializeField] private AudioClip _staticClip;
-    [SerializeField, Range(0f, 1f)] private float _staticVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float _staticVolume = 0.2f;
     [SerializeField] private string _staticClipPathOverride;
 
     [Header("Gate")]
@@ -78,7 +78,10 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
         GameFlowController gfc = GameFlowController.Instance;
         if (gfc != null)
+        {
             gfc.OnRadioEventActivated += OnRadioEventActivated;
+            gfc.OnRadioStaticVolumeRequested += OnRadioStaticVolumeRequested;
+        }
 
         if (_videoPlayer != null)
         {
@@ -107,6 +110,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         if (gfc != null)
         {
             gfc.OnRadioEventActivated -= OnRadioEventActivated;
+            gfc.OnRadioStaticVolumeRequested -= OnRadioStaticVolumeRequested;
             UnsubscribeTeleportForVideo();
         }
         if (_videoPlayer != null)
@@ -119,13 +123,32 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         SetVideoControlLock(false);
     }
 
-    private void OnRadioEventActivated(string id)
+    private void OnRadioEventActivated(string id, float? volumeOverride)
     {
-        if (_staticPlaying || _storyPlaying) return;
-        PlayStatic();
+        if (_storyPlaying) return;
+        if (_staticPlaying)
+        {
+            if (_voiceSource != null)
+            {
+                float vol = volumeOverride ?? _staticVolume;
+                _voiceSource.volume = vol;
+                Debug.Log($"[Radio] Помехи уже играют — выставлена громкость {vol} (eventId: {id})");
+            }
+            return;
+        }
+        PlayStatic(volumeOverride);
     }
 
-    private void PlayStatic()
+    private void OnRadioStaticVolumeRequested(float volume)
+    {
+        if (_staticPlaying && _voiceSource != null)
+        {
+            _voiceSource.volume = volume;
+            Debug.Log($"[Radio] Громкость помех изменена на {volume}");
+        }
+    }
+
+    private void PlayStatic(float? volumeOverride = null)
     {
         if (_voiceSource == null)
             return;
@@ -144,12 +167,13 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
         StopAllStations();
 
-        _voiceSource.volume = _staticVolume;
+        float vol = volumeOverride ?? _staticVolume;
+        _voiceSource.volume = vol;
         _voiceSource.clip = clip;
         _voiceSource.loop = true;
         _voiceSource.Play();
         _staticPlaying = true;
-        Debug.Log($"[Radio] Озвучивается: помехи (статик) — «{clip.name}» (громкость {_staticVolume})");
+        Debug.Log($"[Radio] Помехи запущены — «{clip.name}», громкость {vol}");
     }
 
     private void StopStatic()

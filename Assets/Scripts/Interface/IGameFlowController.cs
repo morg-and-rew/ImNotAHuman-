@@ -63,7 +63,8 @@ public interface IGameFlowController
     TravelTarget CurrentTravelTarget { get; }
     void RemovePackageFromHands();
     void ExpireAllRadioAvailable();
-    void ActivateRadioEvent(string id);
+    void ActivateRadioEvent(string id, float? staticVolumeOverride = null);
+    void SetRadioStaticVolume(float volume);
     event Action<string> OnTriggerFired;
     void NotifyTrigger(string triggerId);
     bool IsStoryExpectingTrigger(string triggerId);

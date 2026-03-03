@@ -89,6 +89,10 @@ public class StoryStepData
     public bool hideDeliveryNote;
     public bool expireRadioOnEnter;
     public string[] activateRadioEventIds;
+    /// <summary> Громкость статика при активации радио этим шагом (0..1). Если &lt; 0 — используется значение из инспектора радио. </summary>
+    public float radioStaticVolume = -1f;
+    /// <summary> При входе в шаг выставить громкость статика (0..1), если статик уже играет. Если &lt; 0 — не менять. </summary>
+    public float radioStaticVolumeWhenEnter = -1f;
     public bool showRadioHintOnEnter;
     public string computerVideoKind;
     public float fadeToBlackDuration;

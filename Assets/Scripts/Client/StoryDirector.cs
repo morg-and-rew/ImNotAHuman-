@@ -147,6 +147,8 @@ public sealed class StoryDirector : MonoBehaviour
                 hideDeliveryNote = d.hideDeliveryNote,
                 expireRadioOnEnter = d.expireRadioOnEnter,
                 activateRadioEventIds = ids,
+                radioStaticVolume = d.radioStaticVolume,
+                radioStaticVolumeWhenEnter = d.radioStaticVolumeWhenEnter,
                 showRadioHintOnEnter = d.showRadioHintOnEnter,
                 computerVideoKind = d.computerVideoKind ?? "",
                 fadeToBlackDuration = d.fadeToBlackDuration
@@ -463,12 +465,15 @@ public sealed class StoryDirector : MonoBehaviour
         if (step.expireRadioOnEnter) _flow?.ExpireAllRadioAvailable();
         if (step?.activateRadioEventIds != null)
         {
+            float? vol = step.radioStaticVolume > 0f ? (float?)step.radioStaticVolume : null;
             foreach (string id in step.activateRadioEventIds)
             {
                 if (!string.IsNullOrEmpty(id))
-                    _flow?.ActivateRadioEvent(id);
+                    _flow?.ActivateRadioEvent(id, vol);
             }
         }
+        if (step.radioStaticVolumeWhenEnter > 0f)
+            _flow?.SetRadioStaticVolume(step.radioStaticVolumeWhenEnter);
         // Показывать «подойдите к радио» только после того как положил телефон (IsIntroGoToRadioStep). Для Radio_Day1_2 не показывать.
         bool skipRadioHint = string.Equals(step.stepId, "go_to_radio", StringComparison.OrdinalIgnoreCase) && !IsIntroGoToRadioStep;
         if (step.showRadioHintOnEnter && !skipRadioHint) _flow?.ShowRadioHintOnce();
@@ -1068,6 +1073,8 @@ public class Step
     public string deliveryNoteLuaCondition;
     public string skipIfLuaConditionFalse;
     public List<string> activateRadioEventIds;
+    public float radioStaticVolume = -1f;
+    public float radioStaticVolumeWhenEnter = -1f;
     public string computerVideoKind;
     public float fadeToBlackDuration;
 }
