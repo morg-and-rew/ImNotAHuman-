@@ -9,11 +9,10 @@ using static IGameFlowController;
 [RequireComponent(typeof(Collider))]
 public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 {
-    [Header("Stations (background music, loop)")]
-    [SerializeField] private AudioSource[] _stations = new AudioSource[0];
+    [Header("Stations (background music, loop) — клип и громкость на каждую станцию")]
+    [SerializeField] private AudioSource _stationSource;
+    [SerializeField] private RadioStationEntry[] _stations = new RadioStationEntry[0];
 
-    [Header("Story voice (one-shot)")]
-    [SerializeField] private AudioSource _storyAudioSource;
     [Header("Event clips (Inspector)")]
     [SerializeField] private RadioEventClipEntry[] _eventClips = new RadioEventClipEntry[0];
     [Header("Event videos (Inspector)")]
@@ -21,9 +20,10 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     [SerializeField] private VideoPlayer _videoPlayer;
     [SerializeField] private GameObject _videoRoot;
 
-    [Header("Static (before story moment)")]
-    [SerializeField] private AudioSource _staticAudioSource;
+    [Header("Static и озвучка сюжета — один источник, клипы задаются здесь и в Event clips")]
+    [SerializeField] private AudioSource _voiceSource;
     [SerializeField] private AudioClip _staticClip;
+    [SerializeField, Range(0f, 1f)] private float _staticVolume = 1f;
     [SerializeField] private string _staticClipPathOverride;
 
     [Header("Gate")]
@@ -65,10 +65,11 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
         // При старте играет только станция; статик включается только после ActivateRadioEvent (подсказка «послушай радио»).
         _staticPlaying = false;
-        if (_staticAudioSource != null)
-            _staticAudioSource.Stop();
+        if (_voiceSource != null)
+            _voiceSource.Stop();
 
-        EnsureStationsLoop();
+        EnsureStationSourceLoop();
+        StopAllStations();
         if (_stations != null && _stations.Length > 0)
         {
             _currentStationIndex = 0;
@@ -88,11 +89,11 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     private void Update()
     {
-        if (!_radioAdvanceByTimestamps || !_waitingStoryEnd || _storyAudioSource == null || !_storyAudioSource.isPlaying
+        if (!_radioAdvanceByTimestamps || !_waitingStoryEnd || _voiceSource == null || !_voiceSource.isPlaying
             || _customDialogueUI == null || _radioAdvanceTimestamps == null || _radioAdvanceIndex >= _radioAdvanceTimestamps.Length)
             return;
 
-        float t = _storyAudioSource.time;
+        float t = _voiceSource.time;
         while (_radioAdvanceIndex < _radioAdvanceTimestamps.Length && t >= _radioAdvanceTimestamps[_radioAdvanceIndex])
         {
             _customDialogueUI.OnContinueConversation();
@@ -126,7 +127,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     private void PlayStatic()
     {
-        if (_staticAudioSource == null)
+        if (_voiceSource == null)
             return;
 
         AudioClip clip = _staticClip;
@@ -141,33 +142,34 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         if (clip == null)
             return;
 
-        if (_currentStationIndex >= 0 && _currentStationIndex < _stations.Length)
-        {
-            AudioSource s = _stations[_currentStationIndex];
-            if (s != null && s.isPlaying) s.Stop();
-        }
+        StopAllStations();
 
-        _staticAudioSource.clip = clip;
-        _staticAudioSource.loop = true;
-        _staticAudioSource.Play();
+        _voiceSource.volume = _staticVolume;
+        _voiceSource.clip = clip;
+        _voiceSource.loop = true;
+        _voiceSource.Play();
         _staticPlaying = true;
+        Debug.Log($"[Radio] Озвучивается: помехи (статик) — «{clip.name}» (громкость {_staticVolume})");
     }
 
     private void StopStatic()
     {
-        if (!_staticPlaying || _staticAudioSource == null) return;
-        _staticAudioSource.Stop();
+        if (!_staticPlaying || _voiceSource == null) return;
+        _voiceSource.Stop();
         _staticPlaying = false;
     }
 
-    private void EnsureStationsLoop()
+    private void EnsureStationSourceLoop()
     {
-        if (_stations == null) return;
-        for (int i = 0; i < _stations.Length; i++)
-        {
-            if (_stations[i] != null)
-                _stations[i].loop = true;
-        }
+        if (_stationSource != null)
+            _stationSource.loop = true;
+    }
+
+    /// <summary> Остановить воспроизведение станции. </summary>
+    private void StopAllStations()
+    {
+        if (_stationSource != null && _stationSource.isPlaying)
+            _stationSource.Stop();
     }
 
     public void Interact(IPlayerInput input)
@@ -240,26 +242,24 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         _phasedStory = story;
         _playerReplicaPlayed = false;
         StopStatic();
-        if (_currentStationIndex >= 0 && _currentStationIndex < _stations.Length)
-        {
-            AudioSource s = _stations[_currentStationIndex];
-            if (s != null && s.isPlaying)
-                s.Stop();
-        }
+        StopAllStations();
 
         if (!string.IsNullOrEmpty(story.conversationTitle))
         {
             RadioEventClipEntry clipEntry = GetEventClipEntry(story.eventId);
-            if (_storyAudioSource != null)
+            if (_voiceSource != null)
             {
                 AudioClip clip = clipEntry != null ? clipEntry.clip : null;
                 if (clip == null && !string.IsNullOrEmpty(story.audioPath))
                     clip = Resources.Load<AudioClip>(story.audioPath);
                 if (clip != null)
                 {
-                    _storyAudioSource.clip = clip;
-                    _storyAudioSource.loop = false;
-                    _storyAudioSource.Play();
+                    float vol = clipEntry != null ? clipEntry.volume : 1f;
+                    _voiceSource.volume = vol;
+                    _voiceSource.clip = clip;
+                    _voiceSource.loop = false;
+                    _voiceSource.Play();
+                    Debug.Log($"[Radio] Озвучивается: сюжет — «{clip.name}» (eventId: {story.eventId}, громкость {vol})");
                 }
             }
 
@@ -305,8 +305,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         _radioAdvanceByTimestamps = false;
         _customDialogueUI?.SetManualAdvanceBlocked(false);
 
-        if (_storyAudioSource != null && _storyAudioSource.isPlaying)
-            _storyAudioSource.Stop();
+        if (_voiceSource != null && _voiceSource.isPlaying)
+            _voiceSource.Stop();
 
         AdvancePhasedFlow();
     }
@@ -465,11 +465,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             _videoRoot.SetActive(true);
 
         StopStatic();
-        if (_currentStationIndex >= 0 && _currentStationIndex < _stations.Length)
-        {
-            AudioSource s = _stations[_currentStationIndex];
-            if (s != null && s.isPlaying) s.Stop();
-        }
+        StopAllStations();
 
         _videoPlayer.loopPointReached -= OnVideoEnded;
         _videoPlayer.loopPointReached += OnVideoEnded;
@@ -511,8 +507,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         _pendingPostVideoConversationForPlayback = null;
 
         _storyPlaying = false;
-        if (_storyAudioSource != null && _storyAudioSource.isPlaying)
-            _storyAudioSource.Stop();
+        if (_voiceSource != null && _voiceSource.isPlaying)
+            _voiceSource.Stop();
 
         StopStatic();
         PlayCurrentStation();
@@ -550,21 +546,21 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         if (_stations == null || _stations.Length == 0 || _storyPlaying) return;
         StopStatic();
 
-        if (_currentStationIndex >= 0 && _currentStationIndex < _stations.Length)
-        {
-            AudioSource s = _stations[_currentStationIndex];
-            if (s != null && s.isPlaying) s.Stop();
-        }
-
         _currentStationIndex = (_currentStationIndex + 1) % _stations.Length;
         PlayCurrentStation();
     }
 
     private void PlayCurrentStation()
     {
-        if (_stations == null || _currentStationIndex < 0 || _currentStationIndex >= _stations.Length) return;
-        AudioSource s = _stations[_currentStationIndex];
-        if (s != null) s.Play();
+        if (_stationSource == null || _stations == null || _currentStationIndex < 0 || _currentStationIndex >= _stations.Length) return;
+        RadioStationEntry entry = _stations[_currentStationIndex];
+        if (entry?.clip == null) return;
+        StopAllStations();
+        _stationSource.volume = entry.volume;
+        _stationSource.clip = entry.clip;
+        _stationSource.loop = true;
+        _stationSource.Play();
+        Debug.Log($"[Radio] Озвучивается: станция [{_currentStationIndex}] — «{entry.clip.name}» (громкость {entry.volume})");
     }
 
     private RadioEventClipEntry GetEventClipEntry(string eventId)
@@ -588,10 +584,21 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 }
 
 [System.Serializable]
+public class RadioStationEntry
+{
+    [Tooltip("Клип фоновой музыки станции (loop).")]
+    public AudioClip clip;
+    [Range(0f, 1f), Tooltip("Громкость этой станции.")]
+    public float volume = 1f;
+}
+
+[System.Serializable]
 public class RadioEventClipEntry
 {
     public string eventId;
     public AudioClip clip;
+    [Range(0f, 1f), Tooltip("Громкость озвучки этого события.")]
+    public float volume = 1f;
     [Tooltip("Секунды на таймлайне озвучки, в которые переключать реплику диалога: [0] — переход с 1-й на 2-ю реплику, [1] — со 2-й на 3-ю и т.д. Если пусто — используется фиксированный интервал авто-листания.")]
     public float[] advanceAtSeconds = new float[0];
 }

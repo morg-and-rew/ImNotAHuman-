@@ -61,4 +61,7 @@
 - **Video Player** — ссылка на `UnityEngine.Video.VideoPlayer`, который проигрывает ролик.
 - **Video Root** — optional root объекта/канваса для видео, автоматически включается на время ролика.
 - **Static Clip Path Override** — fallback, если Static Clip не задан
-- Stations, Story Audio Source, Static Audio Source, Hint Canvas — технические ссылки
+- **Station Source** — один AudioSource для всех станций (фоновая музыка в цикле)
+- **Station Clips** — массив клипов станций (по одному на «кнопку» переключения)
+- **Voice Source** — один AudioSource для помех (статик) и сюжетной озвучки (по очереди)
+- **Hint** — спрайт подсказки

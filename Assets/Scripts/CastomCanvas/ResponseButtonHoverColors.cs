@@ -41,6 +41,12 @@ public sealed class ResponseButtonHoverColors : MonoBehaviour, IPointerEnterHand
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        ResetToNormal();
+    }
+
+    /// <summary> Вернуть плашку/текст кнопки в обычное состояние (без hover). Вызывать при скрытии меню ответов, чтобы при следующем показе не оставалась подсветка прошлого выбора. </summary>
+    public void ResetToNormal()
+    {
         if (textGraphic != null) textGraphic.color = _normalTextColor;
         if (targetImage != null)
         {

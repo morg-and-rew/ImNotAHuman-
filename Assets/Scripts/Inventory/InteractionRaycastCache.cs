@@ -3,11 +3,11 @@ using UnityEngine;
 
 public sealed class InteractionRaycastCache
 {
-    private const float Distance = 2.4f;
+    private const float Distance = 0.65f;
     /// <summary> Настройка: начало луча сдвинуто вперёд от камеры (метры), чтобы луч стартовал уже за пределами CharacterController. Меняй здесь при необходимости. </summary>
     private const float OriginOffset = 0.75f;
     /// <summary> Радиус «толщины» луча — предметы чуть в стороне тоже попадают. </summary>
-    private const float RayRadius = 0.12f;
+    private const float RayRadius = 0.025f;
     /// <summary> Количество колец по длине луча при отладочной отрисовке (0 = только линия и сфера). </summary>
     private const int DebugRings = 5;
     /// <summary> Углы вниз от направления камеры (градусы) — чтобы брать предметы ниже с разных поз. </summary>

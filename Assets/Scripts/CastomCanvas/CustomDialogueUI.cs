@@ -390,6 +390,16 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             _subtitlePanelHiddenByChoiceRule = false;
         }
 
+        // Сбросить подсветку (плашку) выбранного ответа, чтобы при следующем показе меню не оставался старый спрайт/цвет
+        var allButtons = GetAllResponseButtons();
+        for (int i = 0; i < allButtons.Count; i++)
+        {
+            var hover = allButtons[i].GetComponent<ResponseButtonHoverColors>();
+            if (hover != null) hover.ResetToNormal();
+        }
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(null);
+
         base.HideResponses();
 
         _inChoiceMode = false;
@@ -482,52 +492,53 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         }
     }
 
-    private void ApplyResponseButtonColors()
+    private List<StandardUIResponseButton> GetAllResponseButtons()
     {
-        // Собираем все кнопки ответа: и назначенные в панели, и созданные из шаблона
         var allButtons = new List<StandardUIResponseButton>();
+        if (conversationUIElements?.menuPanels == null) return allButtons;
 
-        if (conversationUIElements?.menuPanels != null)
+        for (int p = 0; p < conversationUIElements.menuPanels.Length; p++)
         {
-            for (int p = 0; p < conversationUIElements.menuPanels.Length; p++)
+            var panel = conversationUIElements.menuPanels[p];
+            if (panel == null) continue;
+
+            if (panel.buttons != null)
             {
-                var panel = conversationUIElements.menuPanels[p];
-                if (panel == null) continue;
-
-                if (panel.buttons != null)
+                for (int i = 0; i < panel.buttons.Length; i++)
                 {
-                    for (int i = 0; i < panel.buttons.Length; i++)
-                    {
-                        if (panel.buttons[i] != null && panel.buttons[i].gameObject.activeInHierarchy)
-                            allButtons.Add(panel.buttons[i]);
-                    }
+                    if (panel.buttons[i] != null && panel.buttons[i].gameObject.activeInHierarchy)
+                        allButtons.Add(panel.buttons[i]);
                 }
+            }
 
-                if (panel.instantiatedButtons != null)
+            if (panel.instantiatedButtons != null)
+            {
+                for (int i = 0; i < panel.instantiatedButtons.Count; i++)
                 {
-                    for (int i = 0; i < panel.instantiatedButtons.Count; i++)
-                    {
-                        var go = panel.instantiatedButtons[i];
-                        if (go == null) continue;
-                        var rb = go.GetComponent<StandardUIResponseButton>();
-                        if (rb != null && rb.gameObject.activeInHierarchy)
-                            allButtons.Add(rb);
-                    }
+                    var go = panel.instantiatedButtons[i];
+                    if (go == null) continue;
+                    var rb = go.GetComponent<StandardUIResponseButton>();
+                    if (rb != null && rb.gameObject.activeInHierarchy)
+                        allButtons.Add(rb);
                 }
+            }
 
-                // Кнопки из шаблона могут быть под buttonTemplateHolder
-                if (panel.buttonTemplateHolder != null)
+            if (panel.buttonTemplateHolder != null)
+            {
+                var fromHolder = panel.buttonTemplateHolder.GetComponentsInChildren<StandardUIResponseButton>(true);
+                for (int i = 0; i < fromHolder.Length; i++)
                 {
-                    var fromHolder = panel.buttonTemplateHolder.GetComponentsInChildren<StandardUIResponseButton>(true);
-                    for (int i = 0; i < fromHolder.Length; i++)
-                    {
-                        if (fromHolder[i] != null && fromHolder[i].gameObject.activeInHierarchy && !allButtons.Contains(fromHolder[i]))
-                            allButtons.Add(fromHolder[i]);
-                    }
+                    if (fromHolder[i] != null && fromHolder[i].gameObject.activeInHierarchy && !allButtons.Contains(fromHolder[i]))
+                        allButtons.Add(fromHolder[i]);
                 }
             }
         }
+        return allButtons;
+    }
 
+    private void ApplyResponseButtonColors()
+    {
+        var allButtons = GetAllResponseButtons();
         for (int i = 0; i < allButtons.Count; i++)
             ApplyResponseButtonStyleToSingle(allButtons[i]);
     }
