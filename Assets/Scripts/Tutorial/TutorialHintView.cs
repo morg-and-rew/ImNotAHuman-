@@ -11,8 +11,11 @@ public sealed class TutorialHintView : MonoBehaviour
     [SerializeField] private string[] _hintKeys;
     [Tooltip("Спрайты для подсказок. Добавь сюда все картинки туториала в том же порядке, что и ключи в Hint Keys.")]
     [SerializeField] private Sprite[] _hintSprites;
+    [SerializeField, Min(0.01f)] private float _fadeDuration = 0.18f;
 
     public static TutorialHintView Instance { get; private set; }
+    private CanvasGroup _canvasGroup;
+    private float _targetAlpha;
 
     private void Awake()
     {
@@ -23,7 +26,14 @@ public sealed class TutorialHintView : MonoBehaviour
         }
 
         Instance = this;
+        EnsureCanvasGroup();
+        SetAlphaImmediate(0f);
         _root.SetActive(false);
+    }
+
+    private void Update()
+    {
+        TickFade();
     }
 
     /// <summary> Показать подсказку по ключу (например tutorial.press_space). Спрайт берётся из массивов в инспекторе. </summary>
@@ -50,6 +60,7 @@ public sealed class TutorialHintView : MonoBehaviour
 
         EnsureParentChainActive();
         _root.SetActive(true);
+        _targetAlpha = 1f;
     }
 
     private void EnsureParentChainActive()
@@ -67,7 +78,50 @@ public sealed class TutorialHintView : MonoBehaviour
     public void Hide()
     {
         if (_root == null) return;
-        _root.SetActive(false);
+        _targetAlpha = 0f;
+    }
+
+    private void EnsureCanvasGroup()
+    {
+        if (_root == null)
+            return;
+        _canvasGroup = _root.GetComponent<CanvasGroup>();
+        if (_canvasGroup == null)
+            _canvasGroup = _root.AddComponent<CanvasGroup>();
+        _canvasGroup.interactable = false;
+        _canvasGroup.blocksRaycasts = false;
+    }
+
+    private void TickFade()
+    {
+        if (_root == null)
+            return;
+
+        if (_canvasGroup == null)
+            EnsureCanvasGroup();
+
+        if (_canvasGroup == null)
+            return;
+
+        float duration = Mathf.Max(0.01f, _fadeDuration);
+        float step = Time.deltaTime / duration;
+        _canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, _targetAlpha, step);
+
+        bool keepVisible = _targetAlpha > 0f || _canvasGroup.alpha > 0.001f;
+        if (_root.activeSelf != keepVisible)
+            _root.SetActive(keepVisible);
+
+        if (!keepVisible && _image != null)
+            _image.enabled = false;
+    }
+
+    private void SetAlphaImmediate(float alpha)
+    {
+        if (_canvasGroup == null)
+            EnsureCanvasGroup();
+        if (_canvasGroup != null)
+            _canvasGroup.alpha = Mathf.Clamp01(alpha);
+        _targetAlpha = Mathf.Clamp01(alpha);
     }
 }
 

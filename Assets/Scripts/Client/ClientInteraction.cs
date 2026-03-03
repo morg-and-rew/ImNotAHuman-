@@ -200,11 +200,12 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     private void Update()
     {
         if (PlayerHintView.Instance == null) return;
-        PlayerView player = GameFlowController.Instance != null ? GameFlowController.Instance.Player : null;
+        GameFlowController flow = GameFlowController.Instance;
+        PlayerView player = flow != null ? flow.Player : null;
         bool holdingPhone = HandsRegistry.Hands != null && HandsRegistry.Hands.HasItem && HandsRegistry.Hands.Current is PhoneItemView;
         bool isLooking = player != null && IsPlayerLookingAtClient(player);
-        // Во время override-диалога (Client_Day1.5.2 и т.п.) подсказку не показываем
-        bool canInteract = !_isUsingOverrides && player != null && isLooking && !holdingPhone && (!IsActive || _waitingForContinue);
+        bool canShowClientHint = flow != null && flow.ShouldShowClientInteractHint();
+        bool canInteract = !_isUsingOverrides && canShowClientHint && player != null && isLooking && !holdingPhone && (!IsActive || _waitingForContinue);
         Sprite sprite = canInteract ? _hintSprite : null;
         PlayerHintView.Instance.SetClientHint(sprite);
     }

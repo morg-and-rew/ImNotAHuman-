@@ -48,6 +48,10 @@ public sealed class StoryDirector : MonoBehaviour
     public bool IsWaitingForWarehouseStoryZoneExit => false;
     /// <summary> True, если сюжет ждёт подтверждения перехода на склад (например после Client_Day1.4 с ChoseToGivePackage5577). </summary>
     public bool IsWaitingForWarehouseConfirm => _wait == WaitMode.WaitingWarehouseConfirm;
+    public bool IsWaitingForClientInteraction =>
+        _wait == WaitMode.WaitingFreeRoamClientConfirm
+        || _wait == WaitMode.WaitingClientConfirm
+        || (_currentStep != null && _currentStep.optional);
 
     public bool IsStepAllowingTravelToWarehouse =>
         IsAtOrPastStep("free_roam_before_clients")

@@ -37,6 +37,11 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [SerializeField] private Sprite keyHintSpaceSprite;
     [Tooltip("Спрайт для «завершить и на склад» (F).")]
     [SerializeField] private Sprite keyHintFinishSprite;
+    [Tooltip("Если включено, при показе плашки F позиция берётся из Key Hint Plaque Position When F; иначе плашка остаётся на месте (как в сцене).")]
+    [SerializeField] private bool keyHintPlaqueUseCustomPositionForF;
+    [Tooltip("Anchored position плашки, когда показывается F. Используется только если включено Key Hint Plaque Use Custom Position For F.")]
+    [SerializeField] private Vector2 keyHintPlaquePositionWhenF;
+    [SerializeField, Min(0.01f)] private float keyHintPlaqueFadeDuration = 0.18f;
     [Header("Key Hint Plaque — режим выбора (цвет плашки и текст белый)")]
     [Tooltip("Цвет Image плашки при возможности выбора. Если alpha = 0, смена цвета не применяется.")]
     [SerializeField] private Color keyHintPlaqueChoiceColor = new Color(82f / 255f, 79f / 255f, 13f / 255f, 1f);
@@ -53,12 +58,12 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [Header("Name Plate (плашки имён — только во время разговора с клиентом, когда говорят двое — две плашки)")]
     [Tooltip("Канвас плашек имени со сцены. Виден только во время диалога с клиентом, спрайты из мапы. Скрывается при выборе (Hide On choice mode).")]
     [SerializeField] private Canvas namePlateHideOnChoiceCanvas;
-    [Tooltip("Image для имени левого говорящего — nameSprite из Client Portrait Map.")]
+    [Tooltip("Image для имени левого говорящего.")]
     [SerializeField] private Image namePlateImageLeft;
-    [Tooltip("Image для имени правого говорящего — nameSpriteRight из мапы.")]
+    [Tooltip("Image для имени правого говорящего.")]
     [SerializeField] private Image namePlateImageRight;
-    [Tooltip("Client Portrait Map: по нему определяем, что диалог «клиентский», и берём спрайт имени (nameSprite).")]
-    [SerializeField] private ClientPortraitMap clientPortraitMap;
+    [Tooltip("Мапа спрайтов имён (плашки «Бабушка», «Клиент»). Если нет — плашки имён не показываются. Порядок шагов и conversation как в Client Portrait Map.")]
+    [SerializeField] private ClientNamePlateMap clientNamePlateMap;
     [Tooltip("Sorting Order для канваса имени (если задан). Чем больше — тем выше слой.")]
     [SerializeField] private int namePlateCanvasSortOrder = 100;
     [SerializeField] private string[] hideSubtitlePanelOnChoiceConversations;
@@ -142,6 +147,9 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     private float _nextManualAdvanceAllowedAt;
     private bool _subtitlePanelHiddenByChoiceRule;
     private bool _manualAdvanceBlocked;
+    private Vector2 _keyHintPlaqueNormalPosition;
+    private CanvasGroup _keyHintPlaqueCanvasGroup;
+    private float _keyHintPlaqueTargetAlpha;
 
     public event Action<Subtitle> OnSubtitleShown;
     public event Action OnClientDialogueFinishedByKey;
@@ -168,6 +176,13 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         if (namePlateHideOnChoiceCanvas != null)
             namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
         if (npcSubtitlePanel != null) npcSubtitlePanel.SetActive(false);
+        if (keyHintPlaqueImage != null)
+        {
+            _keyHintPlaqueNormalPosition = keyHintPlaqueImage.rectTransform.anchoredPosition;
+            EnsureKeyHintPlaqueCanvasGroup();
+            SetKeyHintPlaqueAlphaImmediate(0f);
+            keyHintPlaqueImage.gameObject.SetActive(false);
+        }
         RefreshChoiceModeHiddenObjectsVisibility();
         SetAutoAdvanceHiddenObjectsVisible(true);
         CachePanelDefaults();
@@ -253,6 +268,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
     private void Update()
     {
+        TickKeyHintPlaqueFade();
+
         if (!IsDialogueActive) return;
 
         if (_awaitFinish)
@@ -350,6 +367,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         _inChoiceMode = true;
         _subtitleVisible = true;
         _awaitFinish = false;
+        // Сразу пересчитать видимость Space/F-плашек, чтобы Space не оставался на экране в момент входа в выбор.
+        RefreshAwaitingFinishKeyUI();
         RefreshChoiceModeHiddenObjectsVisibility();
         ApplyKeyHintPlaqueChoiceState(true);
         OnResponseMenuShown?.Invoke();
@@ -405,6 +424,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         _inChoiceMode = false;
         _isThreeChoicesMode = false;
         ApplyKeyHintPlaqueChoiceState(false);
+        // После выхода из выбора немедленно вернуть корректную видимость плашек Space/F.
+        RefreshAwaitingFinishKeyUI();
         RefreshChoiceModeHiddenObjectsVisibility();
         OnResponseMenuHidden?.Invoke();
         RestorePanelDefaults();
@@ -763,7 +784,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
     private void UpdateNamePlateFromClientMap(Subtitle subtitle)
     {
-        if (clientPortraitMap == null || namePlateHideOnChoiceCanvas == null) return;
+        if (clientNamePlateMap == null || namePlateHideOnChoiceCanvas == null) return;
         if (subtitle?.dialogueEntry == null)
         {
             _namePlateVisibleByClientConversation = false;
@@ -784,7 +805,14 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             return;
         }
 
-        int stepIndex = FindStepIndexByConversation(clientPortraitMap, conversationTitle);
+        if (clientNamePlateMap == null)
+        {
+            _namePlateVisibleByClientConversation = false;
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
+            return;
+        }
+
+        int stepIndex = clientNamePlateMap.FindStepIndexByConversation(conversationTitle);
         if (stepIndex < 0)
         {
             _namePlateVisibleByClientConversation = false;
@@ -793,15 +821,15 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         }
 
         int entryID = subtitle.dialogueEntry.id;
-        if (!clientPortraitMap.TryGetRule(stepIndex, entryID, out var rule) && !clientPortraitMap.TryGetRule(stepIndex, 0, out rule))
+        if (!clientNamePlateMap.TryGetRule(stepIndex, entryID, out var nameRule))
         {
             _namePlateVisibleByClientConversation = false;
             namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
             return;
         }
 
-        bool showLeft = rule.nameSprite != null;
-        bool showRight = rule.nameSpriteRight != null;
+        bool showLeft = nameRule.nameSprite != null;
+        bool showRight = nameRule.nameSpriteRight != null;
         bool showAny = showLeft || showRight;
         _namePlateVisibleByClientConversation = showAny;
         namePlateHideOnChoiceCanvas.gameObject.SetActive(showAny);
@@ -812,8 +840,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
                 namePlateImageLeft.gameObject.SetActive(showLeft);
                 if (showLeft)
                 {
-                    namePlateImageLeft.sprite = rule.nameSprite;
-                    namePlateImageLeft.color = rule.nameSpriteColor.a < 0.001f ? Color.white : rule.nameSpriteColor;
+                    namePlateImageLeft.sprite = nameRule.nameSprite;
+                    namePlateImageLeft.color = nameRule.nameSpriteColor.a < 0.001f ? Color.white : nameRule.nameSpriteColor;
                 }
             }
             if (namePlateImageRight != null)
@@ -821,23 +849,12 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
                 namePlateImageRight.gameObject.SetActive(showRight);
                 if (showRight)
                 {
-                    namePlateImageRight.sprite = rule.nameSpriteRight;
-                    namePlateImageRight.color = rule.nameSpriteColorRight.a < 0.001f ? Color.white : rule.nameSpriteColorRight;
+                    namePlateImageRight.sprite = nameRule.nameSpriteRight;
+                    namePlateImageRight.color = nameRule.nameSpriteColorRight.a < 0.001f ? Color.white : nameRule.nameSpriteColorRight;
                 }
             }
             namePlateHideOnChoiceCanvas.sortingOrder = namePlateCanvasSortOrder;
         }
-    }
-
-    private static int FindStepIndexByConversation(ClientPortraitMap map, string conversation)
-    {
-        if (map == null || map.steps == null) return -1;
-        for (int i = 0; i < map.steps.Count; i++)
-        {
-            if (string.Equals(map.steps[i].conversation, conversation, StringComparison.OrdinalIgnoreCase))
-                return i;
-        }
-        return -1;
     }
 
     private void RefreshChoiceModeHiddenObjectsVisibility()
@@ -893,16 +910,19 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     private void RefreshKeyHintPlaqueSprite(bool canAdvanceNow)
     {
         if (keyHintPlaqueImage == null) return;
-        bool visible = !_forcedAutoAdvanceEnabled && !_manualAdvanceBlocked && (canAdvanceNow || _awaitFinish || _inChoiceMode);
-        keyHintPlaqueImage.gameObject.SetActive(visible);
+        bool visible = !_forcedAutoAdvanceEnabled && !_manualAdvanceBlocked && !_inChoiceMode && (canAdvanceNow || _awaitFinish);
         if (visible)
         {
-            if (_awaitFinish && keyHintFinishSprite != null)
+            bool showingF = _awaitFinish && keyHintFinishSprite != null;
+            if (showingF)
                 keyHintPlaqueImage.sprite = keyHintFinishSprite;
             else if (!_awaitFinish && keyHintSpaceSprite != null)
                 keyHintPlaqueImage.sprite = keyHintSpaceSprite;
+            if (keyHintPlaqueUseCustomPositionForF)
+                keyHintPlaqueImage.rectTransform.anchoredPosition = showingF ? keyHintPlaquePositionWhenF : _keyHintPlaqueNormalPosition;
             ApplyKeyHintPlaqueChoiceState(_inChoiceMode);
         }
+        SetKeyHintPlaqueVisible(visible);
     }
 
     /// <summary>
@@ -914,6 +934,63 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             keyHintPlaqueImage.color = isChoiceMode ? keyHintPlaqueChoiceColor : keyHintPlaqueNormalColor;
         if (keyHintPlaqueText != null)
             keyHintPlaqueText.color = isChoiceMode ? Color.white : keyHintPlaqueTextNormalColor;
+    }
+
+    private void EnsureKeyHintPlaqueCanvasGroup()
+    {
+        if (keyHintPlaqueImage == null)
+            return;
+        _keyHintPlaqueCanvasGroup = keyHintPlaqueImage.GetComponent<CanvasGroup>();
+        if (_keyHintPlaqueCanvasGroup == null)
+            _keyHintPlaqueCanvasGroup = keyHintPlaqueImage.gameObject.AddComponent<CanvasGroup>();
+        _keyHintPlaqueCanvasGroup.interactable = false;
+        _keyHintPlaqueCanvasGroup.blocksRaycasts = false;
+    }
+
+    private void SetKeyHintPlaqueVisible(bool visible)
+    {
+        if (keyHintPlaqueImage == null)
+            return;
+
+        if (_keyHintPlaqueCanvasGroup == null)
+            EnsureKeyHintPlaqueCanvasGroup();
+
+        _keyHintPlaqueTargetAlpha = visible ? 1f : 0f;
+        if (visible && !keyHintPlaqueImage.gameObject.activeSelf)
+            keyHintPlaqueImage.gameObject.SetActive(true);
+    }
+
+    private void TickKeyHintPlaqueFade()
+    {
+        if (keyHintPlaqueImage == null)
+            return;
+
+        if (_keyHintPlaqueCanvasGroup == null)
+            EnsureKeyHintPlaqueCanvasGroup();
+
+        if (_keyHintPlaqueCanvasGroup == null)
+        {
+            if (keyHintPlaqueImage.gameObject.activeSelf != (_keyHintPlaqueTargetAlpha > 0.5f))
+                keyHintPlaqueImage.gameObject.SetActive(_keyHintPlaqueTargetAlpha > 0.5f);
+            return;
+        }
+
+        float duration = Mathf.Max(0.01f, keyHintPlaqueFadeDuration);
+        float step = Time.unscaledDeltaTime / duration;
+        _keyHintPlaqueCanvasGroup.alpha = Mathf.MoveTowards(_keyHintPlaqueCanvasGroup.alpha, _keyHintPlaqueTargetAlpha, step);
+
+        bool keepVisible = _keyHintPlaqueTargetAlpha > 0f || _keyHintPlaqueCanvasGroup.alpha > 0.001f;
+        if (keyHintPlaqueImage.gameObject.activeSelf != keepVisible)
+            keyHintPlaqueImage.gameObject.SetActive(keepVisible);
+    }
+
+    private void SetKeyHintPlaqueAlphaImmediate(float alpha)
+    {
+        if (_keyHintPlaqueCanvasGroup == null)
+            EnsureKeyHintPlaqueCanvasGroup();
+        if (_keyHintPlaqueCanvasGroup != null)
+            _keyHintPlaqueCanvasGroup.alpha = Mathf.Clamp01(alpha);
+        _keyHintPlaqueTargetAlpha = Mathf.Clamp01(alpha);
     }
 
     private void CachePanelDefaults()

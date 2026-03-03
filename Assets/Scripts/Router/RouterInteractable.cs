@@ -8,19 +8,25 @@ public sealed class RouterInteractable : MonoBehaviour, IWorldInteractable
 
     private bool _used;
 
-    public Sprite HintSprite => _hintSprite;
+    public Sprite HintSprite => CanInteractNow() ? _hintSprite : null;
 
     public void Interact(IPlayerInput input)
     {
-        if (_used) return;
-        if (!_flow.IsStoryExpectingTrigger("router"))
+        if (!CanInteractNow())
             return;
+
         _used = true;
 
         DialogueManager.instance.conversationStarted += OnConversationStarted;
         DialogueManager.instance.conversationEnded += OnConversationEnded;
         string conv = GameConfig.Tutorial.routerConversation;
         DialogueManager.StartConversation(string.IsNullOrEmpty(conv) ? "Hero_AfterRouterReboot" : conv);
+    }
+
+    private bool CanInteractNow()
+    {
+        if (_used) return false;
+        return _flow != null && _flow.IsStoryExpectingTrigger("router");
     }
 
     private void OnConversationStarted(Transform actor)

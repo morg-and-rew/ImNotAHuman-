@@ -14,7 +14,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [SerializeField] private Transform _warehousePoint;
     [SerializeField] private Transform _clientPoint;
     [SerializeField] private Transform _postVideoTablePoint;
-    [SerializeField] private float _postVideoCameraPitchDown = -25f;
+    [SerializeField] private float _postVideoCameraPitchDown = 32.8f;
+    [SerializeField] private float _postVideoCameraYaw = 244.4f;
     [Tooltip("Точка спавна игрока в начале второго дня.")]
     [SerializeField] private Transform _playerSpawnPoint;
 
@@ -184,10 +185,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private bool BlockReturnUntilPlayerDay1_2ReplicaDone => _radioDay1_2ConversationStarted && !_playerDay1_2ReplicaCompleted;
 
-    /// <summary> Текущий шаг — опциональное радио после Day1.2: игрок на складе может вернуться в зону выдачи в любой момент (не блокируем репликой Day1_2). </summary>
-    private bool IsOptionalRadioVideoAfterDay12Step =>
-        _storyDirector != null && string.Equals(_storyDirector.CurrentStepId, "optional_radio_video_after_day1_2", StringComparison.OrdinalIgnoreCase);
-
     public void NotifyTrigger(string triggerId)
     {
         if (string.IsNullOrEmpty(triggerId)) return;
@@ -202,6 +199,25 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public bool IsPhonePickupAllowed()
     {
         return _storyDirector == null || _storyDirector.IsAtOrPastStep("go_to_phone");
+    }
+
+    public bool ShouldShowClientInteractHint()
+    {
+        if (_clientInteraction != null && (_clientInteraction.IsActive || _clientInteraction.IsWaitingForContinue))
+            return true;
+
+        if (_storyDirector == null)
+            return false;
+
+        if (string.Equals(_storyDirector.CurrentStepId, "day2_start", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!_storyDirector.HasStoryStarted)
+            return GameConfig.StoryStartOnClientInteract;
+
+        // Подсказка "пустить клиента" должна следовать за сюжетом, а не только за глобальным GameState.
+        // Иначе бывают шаги, где взаимодействие по E уже разрешено, но GameState ещё не ClientDialog.
+        return _storyDirector.IsWaitingForClientInteraction;
     }
 
     public void NotifyExitZonePassed(string zoneId)
@@ -237,6 +253,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_player == null) return;
         _player.SetCameraPitch(_postVideoCameraPitchDown);
+        _player.transform.rotation = Quaternion.Euler(0f, _postVideoCameraYaw, 0f);
+        _player.SyncRotationFromCamera();
     }
 
     public string ResolveHintText(string hintText, string fallbackLocalizationKey)
@@ -543,9 +561,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 return false;
             if (!IsPlayerLookingAt(_warehouseExitDoor))
                 return false;
-            if (!IsOptionalRadioVideoAfterDay12Step && DialogueManager.isConversationActive && string.Equals(DialogueManager.lastConversationStarted, "Radio_Day1_2", StringComparison.OrdinalIgnoreCase))
+            if (DialogueManager.isConversationActive && string.Equals(DialogueManager.lastConversationStarted, "Radio_Day1_2", StringComparison.OrdinalIgnoreCase))
                 return false;
-            if (!IsOptionalRadioVideoAfterDay12Step && BlockReturnUntilPlayerDay1_2ReplicaDone)
+            if (BlockReturnUntilPlayerDay1_2ReplicaDone)
                 return false;
             if (_storyDirector != null && _storyDirector.IsRunning && !_storyDirector.IsStepAllowingTravelToClient)
                 return false;
@@ -1387,8 +1405,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private string GetWhyCannotReturnToClient()
     {
-        // Опциональное радио: на шаге optional_radio_video_after_day1_2 игрок уже на складе, может не слушать или уйти в зону выдачи в любой момент.
-        if (BlockReturnUntilPlayerDay1_2ReplicaDone && !IsOptionalRadioVideoAfterDay12Step)
+        if (BlockReturnUntilPlayerDay1_2ReplicaDone)
             return "ждётся реплика Player_Day1_2_Replica (до конца диалога на радио)";
         if (_storyDirector != null && _storyDirector.IsRunning && !_storyDirector.IsStepAllowingTravelToClient)
             return "сценарий не разрешает возврат к клиенту (текущий шаг: " + (_storyDirector.CurrentStepId ?? "?") + ")";
@@ -1402,6 +1419,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         bool inExitZone = IsPlayerInZoneTo(TravelTarget.Client) || (_warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= _doorTeleportMaxDistance);
         if (!inExitZone)
             return false;
+
+        // После Client_Day1.5.2/1.5.3 на шаге просмотра видео можно уйти на склад и вернуться обратно без посылки.
+        // Иначе игрок застревает на складе, если до этого остался RequiredPackageNumber > 0.
+        if (_storyDirector != null && string.Equals(_storyDirector.CurrentStepId, "watch_computer_indoor_day1_5", StringComparison.OrdinalIgnoreCase))
+            return true;
 
         PlayerHands hands = HandsRegistry.Hands;
 

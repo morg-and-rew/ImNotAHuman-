@@ -63,9 +63,12 @@ public sealed class PlayerInteractionController
     private void UpdateInteractionHint(IHoldable holdable, IWorldInteractable worldInteractable)
     {
         bool holdingPhone = _hands.HasItem && _hands.Current is PhoneItemView;
+        GameFlowController flowController = GameFlowController.Instance;
+        bool canShowClientHint = flowController != null && flowController.ShouldShowClientInteractHint();
         bool preferClientHint = _client != null && _client.IsPlayerInside
             && _client.IsPlayerLookingAtClient(_playerView)
             && !holdingPhone
+            && canShowClientHint
             && (!_client.IsActive || _client.IsWaitingForContinue);
 
         Sprite sprite = null;
@@ -94,11 +97,16 @@ public sealed class PlayerInteractionController
     private InteractableOutline GetHighlightTarget(IHoldable holdable, IWorldInteractable worldInteractable)
     {
         bool holdingPhone = _hands.HasItem && _hands.Current is PhoneItemView;
+        GameFlowController flowController = GameFlowController.Instance;
+        bool canShowClientHint = flowController != null && flowController.ShouldShowClientInteractHint();
         bool preferClientHint = _client != null && _client.IsPlayerInside
             && _client.IsPlayerLookingAtClient(_playerView)
             && !holdingPhone
+            && canShowClientHint
             && (!_client.IsActive || _client.IsWaitingForContinue);
         if (preferClientHint)
+            return null;
+        if (worldInteractable is RouterInteractable router && router.HintSprite == null)
             return null;
         if (worldInteractable != null)
             return (worldInteractable as MonoBehaviour)?.GetComponent<InteractableOutline>()

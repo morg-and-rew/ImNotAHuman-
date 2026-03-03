@@ -7,6 +7,7 @@ public sealed class PlayerHintView : MonoBehaviour
 
     [SerializeField] private GameObject _root;
     [SerializeField] private Image _image;
+    [SerializeField, Min(0.01f)] private float _fadeDuration = 0.18f;
 
     private Sprite _raycastSprite;
     private Sprite _windowSprite;
@@ -14,6 +15,8 @@ public sealed class PlayerHintView : MonoBehaviour
     private Sprite _clientSprite;
 
     private bool _suspended;
+    private CanvasGroup _canvasGroup;
+    private float _targetAlpha;
 
     private void Awake()
     {
@@ -23,6 +26,8 @@ public sealed class PlayerHintView : MonoBehaviour
             return;
         }
         Instance = this;
+        EnsureCanvasGroup();
+        SetAlphaImmediate(0f);
         if (_root != null) _root.SetActive(false);
     }
 
@@ -59,9 +64,13 @@ public sealed class PlayerHintView : MonoBehaviour
     public void SetSuspended(bool value)
     {
         _suspended = value;
-        if (_suspended && _root != null)
+        if (_suspended)
         {
-            _root.SetActive(false);
+            SetAlphaImmediate(0f);
+            if (_root != null)
+                _root.SetActive(false);
+            if (_image != null)
+                _image.enabled = false;
         }
     }
 
@@ -96,15 +105,62 @@ public sealed class PlayerHintView : MonoBehaviour
                     p = p.parent;
                 }
             }
-            else
-                _root.SetActive(false);
         }
 
         if (_image != null)
         {
-            _image.enabled = shouldShow;
+            _image.enabled = true;
             if (showSprite != null)
                 _image.sprite = showSprite;
         }
+
+        _targetAlpha = shouldShow ? 1f : 0f;
+        TickFade();
+    }
+
+    private void EnsureCanvasGroup()
+    {
+        if (_root == null)
+            return;
+        _canvasGroup = _root.GetComponent<CanvasGroup>();
+        if (_canvasGroup == null)
+            _canvasGroup = _root.AddComponent<CanvasGroup>();
+        _canvasGroup.interactable = false;
+        _canvasGroup.blocksRaycasts = false;
+    }
+
+    private void TickFade()
+    {
+        if (_root == null)
+            return;
+
+        if (_canvasGroup == null)
+            EnsureCanvasGroup();
+
+        if (_canvasGroup == null)
+        {
+            _root.SetActive(_targetAlpha > 0.5f);
+            return;
+        }
+
+        float duration = Mathf.Max(0.01f, _fadeDuration);
+        float step = Time.deltaTime / duration;
+        _canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, _targetAlpha, step);
+
+        bool keepVisible = _targetAlpha > 0f || _canvasGroup.alpha > 0.001f;
+        if (_root.activeSelf != keepVisible)
+            _root.SetActive(keepVisible);
+
+        if (!keepVisible && _image != null)
+            _image.enabled = false;
+    }
+
+    private void SetAlphaImmediate(float alpha)
+    {
+        if (_canvasGroup == null)
+            EnsureCanvasGroup();
+        if (_canvasGroup != null)
+            _canvasGroup.alpha = Mathf.Clamp01(alpha);
+        _targetAlpha = Mathf.Clamp01(alpha);
     }
 }
