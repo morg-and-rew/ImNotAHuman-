@@ -9,6 +9,13 @@ using static IGameFlowController;
 [RequireComponent(typeof(Collider))]
 public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 {
+    [Header("Distance Volume")]
+    [SerializeField] private bool _useDistanceVolume = true;
+    [SerializeField, Min(0f)] private float _fullVolumeDistance = 2f;
+    [SerializeField, Min(0.01f)] private float _muteDistance = 16f;
+    [SerializeField, Range(0f, 1f)] private float _minDistanceVolumeMultiplier = 0f;
+    [SerializeField] private Transform _listenerOverride;
+
     [Header("Stations (background music, loop) — клип и громкость на каждую станцию")]
     [SerializeField] private AudioSource _stationSource;
     [SerializeField] private RadioStationEntry[] _stations = new RadioStationEntry[0];
@@ -55,6 +62,11 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private bool _radioAdvanceByTimestamps;
     private float[] _radioAdvanceTimestamps;
     private int _radioAdvanceIndex;
+    private float _stationBaseVolume = 1f;
+    private float _voiceBaseVolume = 1f;
+    private float _nextVolumeLogTime;
+    private float _lastLoggedStationVolume = -1f;
+    private float _lastLoggedVoiceVolume = -1f;
 
     public Sprite HintSprite => _hintSprite;
 
@@ -62,6 +74,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     {
         _storyEvents = new List<RadioEventData>(GameConfig.RadioEvents);
         _customDialogueUI = _customDialogueUIRef ?? GameFlowController.Instance?.CustomDialogueUI;
+        _stationBaseVolume = _stationSource != null ? _stationSource.volume : 1f;
+        _voiceBaseVolume = _voiceSource != null ? _voiceSource.volume : 1f;
 
         // При старте играет только станция; статик включается только после ActivateRadioEvent (подсказка «послушай радио»).
         _staticPlaying = false;
@@ -92,6 +106,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     private void Update()
     {
+        ApplyDistanceVolumeToSources();
+
         if (!_radioAdvanceByTimestamps || !_waitingStoryEnd || _voiceSource == null || !_voiceSource.isPlaying
             || _customDialogueUI == null || _radioAdvanceTimestamps == null || _radioAdvanceIndex >= _radioAdvanceTimestamps.Length)
             return;
@@ -131,8 +147,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             if (_voiceSource != null)
             {
                 float vol = volumeOverride ?? _staticVolume;
-                _voiceSource.volume = vol;
-                Debug.Log($"[Radio] Помехи уже играют — выставлена громкость {vol} (eventId: {id})");
+                _voiceBaseVolume = vol;
+                ApplyDistanceVolumeToSources();
             }
             return;
         }
@@ -143,8 +159,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     {
         if (_staticPlaying && _voiceSource != null)
         {
-            _voiceSource.volume = volume;
-            Debug.Log($"[Radio] Громкость помех изменена на {volume}");
+            _voiceBaseVolume = volume;
+            ApplyDistanceVolumeToSources();
         }
     }
 
@@ -168,12 +184,12 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         StopAllStations();
 
         float vol = volumeOverride ?? _staticVolume;
-        _voiceSource.volume = vol;
+        _voiceBaseVolume = vol;
+        ApplyDistanceVolumeToSources();
         _voiceSource.clip = clip;
         _voiceSource.loop = true;
         _voiceSource.Play();
         _staticPlaying = true;
-        Debug.Log($"[Radio] Помехи запущены — «{clip.name}», громкость {vol}");
     }
 
     private void StopStatic()
@@ -279,7 +295,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
                 if (clip != null)
                 {
                     float vol = clipEntry != null ? clipEntry.volume : 1f;
-                    _voiceSource.volume = vol;
+                    _voiceBaseVolume = vol;
+                    ApplyDistanceVolumeToSources();
                     _voiceSource.clip = clip;
                     _voiceSource.loop = false;
                     _voiceSource.Play();
@@ -580,11 +597,77 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         RadioStationEntry entry = _stations[_currentStationIndex];
         if (entry?.clip == null) return;
         StopAllStations();
-        _stationSource.volume = entry.volume;
+        _stationBaseVolume = entry.volume;
+        ApplyDistanceVolumeToSources();
         _stationSource.clip = entry.clip;
         _stationSource.loop = true;
         _stationSource.Play();
         Debug.Log($"[Radio] Озвучивается: станция [{_currentStationIndex}] — «{entry.clip.name}» (громкость {entry.volume})");
+    }
+
+    private void ApplyDistanceVolumeToSources()
+    {
+        float distanceMultiplier = GetDistanceVolumeMultiplier();
+        float stationVolume = Mathf.Clamp01(_stationBaseVolume * distanceMultiplier);
+        float voiceVolume = Mathf.Clamp01(_voiceBaseVolume * distanceMultiplier);
+
+        if (_stationSource != null)
+            _stationSource.volume = stationVolume;
+        if (_voiceSource != null)
+            _voiceSource.volume = voiceVolume;
+
+        LogCurrentVolumes(stationVolume, voiceVolume);
+    }
+
+    private float GetDistanceVolumeMultiplier()
+    {
+        if (!_useDistanceVolume)
+            return 1f;
+
+        Transform listener = GetListenerTransform();
+        if (listener == null)
+            return 1f;
+
+        float nearDistance = Mathf.Min(_fullVolumeDistance, _muteDistance);
+        float farDistance = Mathf.Max(_fullVolumeDistance, _muteDistance);
+        float distance = Vector3.Distance(transform.position, listener.position);
+        float t = Mathf.InverseLerp(farDistance, nearDistance, distance);
+        return Mathf.Lerp(_minDistanceVolumeMultiplier, 1f, t);
+    }
+
+    private Transform GetListenerTransform()
+    {
+        if (_listenerOverride != null)
+            return _listenerOverride;
+
+        GameFlowController flow = GameFlowController.Instance;
+        if (flow != null)
+        {
+            if (flow.PlayerCamera != null)
+                return flow.PlayerCamera.transform;
+            if (flow.Player != null)
+                return flow.Player.transform;
+        }
+
+        return Camera.main != null ? Camera.main.transform : null;
+    }
+
+    private void LogCurrentVolumes(float stationVolume, float voiceVolume)
+    {
+        // Логируем не чаще раза в 0.5 сек и только если громкость заметно изменилась.
+        if (Time.time < _nextVolumeLogTime)
+            return;
+
+        bool stationChanged = Mathf.Abs(stationVolume - _lastLoggedStationVolume) >= 0.01f;
+        bool voiceChanged = Mathf.Abs(voiceVolume - _lastLoggedVoiceVolume) >= 0.01f;
+        if (!stationChanged && !voiceChanged)
+            return;
+
+        _nextVolumeLogTime = Time.time + 0.5f;
+        _lastLoggedStationVolume = stationVolume;
+        _lastLoggedVoiceVolume = voiceVolume;
+
+        Debug.Log($"[Radio] Current volume -> station: {stationVolume:0.00}, voice/static: {voiceVolume:0.00}");
     }
 
     private RadioEventClipEntry GetEventClipEntry(string eventId)
