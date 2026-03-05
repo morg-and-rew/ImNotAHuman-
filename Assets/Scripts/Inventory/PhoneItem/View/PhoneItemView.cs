@@ -17,6 +17,8 @@ public sealed class PhoneItemView : HoldableViewBase, IHandPointProvider, IWorld
     [Header("Physics")]
     [SerializeField] private Collider _col;
     [SerializeField] private MeshRenderer _meshRenderer;
+    [Tooltip("Второй меш — отключается в руках, включается когда телефон лежит в мире.")]
+    [SerializeField] private MeshRenderer _meshRendererToHideInHands;
 
     [Header("Return point (where the phone lies)")]
     [SerializeField] private Transform _worldPoint; 
@@ -67,6 +69,7 @@ public sealed class PhoneItemView : HoldableViewBase, IHandPointProvider, IWorld
         transform.localRotation = Quaternion.identity;
 
         if (_meshRenderer != null) _meshRenderer.enabled = false;
+        if (_meshRendererToHideInHands != null) _meshRendererToHideInHands.enabled = false;
 
         Taken?.Invoke();
     }
@@ -76,6 +79,7 @@ public sealed class PhoneItemView : HoldableViewBase, IHandPointProvider, IWorld
         _isTaken = false;
 
         if (_meshRenderer != null) _meshRenderer.enabled = true;
+        if (_meshRendererToHideInHands != null) _meshRendererToHideInHands.enabled = true;
 
         ReturnToWorldPoint();
 

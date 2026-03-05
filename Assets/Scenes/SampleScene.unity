@@ -13281,7 +13281,7 @@ MonoBehaviour:
   _listenerOverride: {fileID: 0}
   _stationSource: {fileID: 537490301}
   _stations:
-  - clip: {fileID: 8300000, guid: e7e7f120f9f9a694fb1ba4f163d7ba46, type: 3}
+  - clip: {fileID: 8300000, guid: 5f29b70d29503c344a5c23f350ce9b10, type: 3}
     volume: 1
   _eventClips:
   - eventId: tutorial_radio
@@ -13643,6 +13643,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractableOutline
   _outlineColor: {r: 1, g: 0.6, b: 0.3372549, a: 1}
   _outlineWidth: 0.0075
+--- !u!23 &968761782 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4755461008253119183, guid: 061222d2862381c4b862dee8e1073692, type: 3}
+  m_PrefabInstance: {fileID: 764680276}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &969026485
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31418,6 +31423,10 @@ PrefabInstance:
       propertyPath: _heldScaleMultiplier
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8711203296386153826, guid: ae59a3633df44f94caad7d26d56b524c, type: 3}
+      propertyPath: _meshRendererToHideInHands
+      value: 
+      objectReference: {fileID: 968761782}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 6761718145055178491, guid: ae59a3633df44f94caad7d26d56b524c, type: 3}
