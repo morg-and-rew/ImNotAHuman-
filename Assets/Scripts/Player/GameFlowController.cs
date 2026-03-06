@@ -1,6 +1,7 @@
 using PixelCrushers;
 using PixelCrushers.DialogueSystem;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -24,6 +25,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     [Header("Fade to black (end of day)")]
     [SerializeField] private FadeToBlackView _fadeToBlackView;
+    [Tooltip("Длительность затемнения при переходе склад ↔ зона выдачи (сек). 0 = без затемнения.")]
+    [SerializeField, Min(0f)] private float _travelFadeDuration = 0.5f;
 
     [Header("Localization (UI Text Table)")]
     [SerializeField] private TextTable _uiTextTable;
@@ -98,6 +101,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _tutorialWarehouseVisit;
     private bool _useFreeTeleportPointForNextClientTravel;
     private float _lastTeleportToClientTime = -999f;
+    private bool _isTravelFading;
     /// <summary> Ключи туториалов, которые игрок уже выполнил — больше не показываем. </summary>
     private readonly HashSet<string> _hintKeysShownOnce = new HashSet<string>();
     /// <summary> Ключи туториалов, которые уже показаны, но игрок ещё не выполнил шаг — не спамим показом. </summary>
@@ -454,7 +458,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_input == null) return;
 
-        if (_travelTarget != TravelTarget.None && _input.ConfirmPressed)
+        if (!_isTravelFading && _travelTarget != TravelTarget.None && _input.ConfirmPressed)
         {
             // Не телепортировать в ту же зону: на складе — только в зону выдачи, в зоне выдачи — только на склад
             bool onWarehouseNow = GameStateService.CurrentState == GameState.Warehouse;
@@ -470,18 +474,19 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                     if (TryPerformPendingReturnToClient())
                         return;
                 }
+                TravelTarget target = _travelTarget;
                 bool freeTeleport = _freeTeleportTargetActive;
                 bool ignoreClientReq = freeTeleport && _travelTarget == TravelTarget.Client;
-                if (PerformTravel(_travelTarget, ignoreClientRequirements: ignoreClientReq, freeTeleport: freeTeleport))
+                PerformTravelWithFade(target, ignoreClientReq, freeTeleport, () =>
                 {
-                    string doorKey = _travelTarget == TravelTarget.Warehouse ? GameConfig.Tutorial.doorWarehouseKey : GameConfig.Tutorial.returnPressFKey;
+                    string doorKey = target == TravelTarget.Warehouse ? GameConfig.Tutorial.doorWarehouseKey : GameConfig.Tutorial.returnPressFKey;
                     MarkTutorialStepCompleted(doorKey);
-                    if (_travelTarget == TravelTarget.Client)
+                    if (target == TravelTarget.Client)
                         MarkTutorialStepCompleted(GameConfig.Tutorial.returnToClientKey);
                     _freeTeleportTargetActive = false;
                     _allowWarehouseConfirmFromClientArea = false;
-                    return;
-                }
+                });
+                return;
             }
         }
 
@@ -1207,7 +1212,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void ForceTravel(TravelTarget target)
     {
-        PerformTravel(target, ignoreClientRequirements: true);
+        PerformTravelWithFade(target, ignoreClientRequirements: true, freeTeleport: false, () => { });
     }
 
     public void SetAllowReturnToClientWithoutExitZone(bool allow) { }
@@ -1230,8 +1235,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_pendingDialogueReturnPackage <= 0) return false;
         if (!CanLeaveWarehouseWithPendingPackage()) return false;
-        _pendingDialogueReturnPackage = 0;
-        return PerformTravel(TravelTarget.Client, ignoreClientRequirements: true);
+        PerformTravelWithFade(TravelTarget.Client, ignoreClientRequirements: true, freeTeleport: false, () =>
+        {
+            _pendingDialogueReturnPackage = 0;
+            MarkTutorialStepCompleted(GameConfig.Tutorial.returnToClientKey);
+        });
+        return true;
     }
 
     public void SetFixedPackageForNextWarehouse(int number)
@@ -1301,6 +1310,45 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         foreach (string id in _radioAvailable)
             _radioExpired.Add(id);
         _radioAvailable.Clear();
+    }
+
+    /// <summary> Экран затемняется → в момент полного показа (чёрный) делаем телепорт → когда спрайт снова прозрачный, мы уже на складе/в зоне. </summary>
+    private void PerformTravelWithFade(TravelTarget target, bool ignoreClientRequirements, bool freeTeleport, Action onSuccess)
+    {
+        if (onSuccess == null) onSuccess = () => { };
+        bool useFade = _travelFadeDuration > 0f && _fadeToBlackView != null
+            && (target == TravelTarget.Warehouse || target == TravelTarget.Client);
+        if (!useFade)
+        {
+            if (PerformTravel(target, ignoreClientRequirements, freeTeleport))
+                onSuccess();
+            return;
+        }
+        _isTravelFading = true;
+        PlayFadeToBlack(_travelFadeDuration, () =>
+        {
+            // Когда экран полностью чёрный — переносим
+            bool ok = PerformTravel(target, ignoreClientRequirements, freeTeleport);
+            if (ok)
+            {
+                StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, onSuccess));
+            }
+            else
+            {
+                _fadeToBlackView.Hide();
+                _isTravelFading = false;
+            }
+        });
+    }
+
+    private IEnumerator FadeFromBlackNextFrame(float duration, Action onSuccess)
+    {
+        yield return null; // один кадр уже отрендерены в новой локации
+        _fadeToBlackView.PlayFadeFromBlack(duration, () =>
+        {
+            _isTravelFading = false;
+            onSuccess();
+        });
     }
 
     private bool PerformTravel(TravelTarget target, bool ignoreClientRequirements, bool freeTeleport = false)

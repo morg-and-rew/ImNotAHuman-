@@ -12,6 +12,8 @@ public sealed class TutorialHintView : MonoBehaviour
     [Tooltip("Спрайты для подсказок. Добавь сюда все картинки туториала в том же порядке, что и ключи в Hint Keys.")]
     [SerializeField] private Sprite[] _hintSprites;
     [SerializeField, Min(0.01f)] private float _fadeDuration = 0.18f;
+    [Tooltip("Sorting order канваса туториала — должен быть меньше, чем у окна (-50), чтобы подсказка рисовалась под спрайтом окна.")]
+    [SerializeField] private int _canvasSortOrder = -100;
 
     public static TutorialHintView Instance { get; private set; }
     private CanvasGroup _canvasGroup;
@@ -29,6 +31,15 @@ public sealed class TutorialHintView : MonoBehaviour
         EnsureCanvasGroup();
         SetAlphaImmediate(0f);
         _root.SetActive(false);
+        ApplyTutorialSortOrder();
+    }
+
+    private void ApplyTutorialSortOrder()
+    {
+        if (_root == null) return;
+        Canvas canvas = _root.GetComponentInParent<Canvas>();
+        if (canvas != null)
+            canvas.sortingOrder = _canvasSortOrder;
     }
 
     private void Update()

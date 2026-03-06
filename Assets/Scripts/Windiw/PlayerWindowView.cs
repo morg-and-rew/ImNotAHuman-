@@ -29,16 +29,21 @@ public sealed class PlayerWindowView
 
         if (_input != null && _currentWindowView != null && _input.InteractPressed)
         {
-            bool toggled = _currentWindowView.ToggleView();
-            if (!toggled)
-                return; // закрытие заблокировано — диалог ещё не дочитан
-
-            _isViewing = !_isViewing;
-
             if (_isViewing)
-                _playerController.SetBlock(true);
+            {
+                if (DialogueManager.isConversationActive)
+                    return;
+                _currentWindowView.ExitView(() => _playerController.SetBlock(false));
+                _isViewing = false;
+            }
             else
-                _playerController.SetBlock(false);
+            {
+                bool toggled = _currentWindowView.ToggleView();
+                if (!toggled)
+                    return;
+                _isViewing = true;
+                _playerController.SetBlock(true);
+            }
         }
     }
 
@@ -55,10 +60,10 @@ public sealed class PlayerWindowView
             {
                 if (!DialogueManager.isConversationActive)
                 {
-                    _currentWindowView.ExitView();
-                    _playerController.SetBlock(false);
-                    _isViewing = false;
+                    WindowView w = _currentWindowView;
                     _currentWindowView = null;
+                    _isViewing = false;
+                    w.ExitView(() => _playerController.SetBlock(false));
                 }
                 // иначе диалог ещё идёт — окно не закрываем, ссылку сохраняем
             }
@@ -74,9 +79,9 @@ public sealed class PlayerWindowView
             {
                 if (!DialogueManager.isConversationActive)
                 {
-                    _currentWindowView.ExitView();
-                    _playerController.SetBlock(false);
+                    WindowView w = _currentWindowView;
                     _isViewing = false;
+                    w.ExitView(() => _playerController.SetBlock(false));
                 }
             }
 

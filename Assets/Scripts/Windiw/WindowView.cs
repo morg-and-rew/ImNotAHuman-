@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ public sealed class WindowView : MonoBehaviour
     [SerializeField] private Image _fullScreenImage;
     [SerializeField] private Sprite _fullScreenSprite;
     [SerializeField, Min(0f)] private float _fadeInDuration = 2f;
+    [Tooltip("Длительность плавного исчезновения при выходе (0 = мгновенно).")]
+    [SerializeField, Min(0f)] private float _fadeOutDuration = 2f;
     [SerializeField] private int _windowSortOrder = -50;
     [Header("Day sprites")]
     [SerializeField] private WindowDaySpriteEntry[] _daySprites = new WindowDaySpriteEntry[0];
@@ -182,23 +185,62 @@ public sealed class WindowView : MonoBehaviour
         _fadeRoutine = StartCoroutine(FadeInRoutine());
     }
 
-    public void ExitView()
+    /// <param name="onFadeOutComplete">Вызывается когда спрайт полностью исчез (после fade-out или сразу при мгновенном скрытии).</param>
+    public void ExitView(Action onFadeOutComplete = null)
     {
         _isViewing = false;
 
-        if (_fullScreenImage != null)
+        if (_fullScreenImage == null)
         {
-            if (_fadeRoutine != null)
-            {
-                StopCoroutine(_fadeRoutine);
-                _fadeRoutine = null;
-            }
-            Canvas canvas = _fullScreenImage.GetComponentInParent<Canvas>();
-            if (canvas != null)
-                canvas.sortingOrder = _originalCanvasSortOrder;
-            SetImageAlpha(0f);
-            _fullScreenImage.gameObject.SetActive(false);
+            onFadeOutComplete?.Invoke();
+            return;
         }
+
+        if (_fadeRoutine != null)
+        {
+            StopCoroutine(_fadeRoutine);
+            _fadeRoutine = null;
+        }
+
+        if (_fadeOutDuration <= 0f)
+        {
+            HideWindowImmediate();
+            onFadeOutComplete?.Invoke();
+            return;
+        }
+
+        _fullScreenImage.gameObject.SetActive(true);
+        _fadeRoutine = StartCoroutine(FadeOutRoutine(onFadeOutComplete));
+    }
+
+    private void HideWindowImmediate()
+    {
+        if (_fullScreenImage == null) return;
+        Canvas canvas = _fullScreenImage.GetComponentInParent<Canvas>();
+        if (canvas != null)
+            canvas.sortingOrder = _originalCanvasSortOrder;
+        SetImageAlpha(0f);
+        _fullScreenImage.gameObject.SetActive(false);
+        _fadeRoutine = null;
+    }
+
+    private IEnumerator FadeOutRoutine(Action onComplete)
+    {
+        float startAlpha = _fullScreenImage != null ? _fullScreenImage.color.a : 0f;
+        float elapsed = 0f;
+        float duration = Mathf.Max(0.0001f, _fadeOutDuration);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            SetImageAlpha(Mathf.Lerp(startAlpha, 0f, Mathf.SmoothStep(0f, 1f, t)));
+            yield return null;
+        }
+
+        HideWindowImmediate();
+        _fadeRoutine = null;
+        onComplete?.Invoke();
     }
 
     public void ApplyDayVisual(int day)

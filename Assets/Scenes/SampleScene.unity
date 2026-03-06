@@ -18576,6 +18576,7 @@ MonoBehaviour:
   _hintSprite: {fileID: 21300000, guid: 7868e66454e4a5348aba9483c3809388, type: 3}
   _lookAtPoint: {fileID: 1282888860}
   _maxLookDistance: 1.75
+  _allowedSidePoint: {fileID: 510495462}
 --- !u!23 &1282888858
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -24462,6 +24463,7 @@ MonoBehaviour:
   _playerSpawnPoint: {fileID: 125020994}
   _introView: {fileID: 195512331}
   _fadeToBlackView: {fileID: 811170432}
+  _travelFadeDuration: 0.5
   _uiTextTable: {fileID: 11400000, guid: 3bb7a3e023e0ead468a0dbf6788d2f83, type: 2}
   _language: ru
   _tutorialHint: {fileID: 613144413}

@@ -52,6 +52,23 @@ public sealed class FadeToBlackView : MonoBehaviour
         }
     }
 
+    /// <summary> Плавно увести оверлей из полной непрозрачности в прозрачный, затем вызвать onComplete. Вызывать после телепорта (оверлей уже чёрный). </summary>
+    public void PlayFadeFromBlack(float durationSeconds, Action onComplete)
+    {
+        Stop();
+        if (_overlayImage == null)
+        {
+            onComplete?.Invoke();
+            return;
+        }
+        _overlayImage.color = new Color(0f, 0f, 0f, 1f);
+        _overlayImage.raycastTarget = true;
+        if (_canvas != null) _canvas.gameObject.SetActive(true);
+        else _overlayImage.gameObject.SetActive(true);
+        float dur = durationSeconds > 0f ? durationSeconds : _defaultDuration;
+        _routine = StartCoroutine(FadeFromBlackRoutine(dur, onComplete));
+    }
+
     /// <summary> Скрыть чёрный оверлей (например перед интро второго дня). </summary>
     public void Hide()
     {
@@ -87,6 +104,22 @@ public sealed class FadeToBlackView : MonoBehaviour
 
         _overlayImage.color = new Color(0f, 0f, 0f, 1f);
         _routine = null;
+        onComplete?.Invoke();
+    }
+
+    private IEnumerator FadeFromBlackRoutine(float duration, Action onComplete)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float alpha = Mathf.SmoothStep(1f, 0f, t);
+            _overlayImage.color = new Color(0f, 0f, 0f, alpha);
+            yield return null;
+        }
+        _routine = null;
+        Hide();
         onComplete?.Invoke();
     }
 }

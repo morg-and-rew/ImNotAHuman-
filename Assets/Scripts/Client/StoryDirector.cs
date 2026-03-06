@@ -890,22 +890,22 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void HandleClientDay14Completed()
     {
-        _client?.CloseUI();
         DialogueLua.SetVariable("RunWarehouse5577Steps", false);
         bool choseToGive = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
-        GameStateService.SetState(GameState.None);
-        ((GameFlowController)_flow).EnterClientDialogueState(false);
-        _controller?.SetBlock(false);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
         if (!choseToGive)
         {
+            _client?.CloseUI();
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
             bool wasInStoryFlow = _wait == WaitMode.WaitingDialogueEnd;
             _wait = WaitMode.Idle;
             if (wasInStoryFlow) Advance();
             return;
         }
-        // ChoseToGivePackage5577 == true: F на последней реплике уже нажат (диалог из finishByKeyConversations) — сразу телепорт на склад.
+        // ChoseToGivePackage5577 == true: экран сначала полностью гаснет (fade), только потом телепорт на склад. UI и разблокировка — после телепорта в OnTeleportedToWarehouse.
         _pendingDialogueAfterReturn = "Client_Day1.4.1";
         _wait = WaitMode.WaitingWarehouseConfirm;
         if (_flow is GameFlowController gfc)
@@ -932,7 +932,9 @@ public sealed class StoryDirector : MonoBehaviour
         }
         if (_wait != WaitMode.WaitingWarehouseConfirm) return;
 
-        // После авто-телепорта на склад (например после Client_Day1.1) всегда разблокируем управление.
+        // После телепорта на склад (в т.ч. из диалога Client_Day1.4) — разблокируем и сбрасываем состояние диалога.
+        if (_flow is GameFlowController gfcUnlock)
+            gfcUnlock.EnterClientDialogueState(false);
         _controller?.SetBlock(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

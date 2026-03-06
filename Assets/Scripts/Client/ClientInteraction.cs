@@ -52,6 +52,9 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     [SerializeField] private Transform _lookAtPoint;
     [Tooltip("Макс. расстояние до точки (м). 0 = без ограничения.")]
     [SerializeField, Min(0f)] private float _maxLookDistance = 0f;
+    [Header("Сторона (откуда можно пустить клиента)")]
+    [Tooltip("Точка на «правильной» стороне (например перед стойкой). Если задана — E срабатывает только когда игрок с этой же стороны относительно клиента.")]
+    [SerializeField] private Transform _allowedSidePoint;
 
     public bool IsActive { get; private set; }
     public bool IsPlayerInside { get; private set; }
@@ -187,6 +190,7 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         Transform point = _lookAtPoint != null ? _lookAtPoint : transform;
         Vector3 toPoint = point.position - player.transform.position;
         if (_maxLookDistance > 0f && toPoint.sqrMagnitude > _maxLookDistance * _maxLookDistance) return false;
+        if (!IsPlayerOnAllowedSide(player, point.position)) return false;
         toPoint.y = 0f;
         if (toPoint.sqrMagnitude < 0.0001f) return true;
         toPoint.Normalize();
@@ -195,6 +199,19 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (camForward.sqrMagnitude < 0.0001f) return false;
         camForward.Normalize();
         return Vector3.Dot(camForward, toPoint) >= 0.5f;
+    }
+
+    private bool IsPlayerOnAllowedSide(PlayerView player, Vector3 lookAtPosition)
+    {
+        if (_allowedSidePoint == null) return true;
+        Vector3 normal = (lookAtPosition - _allowedSidePoint.position).normalized;
+        normal.y = 0f;
+        if (normal.sqrMagnitude < 0.0001f) return true;
+        Vector3 playerOffset = player.transform.position - lookAtPosition;
+        playerOffset.y = 0f;
+        float dotAllowed = Vector3.Dot(_allowedSidePoint.position - lookAtPosition, normal);
+        float dotPlayer = Vector3.Dot(playerOffset, normal);
+        return Mathf.Sign(dotPlayer) == Mathf.Sign(dotAllowed);
     }
 
     private void Update()
@@ -345,7 +362,10 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         {
             ClientDialogueStepCompletionData completionData = new ClientDialogueStepCompletionData(_currentClientIdOverride, _currentConversationOverride);
             ClientDialogueStepCompleted?.Invoke(completionData);
-            CloseUI();
+            // При переходе на склад после Client_Day1.4 UI закроется в момент полной черноты (PerformTravel), чтобы спрайты не исчезали до затемнения
+            bool delayCloseForWarehouseFade = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+            if (!delayCloseForWarehouseFade)
+                CloseUI();
             _isUsingOverrides = false;
             _currentClientIdOverride = null;
             _currentConversationOverride = null;
@@ -354,7 +374,9 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         else
         {
             _waitingForContinue = true;
-            StopDialogUIOnly();
+            bool delayCloseForWarehouseFade = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+            if (!delayCloseForWarehouseFade)
+                StopDialogUIOnly();
             ClientDialogueFinished?.Invoke();
         }
     }
