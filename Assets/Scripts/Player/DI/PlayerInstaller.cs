@@ -64,6 +64,9 @@ public sealed class PlayerInstaller : MonoBehaviour
 
         _clientInteraction.Initialize(playerView.PlayerCanvas, playerView.PlayerDialog, playerView.PlayerDialog1, (ICustomDialogueUI)_dialogueSystemController.DialogueUI);
 
+        if (GetComponent<ClientDialogueDepthOfFieldController>() == null)
+            gameObject.AddComponent<ClientDialogueDepthOfFieldController>();
+
         PlayerModel model = new PlayerModel(_playerConfig);
         IPlayerInput input = new PlayerInputPC(_bindings);
 
