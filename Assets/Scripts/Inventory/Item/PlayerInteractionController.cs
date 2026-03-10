@@ -109,15 +109,21 @@ public sealed class PlayerInteractionController
         if (worldInteractable is RouterInteractable router && router.HintSprite == null)
             return null;
         if (worldInteractable != null)
-            return (worldInteractable as MonoBehaviour)?.GetComponent<InteractableOutline>()
-                ?? (worldInteractable as MonoBehaviour)?.GetComponentInParent<InteractableOutline>();
+            return GetOutlineFrom((worldInteractable as MonoBehaviour));
         if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
-            return (pkg as MonoBehaviour)?.GetComponent<InteractableOutline>()
-                ?? (pkg as MonoBehaviour)?.GetComponentInParent<InteractableOutline>();
+            return GetOutlineFrom((pkg as MonoBehaviour));
         if (holdable is PhoneItemView && IsHoldableAllowed(holdable))
-            return (holdable as MonoBehaviour)?.GetComponent<InteractableOutline>()
-                ?? (holdable as MonoBehaviour)?.GetComponentInParent<InteractableOutline>();
+            return GetOutlineFrom((holdable as MonoBehaviour));
         return null;
+    }
+
+    /// <summary> Ищем InteractableOutline на том же объекте, родителе или в детях — у телефона коллайдер часто на корне, а outline на дочернем (55/model_0_1). </summary>
+    private static InteractableOutline GetOutlineFrom(MonoBehaviour mb)
+    {
+        if (mb == null) return null;
+        return mb.GetComponent<InteractableOutline>()
+            ?? mb.GetComponentInParent<InteractableOutline>()
+            ?? mb.GetComponentInChildren<InteractableOutline>();
     }
 
     private bool IsHoldableAllowed(IHoldable holdable)

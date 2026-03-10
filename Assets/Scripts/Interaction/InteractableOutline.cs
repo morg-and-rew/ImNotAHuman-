@@ -1,90 +1,110 @@
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>
-/// Подсветка контуром при наведении на интерактивный объект (телефон, радио, роутер, коробки).
-/// Добавь компонент на корень объекта или на тот же GameObject, где висит IWorldInteractable / IHoldable.
+/// Подсветка контуром при наведении. Берём рендер (на этом объекте или в детях) и делаем обводку его меша — дочерним объектом этого рендера, в его системе координат.
 /// </summary>
 public sealed class InteractableOutline : MonoBehaviour
 {
     [Header("Outline")]
     [SerializeField] private Color _outlineColor = new Color(0.5f, 0.2f, 0.8f, 1f);
-    [SerializeField, Min(0.001f)] private float _outlineWidth = 0.03f;
+    [SerializeField, Range(0.005f, 0.05f)] private float _shellScale = 0.015f;
+    [SerializeField] private Shader _outlineShader;
 
-    private readonly List<GameObject> _outlineObjects = new List<GameObject>();
+    private GameObject _outlineObject;
     private Material _outlineMaterial;
     private bool _highlighted;
 
-    private void Awake()
+    private void Start()
     {
-        CacheOutlineRenderers();
+        CacheOutline();
     }
 
     private void OnDestroy()
     {
         if (_outlineMaterial != null)
         {
-            if (Application.isPlaying)
-                Destroy(_outlineMaterial);
-            else
-                DestroyImmediate(_outlineMaterial);
+            if (Application.isPlaying) Destroy(_outlineMaterial);
+            else DestroyImmediate(_outlineMaterial);
         }
     }
 
-    private void CacheOutlineRenderers()
+    private void CacheOutline()
     {
-        Shader shader = Shader.Find("Custom/InteractableOutline");
+        Renderer r = FindRenderer();
+        if (r == null)
+        {
+            Debug.LogWarning("[InteractableOutline] Не найден MeshRenderer или SkinnedMeshRenderer на этом объекте или в детях.", this);
+            return;
+        }
+
+        Mesh mesh = GetMeshFrom(r);
+        if (mesh == null)
+        {
+            Debug.LogWarning("[InteractableOutline] У рендера нет меша.", this);
+            return;
+        }
+
+        Shader shader = _outlineShader != null ? _outlineShader : Shader.Find("Custom/InteractableOutlineShell");
         if (shader == null)
         {
-            Debug.LogWarning("[InteractableOutline] Shader 'Custom/InteractableOutline' not found. Outline disabled.", this);
+            Debug.LogWarning("[InteractableOutline] Shader Custom/InteractableOutlineShell не найден. Добавь в Always Included Shaders или укажи в Inspector.", this);
             return;
         }
 
         _outlineMaterial = new Material(shader);
         _outlineMaterial.SetColor("_OutlineColor", _outlineColor);
-        _outlineMaterial.SetFloat("_OutlineWidth", _outlineWidth);
 
-        MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>(true);
-        foreach (MeshRenderer r in renderers)
-        {
-            if (r.gameObject.name.StartsWith("Outline_"))
-                continue;
-            MeshFilter mf = r.GetComponent<MeshFilter>();
-            if (mf == null || mf.sharedMesh == null)
-                continue;
+        float scale = 1f + _shellScale;
+        Vector3 outlineScale = new Vector3(scale, scale, scale);
 
-            GameObject outlineGo = new GameObject("Outline_" + r.gameObject.name);
-            outlineGo.transform.SetParent(r.transform, false);
-            outlineGo.transform.localPosition = Vector3.zero;
-            outlineGo.transform.localRotation = Quaternion.identity;
-            outlineGo.transform.localScale = Vector3.one;
-            outlineGo.layer = r.gameObject.layer;
+        // Обводка — дочерний объект самого рендера, чтобы была в одной системе координат с мешем (не улетала)
+        _outlineObject = new GameObject("Outline_" + r.gameObject.name);
+        _outlineObject.transform.SetParent(r.transform, false);
+        _outlineObject.transform.localPosition = Vector3.zero;
+        _outlineObject.transform.localRotation = Quaternion.identity;
+        _outlineObject.transform.localScale = outlineScale;
+        _outlineObject.layer = r.gameObject.layer;
 
-            MeshFilter outlineMf = outlineGo.AddComponent<MeshFilter>();
-            outlineMf.sharedMesh = mf.sharedMesh;
+        var mf = _outlineObject.AddComponent<MeshFilter>();
+        mf.sharedMesh = mesh;
+        var mr = _outlineObject.AddComponent<MeshRenderer>();
+        mr.sharedMaterial = _outlineMaterial;
+        mr.shadowCastingMode = ShadowCastingMode.Off;
+        mr.receiveShadows = false;
 
-            MeshRenderer outlineMr = outlineGo.AddComponent<MeshRenderer>();
-            outlineMr.sharedMaterial = _outlineMaterial;
-            outlineMr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            outlineMr.receiveShadows = false;
-
-            outlineGo.SetActive(false);
-            _outlineObjects.Add(outlineGo);
-        }
+        _outlineObject.SetActive(false);
     }
 
-    /// <summary>
-    /// Включить или выключить подсветку (вызывается из PlayerInteractionController при наведении).
-    /// </summary>
+    private Renderer FindRenderer()
+    {
+        var mr = GetComponent<MeshRenderer>();
+        if (mr != null && !mr.gameObject.name.StartsWith("Outline_")) return mr;
+        var smr = GetComponent<SkinnedMeshRenderer>();
+        if (smr != null && !smr.gameObject.name.StartsWith("Outline_")) return smr;
+        foreach (var r in GetComponentsInChildren<MeshRenderer>(true))
+            if (r != null && !r.gameObject.name.StartsWith("Outline_")) return r;
+        foreach (var r in GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            if (r != null && !r.gameObject.name.StartsWith("Outline_")) return r;
+        return null;
+    }
+
+    private static Mesh GetMeshFrom(Renderer r)
+    {
+        if (r is MeshRenderer mr)
+        {
+            var mf = mr.GetComponent<MeshFilter>();
+            return mf != null ? mf.sharedMesh : null;
+        }
+        if (r is SkinnedMeshRenderer smr) return smr.sharedMesh;
+        return null;
+    }
+
     public void SetHighlight(bool on)
     {
-        if (_highlighted == on)
-            return;
+        if (_highlighted == on) return;
         _highlighted = on;
-        for (int i = 0; i < _outlineObjects.Count; i++)
-        {
-            if (_outlineObjects[i] != null)
-                _outlineObjects[i].SetActive(on);
-        }
+        if (_outlineObject != null)
+            _outlineObject.SetActive(on);
     }
 }

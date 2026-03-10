@@ -9,6 +9,8 @@ public sealed class PlayerController : IPlayerBlocker
 
     private bool _movementBlocked;
     private bool _lookBlocked;
+    private float _footstepCooldown;
+    private const float FootstepInterval = 0.45f;
 
     public PlayerController(PlayerModel model, PlayerView view, IPlayerInput input)
     {
@@ -30,6 +32,25 @@ public sealed class PlayerController : IPlayerBlocker
         if (!_movementBlocked)
         {
             HandleMovement();
+            if (isMoving && _model.IsGrounded)
+            {
+                _footstepCooldown -= Time.deltaTime;
+                if (_footstepCooldown <= 0f)
+                {
+                    _view.PlayFootstep();
+                    _footstepCooldown = FootstepInterval;
+                }
+            }
+            else
+            {
+                _footstepCooldown = FootstepInterval;
+                _view.StopFootstep();
+            }
+        }
+        else
+        {
+            _footstepCooldown = FootstepInterval;
+            _view.StopFootstep();
         }
     }
 

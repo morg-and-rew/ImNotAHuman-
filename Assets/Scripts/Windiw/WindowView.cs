@@ -21,6 +21,7 @@ public sealed class WindowView : MonoBehaviour
     [SerializeField] private Sprite _hintSprite;
     [Header("Look at")]
     [SerializeField] private Transform _lookAtPoint;
+    [SerializeField] private GameSoundController _gameSoundController;
 
     private bool _isPlayerInZone = false;
     private PlayerView _playerInZone;
@@ -48,6 +49,8 @@ public sealed class WindowView : MonoBehaviour
 
     private void Start()
     {
+        if (_gameSoundController == null)
+            _gameSoundController = FindFirstObjectByType<GameSoundController>();
         if (_fullScreenImage != null)
         {
             _fullScreenImage.gameObject.SetActive(false);
@@ -151,6 +154,7 @@ public sealed class WindowView : MonoBehaviour
     private void EnterView()
     {
         _isViewing = true;
+        _gameSoundController?.PlayWindowOpen();
 
         if (_fullScreenImage == null)
         {
@@ -189,6 +193,7 @@ public sealed class WindowView : MonoBehaviour
     public void ExitView(Action onFadeOutComplete = null)
     {
         _isViewing = false;
+        _gameSoundController?.PlayWindowClose();
 
         if (_fullScreenImage == null)
         {

@@ -24,6 +24,7 @@ public sealed class PhoneUIView : MonoBehaviour
 
     [Header("Digit Buttons Root (optional)")]
     [SerializeField] private Transform _digitsRoot;
+    [SerializeField] private GameSoundController _gameSoundController;
 
     [SerializeField] private float _errorShowSeconds = 1.2f;
 
@@ -32,11 +33,13 @@ public sealed class PhoneUIView : MonoBehaviour
 
     private void Awake()
     {
+        if (_gameSoundController == null)
+            _gameSoundController = FindFirstObjectByType<GameSoundController>();
         HideImmediate();
 
-        if (_callButton != null) _callButton.onClick.AddListener(() => CallPressed?.Invoke());
-        if (_backspaceButton != null) _backspaceButton.onClick.AddListener(() => BackspacePressed?.Invoke());
-        if (_closeButton != null) _closeButton.onClick.AddListener(() => ClosePressed?.Invoke());
+        if (_callButton != null) _callButton.onClick.AddListener(() => { _gameSoundController?.PlayPhoneCallButton(); CallPressed?.Invoke(); });
+        if (_backspaceButton != null) _backspaceButton.onClick.AddListener(() => { _gameSoundController?.PlayPhoneBackspace(); BackspacePressed?.Invoke(); });
+        if (_closeButton != null) _closeButton.onClick.AddListener(() => { _gameSoundController?.PlayPhoneCloseButton(); ClosePressed?.Invoke(); });
 
         BuildDigitDictionary();
     }
@@ -56,7 +59,7 @@ public sealed class PhoneUIView : MonoBehaviour
             _buttonToDigit[db.Button] = db.Digit;
 
             char d = db.Digit;
-            db.Button.onClick.AddListener(() => DigitPressed?.Invoke(d));
+            db.Button.onClick.AddListener(() => { _gameSoundController?.PlayPhoneDigit(d); DigitPressed?.Invoke(d); });
         }
 
     }
@@ -119,6 +122,13 @@ public sealed class PhoneUIView : MonoBehaviour
     public void ShowInvalidNumber()
     {
         ShowTempMessage("Номер набран неправильно", _errorShowSeconds);
+    }
+
+    /// <summary> Показать сообщение «Нет соединения» и воспроизвести соответствующий звук. </summary>
+    public void ShowNoConnection()
+    {
+        _gameSoundController?.PlayPhoneNoConnection();
+        ShowTempMessage("Нет соединения", _errorShowSeconds);
     }
 
     private void ShowTempMessage(string message, float seconds)

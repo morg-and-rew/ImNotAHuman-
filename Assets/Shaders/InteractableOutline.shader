@@ -7,7 +7,8 @@ Shader "Custom/InteractableOutline"
     }
     SubShader
     {
-        Tags { "Queue" = "Geometry+10" "RenderType" = "Opaque" }
+        // Рисуем обводку ДО основного меша (Geometry-10), чтобы в билде контур не перекрывал объект (роутер/радио)
+        Tags { "Queue" = "Geometry-10" "RenderType" = "Opaque" }
         Cull Front
         ZWrite On
         ZTest LEqual
@@ -38,7 +39,8 @@ Shader "Custom/InteractableOutline"
                 v2f o;
                 float3 norm = normalize(v.normal);
                 float4 worldVertex = mul(unity_ObjectToWorld, v.vertex);
-                float3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld, norm));
+                // Inverse transpose для нормалей — при неоднородном масштабе контур не «рвётся»
+                float3 worldNormal = normalize(mul(norm, (float3x3)unity_WorldToObject));
                 worldVertex.xyz += worldNormal * _OutlineWidth;
                 o.pos = mul(unity_MatrixVP, worldVertex);
                 return o;

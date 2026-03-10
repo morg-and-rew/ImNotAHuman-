@@ -19,6 +19,7 @@ public sealed class PlayerView : MonoBehaviour
     [SerializeField] private Transform _dropPoint;
     [SerializeField] private Transform _phoneHandPoint;
     [SerializeField] private DeliveryNoteView _deliveryNoteView;
+    [SerializeField] private GameSoundController _gameSoundController;
 
     public Transform PhoneHandPoint => _phoneHandPoint;
     public Transform HandPoint => _handPoint;
@@ -111,5 +112,23 @@ public sealed class PlayerView : MonoBehaviour
         _pitch = Mathf.Clamp(-pitchFromForward, -90f, maxPitch);
         transform.rotation = Quaternion.Euler(0f, yawDeg, 0f);
         _cameraHolder.localEulerAngles = new Vector3(_pitch, 0f, 0f);
+    }
+
+    /// <summary> Назначить контроллер звуков (вызывается из PlayerInstaller после спавна). </summary>
+    public void SetGameSoundController(GameSoundController soundController)
+    {
+        _gameSoundController = soundController;
+    }
+
+    /// <summary> Воспроизвести один шаг (вызывается контроллером при ходьбе). </summary>
+    public void PlayFootstep()
+    {
+        _gameSoundController?.PlayFootstep();
+    }
+
+    /// <summary> Остановить звук шага (при остановке — не доигрывать до конца). </summary>
+    public void StopFootstep()
+    {
+        _gameSoundController?.StopFootstep();
     }
 }

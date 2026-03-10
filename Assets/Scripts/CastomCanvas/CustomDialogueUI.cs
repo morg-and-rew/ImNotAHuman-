@@ -603,6 +603,9 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             if (hover == null) hover = rb.gameObject.AddComponent<ResponseButtonHoverColors>();
             hover.Setup(textGraphic, plaqueImage, responseButtonTextColor, responseButtonHoverTextColor, responseButtonHoverImageColor, responseButtonHoverSprite);
         }
+
+        if (rb.GetComponent<DialogueResponseClickSound>() == null)
+            rb.gameObject.AddComponent<DialogueResponseClickSound>();
     }
 
     /// <summary>

@@ -5,7 +5,7 @@ public sealed class PhoneStoryWiring
 {
     private readonly PhoneCallService _callService;
     private readonly GameFlowController _flow;
-
+    private readonly GameSoundController _gameSoundController;
 
     private const string SkepticNumber = "333111333";
     private const string SkepticCallConversation = "Phone_CallSkeptic_Number";
@@ -16,10 +16,11 @@ public sealed class PhoneStoryWiring
 
     private bool _skepticUnlocked;
 
-    public PhoneStoryWiring(PhoneCallService callService, GameFlowController flow)
+    public PhoneStoryWiring(PhoneCallService callService, GameFlowController flow, GameSoundController gameSoundController = null)
     {
         _callService = callService;
         _flow = flow;
+        _gameSoundController = gameSoundController;
 
         string providerNum = GameConfig.Tutorial.providerNumber;
         _callService.Register(string.IsNullOrEmpty(providerNum) ? "156190" : providerNum, OnCallProvider);
@@ -49,6 +50,7 @@ public sealed class PhoneStoryWiring
         _flow.HidePhoneHint();
 
         _mode = CallMode.ProviderBeeps;
+        _gameSoundController?.PlayPhoneBeeps();
 
         DialogueManager.instance.conversationEnded -= OnConversationEnded;
         DialogueManager.instance.conversationEnded += OnConversationEnded;
@@ -73,6 +75,7 @@ public sealed class PhoneStoryWiring
     {
         if (_mode == CallMode.ProviderBeeps)
         {
+            _gameSoundController?.StopPhoneSounds();
             _mode = CallMode.ProviderAfter;
             string after = GameConfig.Tutorial.providerAfterConversation;
             DialogueManager.StartConversation(string.IsNullOrEmpty(after) ? "Hero_AfterProviderCall" : after);
@@ -81,6 +84,7 @@ public sealed class PhoneStoryWiring
 
         if (_mode == CallMode.ProviderAfter)
         {
+            _gameSoundController?.PlayPhoneCallEnd();
             _mode = CallMode.None;
             DialogueManager.instance.conversationEnded -= OnConversationEnded;
 
@@ -91,6 +95,7 @@ public sealed class PhoneStoryWiring
 
         if (_mode == CallMode.SkepticCall)
         {
+            _gameSoundController?.PlayPhoneCallEnd();
             _mode = CallMode.None;
             DialogueManager.instance.conversationEnded -= OnConversationEnded;
             return;

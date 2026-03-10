@@ -27,6 +27,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [SerializeField] private FadeToBlackView _fadeToBlackView;
     [Tooltip("Длительность затемнения при переходе склад ↔ зона выдачи (сек). 0 = без затемнения.")]
     [SerializeField, Min(0f)] private float _travelFadeDuration = 0.5f;
+    [SerializeField] private GameSoundController _gameSoundController;
 
     [Header("Localization (UI Text Table)")]
     [SerializeField] private TextTable _uiTextTable;
@@ -96,6 +97,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _acceptAnyPackageForReturn;
 
     private bool _freeTeleportTargetActive;
+    private bool _flyModeActive;
     /// <summary> True, если переход на склад подтверждается нажатием F из зоны клиента (без подхода к двери). Например после Client_Day1.4 ChoseToGivePackage5577. </summary>
     private bool _allowWarehouseConfirmFromClientArea;
     private bool _tutorialWarehouseVisit;
@@ -345,6 +347,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_initialized) return;
 
         _initialized = true;
+        if (_gameSoundController == null)
+            _gameSoundController = FindFirstObjectByType<GameSoundController>();
 
         // Интро только в 1-й день при старте с нуля; при загрузке сохранения не показываем
         if (_introView != null)
@@ -1079,8 +1083,23 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     }
 
     /// <summary> Показать подсказку по ключу (для туториала показывается спрайт по ключу в TutorialHintView). </summary>
+    public void SetFlyMode(bool active)
+    {
+        _flyModeActive = active;
+        if (active)
+        {
+            _tutorialHint?.Hide();
+            if (_storyDirector != null) _storyDirector.enabled = false;
+        }
+        else
+        {
+            if (_storyDirector != null) _storyDirector.enabled = true;
+        }
+    }
+
     public void ShowHintRaw(string key)
     {
+        if (_flyModeActive) return;
         if (_tutorialHint == null) return;
         if (_tutorialPendingAction != TutorialPendingAction.None) return;
         if (string.IsNullOrEmpty(key))
@@ -1108,6 +1127,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void ShowHintOnceByKey(string key)
     {
+        if (_flyModeActive) return;
         if (_tutorialHint == null) return;
         if (_tutorialPendingAction != TutorialPendingAction.None) return;
         if (string.IsNullOrEmpty(key))
@@ -1318,6 +1338,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (onSuccess == null) onSuccess = () => { };
         bool useFade = _travelFadeDuration > 0f && _fadeToBlackView != null
             && (target == TravelTarget.Warehouse || target == TravelTarget.Client);
+        Vector3 soundPos = _player != null ? _player.transform.position : (Camera.main != null ? Camera.main.transform.position : Vector3.zero);
+        _gameSoundController?.PlayTravelTransition(soundPos);
         if (!useFade)
         {
             if (PerformTravel(target, ignoreClientRequirements, freeTeleport))

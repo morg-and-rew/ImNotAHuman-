@@ -14,6 +14,7 @@ public sealed class PhoneController
     private readonly Transform _usePoint;
     private readonly Transform _lookTarget;
     private readonly bool _returnOnClose;
+    private readonly GameSoundController _gameSoundController;
 
     private Vector3 _prevPos;
     private Quaternion _prevRot;
@@ -34,13 +35,15 @@ public sealed class PhoneController
         PlayerView playerView,
         Transform usePoint,
         Transform lookTarget,
-        bool returnOnClose)
+        bool returnOnClose,
+        GameSoundController gameSoundController = null)
     {
         _model = model;
         _itemView = itemView;
         _uiView = uiView;
         _callService = callService;
         _flow = flow;
+        _gameSoundController = gameSoundController;
 
         _isConversationActive = isConversationActive;
         _blocker = blocker;
@@ -156,6 +159,7 @@ public sealed class PhoneController
         if (!IsOpen) return;
         IsOpen = false;
 
+        _gameSoundController?.StopPhoneSounds();
         _model.Close();
 
         if (_callService != null && _callService.IsRinging)
@@ -229,6 +233,9 @@ public sealed class PhoneController
 
         bool ok = _callService.TryCall(_model.Number);
         if (!ok)
+        {
+            _gameSoundController?.PlayPhoneWrongNumber();
             _uiView.ShowInvalidNumber();
+        }
     }
 }
