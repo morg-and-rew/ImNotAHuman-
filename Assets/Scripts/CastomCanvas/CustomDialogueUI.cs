@@ -276,10 +276,24 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         {
             if (Input.GetKeyDown(finishKey))
             {
-                DialogueManager.StopConversation();
-                _awaitFinish = false;
-                RefreshAwaitingFinishKeyUI();
-                OnClientDialogueFinishedByKey?.Invoke();
+                // Всегда: сначала ждём полного затемнения экрана, только потом закрываем диалог и телепортируем (спрайты не пропадают до черноты).
+                if (GameFlowController.Instance != null)
+                {
+                    GameFlowController.Instance.PlayFadeToBlackThenWarehouseFromDialogue(() =>
+                    {
+                        DialogueManager.StopConversation();
+                        _awaitFinish = false;
+                        RefreshAwaitingFinishKeyUI();
+                        OnClientDialogueFinishedByKey?.Invoke();
+                    });
+                }
+                else
+                {
+                    DialogueManager.StopConversation();
+                    _awaitFinish = false;
+                    RefreshAwaitingFinishKeyUI();
+                    OnClientDialogueFinishedByKey?.Invoke();
+                }
             }
             return;
         }

@@ -54,7 +54,8 @@ public sealed class ClientDialogueDepthOfFieldController : MonoBehaviour
 
     private void OnClientDialogueStarted()
     {
-        CreateDialogueVolume();
+        // Временно отключено: разфокус (DoF) в диалогах
+        // CreateDialogueVolume();
     }
 
     private void OnClientDialogueFinished()

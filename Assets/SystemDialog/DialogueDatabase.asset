@@ -1157,13 +1157,7 @@ MonoBehaviour:
       delaySimStatus: 0
       falseConditionAction: Block
       conditionPriority: 2
-      outgoingLinks:
-      - originConversationID: 6
-        originDialogueID: 1
-        destinationConversationID: 6
-        destinationDialogueID: 2
-        isConnector: 0
-        priority: 2
+      outgoingLinks: []
       conditionsString: 
       userScript: 
       onExecute:
@@ -2495,7 +2489,7 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 972.5
+        x: 974.239
         y: 81.25
         width: 160
         height: 30
@@ -4011,8 +4005,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 4604.06, y: 1.8604431}
-    canvasZoom: 0.43000004
+    canvasScrollPosition: {x: 332.174, y: 0}
+    canvasZoom: 0.46000004
   - id: 8
     fields:
     - title: Title

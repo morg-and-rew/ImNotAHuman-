@@ -911,7 +911,9 @@ public sealed class StoryDirector : MonoBehaviour
         if (_flow is GameFlowController gfc)
         {
             gfc.SetFixedPackageForNextWarehouse(5577);
-            _flow.ForceTravel(TravelTarget.Warehouse);
+            // Телепорт выполнит GameFlowController после полного затемнения (PlayFadeToBlackThenWarehouseFromDialogue), не вызываем ForceTravel здесь.
+            if (!gfc.IsWarehouseTravelFromDialogueAfterFade)
+                _flow.ForceTravel(TravelTarget.Warehouse);
         }
     }
 

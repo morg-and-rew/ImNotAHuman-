@@ -16,6 +16,7 @@ public sealed class PlayerKeyBindings
             { InputAction.DropItem, new KeyBinding(KeyCode.Mouse1) },
             { InputAction.Next, new KeyBinding(KeyCode.Space) },
             { InputAction.EndDialog, new KeyBinding(KeyCode.F) },
+            { InputAction.RotateBox, new KeyBinding(KeyCode.Q) },
         };
 
     public KeyBinding Get(InputAction action)

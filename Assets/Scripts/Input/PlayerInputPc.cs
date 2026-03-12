@@ -43,6 +43,8 @@ public sealed class PlayerInputPC : IPlayerInput
     public bool ConfirmPressed =>
         _bindings.Get(InputAction.EndDialog).IsPressedDown();
 
+    public bool RotateBoxPressed =>
+        _bindings.Get(InputAction.RotateBox).IsPressedDown();
 
     public bool DropItemPressed =>
         _bindings.Get(InputAction.DropItem).IsPressed() && !_wasDropHeld;
@@ -69,5 +71,6 @@ public enum InputAction
     UseItem,
     DropItem,
     Next,
-    EndDialog
+    EndDialog,
+    RotateBox
 }

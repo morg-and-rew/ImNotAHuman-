@@ -104,6 +104,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _useFreeTeleportPointForNextClientTravel;
     private float _lastTeleportToClientTime = -999f;
     private bool _isTravelFading;
+    /// <summary> True, когда переход на склад из диалога идёт через «сначала полное затемнение, потом телепорт» — StoryDirector не должен вызывать ForceTravel. </summary>
+    private bool _warehouseTravelFromDialogueAfterFade;
+
+    /// <summary> True, если сейчас выполняется переход на склад с предварительным полным затемнением (F из диалога Client_Day1.4). </summary>
+    public bool IsWarehouseTravelFromDialogueAfterFade => _warehouseTravelFromDialogueAfterFade;
+
     /// <summary> Ключи туториалов, которые игрок уже выполнил — больше не показываем. </summary>
     private readonly HashSet<string> _hintKeysShownOnce = new HashSet<string>();
     /// <summary> Ключи туториалов, которые уже показаны, но игрок ещё не выполнил шаг — не спамим показом. </summary>
@@ -1330,6 +1336,35 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         foreach (string id in _radioAvailable)
             _radioExpired.Add(id);
         _radioAvailable.Clear();
+    }
+
+    /// <summary> Сначала полное затемнение, затем вызов onFadeCompleteBeforeTravel (закрытие диалога), затем телепорт на склад и fade from black. Используется при F из диалога (Client_Day1.4 / ChoseToGivePackage5577). </summary>
+    public void PlayFadeToBlackThenWarehouseFromDialogue(Action onFadeCompleteBeforeTravel)
+    {
+        if (_travelFadeDuration <= 0f || _fadeToBlackView == null)
+        {
+            onFadeCompleteBeforeTravel?.Invoke();
+            if (PerformTravel(TravelTarget.Warehouse, true, false))
+                StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, () => { }));
+            return;
+        }
+        _warehouseTravelFromDialogueAfterFade = true;
+        Vector3 soundPos = _player != null ? _player.transform.position : (Camera.main != null ? Camera.main.transform.position : Vector3.zero);
+        _gameSoundController?.PlayTravelTransition(soundPos);
+        _isTravelFading = true;
+        PlayFadeToBlack(_travelFadeDuration, () =>
+        {
+            onFadeCompleteBeforeTravel?.Invoke();
+            _warehouseTravelFromDialogueAfterFade = false;
+            bool ok = PerformTravel(TravelTarget.Warehouse, true, false);
+            if (ok)
+                StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, () => { _isTravelFading = false; }));
+            else
+            {
+                _fadeToBlackView?.Hide();
+                _isTravelFading = false;
+            }
+        });
     }
 
     /// <summary> Экран затемняется → в момент полного показа (чёрный) делаем телепорт → когда спрайт снова прозрачный, мы уже на складе/в зоне. </summary>

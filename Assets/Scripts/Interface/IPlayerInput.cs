@@ -12,8 +12,11 @@ public interface IPlayerInput
     bool IsDropHeld { get; }
     bool DropItemReleased { get; }
 
-    bool NextPressed {  get; } 
-    bool ConfirmPressed {  get; } 
+    bool NextPressed {  get; }
+    bool ConfirmPressed {  get; }
+
+    /// <summary> Поворот коробки по часовой стрелке (Q). </summary>
+    bool RotateBoxPressed { get; }
 
     void Update();
 }

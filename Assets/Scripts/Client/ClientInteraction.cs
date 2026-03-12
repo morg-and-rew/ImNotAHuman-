@@ -1,6 +1,5 @@
 using PixelCrushers.DialogueSystem;
 using System;
-using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 

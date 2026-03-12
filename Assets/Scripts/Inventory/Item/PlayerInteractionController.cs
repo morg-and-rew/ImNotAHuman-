@@ -37,18 +37,27 @@ public sealed class PlayerInteractionController
         UpdateInteractionHint(holdable, worldInteractable);
         UpdateHoverOutline(holdable, worldInteractable);
 
-        if (!_input.InteractPressed)
-            return;
-
-        // Во время любого диалога (радио, Client_Day1.5.1 и т.д.) блокируем E: окно, радио, телефон, посылка, клиент через луч.
+        // Во время любого диалога блокируем E и Q.
         if (DialogueManager.isConversationActive)
             return;
 
         if (_hands.HasItem)
         {
-            TryDropItem();
+            if (_input.InteractPressed)
+                TryDropItem();
             return;
         }
+
+        // Q — поворот коробки по часовой стрелке (только если коробка не в 0°).
+        if (_input.RotateBoxPressed && holdable is PackageHoldable pkgRotate &&
+            IsHoldableAllowed(pkgRotate) && !pkgRotate.CanPickupByRotation)
+        {
+            pkgRotate.RotateClockwise();
+            return;
+        }
+
+        if (!_input.InteractPressed)
+            return;
 
         if (holdable != null && IsHoldableAllowed(holdable))
         {
@@ -77,7 +86,7 @@ public sealed class PlayerInteractionController
             if (worldInteractable != null)
                 sprite = worldInteractable.HintSprite;
             else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
-                sprite = pkg.HintSprite;
+                sprite = pkg.HintSprite; // «Q — повернуть» или «E — взять» в зависимости от поворота
         }
 
         if (PlayerHintView.Instance != null)
@@ -111,7 +120,7 @@ public sealed class PlayerInteractionController
         if (worldInteractable != null)
             return GetOutlineFrom((worldInteractable as MonoBehaviour));
         if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
-            return GetOutlineFrom((pkg as MonoBehaviour));
+            return GetOutlineFrom(pkg as MonoBehaviour);
         if (holdable is PhoneItemView && IsHoldableAllowed(holdable))
             return GetOutlineFrom((holdable as MonoBehaviour));
         return null;
@@ -141,6 +150,10 @@ public sealed class PlayerInteractionController
     private void TryPickItem(IHoldable holdable)
     {
         if (_hands.HasItem || holdable == null)
+            return;
+
+        // Коробку можно взять только когда она повёрнута в 0° (по Q).
+        if (holdable is PackageHoldable pkg && !pkg.CanPickupByRotation)
             return;
 
         if (holdable is PackageHoldable package &&
