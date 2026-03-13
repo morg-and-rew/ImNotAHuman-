@@ -394,7 +394,7 @@ MonoBehaviour:
   _clientInteraction: {fileID: 1282888856}
   _warehouseExit: {fileID: 0}
   _gameFlowController: {fileID: 1644325939}
-  _gameSoundController: {fileID: 0}
+  _gameSoundController: {fileID: 1223147429}
   _phoneItemView: {fileID: 975431278}
   _phoneUIView: {fileID: 1510581951}
   _warehouseDeliveryController: {fileID: 1255302249}
@@ -19719,6 +19719,80 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PackageItem
   _numberText: {fileID: 0}
   _registry: {fileID: 710741040}
+--- !u!1 &1223147428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1223147430}
+  - component: {fileID: 1223147429}
+  m_Layer: 0
+  m_Name: GameSoundController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1223147429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1223147428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81be6499e479ac84f86e5c8b2a8a80ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameSoundController
+  _travelTransitionClip: {fileID: 8300000, guid: ffff483624576f94e957124eb9957aa5, type: 3}
+  _travelTransitionVolume: 0.35
+  _footstepSource: {fileID: 0}
+  _footstepClips:
+  - {fileID: 8300000, guid: 5f037cb2249f3ae43b6eba2555e465ab, type: 3}
+  _footstepVolume: 0.35
+  _dialogueResponseClickClip: {fileID: 8300000, guid: 10e8564607425ef4392c4874da520371, type: 3}
+  _dialogueResponseClickVolume: 0.5
+  _windowOpenClip: {fileID: 8300000, guid: ac45b9819e4ce8249b7737033dbdd8c6, type: 3}
+  _windowCloseClip: {fileID: 8300000, guid: 8d57d0a06e4866b4d97a42a9f6f61a0b, type: 3}
+  _windowSoundVolume: 0.5
+  _phoneDigitClips:
+  - {fileID: 8300000, guid: 0cda88fbc45255341a56f54d7a39a69c, type: 3}
+  - {fileID: 8300000, guid: 531468abfd4a99f449a4a746acf194a7, type: 3}
+  - {fileID: 8300000, guid: d04b56e3c1c473644a8c4be91dcaf768, type: 3}
+  - {fileID: 8300000, guid: dd263a8c9a3f61848a45aad9949e5abf, type: 3}
+  - {fileID: 8300000, guid: f1ccb61bf05b90e48bff53fe569cd42a, type: 3}
+  - {fileID: 8300000, guid: 742e67cdd1ab62f40b2f21b64bceca6e, type: 3}
+  - {fileID: 8300000, guid: 78ece912c29a0e746aa499eaab90d231, type: 3}
+  - {fileID: 8300000, guid: 2f1177c862a1bfa4b8fd2b424913bcea, type: 3}
+  - {fileID: 8300000, guid: 7009d8c5c604bdb44a72a74d37d0c0fd, type: 3}
+  _phoneBackspaceClip: {fileID: 8300000, guid: 10e8564607425ef4392c4874da520371, type: 3}
+  _phoneCallButtonClip: {fileID: 0}
+  _phoneCloseButtonClip: {fileID: 0}
+  _phoneBeepsClip: {fileID: 8300000, guid: 46e0ec99b245a304880591f63b2ce495, type: 3}
+  _phoneCallEndClip: {fileID: 8300000, guid: ec0cc977cb458ac4484905f66ad52605, type: 3}
+  _phoneWrongNumberClip: {fileID: 0}
+  _phoneNoConnectionClip: {fileID: 8300000, guid: 05cc9c7420bbabd4f94e2c2d71f9bfd5, type: 3}
+  _phoneSoundVolume: 0.5
+  _phoneOngoingSource: {fileID: 0}
+--- !u!4 &1223147430
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1223147428}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.3189, y: -0.78, z: 1.83606}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1225411769 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6647441132610827648, guid: ae59a3633df44f94caad7d26d56b524c, type: 3}
@@ -28460,7 +28534,7 @@ MonoBehaviour:
   _introView: {fileID: 195512331}
   _fadeToBlackView: {fileID: 811170432}
   _travelFadeDuration: 0.5
-  _gameSoundController: {fileID: 0}
+  _gameSoundController: {fileID: 1223147429}
   _uiTextTable: {fileID: 11400000, guid: 3bb7a3e023e0ead468a0dbf6788d2f83, type: 2}
   _language: ru
   _tutorialHint: {fileID: 613144413}
@@ -36721,6 +36795,7 @@ SceneRoots:
   - {fileID: 1418943736}
   - {fileID: 1091226492}
   - {fileID: 2122532601}
+  - {fileID: 1223147430}
   - {fileID: 335039644}
   - {fileID: 1073614889}
   - {fileID: 852778986}
