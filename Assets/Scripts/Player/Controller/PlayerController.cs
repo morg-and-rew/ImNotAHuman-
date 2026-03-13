@@ -52,6 +52,9 @@ public sealed class PlayerController : IPlayerBlocker
             _footstepCooldown = FootstepInterval;
             _view.StopFootstep();
         }
+
+        bool isWalkingForBob = !_movementBlocked && isMoving && _model.IsGrounded;
+        _view.SetWalkingForBob(isWalkingForBob);
     }
 
     private void HandleLook()

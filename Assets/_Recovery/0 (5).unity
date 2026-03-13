@@ -14929,11 +14929,7 @@ MonoBehaviour:
   _listenerOverride: {fileID: 0}
   _stationSource: {fileID: 537490301}
   _stations:
-  - clip: {fileID: 8300000, guid: e7e7f120f9f9a694fb1ba4f163d7ba46, type: 3}
-    volume: 1
-  - clip: {fileID: 8300000, guid: 41accf103bbbd1f48b9e4632babea54e, type: 3}
-    volume: 1
-  - clip: {fileID: 8300000, guid: aed5bb521fb312b47ac125fec273cc14, type: 3}
+  - clip: {fileID: 8300000, guid: 5f29b70d29503c344a5c23f350ce9b10, type: 3}
     volume: 1
   _eventClips:
   - eventId: tutorial_radio

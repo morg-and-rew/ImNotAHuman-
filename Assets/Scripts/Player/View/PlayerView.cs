@@ -76,21 +76,79 @@ public sealed class PlayerView : MonoBehaviour
     }
 
     [SerializeField] private float _dialogueCameraYOffset = 0.24f;
-    private Vector3 _preDialogueCameraHolderLocalPos;
+    private bool _dialogueCameraOffsetActive;
+
+    [Header("Walk bob (только визуал, не влияет на позицию игрока и спавны)")]
+    [Tooltip("Включить покачивание камеры при ходьбе.")]
+    [SerializeField] private bool _walkBobEnabled = true;
+    [Tooltip("Амплитуда вертикального покачивания (м).")]
+    [SerializeField] private float _walkBobVerticalAmplitude = 0.015f;
+    [Tooltip("Амплитуда горизонтального покачивания (м).")]
+    [SerializeField] private float _walkBobHorizontalAmplitude = 0.008f;
+    [Tooltip("Скорость цикла покачивания (рад/с).")]
+    [SerializeField] private float _walkBobFrequency = 14f;
+    [Tooltip("Скорость возврата к нулю при остановке.")]
+    [SerializeField] private float _walkBobSmoothTime = 0.1f;
+
+    private bool _isWalkingForBob;
+    private float _walkBobTimer;
+    private Vector3 _currentBobOffset;
+    private Vector3 _walkBobVelocity;
+    /// <summary> Исходная localPosition холдера камеры из префаба (высота глаз). </summary>
+    private Vector3 _cameraHolderRestLocalPos;
+
+    private void Awake()
+    {
+        if (_cameraHolder != null)
+            _cameraHolderRestLocalPos = _cameraHolder.localPosition;
+    }
 
     /// <summary> Поднять камеру на offset по Y во время диалога. </summary>
     public void ApplyDialogueCameraOffset()
     {
-        if (_cameraHolder == null) return;
-        _preDialogueCameraHolderLocalPos = _cameraHolder.localPosition;
-        _cameraHolder.localPosition = _preDialogueCameraHolderLocalPos + new Vector3(0f, _dialogueCameraYOffset, 0f);
+        _dialogueCameraOffsetActive = true;
     }
 
     /// <summary> Вернуть камеру на место после диалога. </summary>
     public void ClearDialogueCameraOffset()
     {
+        _dialogueCameraOffsetActive = false;
+    }
+
+    /// <summary> Вызывается контроллером: покачивание только когда игрок идёт и на земле. </summary>
+    public void SetWalkingForBob(bool isWalking)
+    {
+        _isWalkingForBob = isWalking;
+    }
+
+    private void LateUpdate()
+    {
+        ApplyCameraHolderLocalPosition();
+    }
+
+    private void ApplyCameraHolderLocalPosition()
+    {
         if (_cameraHolder == null) return;
-        _cameraHolder.localPosition = _preDialogueCameraHolderLocalPos;
+
+        Vector3 basePos = _cameraHolderRestLocalPos;
+        if (_dialogueCameraOffsetActive)
+            basePos.y += _dialogueCameraYOffset;
+
+        if (!_walkBobEnabled)
+        {
+            _cameraHolder.localPosition = basePos;
+            return;
+        }
+
+        if (_isWalkingForBob)
+            _walkBobTimer += Time.deltaTime * _walkBobFrequency;
+
+        float targetX = _isWalkingForBob ? Mathf.Sin(_walkBobTimer * 2f) * _walkBobHorizontalAmplitude : 0f;
+        float targetY = _isWalkingForBob ? Mathf.Sin(_walkBobTimer) * _walkBobVerticalAmplitude : 0f;
+        Vector3 targetBob = new Vector3(targetX, targetY, 0f);
+
+        _currentBobOffset = Vector3.SmoothDamp(_currentBobOffset, targetBob, ref _walkBobVelocity, _walkBobSmoothTime);
+        _cameraHolder.localPosition = basePos + _currentBobOffset;
     }
 
     public void LookAtPoint(Vector3 worldPoint)
