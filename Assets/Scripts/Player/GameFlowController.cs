@@ -487,7 +487,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 TravelTarget target = _travelTarget;
                 bool freeTeleport = _freeTeleportTargetActive;
                 bool ignoreClientReq = freeTeleport && _travelTarget == TravelTarget.Client;
-                PerformTravelWithFade(target, ignoreClientReq, freeTeleport, () =>
+                PerformTravelWithFade(target, ignoreClientReq, freeTeleport, forceIgnoreSameDestination: false, () =>
                 {
                     string doorKey = target == TravelTarget.Warehouse ? GameConfig.Tutorial.doorWarehouseKey : GameConfig.Tutorial.returnPressFKey;
                     MarkTutorialStepCompleted(doorKey);
@@ -1236,9 +1236,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _tutorialWarehouseVisit = isTutorial;
     }
 
-    public void ForceTravel(TravelTarget target)
+    public void ForceTravel(TravelTarget target, bool forceIgnoreSameDestination = false)
     {
-        PerformTravelWithFade(target, ignoreClientRequirements: true, freeTeleport: false, () => { });
+        PerformTravelWithFade(target, ignoreClientRequirements: true, freeTeleport: false, forceIgnoreSameDestination, () => { });
     }
 
     public void SetAllowReturnToClientWithoutExitZone(bool allow) { }
@@ -1261,7 +1261,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_pendingDialogueReturnPackage <= 0) return false;
         if (!CanLeaveWarehouseWithPendingPackage()) return false;
-        PerformTravelWithFade(TravelTarget.Client, ignoreClientRequirements: true, freeTeleport: false, () =>
+        PerformTravelWithFade(TravelTarget.Client, ignoreClientRequirements: true, freeTeleport: false, forceIgnoreSameDestination: false, () =>
         {
             _pendingDialogueReturnPackage = 0;
             MarkTutorialStepCompleted(GameConfig.Tutorial.returnToClientKey);
@@ -1344,7 +1344,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_travelFadeDuration <= 0f || _fadeToBlackView == null)
         {
             onFadeCompleteBeforeTravel?.Invoke();
-            if (PerformTravel(TravelTarget.Warehouse, true, false))
+            if (PerformTravel(TravelTarget.Warehouse, true, false, false))
                 StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, () => { }));
             return;
         }
@@ -1356,7 +1356,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         {
             onFadeCompleteBeforeTravel?.Invoke();
             _warehouseTravelFromDialogueAfterFade = false;
-            bool ok = PerformTravel(TravelTarget.Warehouse, true, false);
+            bool ok = PerformTravel(TravelTarget.Warehouse, true, false, false);
             if (ok)
                 StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, () => { _isTravelFading = false; }));
             else
@@ -1368,7 +1368,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     }
 
     /// <summary> Экран затемняется → в момент полного показа (чёрный) делаем телепорт → когда спрайт снова прозрачный, мы уже на складе/в зоне. </summary>
-    private void PerformTravelWithFade(TravelTarget target, bool ignoreClientRequirements, bool freeTeleport, Action onSuccess)
+    /// <param name="forceIgnoreSameDestination">Только для шага go_warehouse_day2_auto (после Client_Day1.1), иначе не трогать радио.</param>
+    private void PerformTravelWithFade(TravelTarget target, bool ignoreClientRequirements, bool freeTeleport, bool forceIgnoreSameDestination, Action onSuccess)
     {
         if (onSuccess == null) onSuccess = () => { };
         bool useFade = _travelFadeDuration > 0f && _fadeToBlackView != null
@@ -1377,7 +1378,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _gameSoundController?.PlayTravelTransition(soundPos);
         if (!useFade)
         {
-            if (PerformTravel(target, ignoreClientRequirements, freeTeleport))
+            if (PerformTravel(target, ignoreClientRequirements, freeTeleport, forceIgnoreSameDestination))
                 onSuccess();
             return;
         }
@@ -1385,7 +1386,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         PlayFadeToBlack(_travelFadeDuration, () =>
         {
             // Когда экран полностью чёрный — переносим
-            bool ok = PerformTravel(target, ignoreClientRequirements, freeTeleport);
+            bool ok = PerformTravel(target, ignoreClientRequirements, freeTeleport, forceIgnoreSameDestination);
             if (ok)
             {
                 StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, onSuccess));
@@ -1408,10 +1409,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         });
     }
 
-    private bool PerformTravel(TravelTarget target, bool ignoreClientRequirements, bool freeTeleport = false)
+    private bool PerformTravel(TravelTarget target, bool ignoreClientRequirements, bool freeTeleport = false, bool forceIgnoreSameDestination = false)
     {
-        // Не телепортировать в ту же зону, где уже находимся (отслеживаем последний телепорт)
-        if (_lastTeleportDestination != TravelTarget.None && _lastTeleportDestination == target)
+        // Не телепортировать в ту же зону (forceIgnoreSameDestination только для go_warehouse_day2_auto, чтобы не ломать радио)
+        if (!forceIgnoreSameDestination && _lastTeleportDestination != TravelTarget.None && _lastTeleportDestination == target)
             return false;
 
         if (target == TravelTarget.Warehouse)

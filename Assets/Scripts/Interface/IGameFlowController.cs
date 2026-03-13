@@ -56,7 +56,8 @@ public interface IGameFlowController
 
     void SetTravelTarget(TravelTarget target, string hintKey, bool useFreeTeleportPointForClient = false, bool allowWarehouseConfirmFromClient = false);
     void SetTutorialWarehouseVisit(bool isTutorial);
-    void ForceTravel(TravelTarget target);
+    /// <param name="forceIgnoreSameDestination">При true телепорт выполняется даже если игрок уже в целевой зоне (только для шага после Client_Day1.1, чтобы не ломать радио).</param>
+    void ForceTravel(TravelTarget target, bool forceIgnoreSameDestination = false);
     void SetAllowReturnToClientWithoutExitZone(bool allow);
     void SetPendingDialogueReturnPackage(int packageNumber);
     bool TryPerformPendingReturnToClient();
