@@ -606,7 +606,9 @@ public sealed class StoryDirector : MonoBehaviour
                 gfcAuto.SetTutorialWarehouseVisit(true);
             }
             _wait = WaitMode.WaitingWarehouseConfirm;
-            _flow?.ForceTravel(TravelTarget.Warehouse);
+            // Только для шага после Client_Day1.1 — принудительный телепорт даже если считаем что уже на складе; остальные шаги (радио и т.д.) не трогаем.
+            bool forceIgnoreSameDestination = string.Equals(step.stepId, "go_warehouse_day2_auto", StringComparison.OrdinalIgnoreCase);
+            _flow?.ForceTravel(TravelTarget.Warehouse, forceIgnoreSameDestination);
             return;
         }
 
@@ -960,6 +962,23 @@ public sealed class StoryDirector : MonoBehaviour
         }
 
         if (_currentStep != null && string.Equals(_currentStep.stepId, "go_warehouse_after_day1_5", StringComparison.OrdinalIgnoreCase))
+        {
+            _wait = WaitMode.Idle;
+            GameStateService.SetState(GameState.Warehouse);
+            Advance();
+            var gfc = _flow as GameFlowController;
+            gfc?.StartRandomDeliveryTaskAndSetRequiredForReturn();
+            gfc?.RefreshWarehouseDeliveryNote();
+            if (!_warehousePickHintShown)
+            {
+                _warehousePickHintShown = true;
+                gfc?.ShowWarehousePickHint();
+            }
+            return;
+        }
+
+        // После Client_Day1.1 → авто-переход на склад: разблокировка, запись о посылке и подсказка.
+        if (_currentStep != null && string.Equals(_currentStep.stepId, "go_warehouse_day2_auto", StringComparison.OrdinalIgnoreCase))
         {
             _wait = WaitMode.Idle;
             GameStateService.SetState(GameState.Warehouse);
