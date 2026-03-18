@@ -799,6 +799,10 @@ public sealed class StoryDirector : MonoBehaviour
         if (_wait != WaitMode.WaitingDialogueEnd && !isClientDay14 && !isClientDay152 && !isClientDay153)
             return;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[StoryDirector] OnDialogueCompleted conv='{conv}' wait={_wait} stepId='{_currentStep?.stepId}'");
+#endif
+
         _attitudeRecorder?.RecordFromLua();
         _phoneUnlock?.TryUnlockFromDialogue();
         if (_pendingRemovePackageAfterDialogue) { _pendingRemovePackageAfterDialogue = false; _flow?.RemovePackageFromHands(); }
@@ -921,24 +925,40 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void OnTeleportedToWarehouse()
     {
+        void EnsureControlsAfterWarehouseTeleport()
+        {
+            if (_flow is GameFlowController gfc)
+                gfc.EnterClientDialogueState(false, movePlayerToClient: false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
         if (_wait == WaitMode.WaitingTeleportToWarehouse)
         {
+            EnsureControlsAfterWarehouseTeleport();
             _wait = WaitMode.Idle;
             Advance();
             return;
         }
         if (_wait == WaitMode.WaitingRadioComplete)
         {
+            EnsureControlsAfterWarehouseTeleport();
             // Радио приоритетно: подсказка остаётся «иди к радио / нажми E», пока игрок не нажал E у радио
             string hintKey = GameConfig.Tutorial.radioUseKey ?? "";
             _flow?.SetTravelTarget(TravelTarget.Client, hintKey, useFreeTeleportPointForClient: true);
             return;
         }
-        if (_wait != WaitMode.WaitingWarehouseConfirm) return;
+        if (_wait != WaitMode.WaitingWarehouseConfirm)
+        {
+            // Рассинхрон (другой шаг успел сменить _wait до колбэка fade) — не оставляем игрока без управления.
+            EnsureControlsAfterWarehouseTeleport();
+            return;
+        }
 
         // После телепорта на склад (в т.ч. из диалога Client_Day1.4) — разблокируем и сбрасываем состояние диалога.
         if (_flow is GameFlowController gfcUnlock)
-            gfcUnlock.EnterClientDialogueState(false);
+            gfcUnlock.EnterClientDialogueState(false, movePlayerToClient: false);
         _controller?.SetBlock(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

@@ -86,7 +86,12 @@ public sealed class PlayerInteractionController
             if (worldInteractable != null)
                 sprite = worldInteractable.HintSprite;
             else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
-                sprite = pkg.HintSprite; // «Q — повернуть» или «E — взять» в зависимости от поворота
+            {
+                if (IsWrongPackageForStory(pkg))
+                    sprite = pkg.HintSpriteWrongPackage;
+                else
+                    sprite = pkg.HintSprite;
+            }
         }
 
         if (PlayerHintView.Instance != null)
@@ -147,25 +152,36 @@ public sealed class PlayerInteractionController
         return GameStateService.IsWarehouse;
     }
 
+    /// <summary> Нужная посылка по сюжету задана, а эта коробка — не она (E → диалог, но только когда коробка уже стоит правильно). </summary>
+    private bool IsWrongPackageForStory(PackageHoldable pkg)
+    {
+        if (pkg == null) return false;
+        return GameStateService.IsWarehouse
+            && GameStateService.RequiredPackageNumber > 0
+            && _flow != null && !_flow.AcceptAnyPackageForReturn
+            && pkg.Number != GameStateService.RequiredPackageNumber;
+    }
+
     private void TryPickItem(IHoldable holdable)
     {
         if (_hands.HasItem || holdable == null)
             return;
 
-        // Коробку можно взять только когда она повёрнута в 0° (по Q).
-        if (holdable is PackageHoldable pkg && !pkg.CanPickupByRotation)
-            return;
-
-        if (holdable is PackageHoldable package &&
-            GameStateService.IsWarehouse &&
-            GameStateService.RequiredPackageNumber > 0 &&
-            _flow != null && !_flow.AcceptAnyPackageForReturn)
+        if (holdable is PackageHoldable pkg)
         {
-            if (package.Number != GameStateService.RequiredPackageNumber)
+            // Любая попытка взаимодействия (взять или показать «не та посылка»)
+            // возможна только когда коробка уже стоит правильно (0° по Y).
+            if (!pkg.CanPickupByRotation)
+                return;
+
+            // Неправильная посылка по сюжету: E → только диалог, без подъёма.
+            if (IsWrongPackageForStory(pkg))
             {
                 _client?.PlayWrongPackageConversation();
                 return;
             }
+
+            // Перед реальным взятием гасим активный диалог про неправильную посылку (если ещё идёт).
             if (GameStateService.WrongPackageDialogueActive)
             {
                 DialogueManager.StopConversation();

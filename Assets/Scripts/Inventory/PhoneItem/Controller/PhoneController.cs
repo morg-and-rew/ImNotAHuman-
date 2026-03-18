@@ -65,18 +65,18 @@ public sealed class PhoneController
         {
             _itemView.CanDrop = () =>
             {
+                // IsRinging остаётся true до закрытия UI телефона — иначе телефон нельзя положить после звонка.
+                // Блокировка «до конца Hero_AfterProviderCall» даёт ConversationActive + BlockPhoneDropUntilProviderCallOnTutorial;
+                // после MarkProviderCallDone — можно положить даже при активном диалоге.
+                // После Hero_AfterProviderCall (MarkProviderCallDone) — убрать можно, даже если DialogueManager ещё isConversationActive.
+                if (_flow != null && _flow.ProviderCallDone)
+                    return true;
+                if (_flow != null && _flow.BlockPhoneDropUntilProviderCallOnTutorial)
+                    return false;
                 if (ConversationActive()) return false;
-                if (_callService != null && _callService.IsRinging) return false;
                 return true;
             };
         }
-
-        _itemView.CanDrop = () =>
-        {
-            return !ConversationActive();
-        };
-
-
     }
 
     private bool ConversationActive()
@@ -94,7 +94,8 @@ public sealed class PhoneController
     private void OnTaken()
     {
         IsOpen = true;
-        _flow?.ShowPhoneCallHint();
+        if (_flow != null && _flow.BlockPhoneDropUntilProviderCallOnTutorial)
+            _flow.ShowPhoneCallHint();
 
         if (_playerView != null && _returnOnClose)
         {

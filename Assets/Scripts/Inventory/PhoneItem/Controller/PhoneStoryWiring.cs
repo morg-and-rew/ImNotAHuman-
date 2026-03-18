@@ -89,6 +89,9 @@ public sealed class PhoneStoryWiring
             DialogueManager.instance.conversationEnded -= OnConversationEnded;
 
             _flow.MarkProviderCallDone();
+            // Сюжетный шаг go_to_phone ждёт trigger provider_call; раньше он срабатывал только при опускании телефона —
+            // при «залипшем» диалоге дроп был невозможен. Продвигаем сразу после звонка; повтор при дропе безопасен.
+            _flow.NotifyTrigger("provider_call");
             _flow.ShowPhonePutHintOnce();
             return;
         }

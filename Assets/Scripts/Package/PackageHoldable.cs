@@ -15,6 +15,8 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
     [SerializeField] private Sprite _hintSprite;
     [Tooltip("Подсказка «Q — повернуть», когда коробка не в 0°")]
     [SerializeField] private Sprite _hintSpriteRotate;
+    [Tooltip("Не та посылка по сюжету — E (диалог). Если пусто, берётся подсказка взять.")]
+    [SerializeField] private Sprite _hintSpriteWrongPackage;
     [Header("Rotation")]
     [SerializeField, Min(10f)] private float _rotationSpeedDegPerSec = 180f;
 
@@ -24,6 +26,9 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
     public int Number => _packageItem != null ? _packageItem.Number : 0;
     /// <summary> Подсказка: «Q — повернуть» если коробка не в 0°, иначе подсказка взять. </summary>
     public Sprite HintSprite => CanPickupByRotation ? _hintSprite : (_hintSpriteRotate != null ? _hintSpriteRotate : _hintSprite);
+
+    public Sprite HintSpriteWrongPackage =>
+        _hintSpriteWrongPackage != null ? _hintSpriteWrongPackage : _hintSprite;
     /// <summary> Взять можно только когда коробка повёрнута в 0° по Y и не идёт анимация. </summary>
     public bool CanPickupByRotation => !_isRotating && IsAngleAtZero(GetCurrentAngleY());
 

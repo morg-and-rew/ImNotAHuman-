@@ -30,6 +30,8 @@ public class TutorialConfig
 {
     public string pressSpaceKey = "tutorial.press_space";
     public string doorWarehouseKey = "tutorial.door_warehouse";
+    /// <summary> Первый раз после завершения диалога: подсказка «нажми F чтобы перейти на склад». </summary>
+    public string pressFToWarehouseAfterDialogueKey = "tutorial.press_f_to_warehouse";
     public string returnPressFKey = "tutorial.return_press_f";
     public string routerHintKey = "tutorial.router_hint";
     public string phoneHintKey = "tutorial.phone_hint";

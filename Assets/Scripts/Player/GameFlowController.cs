@@ -77,6 +77,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _meetClientHintShown;
 
     public bool ProviderCallDone => _providerCallDone;
+
+    public bool BlockPhoneDropUntilProviderCallOnTutorial =>
+        _storyDirector != null
+        && string.Equals(_storyDirector.CurrentStepId, "go_to_phone", StringComparison.OrdinalIgnoreCase)
+        && !_providerCallDone;
+
     public bool PreferEmptyOverMeetClient => _preferEmptyOverMeetClient;
     public bool MeetClientHintAlreadyShown => _meetClientHintShown;
     public bool IsInClientDialogState => GameStateService.CurrentState == GameState.ClientDialog;
@@ -762,7 +768,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         bool clientDialogue = GameStateService.CurrentState == GameState.ClientDialog;
 
-        if (!clientDialogue)
+        // Важно:
+        // Если блокировка снимается (`isLocked == false`), GameState мог уже смениться.
+        // Тогда ранний `return` мешает разблокировать управление и игрок "залипает".
+        if (!clientDialogue && isLocked)
             return;
 
         _controller?.SetBlock(isLocked);
@@ -852,7 +861,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         if (_tutorialPendingAction != TutorialPendingAction.None)
             return;
-        _tutorialHint?.Show(GameConfig.Tutorial.goWarehouseKey);
+        // Первый раз после завершения диалога: подсказка «нажми F чтобы перейти на склад».
+        ShowHintOnceByKey(GameConfig.Tutorial.pressFToWarehouseAfterDialogueKey);
     }
 
     private void OnClientDialogueFinishedByKey()
@@ -1014,6 +1024,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         Cursor.lockState = CursorLockMode.Locked;
 
         GameStateService.SetWrongPackageDialogue(false);
+
+        // Туториал «нажми F чтобы перейти на склад» должен появляться при первом завершении диалога.
+        // Событие ClientDialogueFinished приходит гарантированно (в отличие от OnClientConversationEnded, который не подписан).
+        if (_tutorialPendingAction == TutorialPendingAction.None)
+            ShowHintOnceByKey(GameConfig.Tutorial.pressFToWarehouseAfterDialogueKey);
     }
 
     private void OnRequestRemovePackageFromHands()
@@ -1052,10 +1067,18 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public void NotifyPhonePutDown()
     {
         if (_tutorialHint == null) return;
+        // Шаг go_to_phone без завершённого звонка: сюжет не продвигаем, радио/склад не подсвечиваем (см. OnDropped — provider_call только после звонка).
+        bool onPhoneTutorialStep = _storyDirector != null
+            && string.Equals(_storyDirector.CurrentStepId, "go_to_phone", StringComparison.OrdinalIgnoreCase);
+        if (onPhoneTutorialStep && !_providerCallDone)
+        {
+            ShowHintRaw(GameConfig.Tutorial.phoneHintKey);
+            return;
+        }
+
         MarkTutorialStepCompleted(GameConfig.Tutorial.phonePutKey);
-        // Показать tutorial.radio_use сразу после tutorial.phone_put: если игрок уже видел phone_put — показываем radio_use при опускании телефона
-        bool phonePutWasShown = IsTutorialStepAlreadyShown(GameConfig.Tutorial.phonePutKey);
-        if (!_providerCallDone && !phonePutWasShown) return;
+        if (!_providerCallDone)
+            return;
         _preferEmptyOverMeetClient = false;
         if (IsTutorialStepAlreadyShown(GameConfig.Tutorial.radioUseKey))
             return;
@@ -1142,6 +1165,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 _tutorialHint?.Show(GameConfig.Tutorial.emptyKey);
             return;
         }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[GameFlowController] ShowHintOnceByKey('{key}') alreadyShown={IsTutorialStepAlreadyShown(key)} displayed={_hintKeysDisplayed.Contains(key)} hasActiveTutorial={HasActiveTutorial()} pendingAction={_tutorialPendingAction} stepId='{_storyDirector?.CurrentStepId}'");
+#endif
+
         // Шаг уже выполнен игроком — не показываем снова (кроме подсказок текущего шага сюжета).
         if (IsTutorialStepAlreadyShown(key))
         {
@@ -1443,8 +1471,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
             _travelTarget = TravelTarget.None;
             _lastTeleportDestination = TravelTarget.Warehouse;
+            // Всегда до подписчиков OnTeleportedToWarehouse: иначе StoryDirector может выйти по раннему return
+            // (рассинхрон _wait: Idle, WaitingRadioComplete и т.д.) и игрок останется с SetBlock(true) после диалога.
+            EnterClientDialogueState(false, movePlayerToClient: false);
+            _controller?.SetBlock(false);
             OnTeleportedToWarehouse?.Invoke();
-            _clientInteraction?.CloseUI();
+            _clientInteraction?.ResetClientDialogFlagsForWarehouse();
             ShowHintOnceByKey(GameConfig.Tutorial.returnToClientKey);
             return true;
         }
@@ -1470,6 +1502,13 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 _useFreeTeleportPointForNextClientTravel = false;
             }
             else if (freeTeleport && _freeTeleportToClientPoint != null)
+                point = _freeTeleportToClientPoint;
+            // Сюжет вызывает SetTravelTarget(Client) без useFreeTeleportPointForClient → _freeTeleportTargetActive=false.
+            // Игрок жмёт F у двери: freeTeleport остаётся false → раньше попадали в TeleportFromSklad вместо FreeTeleportToPVZ.
+            // Сюжетные телепорты (ForceTravel / pending return) идут с ignoreClientRequirements=true — сюжетная точка не трогается.
+            else if (!ignoreClientRequirements
+                     && GameStateService.CurrentState == GameState.Warehouse
+                     && _freeTeleportToClientPoint != null)
                 point = _freeTeleportToClientPoint;
             Teleport(point);
             GameStateService.SetState(GameState.ClientDialog);

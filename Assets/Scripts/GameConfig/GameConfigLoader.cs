@@ -47,6 +47,7 @@ public static class GameConfig
         var d = new TutorialConfig();
         if (string.IsNullOrEmpty(t.pressSpaceKey)) t.pressSpaceKey = d.pressSpaceKey;
         if (string.IsNullOrEmpty(t.doorWarehouseKey)) t.doorWarehouseKey = d.doorWarehouseKey;
+        if (string.IsNullOrEmpty(t.pressFToWarehouseAfterDialogueKey)) t.pressFToWarehouseAfterDialogueKey = d.pressFToWarehouseAfterDialogueKey;
         if (string.IsNullOrEmpty(t.returnPressFKey)) t.returnPressFKey = d.returnPressFKey;
         if (string.IsNullOrEmpty(t.routerHintKey)) t.routerHintKey = d.routerHintKey;
         if (string.IsNullOrEmpty(t.phoneHintKey)) t.phoneHintKey = d.phoneHintKey;

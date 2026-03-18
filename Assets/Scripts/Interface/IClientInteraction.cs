@@ -19,6 +19,8 @@ public interface IClientInteraction
     void StartClientDialogWithSpecificStep(string clientId, string conversationTitle);
     void ContinueSequence();
     void CloseUI();
+    /// <summary>Сброс флагов диалога при телепорте на склад — иначе IsActive «залипает» и складской Warehouse_WrongPackage включает портреты клиента.</summary>
+    void ResetClientDialogFlagsForWarehouse();
     void PlayWrongPackageConversation();
     void ShowPortraitOnly(string conversation);
     void HidePortraitOnly();

@@ -7,6 +7,9 @@ using PixelCrushers.DialogueSystem;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+using Debug = UnityEngine.Debug;
+#endif
 #if TMP_PRESENT
 using TMPro;
 #endif
@@ -276,6 +279,12 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         {
             if (Input.GetKeyDown(finishKey))
             {
+                // После показа подсказки (на последней реплике) — считаем шаг выполненным в момент нажатия F.
+                if (GameFlowController.Instance != null)
+                {
+                    string key = GameConfig.Tutorial.pressFToWarehouseAfterDialogueKey ?? "tutorial.press_f_to_warehouse";
+                    GameFlowController.Instance.MarkTutorialStepCompleted(key);
+                }
                 // Всегда: сначала ждём полного затемнения экрана, только потом закрываем диалог и телепортируем (спрайты не пропадают до черноты).
                 if (GameFlowController.Instance != null)
                 {
@@ -340,8 +349,11 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     {
         if (_finishByKeyAllowed && _currentIsLastEntry && !_inChoiceMode)
         {
+            bool wasAwaitFinish = _awaitFinish;
             _awaitFinish = true;
             RefreshAwaitingFinishKeyUI();
+            if (!wasAwaitFinish)
+                TryShowPressFToWarehouseTutorial();
             return true;
         }
         return false;
@@ -356,8 +368,11 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         _finishByKeyAllowed = IsFinishByKeyConversation(subtitle);
         _currentIsLastEntry = IsLastEntry(subtitle);
         // Как только показана последняя реплика диалога «только F» — сразу ждём F, чтобы по F перейти на склад без лишнего пробела.
+        bool wasAwaitFinish = _awaitFinish;
         _awaitFinish = _finishByKeyAllowed && _currentIsLastEntry && !_inChoiceMode;
         RefreshAwaitingFinishKeyUI();
+        if (!wasAwaitFinish && _awaitFinish)
+            TryShowPressFToWarehouseTutorial(subtitle);
 
         if (manualAdvanceMinInterval > 0f && !_forcedAutoAdvanceEnabled && !_manualAdvanceBlocked)
             _nextManualAdvanceAllowedAt = Time.unscaledTime + manualAdvanceMinInterval;
@@ -374,6 +389,31 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         UpdateNamePlateFromClientMap(subtitle);
 
         OnSubtitleShown?.Invoke(subtitle);
+    }
+
+    private void TryShowPressFToWarehouseTutorial(Subtitle subtitle = null)
+    {
+        if (GameFlowController.Instance == null) return;
+        string key = GameConfig.Tutorial.pressFToWarehouseAfterDialogueKey ?? "tutorial.press_f_to_warehouse";
+        if (GameFlowController.Instance.IsTutorialStepAlreadyShown(key))
+            return;
+
+        string title = null;
+        if (subtitle?.dialogueEntry != null && DialogueManager.masterDatabase != null)
+        {
+            var conv = DialogueManager.masterDatabase.GetConversation(subtitle.dialogueEntry.conversationID);
+            title = conv != null ? conv.Title : null;
+        }
+        if (string.IsNullOrEmpty(title))
+            title = DialogueManager.lastConversationStarted ?? "";
+
+        if (!string.Equals(title, "Client_Day1", StringComparison.OrdinalIgnoreCase))
+            return;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[CustomDialogueUI] awaitFinish entered for '{title}' -> show tutorial '{key}'");
+#endif
+        GameFlowController.Instance.ShowHintOnceByKey(key);
     }
 
     public override void ShowResponses(Subtitle subtitle, Response[] responses, float timeout)

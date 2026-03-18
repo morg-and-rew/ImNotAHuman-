@@ -10,6 +10,7 @@
     "tutorial": {
       "pressSpaceKey": "tutorial.press_space",
       "doorWarehouseKey": "tutorial.door_warehouse",
+      "pressFToWarehouseAfterDialogueKey": "tutorial.press_f_to_warehouse",
       "returnPressFKey": "tutorial.return_press_f",
       "routerHintKey": "tutorial.router_hint",
       "phoneHintKey": "tutorial.phone_hint",

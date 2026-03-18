@@ -33,6 +33,8 @@ public interface IGameFlowController
     event System.Action OnPlayerReturnedFromWarehouse;
     event System.Action OnPlayerReturnedToClient;
     bool ProviderCallDone { get; }
+    /// <summary> Шаг go_to_phone, Hero_AfterProviderCall ещё не завершён — телефон нельзя убрать. </summary>
+    bool BlockPhoneDropUntilProviderCallOnTutorial { get; }
     bool IsInClientDialogState { get; }
     PlayerView Player { get; }
 

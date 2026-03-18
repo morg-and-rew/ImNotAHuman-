@@ -298,6 +298,15 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         HidePortraits();
     }
 
+    public void ResetClientDialogFlagsForWarehouse()
+    {
+        _wrongConversationRunning = false;
+        _waitingForContinue = false;
+        IsActive = false;
+        SetClientPortraitsRootActive(false);
+        HidePortraits();
+    }
+
     private void ShowUI()
     {
         SetClientPortraitsRootActive(true);
@@ -349,13 +358,17 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private void OnConversationEnded(Transform actor)
     {
-        if (!IsActive) return;
-
+        // Диалог «не та посылка» на складе: IsActive часто false — обязаны сбросить флаги, иначе ломается следующий диалог с клиентом.
         if (_wrongConversationRunning)
         {
             _wrongConversationRunning = false;
+            GameStateService.SetWrongPackageDialogue(false);
+            StopDialogUIOnly();
+            HidePortraits();
             return;
         }
+
+        if (!IsActive) return;
 
         if (_isUsingOverrides)
         {
@@ -380,11 +393,21 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         }
     }
 
+    private static bool IsWrongPackageWarehouseConversation(Subtitle subtitle, ClientPortraitMap portraitMap)
+    {
+        if (portraitMap == null || string.IsNullOrWhiteSpace(portraitMap.wrongPackageConversation)) return false;
+        if (subtitle?.dialogueEntry == null || DialogueManager.masterDatabase == null) return false;
+        var conv = DialogueManager.masterDatabase.GetConversation(subtitle.dialogueEntry.conversationID);
+        return conv != null && string.Equals(conv.Title, portraitMap.wrongPackageConversation, StringComparison.OrdinalIgnoreCase);
+    }
+
     private void OnSubtitleShown(Subtitle subtitle)
     {
         if (!IsActive) return;
         if (_portraitMap == null) return;
         if (subtitle?.dialogueEntry == null) return;
+        // Складской разговор про неверную посылку — не включать портреты клиента.
+        if (IsWrongPackageWarehouseConversation(subtitle, _portraitMap)) return;
 
         int entryID = subtitle.dialogueEntry.id;
         int conversationID = subtitle.dialogueEntry.conversationID;
