@@ -19,18 +19,26 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
     [SerializeField] private Sprite _hintSpriteWrongPackage;
     [Header("Rotation")]
     [SerializeField, Min(10f)] private float _rotationSpeedDegPerSec = 180f;
+    [Tooltip("Если включено — угол «взять» берётся из сцены при Start(). Иначе используется угол под этим чекбоксом (градусы 0–360).")]
+    [SerializeField] private bool _takeAngleFromScene = true;
+    [Tooltip("Используется только если Take Angle From Scene выключен. Угол Y (0–360°), при котором коробка «правильно» (номер к игроку).")]
+    [SerializeField, Range(0f, 360f)] private float _takeAngleYOverride = 0f;
 
     private float _targetAngleY;
     private bool _isRotating;
+    /// <summary> Угол Y, при котором коробка «правильно» повёрнута (номер к игроку). Заполняется в Start() из сцены или из _takeAngleYOverride. </summary>
+    private float _takeAngleY;
 
     public int Number => _packageItem != null ? _packageItem.Number : 0;
-    /// <summary> Подсказка: «Q — повернуть» если коробка не в 0°, иначе подсказка взять. </summary>
-    public Sprite HintSprite => CanPickupByRotation ? _hintSprite : (_hintSpriteRotate != null ? _hintSpriteRotate : _hintSprite);
+    /// <summary> Подсказка: «Q — повернуть» если коробка не в позиции «взять», иначе подсказка взять. </summary>
+    public Sprite HintSprite => CanPickupByRotation ? _hintSprite : _hintSpriteRotate;
 
     public Sprite HintSpriteWrongPackage =>
         _hintSpriteWrongPackage != null ? _hintSpriteWrongPackage : _hintSprite;
-    /// <summary> Взять можно только когда коробка повёрнута в 0° по Y и не идёт анимация. </summary>
-    public bool CanPickupByRotation => !_isRotating && IsAngleAtZero(GetCurrentAngleY());
+    /// <summary> Подсказка «Q — повернуть». Нужна и для «не той» посылки, когда она ещё не в позиции «взять». </summary>
+    public Sprite HintSpriteRotate => _hintSpriteRotate;
+    /// <summary> Взять можно только когда коробка повёрнута в «правильную» ориентацию (как в сцене — номер к игроку) и не идёт анимация. </summary>
+    public bool CanPickupByRotation => !_isRotating && IsAngleAtTakePosition(GetCurrentAngleY());
 
     private void Reset()
     {
@@ -47,6 +55,12 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
 
     private void Start()
     {
+        // Угол «взять»: из сцены (как расставлено — номер к игроку) или ручной в инспекторе. Делаем в Start(), чтобы все Awake и расстановка уже применились.
+        if (_takeAngleFromScene)
+            _takeAngleY = GetCurrentAngleY();
+        else
+            _takeAngleY = _takeAngleYOverride;
+
         SetRandomRotationStep();
     }
 
@@ -66,13 +80,13 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
         }
     }
 
-    /// <summary> Поворот по часовой стрелке на один шаг (45°). Вызывается из контроллера по Q. </summary>
+    /// <summary> Поворот по часовой стрелке на один шаг (90°). Вызывается из контроллера по Q. </summary>
     public void RotateClockwise()
     {
         if (_isRotating) return;
 
         float current = GetCurrentAngleY();
-        if (IsAngleAtZero(current)) return;
+        if (IsAngleAtTakePosition(current)) return;
 
         _targetAngleY = current - RotationStepDeg;
         if (_targetAngleY < 0f) _targetAngleY += 360f;
@@ -84,9 +98,10 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
         return Mathf.Repeat(transform.eulerAngles.y, 360f);
     }
 
-    private static bool IsAngleAtZero(float angleY)
+    /// <summary> Текущий угол совпадает с «правильной» ориентацией для взятия (номер к игроку). </summary>
+    private bool IsAngleAtTakePosition(float angleY)
     {
-        return Mathf.Abs(Mathf.DeltaAngle(angleY, 0f)) < AngleEpsilon;
+        return Mathf.Abs(Mathf.DeltaAngle(angleY, _takeAngleY)) < AngleEpsilon;
     }
 
     private void SetAngleY(float angleY)

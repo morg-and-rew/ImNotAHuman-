@@ -294,12 +294,18 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     public void CloseUI()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[ClientInteraction] CloseUI called. IsActive={IsActive} stepIndex={_stepIndex} usingOverrides={_isUsingOverrides}");
+#endif
         SetClientPortraitsRootActive(false);
         HidePortraits();
     }
 
     public void ResetClientDialogFlagsForWarehouse()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[ClientInteraction] ResetClientDialogFlagsForWarehouse called. IsActive={IsActive} stepIndex={_stepIndex}");
+#endif
         _wrongConversationRunning = false;
         _waitingForContinue = false;
         IsActive = false;
@@ -314,6 +320,9 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private void StopDialogUIOnly()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[ClientInteraction] StopDialogUIOnly called. IsActive={IsActive} stepIndex={_stepIndex} waitingForContinue={_waitingForContinue}");
+#endif
         SetClientPortraitsRootActive(false);
         HidePortraits();
     }
@@ -331,6 +340,9 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private void HidePortraits()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[ClientInteraction] HidePortraits called. leftRootNull={_leftRoot==null} rightRootNull={_rightRoot==null}");
+#endif
         if (_leftRoot != null) _leftRoot.gameObject.SetActive(false);
         if (_rightRoot != null) _rightRoot.gameObject.SetActive(false);
     }
@@ -358,6 +370,11 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private void OnConversationEnded(Transform actor)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log(
+            $"[ClientInteraction] conversationEnded. IsActive={IsActive} wrongConversationRunning={_wrongConversationRunning} " +
+            $"usingOverrides={_isUsingOverrides} waitingForContinue={_waitingForContinue} currentOverrideConv='{_currentConversationOverride}'");
+#endif
         // Диалог «не та посылка» на складе: IsActive часто false — обязаны сбросить флаги, иначе ломается следующий диалог с клиентом.
         if (_wrongConversationRunning)
         {
@@ -368,16 +385,36 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
             return;
         }
 
-        if (!IsActive) return;
+        // Всегда убираем портреты при завершении любого диалога — иначе они могут «залипнуть» при глюках порядка событий или при !IsActive.
+        if (!IsActive)
+        {
+            StopDialogUIOnly();
+            return;
+        }
 
         if (_isUsingOverrides)
         {
             ClientDialogueStepCompletionData completionData = new ClientDialogueStepCompletionData(_currentClientIdOverride, _currentConversationOverride);
             ClientDialogueStepCompleted?.Invoke(completionData);
             // При переходе на склад после Client_Day1.4 UI закроется в момент полной черноты (PerformTravel), чтобы спрайты не исчезали до затемнения
-            bool delayCloseForWarehouseFade = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+            bool choseToGive5577 = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+            // Важно: задерживать закрытие UI нужно только для конкретного шага Day1.4 (когда реально идём на склад с fade),
+            // иначе портреты могут "залипнуть" после других диалогов, если переменная осталась true из прошлого шага.
+            bool isClientDay14Override = string.Equals(_currentConversationOverride, "Client_Day1.4", StringComparison.OrdinalIgnoreCase)
+                                          || string.Equals(_currentConversationOverride, "Client_Day1.4.1", StringComparison.OrdinalIgnoreCase);
+            bool delayCloseForWarehouseFade = choseToGive5577 && isClientDay14Override;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log(
+                $"[ClientInteraction] override conversation ended. overrideConv='{_currentConversationOverride}' " +
+                $"choseToGive5577={choseToGive5577} isClientDay14Override={isClientDay14Override} " +
+                $"delayCloseForWarehouseFade={delayCloseForWarehouseFade}");
+#endif
             if (!delayCloseForWarehouseFade)
                 CloseUI();
+            else
+                // Delay нужен только чтобы не дергать root-панель до fade-to-black,
+                // но изображения портретов должны скрываться гарантированно, иначе они могут остаться на экране при любых гонках событий.
+                HidePortraits();
             _isUsingOverrides = false;
             _currentClientIdOverride = null;
             _currentConversationOverride = null;
@@ -386,9 +423,21 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         else
         {
             _waitingForContinue = true;
-            bool delayCloseForWarehouseFade = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+            bool choseToGive5577 = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+            string currentConv = null;
+            if (_portraitMap != null && _stepIndex >= 0 && _stepIndex < _portraitMap.StepsCount)
+                currentConv = _portraitMap.GetConversation(_stepIndex);
+
+            bool isClientDay14Dialogue = string.Equals(currentConv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase)
+                                          || string.Equals(currentConv, "Client_Day1.4.1", StringComparison.OrdinalIgnoreCase);
+            bool delayCloseForWarehouseFade = choseToGive5577 && isClientDay14Dialogue;
+
             if (!delayCloseForWarehouseFade)
                 StopDialogUIOnly();
+            else
+                // Аналогично override-ветке: не дергаем root-панель при ожидании fade,
+                // но скрываем спрайты гарантированно.
+                HidePortraits();
             ClientDialogueFinished?.Invoke();
         }
     }
@@ -424,6 +473,12 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (_leftRoot != null)
         {
             bool showLeft = rule.leftSprite != null;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log(
+                $"[ClientInteraction] OnSubtitleShown convId='{conversationID}' title='{subtitle?.dialogueEntry?.conversationID}' " +
+                $"entryId={entryID} mapStepIndex={mapStepIndex} IsActive={IsActive} usingOverrides={_isUsingOverrides} overrideConv='{_currentConversationOverride}' " +
+                $"showLeft={showLeft} showRight={(rule.rightSprite != null)} leftSpriteSet={(rule.leftSprite != null)} rightSpriteSet={(rule.rightSprite != null)}");
+#endif
             _leftRoot.gameObject.SetActive(showLeft);
             if (showLeft && _leftImage != null)
             {

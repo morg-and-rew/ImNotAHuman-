@@ -181,7 +181,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         if (clip == null)
             return;
 
-        StopAllStations();
+        // Фоновая музыка (_stationSource) не останавливается — играет всегда независимо от шипения/озвучки радио.
+        // StopAllStations(); // убрано: шипение только на _voiceSource
 
         float vol = volumeOverride ?? _staticVolume;
         _voiceBaseVolume = vol;
@@ -282,7 +283,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         _phasedStory = story;
         _playerReplicaPlayed = false;
         StopStatic();
-        StopAllStations();
+        // Фоновая музыка не останавливается при озвучке сюжета по радио.
+        // StopAllStations(); // убрано
 
         if (!string.IsNullOrEmpty(story.conversationTitle))
         {
@@ -506,7 +508,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             _videoRoot.SetActive(true);
 
         StopStatic();
-        StopAllStations();
+        // Фоновая музыка не останавливается при воспроизведении видео с радио.
+        // StopAllStations(); // убрано
 
         _videoPlayer.loopPointReached -= OnVideoEnded;
         _videoPlayer.loopPointReached += OnVideoEnded;
@@ -596,6 +599,15 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         if (_stationSource == null || _stations == null || _currentStationIndex < 0 || _currentStationIndex >= _stations.Length) return;
         RadioStationEntry entry = _stations[_currentStationIndex];
         if (entry?.clip == null) return;
+
+        // Если уже играет эта же станция — только обновляем громкость, не перезапускаем (клик по радио не режет музыку).
+        if (_stationSource.isPlaying && _stationSource.clip == entry.clip)
+        {
+            _stationBaseVolume = entry.volume;
+            ApplyDistanceVolumeToSources();
+            return;
+        }
+
         StopAllStations();
         _stationBaseVolume = entry.volume;
         ApplyDistanceVolumeToSources();

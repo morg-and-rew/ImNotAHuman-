@@ -15,7 +15,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [SerializeField] private Transform _warehousePoint;
     [SerializeField] private Transform _clientPoint;
     [SerializeField] private Transform _postVideoTablePoint;
+    [Tooltip("Наклон камеры вниз (градусы) после видео Radio_Day1_2 и телепорта к столу. Меняй здесь, если камера смотрит под неправильным углом.")]
     [SerializeField] private float _postVideoCameraPitchDown = 32.8f;
+    [Tooltip("Поворот камеры по горизонтали (Yaw, градусы 0–360) после видео. Задаёт направление взгляда после телепорта к столу.")]
     [SerializeField] private float _postVideoCameraYaw = 244.4f;
     [Tooltip("Точка спавна игрока в начале второго дня.")]
     [SerializeField] private Transform _playerSpawnPoint;
@@ -586,8 +588,15 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 return false;
             if (BlockReturnUntilPlayerDay1_2ReplicaDone)
                 return false;
+
             if (_storyDirector != null && _storyDirector.IsRunning && !_storyDirector.IsStepAllowingTravelToClient)
-                return false;
+            {
+                // Разрешаем перемещения во время просмотра записи (после Client_Day1.5.3),
+                // но не разрешаем запуск радио-события до завершения видео (см. IsRadioEventAvailable).
+                bool duringWatchComputerVideo = _storyDirector.IsWaitingComputerVideo || _storyDirector.IsCurrentStepWatchComputerVideo;
+                if (!duringWatchComputerVideo)
+                    return false;
+            }
             if (GameStateService.RequiredPackageNumber > 0 && !CanLeaveWarehouseToClient())
                 return false;
             return true;
@@ -1017,6 +1026,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         _meetClientHintShown = true;
 
+        // Гарантированно убираем портреты клиентов при завершении диалога (на случай, если conversationEnded не сработал или порядок событий глючит).
+        _clientInteraction?.CloseUI();
+
         RemovePackageFromHands();
 
         _controller?.SetBlock(false);
@@ -1088,7 +1100,18 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public void ShowWarehousePickHint()
     {
         if (_tutorialHint == null) return;
-        if (!IsPackagePickAllowedByStory) return;
+        bool allowed = IsPackagePickAllowedByStory;
+        if (!allowed)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log(
+                $"[GameFlowController] ShowWarehousePickHint blocked. " +
+                $"requiredPackage={GameStateService.RequiredPackageNumber} acceptAny={_acceptAnyPackageForReturn} " +
+                $"waitingClientVideo={_storyDirector != null && _storyDirector.IsWaitingComputerVideo} " +
+                $"currentState={GameStateService.CurrentState} stepId='{_storyDirector?.CurrentStepId}'");
+#endif
+            return;
+        }
         _preferEmptyOverMeetClient = false;
         ShowHintOnceByKey(GameConfig.Tutorial.warehousePickKey);
     }
@@ -1179,7 +1202,14 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 _tutorialHint?.Show(key);
             }
             else if (!HasActiveTutorial())
+            {
                 _tutorialHint?.Show(GameConfig.Tutorial.emptyKey);
+            }
+            else
+            {
+                // Чтобы не оставлять "залипший" старый спрайт туториала при переходе на новый шаг.
+                _tutorialHint?.Hide();
+            }
             return;
         }
         // Уже показали этот шаг, ждём выполнения — не спамим (кроме подсказок текущего шага сюжета).
@@ -1189,6 +1219,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 _tutorialHint?.Show(key);
             else if (!HasActiveTutorial())
                 _tutorialHint?.Show(GameConfig.Tutorial.emptyKey);
+            else
+            {
+                _tutorialHint?.Hide();
+            }
             return;
         }
         _hintKeysDisplayed.Add(key);
@@ -1283,7 +1317,17 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public bool AcceptAnyPackageForReturn => _acceptAnyPackageForReturn;
 
-    public bool IsPackagePickAllowedByStory => GameStateService.RequiredPackageNumber > 0 || _acceptAnyPackageForReturn;
+    public bool IsPackagePickAllowedByStory
+    {
+        get
+        {
+            // Пока игрок находится на шаге просмотра видео (Client_Day1.5.3), не даём ломать сценарий
+            // через pickup посылок на складе и не показываем tutorial.warehouse_pick.
+            if (_storyDirector != null && (_storyDirector.IsWaitingComputerVideo || _storyDirector.IsCurrentStepWatchComputerVideo))
+                return false;
+            return GameStateService.RequiredPackageNumber > 0 || _acceptAnyPackageForReturn;
+        }
+    }
 
     public bool TryPerformPendingReturnToClient()
     {
@@ -1344,6 +1388,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public bool IsRadioEventAvailable(string id)
     {
         if (string.IsNullOrEmpty(id)) return false;
+        // Обучение: пока не досмотрели компьютер-видео (WatchComputerVideo / Radio video intro),
+        // радио-события не должны стартовать, даже если игрок уже может свободно перемещаться.
+        if (_storyDirector != null && (_storyDirector.IsWaitingComputerVideo || _storyDirector.IsCurrentStepWatchComputerVideo))
+            return false;
         bool ok = _radioAvailable.Contains(id) && !_radioPlayed.Contains(id) && !_radioExpired.Contains(id);
         return ok;
     }
@@ -1454,7 +1502,20 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             Teleport(point);
             GameStateService.SetState(GameState.Warehouse);
 
-            if (!freeTeleport && !_tutorialWarehouseVisit && _delivery != null && !_delivery.HasActiveTask)
+            bool blockDeliveryDuringClientVideo = _storyDirector != null && (_storyDirector.IsWaitingComputerVideo || _storyDirector.IsCurrentStepWatchComputerVideo);
+            if (blockDeliveryDuringClientVideo)
+            {
+                // Сбрасываем активную задачу посылок, чтобы pickup и туториал не происходили раньше сценария.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[GameFlowController] Enter Warehouse during client video. Clearing delivery. state='{GameStateService.CurrentState}' required={GameStateService.RequiredPackageNumber} stepId='{_storyDirector?.CurrentStepId}'");
+#endif
+                if (_delivery != null)
+                {
+                    _delivery.ClearTask();
+                }
+                GameStateService.SetRequiredPackage(0, enforceOnly: false);
+            }
+            else if (!freeTeleport && !_tutorialWarehouseVisit && _delivery != null && !_delivery.HasActiveTask)
             {
                 _delivery.ClearTask();
                 if (_fixedPackageForNextWarehouse > 0)
@@ -1471,8 +1532,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
             _travelTarget = TravelTarget.None;
             _lastTeleportDestination = TravelTarget.Warehouse;
+            // Закрываем UI клиента при прилёте на склад — иначе портреты могут остаться на экране (например при delayCloseForWarehouseFade).
+            _clientInteraction?.CloseUI();
             // Всегда до подписчиков OnTeleportedToWarehouse: иначе StoryDirector может выйти по раннему return
-            // (рассинхрон _wait: Idle, WaitingRadioComplete и т.д.) и игрок останется с SetBlock(true) после диалога.
             EnterClientDialogueState(false, movePlayerToClient: false);
             _controller?.SetBlock(false);
             OnTeleportedToWarehouse?.Invoke();

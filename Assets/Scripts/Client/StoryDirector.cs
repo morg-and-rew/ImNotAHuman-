@@ -39,6 +39,8 @@ public sealed class StoryDirector : MonoBehaviour
     public bool HasStoryStarted => _index >= 0;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
     public bool IsWaitingForRadioComplete => _wait == WaitMode.WaitingRadioComplete;
+    public bool IsWaitingComputerVideo => _wait == WaitMode.WaitingComputerVideo;
+    public bool IsCurrentStepWatchComputerVideo => _currentStep != null && _currentStep.type == StepType.WatchComputerVideo;
     public bool IsCurrentStepGoToRadio => _currentStep != null && _currentStep.type == StepType.GoToRadio;
     /// <summary> True, если текущий шаг — интро «go_to_radio»: пришли на склад после того как положили телефон (go_to_phone → go_to_warehouse_for_radio → go_to_radio). Иначе не показывать tutorial.radio_use. </summary>
     public bool IsIntroGoToRadioStep => IsCurrentStepGoToRadio
@@ -831,11 +833,12 @@ public sealed class StoryDirector : MonoBehaviour
         if (string.Equals(conv, "Client_Day1.5.2", StringComparison.OrdinalIgnoreCase))
         {
             _flow?.RemovePackageFromHands();
-            // После Client_Day1.5.2 автоматически запускаем Client_Day1.5.3; во время 1.5.3 игрок может передвигаться
+            // После Client_Day1.5.2 автоматически запускаем Client_Day1.5.3.
+            // В режиме обучения нельзя “срезать” скрипт: сначала должен быть просмотр записи, затем радио.
             _wait = WaitMode.WaitingDialogueEnd;
-            _controller?.SetBlock(false);
+            _controller?.SetBlock(true);
             GameStateService.SetState(GameState.ClientDialog);
-            StartCoroutine(ShowClientDialogueNextFrame("Client_Day1.5.3", lockMovement: false));
+            StartCoroutine(ShowClientDialogueNextFrame("Client_Day1.5.3", lockMovement: true));
             return;
         }
 
@@ -847,6 +850,13 @@ public sealed class StoryDirector : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             // После окончания Client_Day1.5.3 показываем туториал tutorial.watch_video
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log(
+                $"[StoryDirector] Client_Day1.5.3 completed -> show watch_video. " +
+                $"currentStep='{_currentStep?.stepId}', wait='{_wait}', " +
+                $"state='{GameStateService.CurrentState}', requiredPackage={GameStateService.RequiredPackageNumber}, " +
+                $"acceptAny={_flow != null && _flow.AcceptAnyPackageForReturn}");
+#endif
             _flow?.ShowHintOnceByKey(GameConfig.Tutorial?.watchVideoKey ?? "tutorial.watch_video");
             _wait = WaitMode.Idle;
             Advance();
@@ -991,6 +1001,14 @@ public sealed class StoryDirector : MonoBehaviour
             gfc?.RefreshWarehouseDeliveryNote();
             if (!_warehousePickHintShown)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log(
+                    $"[StoryDirector] TeleportedToWarehouse -> step go_warehouse_after_day1_5. " +
+                    $"showWarehousePickHint now. currentStep='{_currentStep?.stepId}', " +
+                    $"state='{GameStateService.CurrentState}', requiredPackage={GameStateService.RequiredPackageNumber}, " +
+                    $"acceptAny={(gfc != null ? gfc.AcceptAnyPackageForReturn : false)}, " +
+                    $"waitModeAfterTeleport='{_wait}'");
+#endif
                 _warehousePickHintShown = true;
                 gfc?.ShowWarehousePickHint();
             }
@@ -1008,6 +1026,12 @@ public sealed class StoryDirector : MonoBehaviour
             gfc?.RefreshWarehouseDeliveryNote();
             if (!_warehousePickHintShown)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log(
+                    $"[StoryDirector] TeleportedToWarehouse -> step go_warehouse_day2_auto. " +
+                    $"showWarehousePickHint now. state='{GameStateService.CurrentState}', " +
+                    $"requiredPackage={GameStateService.RequiredPackageNumber}, acceptAny={(gfc != null && gfc.AcceptAnyPackageForReturn)}");
+#endif
                 _warehousePickHintShown = true;
                 gfc?.ShowWarehousePickHint();
             }

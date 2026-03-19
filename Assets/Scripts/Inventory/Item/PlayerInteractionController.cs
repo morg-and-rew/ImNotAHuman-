@@ -87,8 +87,9 @@ public sealed class PlayerInteractionController
                 sprite = worldInteractable.HintSprite;
             else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
             {
+                // Для «не той» посылки: если коробка не повёрнута — показываем «Q — повернуть», иначе подсказку про диалог.
                 if (IsWrongPackageForStory(pkg))
-                    sprite = pkg.HintSpriteWrongPackage;
+                    sprite = pkg.CanPickupByRotation ? pkg.HintSpriteWrongPackage : pkg.HintSpriteRotate;
                 else
                     sprite = pkg.HintSprite;
             }
@@ -169,6 +170,13 @@ public sealed class PlayerInteractionController
 
         if (holdable is PackageHoldable pkg)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log(
+                $"[PlayerInteractionController] TryPickItem PackageHoldable. " +
+                $"state={GameStateService.CurrentState} requiredPackage={GameStateService.RequiredPackageNumber} acceptAny={_flow != null && _flow.AcceptAnyPackageForReturn} " +
+                $"allowedByStory={_flow != null && _flow.IsPackagePickAllowedByStory} canPickupByRotation={pkg.CanPickupByRotation} currentAngleY={pkg.transform.eulerAngles.y} " +
+                $"isWrongPackageForStory={IsWrongPackageForStory(pkg)}");
+#endif
             // Любая попытка взаимодействия (взять или показать «не та посылка»)
             // возможна только когда коробка уже стоит правильно (0° по Y).
             if (!pkg.CanPickupByRotation)
