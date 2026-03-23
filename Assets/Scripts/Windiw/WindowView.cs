@@ -50,7 +50,7 @@ public sealed class WindowView : MonoBehaviour
     private void Start()
     {
         if (_gameSoundController == null)
-            _gameSoundController = FindFirstObjectByType<GameSoundController>();
+            _gameSoundController = GameSoundController.Instance;
         if (_fullScreenImage != null)
         {
             _fullScreenImage.gameObject.SetActive(false);

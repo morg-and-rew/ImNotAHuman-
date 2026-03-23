@@ -83,9 +83,9 @@ public sealed class PlayerInteractionController
         Sprite sprite = null;
         if (!preferClientHint)
         {
-            if (worldInteractable != null)
+            if (worldInteractable != null && IsWorldInteractableFeedbackAllowed(worldInteractable))
                 sprite = worldInteractable.HintSprite;
-            else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
+            else if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem && IsPackageFrontAccessible(pkg))
             {
                 // Для «не той» посылки: если коробка не повёрнута — показываем «Q — повернуть», иначе подсказку про диалог.
                 if (IsWrongPackageForStory(pkg))
@@ -123,13 +123,20 @@ public sealed class PlayerInteractionController
             return null;
         if (worldInteractable is RouterInteractable router && router.HintSprite == null)
             return null;
-        if (worldInteractable != null)
+        if (worldInteractable != null && IsWorldInteractableFeedbackAllowed(worldInteractable))
             return GetOutlineFrom((worldInteractable as MonoBehaviour));
-        if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem)
+        if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem && IsPackageFrontAccessible(pkg))
             return GetOutlineFrom(pkg as MonoBehaviour);
         if (holdable is PhoneItemView && IsHoldableAllowed(holdable))
             return GetOutlineFrom((holdable as MonoBehaviour));
         return null;
+    }
+
+    private static bool IsWorldInteractableFeedbackAllowed(IWorldInteractable worldInteractable)
+    {
+        if (worldInteractable is RadioInteractable radio)
+            return radio.CanShowInteractionFeedback();
+        return true;
     }
 
     /// <summary> Ищем InteractableOutline на том же объекте, родителе или в детях — у телефона коллайдер часто на корне, а outline на дочернем (55/model_0_1). </summary>
@@ -163,6 +170,11 @@ public sealed class PlayerInteractionController
             && pkg.Number != GameStateService.RequiredPackageNumber;
     }
 
+    private bool IsPackageFrontAccessible(PackageHoldable pkg)
+    {
+        return pkg != null && pkg.IsInteractableFromFront(_playerView != null ? _playerView.transform : null);
+    }
+
     private void TryPickItem(IHoldable holdable)
     {
         if (_hands.HasItem || holdable == null)
@@ -180,6 +192,10 @@ public sealed class PlayerInteractionController
             // Любая попытка взаимодействия (взять или показать «не та посылка»)
             // возможна только когда коробка уже стоит правильно (0° по Y).
             if (!pkg.CanPickupByRotation)
+                return;
+
+            // Брать/взаимодействовать с коробкой можно только с фронтальной стороны стеллажа.
+            if (!IsPackageFrontAccessible(pkg))
                 return;
 
             // Неправильная посылка по сюжету: E → только диалог, без подъёма.

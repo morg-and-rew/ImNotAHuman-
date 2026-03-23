@@ -24,6 +24,7 @@ public sealed class InteractionRaycastCache
     private readonly List<Vector3> _debugDirections = new List<Vector3>(8);
 
     private static readonly List<MonoBehaviour> _componentBuffer = new List<MonoBehaviour>(8);
+    private static readonly RaycastHit[] _hitsBuffer = new RaycastHit[16];
 
     public void Refresh(Camera camera)
     {
@@ -66,10 +67,13 @@ public sealed class InteractionRaycastCache
 
         _hasHit = false;
         Ray ray = new Ray(origin, forward);
-        if (Physics.Raycast(ray, out RaycastHit h, Distance))
+        if (TrySelectInteractionHit(ray, out RaycastHit h, out IHoldable holdable, out IWorldInteractable worldInteractable))
         {
             _hit = h;
             _hasHit = true;
+            _lastCollider = h.collider;
+            _cachedHoldable = holdable;
+            _cachedWorldInteractable = worldInteractable;
         }
 
         if (!_hasHit)
@@ -155,7 +159,7 @@ public sealed class InteractionRaycastCache
     {
         if (!_hasHit || _hit.collider == null) return null;
 
-        if (_hit.collider == _lastCollider && _cachedHoldable != null)
+        if (_hit.collider == _lastCollider)
             return _cachedHoldable;
 
         if (_hit.collider != _lastCollider)
@@ -172,7 +176,7 @@ public sealed class InteractionRaycastCache
     {
         if (!_hasHit || _hit.collider == null) return null;
 
-        if (_hit.collider == _lastCollider && _cachedWorldInteractable != null)
+        if (_hit.collider == _lastCollider)
             return _cachedWorldInteractable;
 
         if (_hit.collider != _lastCollider)
@@ -199,5 +203,87 @@ public sealed class InteractionRaycastCache
             t = t.parent;
         }
         return null;
+    }
+
+    private static bool TrySelectInteractionHit(Ray ray, out RaycastHit selectedHit, out IHoldable selectedHoldable, out IWorldInteractable selectedWorldInteractable)
+    {
+        selectedHit = default;
+        selectedHoldable = null;
+        selectedWorldInteractable = null;
+
+        int hitsCount = Physics.RaycastNonAlloc(ray, _hitsBuffer, Distance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        if (hitsCount <= 0)
+            return false;
+
+        // Делаем порядок стабильным, чтобы всегда выбирать ближайшее подходящее попадание.
+        System.Array.Sort(_hitsBuffer, 0, hitsCount, RaycastHitDistanceComparer.Instance);
+
+        int fallbackHitIndex = -1;
+        int worldHitIndex = -1;
+        int holdableHitIndex = -1;
+
+        IWorldInteractable worldCandidate = null;
+        IHoldable holdableCandidate = null;
+
+        for (int i = 0; i < hitsCount; i++)
+        {
+            Collider col = _hitsBuffer[i].collider;
+            if (col == null)
+                continue;
+
+            if (fallbackHitIndex < 0)
+                fallbackHitIndex = i;
+
+            IHoldable holdable = FindHoldableInParent(col.transform);
+            if (holdable != null)
+            {
+                holdableHitIndex = i;
+                holdableCandidate = holdable;
+                break;
+            }
+
+            if (worldHitIndex < 0)
+            {
+                IWorldInteractable world = col.GetComponentInParent<IWorldInteractable>();
+                if (world != null)
+                {
+                    worldHitIndex = i;
+                    worldCandidate = world;
+                }
+            }
+        }
+
+        if (holdableHitIndex >= 0)
+        {
+            selectedHit = _hitsBuffer[holdableHitIndex];
+            selectedHoldable = holdableCandidate;
+            selectedWorldInteractable = selectedHit.collider.GetComponentInParent<IWorldInteractable>();
+            return true;
+        }
+
+        if (worldHitIndex >= 0)
+        {
+            selectedHit = _hitsBuffer[worldHitIndex];
+            selectedWorldInteractable = worldCandidate;
+            return true;
+        }
+
+        if (fallbackHitIndex >= 0)
+        {
+            selectedHit = _hitsBuffer[fallbackHitIndex];
+            return true;
+        }
+
+        return false;
+    }
+
+    private sealed class RaycastHitDistanceComparer : IComparer<RaycastHit>
+    {
+        public static readonly RaycastHitDistanceComparer Instance = new RaycastHitDistanceComparer();
+
+        public int Compare(RaycastHit x, RaycastHit y)
+        {
+            return x.distance.CompareTo(y.distance);
+        }
     }
 }

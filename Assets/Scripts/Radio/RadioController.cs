@@ -67,6 +67,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private float _nextVolumeLogTime;
     private float _lastLoggedStationVolume = -1f;
     private float _lastLoggedVoiceVolume = -1f;
+    private float _currentStaticVolume;
 
     public Sprite HintSprite => _hintSprite;
 
@@ -76,6 +77,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         _customDialogueUI = _customDialogueUIRef ?? GameFlowController.Instance?.CustomDialogueUI;
         _stationBaseVolume = _stationSource != null ? _stationSource.volume : 1f;
         _voiceBaseVolume = _voiceSource != null ? _voiceSource.volume : 1f;
+        _currentStaticVolume = _staticVolume;
 
         // При старте играет только станция; статик включается только после ActivateRadioEvent (подсказка «послушай радио»).
         _staticPlaying = false;
@@ -102,6 +104,9 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             _videoPlayer.prepareCompleted += OnVideoPrepared;
             _videoPlayer.errorReceived += OnVideoError;
         }
+
+        if (DialogueManager.instance != null)
+            DialogueManager.instance.conversationStarted += OnAnyConversationStarted;
     }
 
     private void Update()
@@ -135,8 +140,18 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             _videoPlayer.prepareCompleted -= OnVideoPrepared;
             _videoPlayer.errorReceived -= OnVideoError;
         }
+        if (DialogueManager.instance != null)
+            DialogueManager.instance.conversationStarted -= OnAnyConversationStarted;
         SetRadioDialogueAutoAdvance(false);
         SetVideoControlLock(false);
+    }
+
+    private void OnAnyConversationStarted(Transform _)
+    {
+        // После старта Client_Day1.3 помех быть не должно: выключаем статик сразу.
+        string title = DialogueManager.lastConversationStarted ?? string.Empty;
+        if (string.Equals(title, "Client_Day1.3", System.StringComparison.OrdinalIgnoreCase))
+            StopStatic();
     }
 
     private void OnRadioEventActivated(string id, float? volumeOverride)
@@ -146,7 +161,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         {
             if (_voiceSource != null)
             {
-                float vol = volumeOverride ?? _staticVolume;
+                float vol = volumeOverride ?? _currentStaticVolume;
+                _currentStaticVolume = vol;
                 _voiceBaseVolume = vol;
                 ApplyDistanceVolumeToSources();
             }
@@ -157,6 +173,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     private void OnRadioStaticVolumeRequested(float volume)
     {
+        _currentStaticVolume = volume;
         if (_staticPlaying && _voiceSource != null)
         {
             _voiceBaseVolume = volume;
@@ -184,7 +201,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         // Фоновая музыка (_stationSource) не останавливается — играет всегда независимо от шипения/озвучки радио.
         // StopAllStations(); // убрано: шипение только на _voiceSource
 
-        float vol = volumeOverride ?? _staticVolume;
+        float vol = volumeOverride ?? _currentStaticVolume;
+        _currentStaticVolume = vol;
         _voiceBaseVolume = vol;
         ApplyDistanceVolumeToSources();
         _voiceSource.clip = clip;
@@ -254,6 +272,19 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
             if (flow.IsRadioEventAvailable(ev.eventId)) return ev;
         }
         return null;
+    }
+
+    public bool CanShowInteractionFeedback()
+    {
+        if (_waitingStoryEnd || _waitingPlayerReplica || _waitingForLeaveWarehouseBeforeVideo || _waitingVideoEnd)
+            return false;
+
+        GameFlowController flow = GameFlowController.Instance;
+        if (flow == null)
+            return false;
+
+        // Для радио показываем подсветку/иконку только когда есть доступный сюжетный запуск.
+        return GetFirstAvailableStoryEvent(flow) != null;
     }
 
     private void PlayStoryEvent(GameFlowController flow, RadioEventData story)

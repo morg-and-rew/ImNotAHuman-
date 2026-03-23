@@ -3,8 +3,11 @@ using UnityEngine;
 /// <summary>
 /// Централизованное воспроизведение звуков игры: переход склад/зона, шаги и т.д.
 /// </summary>
+[DefaultExecutionOrder(-200)]
 public sealed class GameSoundController : MonoBehaviour
 {
+    public static GameSoundController Instance { get; private set; }
+
     [Header("Переход склад ↔ зона")]
     [Tooltip("Звук при переходе на склад и обратно (тихий).")]
     [SerializeField] private AudioClip _travelTransitionClip;
@@ -56,6 +59,13 @@ public sealed class GameSoundController : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
         if (_footstepSource == null)
             _cachedFootstepSource = GetComponent<AudioSource>();
         else
@@ -64,6 +74,12 @@ public sealed class GameSoundController : MonoBehaviour
             _cachedFootstepSource = gameObject.AddComponent<AudioSource>();
         if (_phoneOngoingSource == null)
             _phoneOngoingSource = gameObject.AddComponent<AudioSource>();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 
     /// <summary> Воспроизвести звук перехода склад/зона в заданной позиции. </summary>

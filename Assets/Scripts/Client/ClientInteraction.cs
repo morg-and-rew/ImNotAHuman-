@@ -17,8 +17,11 @@ public struct ClientDialogueStepCompletionData
     }
 }
 
+[DefaultExecutionOrder(-200)]
 public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 {
+    public static ClientInteraction Instance { get; private set; }
+
     [Header("Dialogue Sequence")]
     [SerializeField] private ClientPortraitMap _portraitMap;
 
@@ -54,6 +57,12 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
     [Header("Сторона (откуда можно пустить клиента)")]
     [Tooltip("Точка на «правильной» стороне (например перед стойкой). Если задана — E срабатывает только когда игрок с этой же стороны относительно клиента.")]
     [SerializeField] private Transform _allowedSidePoint;
+    [Tooltip("Если точка Allowed Side Point не задана, используем forward клиента для отсечения 'стороны клиента'.")]
+    [SerializeField] private bool _useForwardSideFallback = true;
+    [Tooltip("Инвертировать fallback-проверку стороны (если forward направлен не в нашу сторону).")]
+    [SerializeField] private bool _invertForwardSideFallback = false;
+    [Tooltip("Порог dot для проверки стороны. 0 = полуплоскость; 0.1..0.3 = строже.")]
+    [SerializeField, Range(-1f, 1f)] private float _allowedSideDotThreshold = 0f;
 
     public bool IsActive { get; private set; }
     public bool IsPlayerInside { get; private set; }
@@ -113,6 +122,13 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
         if (_leftRoot != null)
         {
             _originalLeftAnchoredPosition = _leftRoot.anchoredPosition;
@@ -129,6 +145,12 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         SetClientPortraitsRootActive(false);
 
         HidePortraits();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 
     private void Start()
@@ -202,15 +224,36 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private bool IsPlayerOnAllowedSide(PlayerView player, Vector3 lookAtPosition)
     {
-        if (_allowedSidePoint == null) return true;
-        Vector3 normal = (lookAtPosition - _allowedSidePoint.position).normalized;
-        normal.y = 0f;
-        if (normal.sqrMagnitude < 0.0001f) return true;
+        if (player == null) return false;
+
         Vector3 playerOffset = player.transform.position - lookAtPosition;
         playerOffset.y = 0f;
-        float dotAllowed = Vector3.Dot(_allowedSidePoint.position - lookAtPosition, normal);
-        float dotPlayer = Vector3.Dot(playerOffset, normal);
-        return Mathf.Sign(dotPlayer) == Mathf.Sign(dotAllowed);
+        if (playerOffset.sqrMagnitude < 0.0001f) return true;
+        playerOffset.Normalize();
+
+        if (_allowedSidePoint != null)
+        {
+            Vector3 allowedDir = _allowedSidePoint.position - lookAtPosition;
+            allowedDir.y = 0f;
+            if (allowedDir.sqrMagnitude < 0.0001f) return true;
+            allowedDir.Normalize();
+
+            float dot = Vector3.Dot(playerOffset, allowedDir);
+            return dot >= _allowedSideDotThreshold;
+        }
+
+        if (!_useForwardSideFallback)
+            return true;
+
+        Vector3 fallbackDir = transform.forward;
+        fallbackDir.y = 0f;
+        if (fallbackDir.sqrMagnitude < 0.0001f) return true;
+        fallbackDir.Normalize();
+        if (_invertForwardSideFallback)
+            fallbackDir = -fallbackDir;
+
+        float fallbackDot = Vector3.Dot(playerOffset, fallbackDir);
+        return fallbackDot >= _allowedSideDotThreshold;
     }
 
     private void Update()

@@ -68,7 +68,7 @@ public sealed class PlayerInstaller : MonoBehaviour
         _playerView = _playerSpawner.SpawnPlayer();
         PlayerView playerView = _playerView;
         if (_gameSoundController == null)
-            _gameSoundController = FindFirstObjectByType<GameSoundController>();
+            _gameSoundController = GameSoundController.Instance;
         if (_gameSoundController != null)
             playerView.SetGameSoundController(_gameSoundController);
 
@@ -100,6 +100,9 @@ public sealed class PlayerInstaller : MonoBehaviour
         _interactionController = new PlayerInteractionController(playerView, _playerInput, hands, _clientInteraction, _raycastCache, _gameFlowController);
 
         _computer.Initialize(playerView.PlayerCamera);
+
+        // Ссылка нужна корутине стартового меню, которую GameFlowController запускает внутри Init().
+        _gameFlowController.SetInputRebindMenu(_rebindMenu);
 
         _gameFlowController.Init(playerView, _playerController, _playerInput, _clientInteraction, playerView.DeliveryNoteView,
             _dialogueSystemController?.DialogueUI as CustomDialogueUI);

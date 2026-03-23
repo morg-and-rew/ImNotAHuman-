@@ -568,6 +568,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &17789176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3524,6 +3525,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &259499220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4582,6 +4584,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &288402241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6650,6 +6653,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &409629286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6868,6 +6872,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!65 &423303585
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7026,6 +7031,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &433717419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8791,6 +8797,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &547252962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9799,6 +9806,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &616548511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10290,6 +10298,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &637218368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11656,6 +11665,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &724158071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12018,6 +12028,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &738219972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12798,6 +12809,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &780101456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12859,6 +12871,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &783288258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13745,6 +13758,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &833957280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13806,6 +13820,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &838163777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14247,6 +14262,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!65 &853744010
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14910,6 +14926,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &903735416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15384,6 +15401,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &927665821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15677,6 +15695,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &955010626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16050,6 +16069,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &987154861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16916,6 +16936,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1010746410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17641,6 +17662,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1041060807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19249,6 +19271,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1089488157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19527,6 +19550,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!65 &1125636995
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19789,6 +19813,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1164816977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19850,6 +19875,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1177566188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20129,6 +20155,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1222007646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20573,6 +20600,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!65 &1229230319
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20731,6 +20759,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1232483839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20792,6 +20821,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1234666636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21191,6 +21221,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1266925716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21252,6 +21283,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1272990158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21389,8 +21421,11 @@ MonoBehaviour:
   _debugPortraits: 0
   _hintSprite: {fileID: 21300000, guid: 7868e66454e4a5348aba9483c3809388, type: 3}
   _lookAtPoint: {fileID: 1282888860}
-  _maxLookDistance: 2.1
+  _maxLookDistance: 1.75
   _allowedSidePoint: {fileID: 1282888860}
+  _useForwardSideFallback: 1
+  _invertForwardSideFallback: 0
+  _allowedSideDotThreshold: 0
 --- !u!23 &1282888858
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21591,6 +21626,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1283993104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23049,6 +23085,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1351986305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23444,6 +23481,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1365012449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24197,6 +24235,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: baafe08ec17650e45bc65581405db0ea, type: 2}
     - target: {fileID: -6343548734507196213, guid: 7ad170ebb5d6576429b24de19c5eec46, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6343548734507196213, guid: 7ad170ebb5d6576429b24de19c5eec46, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -24766,6 +24808,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1433038944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25119,6 +25162,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1456355593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25180,6 +25224,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1461736931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26389,6 +26434,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1482429128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26467,6 +26513,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1485241652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27503,6 +27550,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1548094093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27574,6 +27622,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1559031683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29205,6 +29254,9 @@ MonoBehaviour:
   _uiTextTable: {fileID: 11400000, guid: 3bb7a3e023e0ead468a0dbf6788d2f83, type: 2}
   _language: ru
   _tutorialHint: {fileID: 613144413}
+  _showMainMenuOnStart: 1
+  _mainMenuBackground: {fileID: 21300000, guid: eae9010da23b6034e9f7b9d1fa5beae8, type: 3}
+  _mainMenuFont: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   _delivery: {fileID: 1255302249}
   _freeTeleportToWarehousePoint: {fileID: 888203572}
   _freeTeleportToClientPoint: {fileID: 878373952}
@@ -29574,6 +29626,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1665124340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30072,6 +30125,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1686770108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30133,6 +30187,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1692742011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30381,6 +30436,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1723696010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30554,6 +30610,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1733073965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30615,6 +30672,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1733305739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30676,6 +30734,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1736739436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30737,6 +30796,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1750468491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30893,6 +30953,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1778359129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31528,6 +31589,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1822710144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31679,6 +31741,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1841994041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32623,6 +32686,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!65 &1899385095
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32957,6 +33021,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!65 &1917406369
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33124,6 +33189,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1927448615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33740,6 +33806,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &1975865123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33955,6 +34022,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!65 &1999823685
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34023,6 +34091,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &2004526292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35084,6 +35153,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!65 &2077753642
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35226,6 +35296,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &2086762695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35373,6 +35444,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &2091926059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35957,6 +36029,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &2101709900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36023,6 +36096,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &2108832586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36196,6 +36270,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &2118440349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36797,6 +36872,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &2136848916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36933,6 +37009,7 @@ MonoBehaviour:
   _rotationSpeedDegPerSec: 180
   _takeAngleFromScene: 1
   _takeAngleYOverride: 0
+  _minFrontSideDot: 0
 --- !u!114 &2146051168
 MonoBehaviour:
   m_ObjectHideFlags: 0

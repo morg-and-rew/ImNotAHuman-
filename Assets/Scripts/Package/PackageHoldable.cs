@@ -23,11 +23,15 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
     [SerializeField] private bool _takeAngleFromScene = true;
     [Tooltip("Используется только если Take Angle From Scene выключен. Угол Y (0–360°), при котором коробка «правильно» (номер к игроку).")]
     [SerializeField, Range(0f, 360f)] private float _takeAngleYOverride = 0f;
+    [Header("Pickup Side")]
+    [Tooltip("Минимальный dot для фронтальной стороны. 0 = только передняя полусфера; 0.2..0.4 = строже.")]
+    [SerializeField, Range(-1f, 1f)] private float _minFrontSideDot = 0f;
 
     private float _targetAngleY;
     private bool _isRotating;
     /// <summary> Угол Y, при котором коробка «правильно» повёрнута (номер к игроку). Заполняется в Start() из сцены или из _takeAngleYOverride. </summary>
     private float _takeAngleY;
+    private Vector3 _frontDirectionWorld;
 
     public int Number => _packageItem != null ? _packageItem.Number : 0;
     /// <summary> Подсказка: «Q — повернуть» если коробка не в позиции «взять», иначе подсказка взять. </summary>
@@ -55,6 +59,8 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
 
     private void Start()
     {
+        CacheFrontDirection();
+
         // Угол «взять»: из сцены (как расставлено — номер к игроку) или ручной в инспекторе. Делаем в Start(), чтобы все Awake и расстановка уже применились.
         if (_takeAngleFromScene)
             _takeAngleY = GetCurrentAngleY();
@@ -62,6 +68,25 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
             _takeAngleY = _takeAngleYOverride;
 
         SetRandomRotationStep();
+    }
+
+    public bool IsInteractableFromFront(Transform interactor)
+    {
+        if (interactor == null)
+            return true;
+
+        Vector3 toInteractor = interactor.position - transform.position;
+        toInteractor.y = 0f;
+        if (toInteractor.sqrMagnitude < 0.0001f)
+            return true;
+        toInteractor.Normalize();
+
+        Vector3 front = _frontDirectionWorld;
+        if (front.sqrMagnitude < 0.0001f)
+            front = GetHorizontalNormalized(transform.forward);
+
+        float dot = Vector3.Dot(front, toInteractor);
+        return dot >= _minFrontSideDot;
     }
 
     private void Update()
@@ -117,6 +142,19 @@ public sealed class PackageHoldable : HoldableViewBase, IHandPointProvider
         int index = Random.Range(0, steps);
         float y = index * RotationStepDeg;
         SetAngleY(y);
+    }
+
+    private void CacheFrontDirection()
+    {
+        _frontDirectionWorld = GetHorizontalNormalized(transform.forward);
+    }
+
+    private static Vector3 GetHorizontalNormalized(Vector3 direction)
+    {
+        direction.y = 0f;
+        if (direction.sqrMagnitude < 0.0001f)
+            return Vector3.forward;
+        return direction.normalized;
     }
 
     public override void OnTaken(Transform handPoint)

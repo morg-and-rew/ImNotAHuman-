@@ -26,6 +26,7 @@ public sealed class GameSaveData
 public sealed class GameSaveSystem : MonoBehaviour
 {
     private static GameSaveSystem _instance;
+    private static bool? _loadFromSaveAtStartOverride;
 
     [Header("Save Settings")]
     [Tooltip("Имя основного файла сохранения в Application.persistentDataPath. Слоты 1–3 пишутся как save_slot1.json, save_slot2.json, save_slot3.json.")]
@@ -43,7 +44,14 @@ public sealed class GameSaveSystem : MonoBehaviour
     [SerializeField] [Range(0, 3)] private int _alsoSaveToSlot = 0;
 
     /// <summary>При старте игры загружать сохранение и продолжать со 2-го дня (галочка в инспекторе).</summary>
-    public static bool LoadFromSaveAtStart => _instance != null && _instance._loadFromSaveAtStart;
+    public static bool LoadFromSaveAtStart =>
+        _loadFromSaveAtStartOverride ?? (_instance != null && _instance._loadFromSaveAtStart);
+
+    public static bool HasLoadFromSaveAtStartOverride => _loadFromSaveAtStartOverride.HasValue;
+
+    public static void SetLoadFromSaveAtStartOverride(bool value) => _loadFromSaveAtStartOverride = value;
+
+    public static void ClearLoadFromSaveAtStartOverride() => _loadFromSaveAtStartOverride = null;
 
     private void Awake()
     {

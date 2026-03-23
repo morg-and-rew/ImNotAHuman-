@@ -38,6 +38,14 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [Header("Tutorial")]
     [SerializeField] private TutorialHintView _tutorialHint;
 
+    [Header("Main Menu (Start Screen)")]
+    [Tooltip("Показывать стартовое меню (Continue / New Game / Options / Exit) перед началом сюжета.")]
+    [SerializeField] private bool _showMainMenuOnStart = true;
+    [Tooltip("Фоновая картинка для стартового меню (используется как обычный Image). Если не задана — будет черный фон.")]
+    [SerializeField] private Sprite _mainMenuBackground;
+    [Tooltip("Шрифт TextMeshPro для кнопок стартового меню. Если не задан — используется TMP default.")]
+    [SerializeField] private TMPro.TMP_FontAsset _mainMenuFont;
+
     [Header("Delivery (optional)")]
     [SerializeField] private WarehouseDeliveryController _delivery;
 
@@ -117,6 +125,13 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     /// <summary> True, если сейчас выполняется переход на склад с предварительным полным затемнением (F из диалога Client_Day1.4). </summary>
     public bool IsWarehouseTravelFromDialogueAfterFade => _warehouseTravelFromDialogueAfterFade;
+
+    private enum MainMenuChoice
+    {
+        None,
+        Continue,
+        NewGame
+    }
 
     /// <summary> Ключи туториалов, которые игрок уже выполнил — больше не показываем. </summary>
     private readonly HashSet<string> _hintKeysShownOnce = new HashSet<string>();
@@ -362,7 +377,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         _initialized = true;
         if (_gameSoundController == null)
-            _gameSoundController = FindFirstObjectByType<GameSoundController>();
+            _gameSoundController = GameSoundController.Instance;
 
         // Интро только в 1-й день при старте с нуля; при загрузке сохранения не показываем
         if (_introView != null)
@@ -396,6 +411,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         DialogueManager.SetLanguage(_language);
 
+        if (_showMainMenuOnStart)
+        {
+            StartCoroutine(ShowMainMenuThenStart());
+            return;
+        }
+
         if (GameSaveSystem.LoadFromSaveAtStart && GameSaveSystem.LoadDay1() != null)
         {
             StartCoroutine(StartFromSavedGameDelayed());
@@ -404,6 +425,118 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         EnterIntro();
     }
+
+    private System.Collections.IEnumerator ShowMainMenuThenStart()
+    {
+        // Важно: GameFlowController.Init уже вызван, но сюжет должен ждать выбор пользователя.
+        if (_introView != null)
+        {
+            _introView.Stop();
+            _introView.gameObject.SetActive(false);
+        }
+
+        _tutorialHint?.Hide();
+        TutorialHintView.Instance?.Hide();
+
+        _controller?.SetBlock(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        InputRebindMenu rebindMenu = _inputRebindMenu;
+        if (rebindMenu != null)
+            rebindMenu.gameObject.SetActive(false);
+
+        bool optionsOpen = false;
+        bool canContinue = GameSaveSystem.LoadDay1() != null;
+
+        MainMenuChoice choice = MainMenuChoice.None;
+        bool exitRequested = false;
+
+        MainMenuUI menu = MainMenuUI.Create(
+            backgroundSprite: _mainMenuBackground,
+            font: _mainMenuFont != null ? _mainMenuFont : TMPro.TMP_Settings.defaultFontAsset,
+            canContinue: canContinue,
+            onContinue: () => choice = MainMenuChoice.Continue,
+            onNewGame: () => choice = MainMenuChoice.NewGame,
+            onOptions: () =>
+            {
+                optionsOpen = !optionsOpen;
+                if (rebindMenu != null)
+                    rebindMenu.gameObject.SetActive(optionsOpen);
+
+                // Чтобы не было конфликтов с кликами по "слою" меню.
+                _mainMenuUI?.SetButtonsInteractable(
+                    canContinue: optionsOpen ? false : canContinue,
+                    newGameEnabled: optionsOpen ? false : true,
+                    exitEnabled: optionsOpen ? false : true,
+                    optionsEnabled: true);
+
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            },
+            onExit: () =>
+            {
+                exitRequested = true;
+                choice = MainMenuChoice.None;
+            });
+
+        _mainMenuUI = menu;
+        menu.SetButtonsInteractable(canContinue, newGameEnabled: true, exitEnabled: true, optionsEnabled: true);
+
+        // Ждём выбора пользователя.
+        while (choice == MainMenuChoice.None && !exitRequested)
+        {
+            // ESC закрывает Options, если оно открыто.
+            if (optionsOpen && Input.GetKeyDown(KeyCode.Escape))
+            {
+                optionsOpen = false;
+                if (rebindMenu != null)
+                    rebindMenu.gameObject.SetActive(false);
+
+                menu.SetButtonsInteractable(
+                    canContinue: canContinue,
+                    newGameEnabled: true,
+                    exitEnabled: true,
+                    optionsEnabled: true);
+            }
+
+            yield return null;
+        }
+
+        if (rebindMenu != null)
+            rebindMenu.gameObject.SetActive(false);
+
+        if (_mainMenuUI != null)
+            Destroy(_mainMenuUI.gameObject);
+        _mainMenuUI = null;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        if (exitRequested)
+        {
+            // В редакторе корректнее остановить Play Mode.
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            Application.Quit();
+            yield break;
+        }
+
+        // Continue: загрузим сейв и сразу стартуем второй день (без интро).
+        if (choice == MainMenuChoice.Continue)
+        {
+            yield return StartCoroutine(StartFromSavedGameDelayed());
+            yield break;
+        }
+
+        // New Game: обычное вступление/интро как в текущей логике.
+        GameSaveSystem.SetLoadFromSaveAtStartOverride(false);
+        EnterIntro();
+    }
+
+    private MainMenuUI _mainMenuUI;
+    private InputRebindMenu _inputRebindMenu;
 
     private System.Collections.IEnumerator StartFromSavedGameDelayed()
     {
@@ -423,6 +556,14 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         {
             _storyDirector.StartStory();
         }
+    }
+
+    /// <summary>
+    /// Передаём ссылку на меню переназначения клавиш, чтобы не искать его по сцене.
+    /// </summary>
+    public void SetInputRebindMenu(InputRebindMenu menu)
+    {
+        _inputRebindMenu = menu;
     }
 
     private void EnterIntro()
@@ -457,6 +598,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         yield return WaitForSecondsCache.Get(seconds);
 
+        bool hasOverride = GameSaveSystem.HasLoadFromSaveAtStartOverride;
+
         if (GameSaveSystem.LoadFromSaveAtStart)
         {
             Day1SaveData loaded = GameSaveSystem.LoadDay1();
@@ -465,9 +608,14 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 _storyDirector.ApplyDay1Save(loaded);
                 MarkDay1TutorialCompleted();
                 _storyDirector.StartStoryFromStepId("fade_to_black_day1_end");
+                if (hasOverride)
+                    GameSaveSystem.ClearLoadFromSaveAtStartOverride();
                 yield break;
             }
         }
+
+        if (hasOverride)
+            GameSaveSystem.ClearLoadFromSaveAtStartOverride();
 
         _storyDirector.StartStory();
     }

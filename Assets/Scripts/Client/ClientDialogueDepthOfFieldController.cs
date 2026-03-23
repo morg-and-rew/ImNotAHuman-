@@ -24,7 +24,7 @@ public sealed class ClientDialogueDepthOfFieldController : MonoBehaviour
     private void Awake()
     {
         if (_clientInteraction == null)
-            _clientInteraction = FindFirstObjectByType<ClientInteraction>();
+            _clientInteraction = ClientInteraction.Instance;
 
         if (_clientInteraction == null)
         {

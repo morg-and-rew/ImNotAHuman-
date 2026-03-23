@@ -23,7 +23,7 @@ public sealed class DialogueResponseClickSound : MonoBehaviour
         if (_listenerAdded) return;
         Button button = GetComponent<Button>();
         if (button == null) return;
-        GameSoundController sound = FindFirstObjectByType<GameSoundController>();
+        GameSoundController sound = GameSoundController.Instance;
         if (sound == null) return;
         button.onClick.AddListener(() => sound.PlayDialogueResponseClick());
         _listenerAdded = true;

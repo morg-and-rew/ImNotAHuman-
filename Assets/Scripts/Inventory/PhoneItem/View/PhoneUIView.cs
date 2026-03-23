@@ -34,7 +34,7 @@ public sealed class PhoneUIView : MonoBehaviour
     private void Awake()
     {
         if (_gameSoundController == null)
-            _gameSoundController = FindFirstObjectByType<GameSoundController>();
+            _gameSoundController = GameSoundController.Instance;
         HideImmediate();
 
         if (_callButton != null) _callButton.onClick.AddListener(() => { _gameSoundController?.PlayPhoneCallButton(); CallPressed?.Invoke(); });
