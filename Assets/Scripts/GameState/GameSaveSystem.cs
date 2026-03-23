@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -11,6 +12,18 @@ public sealed class Day1SaveData
     public int NeutralChoicesCount;
     public int MysticalChoicesCount;
     public int SkepticalChoicesCount;
+    public List<PackageSaveEntry> Packages;
+}
+
+[Serializable]
+public sealed class PackageSaveEntry
+{
+    public string Id;
+    public int Number;
+    public Vector3 Position;
+    public Quaternion Rotation;
+    public bool Active;
+    public bool Taken;
 }
 
 [Serializable]

@@ -430,6 +430,11 @@ public sealed class StoryDirector : MonoBehaviour
     {
         if (step.type == StepType.None)
         {
+            if (string.Equals(step.stepId, "day2_after_radio", StringComparison.OrdinalIgnoreCase))
+            {
+                _flow?.ShowHintOnceByKey(GameConfig.Tutorial.emptyKey);
+                return;
+            }
             _flow?.ShowMeetClientHintOnce();
             return;
         }
@@ -750,7 +755,8 @@ public sealed class StoryDirector : MonoBehaviour
             SavedPhoneNumber = savedPhoneNumber ?? "",
             NeutralChoicesCount = neutral,
             MysticalChoicesCount = mystical,
-            SkepticalChoicesCount = skeptical
+            SkepticalChoicesCount = skeptical,
+            Packages = PackageRegistry.Instance != null ? PackageRegistry.Instance.CaptureSaveEntries() : null
         };
         GameSaveSystem.SaveDay1(data);
     }
@@ -771,6 +777,9 @@ public sealed class StoryDirector : MonoBehaviour
             GameStateService.UnlockPhone();
             _phoneUnlock?.SpawnNoteFromSave(data.SavedPhoneNumber ?? "");
         }
+
+        if (data.Packages != null && data.Packages.Count > 0 && PackageRegistry.Instance != null)
+            PackageRegistry.Instance.RestoreFromSaveEntries(data.Packages);
     }
 
     /// <summary>Запустить сюжет с указанного шага — выполнить этот шаг (для загрузки: отыграть fade_to_black_day1_end и интро 2-го дня).</summary>
