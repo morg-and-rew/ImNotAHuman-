@@ -38,6 +38,13 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     [Header("Hint")]
     [SerializeField] private Sprite _hintSprite;
+    [Header("Interaction Side")]
+    [Tooltip("Требовать взаимодействие только с фронтальной стороны радио.")]
+    [SerializeField] private bool _requireFrontSide = true;
+    [Tooltip("Инвертировать направление фронта (если forward модели смотрит назад).")]
+    [SerializeField] private bool _invertFrontSide = false;
+    [Tooltip("Порог dot для проверки фронтальной стороны. 0 = полуплоскость перед радио; 0.1..0.3 = строже.")]
+    [SerializeField, Range(-1f, 1f)] private float _frontSideDotThreshold = 0f;
 
     [Header("Radio Dialogue Auto-Advance")]
     [SerializeField, Min(0.1f)] private float _radioDialogueAutoAdvanceSeconds = 10f;
@@ -243,6 +250,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         GameFlowController flow = GameFlowController.Instance;
         if (flow == null)
             return;
+        if (!CanInteractFromPlayerSide(flow))
+            return;
 
         RadioEventData story = GetFirstAvailableStoryEvent(flow);
         if (story != null)
@@ -282,9 +291,36 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         GameFlowController flow = GameFlowController.Instance;
         if (flow == null)
             return false;
+        if (!CanInteractFromPlayerSide(flow))
+            return false;
 
         // Для радио показываем подсветку/иконку только когда есть доступный сюжетный запуск.
         return GetFirstAvailableStoryEvent(flow) != null;
+    }
+
+    private bool CanInteractFromPlayerSide(GameFlowController flow)
+    {
+        if (!_requireFrontSide)
+            return true;
+        if (flow == null || flow.Player == null)
+            return false;
+
+        Vector3 playerOffset = flow.Player.transform.position - transform.position;
+        playerOffset.y = 0f;
+        if (playerOffset.sqrMagnitude < 0.0001f)
+            return true;
+        playerOffset.Normalize();
+
+        Vector3 front = transform.forward;
+        front.y = 0f;
+        if (front.sqrMagnitude < 0.0001f)
+            return true;
+        front.Normalize();
+        if (_invertFrontSide)
+            front = -front;
+
+        float dot = Vector3.Dot(playerOffset, front);
+        return dot >= _frontSideDotThreshold;
     }
 
     private void PlayStoryEvent(GameFlowController flow, RadioEventData story)
