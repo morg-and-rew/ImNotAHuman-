@@ -62,6 +62,7 @@ public interface IGameFlowController
     void ForceTravel(TravelTarget target, bool forceIgnoreSameDestination = false);
     void SetAllowReturnToClientWithoutExitZone(bool allow);
     void SetPendingDialogueReturnPackage(int packageNumber);
+    void SetPendingStoryCarryItemId(string itemId);
     bool TryPerformPendingReturnToClient();
     TravelTarget CurrentTravelTarget { get; }
     void RemovePackageFromHands();

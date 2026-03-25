@@ -307,6 +307,7 @@ MonoBehaviour:
   - Client_day2.1.3_candles_lit
   - Client_day2.2_order_8877
   - Client_day2.2_after_8877
+  - Client_day2.2_after_4455_lit_followup
   keyHintPlaqueImage: {fileID: 126639180057814539}
   keyHintSpaceSprite: {fileID: 21300000, guid: 63ea0c0b6088fb7498770da7a1da7185, type: 3}
   keyHintFinishSprite: {fileID: 21300000, guid: 3568d7ae1d0d675468c3992a727540c2, type: 3}

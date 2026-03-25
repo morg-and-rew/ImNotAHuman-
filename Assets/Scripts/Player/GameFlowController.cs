@@ -110,6 +110,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private TravelTarget _lastTeleportDestination = TravelTarget.None;
     private int _fixedPackageForNextWarehouse;
     private int _pendingDialogueReturnPackage;
+    private string _pendingStoryCarryItemId;
     private bool _acceptAnyPackageForReturn;
 
     private bool _freeTeleportTargetActive;
@@ -1467,6 +1468,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _pendingDialogueReturnPackage = packageNumber;
     }
 
+    public void SetPendingStoryCarryItemId(string itemId)
+    {
+        _pendingStoryCarryItemId = string.IsNullOrWhiteSpace(itemId) ? null : itemId.Trim();
+    }
+
     public void SetAcceptAnyPackageForReturn(bool acceptAny)
     {
         _acceptAnyPackageForReturn = acceptAny;
@@ -1714,6 +1720,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             }
 
             _acceptAnyPackageForReturn = false;
+            _pendingStoryCarryItemId = null;
             Transform point = _clientPoint;
             if (_useFreeTeleportPointForNextClientTravel && _freeTeleportToClientPoint != null)
             {
@@ -1773,6 +1780,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             return "ждётся реплика Player_Day1_2_Replica (до конца диалога на радио)";
         if (_storyDirector != null && _storyDirector.IsRunning && !_storyDirector.IsStepAllowingTravelToClient)
             return "сценарий не разрешает возврат к клиенту (текущий шаг: " + (_storyDirector.CurrentStepId ?? "?") + ")";
+        if (!string.IsNullOrEmpty(_pendingStoryCarryItemId) && !CanLeaveWarehouseWithPendingStoryCarryItem())
+            return "нужно принести специальный предмет: " + _pendingStoryCarryItemId;
         if (GameStateService.RequiredPackageNumber > 0 && !CanLeaveWarehouseToClient())
             return "нужна посылка в руках (требуется №" + GameStateService.RequiredPackageNumber + ")";
         return null;
@@ -1783,6 +1792,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         bool inExitZone = IsPlayerInZoneTo(TravelTarget.Client) || (_warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= _doorTeleportMaxDistance);
         if (!inExitZone)
             return false;
+
+        if (!string.IsNullOrEmpty(_pendingStoryCarryItemId))
+            return CanLeaveWarehouseWithPendingStoryCarryItem();
 
         // После Client_Day1.5.2/1.5.3 на шаге просмотра видео можно уйти на склад и вернуться обратно без посылки.
         // Иначе игрок застревает на складе, если до этого остался RequiredPackageNumber > 0.
@@ -1804,6 +1816,23 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             return false;
 
         return true;
+    }
+
+    private bool CanLeaveWarehouseWithPendingStoryCarryItem()
+    {
+        if (string.IsNullOrEmpty(_pendingStoryCarryItemId))
+            return true;
+
+        bool exitInside = IsPlayerInZoneTo(TravelTarget.Client) || (_warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= _doorTeleportMaxDistance);
+        if (!exitInside)
+            return false;
+
+        PlayerHands hands = HandsRegistry.Hands;
+        if (hands == null || hands.Current is not MonoBehaviour mb)
+            return false;
+
+        StoryCarryItem marker = mb.GetComponent<StoryCarryItem>();
+        return marker != null && string.Equals(marker.ItemId, _pendingStoryCarryItemId, StringComparison.OrdinalIgnoreCase);
     }
 
     private bool CanLeaveWarehouseWithPendingPackage()

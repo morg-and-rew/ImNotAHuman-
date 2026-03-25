@@ -14,6 +14,12 @@ public sealed class StoryDirector : MonoBehaviour
     private const string Day2CandlesUnlitConversation = "Client_day2.1.3_candles_unlit";
     private const string Day2CandlesUnlitAfterVideoConversation = "Client_day2.1.4_after_video_unlit";
     private const string Day2CandlesLitReturnConversation = "Client_day2.1.4_after_warehouse_lit";
+    private const string Day2After4455LitFollowupConversation = "Client_day2.2_after_4455_lit_followup";
+    private const string Day2After4455LitWarehouseConversation = "Client_day2.2_warehouse_lit_auto";
+    private const string Day2After4455LitWarehouseConversationGiveExtra = "Client_day2.2_warehouse_lit_auto_if_gave_5577";
+    private const string Day2After4455LitReturnDialogueTools = "Client_day2.2_after_tools_if_gave_5577";
+    private const string Day2After4455LitReturnDialogue5577 = "Client_day2.2_after_5577_if_not_gave";
+    private const string Day2ToolsCarryItemId = "day2_tools_box";
 
     [SerializeField] private AttitudeChoiceRecorder _attitudeRecorder;
     [SerializeField] private PhoneUnlockDirector _phoneUnlock;
@@ -42,6 +48,8 @@ public sealed class StoryDirector : MonoBehaviour
     private string _pendingClientApproachConversation;
     private bool _day2LitWarehouseDetourActive;
     private string _pendingDialogueAfterComputerVideo;
+    private bool _day2After4455LitGoToWarehousePending;
+    private Coroutine _day2After4455LitWarehouseSequence;
     public string CurrentStepId => (_index >= 0 && _index < _steps.Count) ? _steps[_index].stepId : "";
     public bool HasStoryStarted => _index >= 0;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
@@ -177,6 +185,8 @@ public sealed class StoryDirector : MonoBehaviour
         if (_client != null) _client.ClientDialogueStepCompleted -= OnDialogueCompleted;
         if (DialogueManager.instance != null)
             DialogueManager.instance.conversationEnded -= OnDialogueSystemConversationEnded;
+        if (_day2After4455LitWarehouseSequence != null)
+            StopCoroutine(_day2After4455LitWarehouseSequence);
         _flow.OnTeleportedToWarehouse -= OnTeleportedToWarehouse;
         _flow.OnTeleportedToClient -= OnTeleportedToClient;
         if (_flow is GameFlowController gfc)
@@ -983,6 +993,49 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
+        if (string.Equals(conv, Day2After4455LitReturnDialogueTools, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(conv, Day2After4455LitReturnDialogue5577, StringComparison.OrdinalIgnoreCase))
+        {
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            _wait = WaitMode.Idle;
+            return;
+        }
+
+        if (string.Equals(conv, "Client_day2.2_candles_lit_after_4455", StringComparison.OrdinalIgnoreCase)
+            && CandleInteractable.IsAnyCandleLit)
+        {
+            // После этого шага игрок свободно двигается; следующий диалог запускается как обычно по E у стойки.
+            _pendingClientApproachConversation = Day2After4455LitFollowupConversation;
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            _wait = WaitMode.WaitingFreeRoamClientConfirm;
+            return;
+        }
+
+        if (string.Equals(conv, Day2After4455LitFollowupConversation, StringComparison.OrdinalIgnoreCase))
+        {
+            _day2After4455LitGoToWarehousePending = true;
+            if (_flow is GameFlowController gfcPrep)
+            {
+                // Жестко очищаем возможные хвосты прошлых шагов (в т.ч. 5577), чтобы на складе не появлялась записка.
+                gfcPrep.SetFixedPackageForNextWarehouse(0);
+                gfcPrep.SetPendingDialogueReturnPackage(0);
+                gfcPrep.SetPendingStoryCarryItemId(null);
+                gfcPrep.SetRequiredPackageForReturn(0);
+            }
+            _flow?.SetTutorialWarehouseVisit(true); // Отключаем генерацию складской записки/задачи на этом переходе.
+            _wait = WaitMode.WaitingWarehouseConfirm;
+            _flow?.ForceTravel(TravelTarget.Warehouse);
+            return;
+        }
+
         if (string.Equals(conv, "Client_Day1.2", StringComparison.OrdinalIgnoreCase))
         {
             GameStateService.SetState(GameState.None);
@@ -1082,6 +1135,20 @@ public sealed class StoryDirector : MonoBehaviour
                 ? (GameConfig.Tutorial.emptyKey ?? "")
                 : (GameConfig.Tutorial.returnToClientKey ?? "");
             _flow?.SetTravelTarget(TravelTarget.Client, hintKey);
+            return;
+        }
+        if (_day2After4455LitGoToWarehousePending)
+        {
+            _day2After4455LitGoToWarehousePending = false;
+            EnsureControlsAfterWarehouseTeleport();
+            _controller?.SetBlock(false);
+            GameStateService.SetState(GameState.None);
+            if (_flow is GameFlowController gfcWarehouseDialog)
+                gfcWarehouseDialog.EnterClientDialogueState(false, movePlayerToClient: false);
+            if (_day2After4455LitWarehouseSequence != null)
+                StopCoroutine(_day2After4455LitWarehouseSequence);
+            bool gave5577InDay1 = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+            _day2After4455LitWarehouseSequence = StartCoroutine(RunDay2After4455LitWarehouseSequence(gave5577InDay1));
             return;
         }
         if (_wait == WaitMode.WaitingRadioComplete)
@@ -1200,6 +1267,7 @@ public sealed class StoryDirector : MonoBehaviour
         Advance();
     }
 
+
     private void OnTeleportedToClient()
     {
         if (_wait == WaitMode.WaitingRadioComplete)
@@ -1253,6 +1321,68 @@ public sealed class StoryDirector : MonoBehaviour
         }
     }
 
+    private IEnumerator RunDay2After4455LitWarehouseSequence(bool gave5577InDay1)
+    {
+        _wait = WaitMode.WaitingDialogueEnd;
+        if (_customDialogueUI != null)
+            _customDialogueUI.SetForcedAutoAdvance(true, 6f);
+
+        DialogueManager.StartConversation(Day2After4455LitWarehouseConversation);
+        while (DialogueManager.isConversationActive)
+            yield return null;
+
+        if (gave5577InDay1)
+        {
+            DialogueManager.StartConversation(Day2After4455LitWarehouseConversationGiveExtra);
+            while (DialogueManager.isConversationActive)
+                yield return null;
+        }
+
+        if (_customDialogueUI != null)
+            _customDialogueUI.SetForcedAutoAdvance(false);
+
+        _controller?.SetBlock(false);
+        GameStateService.SetState(GameState.Warehouse);
+        if (_flow is GameFlowController gfc)
+        {
+            gfc.EnterClientDialogueState(false, movePlayerToClient: false);
+            gfc.SetPendingDialogueReturnPackage(0);
+            gfc.SetRequiredPackageForReturn(0);
+            gfc.SetPendingStoryCarryItemId(Day2ToolsCarryItemId);
+        }
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        _day2After4455LitWarehouseSequence = null;
+
+        if (gave5577InDay1)
+        {
+            _pendingDialogueAfterReturn = Day2After4455LitReturnDialogueTools;
+            _wait = WaitMode.WaitingClientConfirm;
+            string toolsHintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
+                ? (GameConfig.Tutorial.emptyKey ?? "")
+                : (GameConfig.Tutorial.returnToClientKey ?? "");
+            _flow?.SetTravelTarget(TravelTarget.Client, toolsHintKey);
+            yield break;
+        }
+
+        // Если в дне 1 не отдавали 5577 — после базового автодиалога на складе несём 5577.
+        _pendingDialogueAfterReturn = Day2After4455LitReturnDialogue5577;
+        _wait = WaitMode.WaitingClientReturnForDialogue;
+        if (_flow is GameFlowController gfcNoGive)
+        {
+            gfcNoGive.SetPendingStoryCarryItemId(null);
+            // В этой ветке записка не должна появляться — задаем требуемую посылку напрямую без показа note.
+            GameStateService.SetRequiredPackage(5577, enforceOnly: false);
+            GameStateService.SetPackageDropLocked(false);
+            _deliveryNoteView?.Hide();
+            gfcNoGive.SetPendingDialogueReturnPackage(5577);
+        }
+        string noGiveHintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
+            ? (GameConfig.Tutorial.emptyKey ?? "")
+            : (GameConfig.Tutorial.returnToClientKey ?? "");
+        _flow?.SetTravelTarget(TravelTarget.Client, noGiveHintKey);
+    }
+
     /// <summary> Показать диалог с клиентом со следующего кадра после телепорта, чтобы UI успел отрисоваться. </summary>
     /// <param name="lockMovement">Если false, игрок может передвигаться во время диалога (например Client_Day1.5.3).</param>
     private IEnumerator ShowClientDialogueNextFrame(string conversationTitle, bool lockMovement = true)
@@ -1261,6 +1391,13 @@ public sealed class StoryDirector : MonoBehaviour
         if (string.IsNullOrEmpty(conversationTitle)) yield break;
         ((GameFlowController)_flow).EnterClientDialogueState(lockMovement);
         _client?.StartClientDialogWithSpecificStep("", conversationTitle);
+    }
+
+    private IEnumerator StartDialogueNextFrame(string conversationTitle)
+    {
+        yield return null;
+        if (string.IsNullOrEmpty(conversationTitle)) yield break;
+        DialogueManager.StartConversation(conversationTitle);
     }
 
     /// <summary> Показать только портрет клиента со следующего кадра после телепорта, чтобы спрайт и плашка не были пустыми. </summary>
