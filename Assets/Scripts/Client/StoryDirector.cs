@@ -10,6 +10,10 @@ using TutorialPendingAction = IGameFlowController.TutorialPendingAction;
 public sealed class StoryDirector : MonoBehaviour
 {
     private const float KnockAfterFreeRoamDelaySeconds = 10f;
+    private const string Day2CandlesLitConversation = "Client_day2.1.3_candles_lit";
+    private const string Day2CandlesUnlitConversation = "Client_day2.1.3_candles_unlit";
+    private const string Day2CandlesUnlitAfterVideoConversation = "Client_day2.1.4_after_video_unlit";
+    private const string Day2CandlesLitReturnConversation = "Client_day2.1.4_after_warehouse_lit";
 
     [SerializeField] private AttitudeChoiceRecorder _attitudeRecorder;
     [SerializeField] private PhoneUnlockDirector _phoneUnlock;
@@ -35,6 +39,9 @@ public sealed class StoryDirector : MonoBehaviour
     private string _waitingRadioStyleConversation;
     private bool _warehousePickHintShown;
     private CustomDialogueUI _customDialogueUI;
+    private string _pendingClientApproachConversation;
+    private bool _day2LitWarehouseDetourActive;
+    private string _pendingDialogueAfterComputerVideo;
     public string CurrentStepId => (_index >= 0 && _index < _steps.Count) ? _steps[_index].stepId : "";
     public bool HasStoryStarted => _index >= 0;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
@@ -320,6 +327,19 @@ public sealed class StoryDirector : MonoBehaviour
         if (_wait == WaitMode.WaitingFreeRoamClientConfirm && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed
             && (HandsRegistry.Hands == null || !HandsRegistry.Hands.HasItem))
         {
+            if (!string.IsNullOrEmpty(_pendingClientApproachConversation))
+            {
+                string nextConversation = _pendingClientApproachConversation;
+                _pendingClientApproachConversation = null;
+                _pendingRemovePackageAfterDialogue = false;
+                _controller?.SetBlock(true);
+                GameStateService.SetState(GameState.ClientDialog);
+                ((GameFlowController)_flow).EnterClientDialogueState(true);
+                _wait = WaitMode.WaitingDialogueEnd;
+                _client.StartClientDialogWithSpecificStep("", nextConversation);
+                return;
+            }
+
             // День 2: после радио ждём, пока игрок сам подойдёт к клиенту и нажмёт E — тогда запускаем Client_day2.1
             if (_currentStep != null && !string.IsNullOrEmpty(_currentStep.conversationTitle)
                 && string.Equals(_currentStep.stepId, "day2_after_radio", StringComparison.OrdinalIgnoreCase))
@@ -663,6 +683,16 @@ public sealed class StoryDirector : MonoBehaviour
         if (_wait != WaitMode.WaitingComputerVideo) return;
         _wait = WaitMode.Idle;
         _computer?.SetAllowedVideoKind(null);
+        if (!string.IsNullOrEmpty(_pendingDialogueAfterComputerVideo))
+        {
+            string nextConversation = _pendingDialogueAfterComputerVideo;
+            _pendingDialogueAfterComputerVideo = null;
+            _wait = WaitMode.WaitingDialogueEnd;
+            _controller?.SetBlock(true);
+            GameStateService.SetState(GameState.ClientDialog);
+            StartCoroutine(ShowClientDialogueNextFrame(nextConversation, lockMovement: true));
+            return;
+        }
         Advance();
     }
 
@@ -872,6 +902,80 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
+        if (string.Equals(conv, "Client_day2.1.2", StringComparison.OrdinalIgnoreCase))
+        {
+            GameSoundController.Instance?.StartWindLoop();
+
+            string nextConversation = CandleInteractable.IsAnyCandleLit
+                ? Day2CandlesLitConversation
+                : Day2CandlesUnlitConversation;
+
+            // Ветка дня 2: сначала свободное перемещение, затем игрок сам подходит к клиенту и жмет E.
+            _pendingClientApproachConversation = nextConversation;
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            _wait = WaitMode.WaitingFreeRoamClientConfirm;
+            return;
+        }
+
+        if (string.Equals(conv, Day2CandlesLitConversation, StringComparison.OrdinalIgnoreCase))
+        {
+            // Ветка "свечи зажжены": после диалога едем на склад без задания, затем возвращаемся к клиенту без посылки.
+            _day2LitWarehouseDetourActive = true;
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            _wait = WaitMode.WaitingWarehouseConfirm;
+            _flow?.ForceTravel(TravelTarget.Warehouse);
+            return;
+        }
+
+        if (string.Equals(conv, Day2CandlesUnlitConversation, StringComparison.OrdinalIgnoreCase))
+        {
+            // Ветка "свечи не зажжены": второй диалог запускается сразу после видео, без ручных действий игрока.
+            _pendingDialogueAfterComputerVideo = Day2CandlesUnlitAfterVideoConversation;
+            _wait = WaitMode.WaitingComputerVideo;
+            _computer?.SetAllowedVideoKind(Computer.KindIndoor);
+            bool started = _computer != null && _computer.TryPlayAllowedVideoImmediately();
+            if (!started)
+            {
+                _pendingDialogueAfterComputerVideo = null;
+                _wait = WaitMode.WaitingDialogueEnd;
+                _controller?.SetBlock(true);
+                GameStateService.SetState(GameState.ClientDialog);
+                StartCoroutine(ShowClientDialogueNextFrame(Day2CandlesUnlitAfterVideoConversation, lockMovement: true));
+            }
+            return;
+        }
+
+        if (string.Equals(conv, Day2CandlesUnlitAfterVideoConversation, StringComparison.OrdinalIgnoreCase))
+        {
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            _wait = WaitMode.Idle;
+            return;
+        }
+
+        if (string.Equals(conv, Day2CandlesLitReturnConversation, StringComparison.OrdinalIgnoreCase))
+        {
+            // После дополнительного диалога в lit-ветке возвращаем игрока в свободный режим.
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            _wait = WaitMode.Idle;
+            return;
+        }
+
         if (string.Equals(conv, "Client_Day1.2", StringComparison.OrdinalIgnoreCase))
         {
             GameStateService.SetState(GameState.None);
@@ -958,6 +1062,19 @@ public sealed class StoryDirector : MonoBehaviour
             EnsureControlsAfterWarehouseTeleport();
             _wait = WaitMode.Idle;
             Advance();
+            return;
+        }
+
+        if (_day2LitWarehouseDetourActive)
+        {
+            EnsureControlsAfterWarehouseTeleport();
+            if (_flow is GameFlowController gfcDetour)
+                gfcDetour.SetRequiredPackageForReturn(0); // Без записки и без активной задачи на складе.
+            _wait = WaitMode.WaitingClientConfirm;
+            string hintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
+                ? (GameConfig.Tutorial.emptyKey ?? "")
+                : (GameConfig.Tutorial.returnToClientKey ?? "");
+            _flow?.SetTravelTarget(TravelTarget.Client, hintKey);
             return;
         }
         if (_wait == WaitMode.WaitingRadioComplete)
@@ -1104,6 +1221,16 @@ public sealed class StoryDirector : MonoBehaviour
         }
         if (_wait == WaitMode.WaitingClientConfirm)
         {
+            if (_day2LitWarehouseDetourActive)
+            {
+                _day2LitWarehouseDetourActive = false;
+                _wait = WaitMode.WaitingDialogueEnd;
+                _controller?.SetBlock(true);
+                GameStateService.SetState(GameState.ClientDialog);
+                StartCoroutine(ShowClientDialogueNextFrame(Day2CandlesLitReturnConversation));
+                return;
+            }
+
             if (_currentStep != null && string.Equals(_currentStep.stepId, "return_to_client_day1_5", StringComparison.OrdinalIgnoreCase))
             {
                 // Запускаем Client_Day1.5.2 как обычный диалог (без портрета и F)

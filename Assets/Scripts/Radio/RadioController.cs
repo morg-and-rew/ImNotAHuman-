@@ -155,9 +155,10 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     private void OnAnyConversationStarted(Transform _)
     {
-        // После старта Client_Day1.3 помех быть не должно: выключаем статик сразу.
+        // После старта клиентских диалогов, где по логике не должно быть помех, выключаем статик сразу.
         string title = DialogueManager.lastConversationStarted ?? string.Empty;
-        if (string.Equals(title, "Client_Day1.3", System.StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(title, "Client_Day1.3", System.StringComparison.OrdinalIgnoreCase)
+            || string.Equals(title, "Client_day2.1", System.StringComparison.OrdinalIgnoreCase))
             StopStatic();
     }
 

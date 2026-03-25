@@ -121,6 +121,19 @@ public sealed class Computer : MonoBehaviour
         return _isPlayerInZone && _computerOpen;
     }
 
+    public bool TryPlayAllowedVideoImmediately()
+    {
+        if (_videoPlaying)
+            return false;
+
+        string kind = string.IsNullOrEmpty(s_allowedVideoKind) ? KindIndoor : s_allowedVideoKind;
+        if (kind != KindStreet && kind != KindIndoor)
+            kind = KindIndoor;
+
+        TryPlayVideo(kind);
+        return _videoPlaying;
+    }
+
     private void CloseComputer()
     {
         if (!_computerOpen) return;

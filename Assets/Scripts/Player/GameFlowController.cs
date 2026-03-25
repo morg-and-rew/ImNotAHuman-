@@ -255,6 +255,15 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         return _storyDirector.IsWaitingForClientInteraction;
     }
 
+    public bool IsDay2OrLater()
+    {
+        if (_storyDirector == null)
+            return false;
+        string stepId = _storyDirector.CurrentStepId;
+        return !string.IsNullOrEmpty(stepId)
+            && stepId.IndexOf("day2", StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
     public void NotifyExitZonePassed(string zoneId)
     {
         if (string.IsNullOrEmpty(zoneId)) return;

@@ -32,6 +32,13 @@ public sealed class GameSoundController : MonoBehaviour
     [SerializeField] private AudioClip _windowCloseClip;
     [SerializeField, Range(0.2f, 1f)] private float _windowSoundVolume = 0.5f;
 
+    [Header("Ветер")]
+    [Tooltip("Зацикленный звук ветра. Запускается по сюжету (после Client_day2.1.2).")]
+    [SerializeField] private AudioClip _windLoopClip;
+    [SerializeField, Range(0f, 1f)] private float _windLoopVolume = 0.45f;
+    [Tooltip("Источник для ветра. Если пусто — будет создан автоматически.")]
+    [SerializeField] private AudioSource _windLoopSource;
+
     [Header("Телефон — кнопки")]
     [Tooltip("Звуки при нажатии цифр: [0]=0, [1]=1, … [9]=9. По одному клипу на кнопку.")]
     [SerializeField] private AudioClip[] _phoneDigitClips = new AudioClip[10];
@@ -74,6 +81,8 @@ public sealed class GameSoundController : MonoBehaviour
             _cachedFootstepSource = gameObject.AddComponent<AudioSource>();
         if (_phoneOngoingSource == null)
             _phoneOngoingSource = gameObject.AddComponent<AudioSource>();
+        if (_windLoopSource == null && _windLoopClip != null)
+            _windLoopSource = gameObject.AddComponent<AudioSource>();
     }
 
     private void OnDestroy()
@@ -121,6 +130,25 @@ public sealed class GameSoundController : MonoBehaviour
         if (_windowCloseClip == null) return;
         Vector3 pos = Camera.main != null ? Camera.main.transform.position : transform.position;
         AudioSource.PlayClipAtPoint(_windowCloseClip, pos, _windowSoundVolume);
+    }
+
+    public void StartWindLoop()
+    {
+        if (_windLoopClip == null) return;
+        if (_windLoopSource == null)
+            _windLoopSource = gameObject.AddComponent<AudioSource>();
+
+        _windLoopSource.clip = _windLoopClip;
+        _windLoopSource.loop = true;
+        _windLoopSource.volume = _windLoopVolume;
+        if (!_windLoopSource.isPlaying)
+            _windLoopSource.Play();
+    }
+
+    public void StopWindLoop()
+    {
+        if (_windLoopSource != null && _windLoopSource.isPlaying)
+            _windLoopSource.Stop();
     }
 
     /// <summary> Воспроизвести звук при нажатии на вариант ответа в диалоге. </summary>
