@@ -341,8 +341,7 @@ public sealed class StoryDirector : MonoBehaviour
             }
 
             // День 2: после радио ждём, пока игрок сам подойдёт к клиенту и нажмёт E — тогда запускаем Client_day2.1
-            if (_currentStep != null && !string.IsNullOrEmpty(_currentStep.conversationTitle)
-                && string.Equals(_currentStep.stepId, "day2_after_radio", StringComparison.OrdinalIgnoreCase))
+            if (_currentStep != null && !string.IsNullOrEmpty(_currentStep.conversationTitle))
             {
                 _pendingRemovePackageAfterDialogue = _currentStep.removePackageAfterDialogue;
                 _controller?.SetBlock(true);
@@ -407,6 +406,12 @@ public sealed class StoryDirector : MonoBehaviour
         }
 
         _currentStep = _steps[_index];
+
+        // Обновляем Lua-флаги для шагов с skipIfLuaConditionFalse.
+        // Используется для разветвления по состоянию свечей.
+        bool candlesLit = CandleInteractable.IsAnyCandleLit;
+        DialogueLua.SetVariable("CandlesLit", candlesLit);
+        DialogueLua.SetVariable("CandlesUnlit", !candlesLit);
 
         if (!string.IsNullOrEmpty(_currentStep.skipIfLuaConditionFalse))
         {
@@ -961,6 +966,7 @@ public sealed class StoryDirector : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             _wait = WaitMode.Idle;
+            Advance();
             return;
         }
 
@@ -973,6 +979,7 @@ public sealed class StoryDirector : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             _wait = WaitMode.Idle;
+            Advance();
             return;
         }
 
