@@ -503,3 +503,20 @@ MonoBehaviour:
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.1.3_candles_lit
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 2
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}

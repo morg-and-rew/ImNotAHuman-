@@ -715,6 +715,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         {
             if (IsRadioTutorialPlaying())
                 return false;
+            if (_storyDirector != null && _storyDirector.IsDay2After4455LitMoveDialogueActive)
+                return false;
             if (GameStateService.CurrentState == GameState.Warehouse)
                 return false;
             // Подтверждение из зоны клиента (напр. после Client_Day1.4 «отдать посылку 5577») — F без подхода к двери.
@@ -733,6 +735,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_travelTarget == TravelTarget.Client && GameStateService.CurrentState == GameState.Warehouse)
         {
             if (IsRadioTutorialPlaying())
+                return false;
+            if (_storyDirector != null && _storyDirector.IsDay2After4455LitWarehouseSequenceRunning)
                 return false;
             bool inZoneToClient = IsPlayerInZoneTo(TravelTarget.Client);
             bool nearExitDoor = _warehouseExitDoor != null && _player != null && Vector3.Distance(_player.transform.position, _warehouseExitDoor.position) <= _doorTeleportMaxDistance;
@@ -836,6 +840,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             bool canSetWarehouseTarget = !onWarehouse
                 && !IsRadioTutorialPlaying()
                 && GameStateService.CurrentState != GameState.Phone
+                && (_storyDirector == null || !_storyDirector.IsDay2After4455LitMoveDialogueActive)
                 && (Time.time - _lastTeleportToClientTime) >= 2f
                 && (_storyDirector == null || !string.Equals(_storyDirector.CurrentStepId, "go_to_phone", StringComparison.OrdinalIgnoreCase))
                 && (_storyDirector == null || _storyDirector.IsStepAllowingTravelToWarehouse);
@@ -1778,6 +1783,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (BlockReturnUntilPlayerDay1_2ReplicaDone)
             return "ждётся реплика Player_Day1_2_Replica (до конца диалога на радио)";
+        if (_storyDirector != null && _storyDirector.IsDay2After4455LitWarehouseSequenceRunning)
+            return "нужно дождаться окончания сюжетной сцены на складе";
         if (_storyDirector != null && _storyDirector.IsRunning && !_storyDirector.IsStepAllowingTravelToClient)
             return "сценарий не разрешает возврат к клиенту (текущий шаг: " + (_storyDirector.CurrentStepId ?? "?") + ")";
         if (!string.IsNullOrEmpty(_pendingStoryCarryItemId) && !CanLeaveWarehouseWithPendingStoryCarryItem())
