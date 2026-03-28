@@ -9,9 +9,11 @@ public sealed class PhoneStoryWiring
 
     private const string SkepticNumber = "333111333";
     private const string SkepticCallConversation = "Phone_CallSkeptic_Number";
+    private const string EmergencyNumber = "911";
+    private const string EmergencyCallConversation = "Phone_CallEmergency_911";
     private const string LuaUnlockFunc = "UnlockSkepticPhone";
 
-    private enum CallMode { None, ProviderBeeps, ProviderAfter, SkepticCall }
+    private enum CallMode { None, ProviderBeeps, ProviderAfter, SkepticCall, EmergencyCall }
     private CallMode _mode = CallMode.None;
 
     private bool _skepticUnlocked;
@@ -24,6 +26,7 @@ public sealed class PhoneStoryWiring
 
         string providerNum = GameConfig.Tutorial.providerNumber;
         _callService.Register(string.IsNullOrEmpty(providerNum) ? "156190" : providerNum, OnCallProvider);
+        _callService.Register(EmergencyNumber, OnCallEmergency);
 
         Lua.RegisterFunction(LuaUnlockFunc, this,
             SymbolExtensions.GetMethodInfo(() => UnlockSkepticPhone()));
@@ -71,6 +74,14 @@ public sealed class PhoneStoryWiring
         DialogueManager.StartConversation(SkepticCallConversation);
     }
 
+    private void OnCallEmergency()
+    {
+        _mode = CallMode.EmergencyCall;
+        DialogueManager.instance.conversationEnded -= OnConversationEnded;
+        DialogueManager.instance.conversationEnded += OnConversationEnded;
+        DialogueManager.StartConversation(EmergencyCallConversation);
+    }
+
     private void OnConversationEnded(Transform actor)
     {
         if (_mode == CallMode.ProviderBeeps)
@@ -97,6 +108,13 @@ public sealed class PhoneStoryWiring
         }
 
         if (_mode == CallMode.SkepticCall)
+        {
+            _gameSoundController?.PlayPhoneCallEnd();
+            _mode = CallMode.None;
+            DialogueManager.instance.conversationEnded -= OnConversationEnded;
+            return;
+        }
+        if (_mode == CallMode.EmergencyCall)
         {
             _gameSoundController?.PlayPhoneCallEnd();
             _mode = CallMode.None;

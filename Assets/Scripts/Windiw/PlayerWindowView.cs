@@ -22,9 +22,22 @@ public sealed class PlayerWindowView
 
         if (PlayerHintView.Instance != null)
         {
-            bool showWindow = _currentWindowView != null && !_isViewing && _currentWindowView.IsPlayerLookingAtMe(_playerView);
-            Sprite sprite = showWindow ? _currentWindowView.HintSprite : null;
+            Sprite sprite = null;
+            if (_currentWindowView != null)
+            {
+                if (!_isViewing && _currentWindowView.IsPlayerLookingAtMe(_playerView))
+                    sprite = _currentWindowView.HintSprite;
+            }
             PlayerHintView.Instance.SetWindowHint(sprite);
+        }
+
+        if (WindowCloseHintView.Instance != null)
+        {
+            bool canCloseNow = _isViewing && !DialogueManager.isConversationActive;
+            if (canCloseNow)
+                WindowCloseHintView.Instance.Show();
+            else
+                WindowCloseHintView.Instance.Hide();
         }
 
         if (_input != null && _currentWindowView != null && _input.InteractPressed)
@@ -35,6 +48,7 @@ public sealed class PlayerWindowView
                     return;
                 _currentWindowView.ExitView(() => _playerController.SetBlock(false));
                 _isViewing = false;
+                WindowCloseHintView.Instance?.Hide();
             }
             else
             {
@@ -64,6 +78,7 @@ public sealed class PlayerWindowView
                     _currentWindowView = null;
                     _isViewing = false;
                     w.ExitView(() => _playerController.SetBlock(false));
+                    WindowCloseHintView.Instance?.Hide();
                 }
                 // иначе диалог ещё идёт — окно не закрываем, ссылку сохраняем
             }

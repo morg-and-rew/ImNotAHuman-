@@ -1415,14 +1415,33 @@ MonoBehaviour:
       leftScale: 1
       rightScale: 1
       useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 91.4, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.1.3_candles_lit
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 83209c56387bd0344b4b2bc57218726e, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
       customLeftAnchoredPos: {x: -3, y: 73, z: 181}
       customLeftScale: {x: 1, y: 1, z: 1}
       customLeftRotation: {x: 0, y: 0, z: 0}
       customRightAnchoredPos: {x: -13, y: 73, z: 181}
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
-    - entryID: 1
-      leftSprite: {fileID: 21300000, guid: bad354ed6fdd0864caecb39ef6d74112, type: 3}
+    - entryID: 3
+      leftSprite: {fileID: 21300000, guid: bd3fd9381858df74ea7ebf24da510ef6, type: 3}
       rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
@@ -1438,10 +1457,150 @@ MonoBehaviour:
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
     removePackageFromHandsAfterEntryID: 0
-  - conversation: Client_day2.1.3_candles_lit
+  - conversation: Client_day2.1.4_after_video_unlit
     rules:
     - entryID: 1
-      leftSprite: {fileID: 21300000, guid: c248c45d6a184554cafb6645265c186d, type: 3}
+      leftSprite: {fileID: 21300000, guid: 0e76d8054c6d4ea488393868e01ae205, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 91.4, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 4
+      leftSprite: {fileID: 21300000, guid: 6de222469ba8d55469b37bdef253543d, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 91.4, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.2_order_8877
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 9d918910f078f25488bb56e3c1dfad55, type: 3}
+      rightSprite: {fileID: 21300000, guid: f74725ecbad6a084397d32a05da6e20e, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: 59, y: 73, z: 180}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 22.68, z: 0}
+      customRightAnchoredPos: {x: -11, y: 80, z: 197}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.2_after_8877
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 9d918910f078f25488bb56e3c1dfad55, type: 3}
+      rightSprite: {fileID: 21300000, guid: 72ef39c17233e524caca120087d9318e, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: 59, y: 73, z: 180}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 22.68, z: 0}
+      customRightAnchoredPos: {x: -11, y: 80, z: 197}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 8
+      leftSprite: {fileID: 21300000, guid: 9d918910f078f25488bb56e3c1dfad55, type: 3}
+      rightSprite: {fileID: 21300000, guid: f74725ecbad6a084397d32a05da6e20e, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: 59, y: 73, z: 180}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 22.68, z: 0}
+      customRightAnchoredPos: {x: -11, y: 80, z: 197}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.2_candles_lit_after_4455
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 9d918910f078f25488bb56e3c1dfad55, type: 3}
+      rightSprite: {fileID: 21300000, guid: f74725ecbad6a084397d32a05da6e20e, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: 59, y: 73, z: 180}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 22.68, z: 0}
+      customRightAnchoredPos: {x: -11, y: 80, z: 197}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 7
+      leftSprite: {fileID: 21300000, guid: 9d918910f078f25488bb56e3c1dfad55, type: 3}
+      rightSprite: {fileID: 21300000, guid: c4e01118c42192f49bc687ab7355ca5a, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: 59, y: 73, z: 180}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 22.68, z: 0}
+      customRightAnchoredPos: {x: -11, y: 80, z: 197}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 8
+      leftSprite: {fileID: 21300000, guid: 9d918910f078f25488bb56e3c1dfad55, type: 3}
+      rightSprite: {fileID: 21300000, guid: c4e01118c42192f49bc687ab7355ca5a, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: 59, y: 73, z: 180}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 22.68, z: 0}
+      customRightAnchoredPos: {x: -11, y: 80, z: 197}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.1.4_after_warehouse_lit
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 632e8f3da6ea6694689773874ea47fc9, type: 3}
       rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
@@ -1456,8 +1615,11 @@ MonoBehaviour:
       customRightAnchoredPos: {x: -13, y: 73, z: 181}
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.2_after_4455_lit_followup
+    rules:
     - entryID: 1
-      leftSprite: {fileID: 21300000, guid: bad354ed6fdd0864caecb39ef6d74112, type: 3}
+      leftSprite: {fileID: 21300000, guid: 83209c56387bd0344b4b2bc57218726e, type: 3}
       rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
@@ -1467,6 +1629,405 @@ MonoBehaviour:
       rightScale: 1
       useCustomPositionAndSize: 1
       customLeftAnchoredPos: {x: -3, y: 73, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 3
+      leftSprite: {fileID: 21300000, guid: 632e8f3da6ea6694689773874ea47fc9, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 73, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 5
+      leftSprite: {fileID: 21300000, guid: 632e8f3da6ea6694689773874ea47fc9, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 73, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.2_after_tools_if_gave_5577
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 83209c56387bd0344b4b2bc57218726e, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 73, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.2_after_5577_if_not_gave
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: 632e8f3da6ea6694689773874ea47fc9, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 73, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.2_after_60s_meet
+    rules:
+    - entryID: 1
+      leftSprite: {fileID: 21300000, guid: cb0782bca2a3f42499b6b327660717cf, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 10
+      leftSprite: {fileID: 21300000, guid: ada91e80fc337ae4b9d3e1fe754045f8, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 13
+      leftSprite: {fileID: 21300000, guid: ada91e80fc337ae4b9d3e1fe754045f8, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 45
+      leftSprite: {fileID: 21300000, guid: 206fe8a54812d54438b235673110b3a4, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.2_after_60s_after_video
+    rules:
+    - entryID: 6
+      leftSprite: {fileID: 21300000, guid: 55e86903e269c2d4eb7ee444b2692f34, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 10
+      leftSprite: {fileID: 21300000, guid: ada91e80fc337ae4b9d3e1fe754045f8, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 48
+      leftSprite: {fileID: 21300000, guid: 740bf3eae0896b64e91e2c86c3695600, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 22
+      leftSprite: {fileID: 21300000, guid: 930e4351d1aaac542b45fb7db413f708, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 26
+      leftSprite: {fileID: 21300000, guid: 206fe8a54812d54438b235673110b3a4, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 33
+      leftSprite: {fileID: 21300000, guid: 930e4351d1aaac542b45fb7db413f708, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 39
+      leftSprite: {fileID: 21300000, guid: 930e4351d1aaac542b45fb7db413f708, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 45
+      leftSprite: {fileID: 21300000, guid: 94a8327649686b44c97ec68e97c8fd43, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    removePackageFromHandsAfterEntryID: 0
+  - conversation: Client_day2.2_after_60s_after_ambulance
+    rules:
+    - entryID: 3
+      leftSprite: {fileID: 21300000, guid: f1ce94c031071f24d95550cb986edf68, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 10
+      leftSprite: {fileID: 21300000, guid: ada91e80fc337ae4b9d3e1fe754045f8, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 12
+      leftSprite: {fileID: 21300000, guid: a3db5bc8d068dc74bb6791643b3acc2e, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 24
+      leftSprite: {fileID: 21300000, guid: f1ce94c031071f24d95550cb986edf68, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 28
+      leftSprite: {fileID: 21300000, guid: a3db5bc8d068dc74bb6791643b3acc2e, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 35
+      leftSprite: {fileID: 21300000, guid: db7b91ebd453621469300abb4ce3e756, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 39
+      leftSprite: {fileID: 21300000, guid: 930e4351d1aaac542b45fb7db413f708, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftScale: {x: 1, y: 1, z: 1}
+      customLeftRotation: {x: 0, y: 0, z: 0}
+      customRightAnchoredPos: {x: -13, y: 73, z: 181}
+      customRightScale: {x: 1, y: 1, z: 1}
+      customRightRotation: {x: 0, y: 0, z: 0}
+    - entryID: 45
+      leftSprite: {fileID: 21300000, guid: 94a8327649686b44c97ec68e97c8fd43, type: 3}
+      rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      priority: 2
+      useCenteredPositionOverride: 0
+      leftScale: 1
+      rightScale: 1
+      useCustomPositionAndSize: 1
+      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
       customLeftScale: {x: 1, y: 1, z: 1}
       customLeftRotation: {x: 0, y: 0, z: 0}
       customRightAnchoredPos: {x: -13, y: 73, z: 181}

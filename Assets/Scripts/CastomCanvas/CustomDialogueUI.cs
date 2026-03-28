@@ -16,6 +16,13 @@ using TMPro;
 
 public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 {
+    [Serializable]
+    private sealed class NamePlateEntryHideOverride
+    {
+        public string conversationTitle;
+        public int[] entryIds = Array.Empty<int>();
+    }
+
     [Header("Advance")]
     [SerializeField] private KeyCode advanceKey = KeyCode.Space;
     [SerializeField] private bool advanceOnlyWhenNoResponses = true;
@@ -69,6 +76,8 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     [SerializeField] private ClientNamePlateMap clientNamePlateMap;
     [Tooltip("Sorting Order для канваса имени (если задан). Чем больше — тем выше слой.")]
     [SerializeField] private int namePlateCanvasSortOrder = 100;
+    [Tooltip("Точечное скрытие верхней плашки имени для отдельных реплик (по conversation + entryID).")]
+    [SerializeField] private NamePlateEntryHideOverride[] hideNamePlateEntries = Array.Empty<NamePlateEntryHideOverride>();
     [SerializeField] private string[] hideSubtitlePanelOnChoiceConversations;
     [SerializeField] private RectTransform responseMenuRect;
 
@@ -878,6 +887,12 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
         }
 
         int entryID = subtitle.dialogueEntry.id;
+        if (ShouldForceHideNamePlate(conversationTitle, entryID))
+        {
+            _namePlateVisibleByClientConversation = false;
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
+            return;
+        }
         if (!clientNamePlateMap.TryGetRule(stepIndex, entryID, out var nameRule))
         {
             _namePlateVisibleByClientConversation = false;
@@ -912,6 +927,28 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             }
             namePlateHideOnChoiceCanvas.sortingOrder = namePlateCanvasSortOrder;
         }
+    }
+
+    private bool ShouldForceHideNamePlate(string conversationTitle, int entryID)
+    {
+        if (string.IsNullOrEmpty(conversationTitle) || hideNamePlateEntries == null || hideNamePlateEntries.Length == 0)
+            return false;
+        for (int i = 0; i < hideNamePlateEntries.Length; i++)
+        {
+            NamePlateEntryHideOverride entry = hideNamePlateEntries[i];
+            if (entry == null || string.IsNullOrEmpty(entry.conversationTitle))
+                continue;
+            if (!string.Equals(entry.conversationTitle.Trim(), conversationTitle, StringComparison.OrdinalIgnoreCase))
+                continue;
+            if (entry.entryIds == null || entry.entryIds.Length == 0)
+                continue;
+            for (int j = 0; j < entry.entryIds.Length; j++)
+            {
+                if (entry.entryIds[j] == entryID)
+                    return true;
+            }
+        }
+        return false;
     }
 
     private void RefreshChoiceModeHiddenObjectsVisibility()

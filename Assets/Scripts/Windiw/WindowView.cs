@@ -19,6 +19,8 @@ public sealed class WindowView : MonoBehaviour
     [SerializeField] private WindowDayReplicaEntry[] _dayReplicas = new WindowDayReplicaEntry[0];
     [Header("Hint")]
     [SerializeField] private Sprite _hintSprite;
+    [Tooltip("Подсказка во время просмотра окна (например: 'E - закрыть окно').")]
+    [SerializeField] private Sprite _closeHintSprite;
     [Header("Look at")]
     [SerializeField] private Transform _lookAtPoint;
     [SerializeField] private GameSoundController _gameSoundController;
@@ -31,6 +33,7 @@ public sealed class WindowView : MonoBehaviour
 
     public bool IsPlayerInZone => _isPlayerInZone;
     public Sprite HintSprite => _hintSprite;
+    public Sprite CloseHintSprite => _closeHintSprite != null ? _closeHintSprite : _hintSprite;
 
     public bool IsPlayerLookingAtMe(PlayerView player)
     {

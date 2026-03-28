@@ -22,6 +22,12 @@ public sealed class StoryDirector : MonoBehaviour
     private const string Day2After4455LitMoveDialogueTools = "Client_day2.2_move_dialogue_after_tools";
     private const string Day2After4455LitMoveDialogue5577 = "Client_day2.2_move_dialogue_after_5577";
     private const string Day2After4455LitDelayedClientConversation = "Client_day2.2_after_60s_meet";
+    private const string Day2After60sMeetWarehouseAutoConversation = "Client_day2.2_warehouse_after_60s_auto";
+    private const string Day2After60sMeetAfterVideoConversation = "Client_day2.2_after_60s_after_video";
+    private const string Day2After60sMeetAfterAmbulanceConversation = "Client_day2.2_after_60s_after_ambulance";
+    private const string Day2After60sMeetEmergencyCallConversation = "Phone_CallEmergency_911";
+    private const string Day2EndAutoBeforeRadioConversation = "Client_day2.2_end_auto_before_radio";
+    private const string Day2EndAutoAfterRadioConversation = "Client_day2.2_end_auto_after_radio_static";
     private const string Day2ToolsCarryItemId = "day2_tools_box";
     private const float Day2After4455LitNextClientDelaySeconds = 60f;
 
@@ -31,6 +37,16 @@ public sealed class StoryDirector : MonoBehaviour
     [SerializeField] private AudioSource _knockAudioSource;
     [SerializeField] private Computer _computer;
     [SerializeField] private CustomDialogueUI _customDialogueUIRef;
+    [SerializeField] private AudioClip _day2After60sMeetWarehouseImpactClip;
+    [SerializeField, Range(0f, 1f)] private float _day2After60sMeetWarehouseImpactVolume = 0.85f;
+    [SerializeField] private PhoneItemView _phoneItemView;
+    [SerializeField] private AudioClip _day2After60sMeetSlapClip;
+    [SerializeField, Range(0f, 1f)] private float _day2After60sMeetSlapVolume = 0.9f;
+    [SerializeField] private AudioClip _day2After60sMeetEnergyClip;
+    [SerializeField, Range(0f, 1f)] private float _day2After60sMeetEnergyVolume = 0.9f;
+    [SerializeField] private AudioClip _day1AfterClient14WarehouseImpactClip;
+    [SerializeField, Range(0f, 1f)] private float _day1AfterClient14WarehouseImpactVolume = 0.85f;
+    [SerializeField] private RadioInteractable _radioInteractable;
 
     private List<Step> _steps = new List<Step>();
     private int _index = -1;
@@ -56,6 +72,22 @@ public sealed class StoryDirector : MonoBehaviour
     private Coroutine _day2After4455LitWarehouseSequence;
     private bool _day2After4455LitAwaitingNextClientDelay;
     private Coroutine _day2After4455LitNextClientDelayCoroutine;
+    private bool _day2After60sMeetGoToWarehousePending;
+    private bool _day2After60sMeetPlayVideoOnClientReturn;
+    private int _day2After60sMeetLastEntryId = -1;
+    private bool _day2After60sMeetSlapSoundPlayed;
+    private bool _day2After60sMeetEnergySoundPlayed;
+    private bool _day2After60sMeetEmergencyCallRunning;
+    private bool _day2After60sMeetRestorePoseValid;
+    private Vector3 _day2After60sMeetRestorePos;
+    private Quaternion _day2After60sMeetRestoreRot = Quaternion.identity;
+    private Quaternion _day2After60sMeetRestoreCamRot = Quaternion.identity;
+    private bool _isSubscribedToSubtitleShown;
+    private bool _day2EndFlowStarted;
+    private bool _day2EndWaitingForRadioInteract;
+    private bool _day2EndRadioInteracted;
+    private Coroutine _day2EndFlowCoroutine;
+    private bool _day1PlayWarehouseImpactOnNextTeleport;
     public string CurrentStepId => (_index >= 0 && _index < _steps.Count) ? _steps[_index].stepId : "";
     public bool HasStoryStarted => _index >= 0;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
@@ -128,6 +160,8 @@ public sealed class StoryDirector : MonoBehaviour
         _deliveryNoteView = deliveryNoteView;
 
         _customDialogueUI = _customDialogueUIRef ?? GameFlowController.Instance?.CustomDialogueUI;
+        EnsureCustomDialogueUISubscription();
+        RadioInteractable.OnAnyRadioInteracted += OnAnyRadioInteracted;
 
         _steps = BuildStepsFromConfig();
         if (_steps.Count == 0)
@@ -201,6 +235,11 @@ public sealed class StoryDirector : MonoBehaviour
             StopCoroutine(_day2After4455LitWarehouseSequence);
         if (_day2After4455LitNextClientDelayCoroutine != null)
             StopCoroutine(_day2After4455LitNextClientDelayCoroutine);
+        if (_day2EndFlowCoroutine != null)
+            StopCoroutine(_day2EndFlowCoroutine);
+        _day2EndFlowCoroutine = null;
+        RadioInteractable.OnAnyRadioInteracted -= OnAnyRadioInteracted;
+        UnsubscribeCustomDialogueUI();
         _flow.OnTeleportedToWarehouse -= OnTeleportedToWarehouse;
         _flow.OnTeleportedToClient -= OnTeleportedToClient;
         if (_flow is GameFlowController gfc)
@@ -319,6 +358,7 @@ public sealed class StoryDirector : MonoBehaviour
 
     public void Tick()
     {
+        EnsureCustomDialogueUISubscription();
         if (_input == null) return;
 
         if (_wait == WaitMode.WaitingTrigger && _currentStep != null && _input.NextPressed)
@@ -866,7 +906,14 @@ public sealed class StoryDirector : MonoBehaviour
         bool isClientDay14 = string.Equals(conv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase);
         bool isClientDay152 = string.Equals(conv, "Client_Day1.5.2", StringComparison.OrdinalIgnoreCase);
         bool isClientDay153 = string.Equals(conv, "Client_Day1.5.3", StringComparison.OrdinalIgnoreCase);
-        if (_wait != WaitMode.WaitingDialogueEnd && !isClientDay14 && !isClientDay152 && !isClientDay153)
+        bool isDay2After60sAfterVideo = string.Equals(conv, Day2After60sMeetAfterVideoConversation, StringComparison.OrdinalIgnoreCase);
+        bool isDay2After60sAfterAmbulance = string.Equals(conv, Day2After60sMeetAfterAmbulanceConversation, StringComparison.OrdinalIgnoreCase);
+        if (_wait != WaitMode.WaitingDialogueEnd
+            && !isClientDay14
+            && !isClientDay152
+            && !isClientDay153
+            && !isDay2After60sAfterVideo
+            && !isDay2After60sAfterAmbulance)
             return;
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -967,6 +1014,31 @@ public sealed class StoryDirector : MonoBehaviour
         if (string.Equals(conv, Day2CandlesUnlitConversation, StringComparison.OrdinalIgnoreCase))
         {
             // Ветка "свечи не зажжены": второй диалог запускается сразу после видео, без ручных действий игрока.
+            Vector3 savedPlayerPosition = Vector3.zero;
+            Quaternion savedPlayerRotation = Quaternion.identity;
+            Quaternion savedCameraRotation = Quaternion.identity;
+            PlayerView savedPlayer = null;
+            bool hasSavedPose = false;
+            if (_flow is GameFlowController gfcPose && gfcPose.Player != null && gfcPose.Player.PlayerCamera != null)
+            {
+                hasSavedPose = true;
+                savedPlayer = gfcPose.Player;
+                savedPlayerPosition = savedPlayer.transform.position;
+                savedPlayerRotation = savedPlayer.transform.rotation;
+                savedCameraRotation = savedPlayer.PlayerCamera.transform.rotation;
+            }
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            if (hasSavedPose && savedPlayer != null && savedPlayer.PlayerCamera != null)
+            {
+                savedPlayer.TeleportTo(savedPlayerPosition, savedPlayerRotation);
+                savedPlayer.PlayerCamera.transform.rotation = savedCameraRotation;
+                savedPlayer.SyncRotationFromCamera();
+                StartCoroutine(RestorePlayerPoseNextFrame(savedPlayerPosition, savedPlayerRotation, savedCameraRotation));
+            }
             _pendingDialogueAfterComputerVideo = Day2CandlesUnlitAfterVideoConversation;
             _wait = WaitMode.WaitingComputerVideo;
             _computer?.SetAllowedVideoKind(Computer.KindIndoor);
@@ -1060,6 +1132,41 @@ public sealed class StoryDirector : MonoBehaviour
             return;
         }
 
+        if (string.Equals(conv, Day2After4455LitDelayedClientConversation, StringComparison.OrdinalIgnoreCase))
+        {
+            _day2After60sMeetGoToWarehousePending = true;
+            if (_flow is GameFlowController gfcPrep60s)
+            {
+                // Переход на склад должен открыть обычную рандомную задачу без хвостов прошлых шагов.
+                gfcPrep60s.SetFixedPackageForNextWarehouse(0);
+                gfcPrep60s.SetPendingDialogueReturnPackage(0);
+                gfcPrep60s.SetPendingStoryCarryItemId(null);
+                gfcPrep60s.SetRequiredPackageForReturn(0);
+            }
+            _wait = WaitMode.WaitingWarehouseConfirm;
+            _flow?.ForceTravel(TravelTarget.Warehouse);
+            return;
+        }
+        if (string.Equals(conv, Day2After60sMeetAfterVideoConversation, StringComparison.OrdinalIgnoreCase))
+        {
+            // В этом диалоге финалы "обычных" веток — id 9 и id 12.
+            // Если диалог завершился на другом id, это ветка "Позвонить в скорую":
+            // нужно перейти к телефону, а не отпускать игрока в свободный режим.
+            bool finishedRegularBranch = _day2After60sMeetLastEntryId == 9 || _day2After60sMeetLastEntryId == 12;
+            if (!finishedRegularBranch)
+            {
+                StartDay2After60sMeetEmergencyCall();
+                return;
+            }
+            StartDay2EndFlow();
+            return;
+        }
+        if (string.Equals(conv, Day2After60sMeetAfterAmbulanceConversation, StringComparison.OrdinalIgnoreCase))
+        {
+            StartDay2EndFlow();
+            return;
+        }
+
         if (string.Equals(conv, "Client_Day1.2", StringComparison.OrdinalIgnoreCase))
         {
             GameStateService.SetState(GameState.None);
@@ -1106,6 +1213,13 @@ public sealed class StoryDirector : MonoBehaviour
                 _day2After4455LitNextClientDelayCoroutine = StartCoroutine(Day2After4455LitDelayThenAdvance());
             return;
         }
+        if (_day2After60sMeetEmergencyCallRunning
+            && string.Equals(lastConv, Day2After60sMeetEmergencyCallConversation, StringComparison.OrdinalIgnoreCase))
+        {
+            _day2After60sMeetEmergencyCallRunning = false;
+            RestoreAfterDay2After60sMeetEmergencyCall();
+            return;
+        }
         if (!string.Equals(lastConv, "Client_Day1.4", StringComparison.OrdinalIgnoreCase)) return;
         _clientDay14HandledByConversationEnded = true;
         HandleClientDay14Completed();
@@ -1139,6 +1253,8 @@ public sealed class StoryDirector : MonoBehaviour
     {
         DialogueLua.SetVariable("RunWarehouse5577Steps", false);
         bool choseToGive = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
+        // После Client_Day1.4 звук падения должен прозвучать при следующем попадании на склад независимо от выбора.
+        _day1PlayWarehouseImpactOnNextTeleport = true;
         if (!choseToGive)
         {
             _client?.CloseUI();
@@ -1166,6 +1282,12 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void OnTeleportedToWarehouse()
     {
+        if (_day1PlayWarehouseImpactOnNextTeleport)
+        {
+            _day1PlayWarehouseImpactOnNextTeleport = false;
+            PlayDay1AfterClient14WarehouseImpactSound();
+        }
+
         void EnsureControlsAfterWarehouseTeleport()
         {
             if (_flow is GameFlowController gfc)
@@ -1207,6 +1329,20 @@ public sealed class StoryDirector : MonoBehaviour
                 StopCoroutine(_day2After4455LitWarehouseSequence);
             bool gave5577InDay1 = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
             _day2After4455LitWarehouseSequence = StartCoroutine(RunDay2After4455LitWarehouseSequence(gave5577InDay1));
+            return;
+        }
+        if (_day2After60sMeetGoToWarehousePending)
+        {
+            _day2After60sMeetGoToWarehousePending = false;
+            EnsureControlsAfterWarehouseTeleport();
+            _controller?.SetBlock(false);
+            GameStateService.SetState(GameState.None);
+            PlayDay2After60sMeetWarehouseImpactSound();
+            if (_flow is GameFlowController gfcWarehouseDialog60s)
+                gfcWarehouseDialog60s.EnterClientDialogueState(false, movePlayerToClient: false);
+            if (_day2After4455LitWarehouseSequence != null)
+                StopCoroutine(_day2After4455LitWarehouseSequence);
+            _day2After4455LitWarehouseSequence = StartCoroutine(RunDay2After60sMeetWarehouseSequence());
             return;
         }
         if (_wait == WaitMode.WaitingRadioComplete)
@@ -1363,6 +1499,18 @@ public sealed class StoryDirector : MonoBehaviour
                 StartCoroutine(ShowClientDialogueNextFrame(Day2CandlesLitReturnConversation));
                 return;
             }
+            if (_day2After60sMeetPlayVideoOnClientReturn)
+            {
+                _day2After60sMeetPlayVideoOnClientReturn = false;
+                _day2After60sMeetLastEntryId = -1;
+                _day2After60sMeetSlapSoundPlayed = false;
+                _day2After60sMeetEnergySoundPlayed = false;
+                _wait = WaitMode.WaitingDialogueEnd;
+                _controller?.SetBlock(true);
+                GameStateService.SetState(GameState.ClientDialog);
+                StartCoroutine(ShowClientDialogueNextFrame(Day2After60sMeetAfterVideoConversation, lockMovement: true));
+                return;
+            }
 
             if (_currentStep != null && string.Equals(_currentStep.stepId, "return_to_client_day1_5", StringComparison.OrdinalIgnoreCase))
             {
@@ -1443,6 +1591,43 @@ public sealed class StoryDirector : MonoBehaviour
         _flow?.SetTravelTarget(TravelTarget.Client, noGiveHintKey);
     }
 
+    private IEnumerator RunDay2After60sMeetWarehouseSequence()
+    {
+        _wait = WaitMode.WaitingDialogueEnd;
+        if (_customDialogueUI != null)
+            _customDialogueUI.SetForcedAutoAdvance(true, 6f);
+
+        DialogueManager.StartConversation(Day2After60sMeetWarehouseAutoConversation);
+        while (DialogueManager.isConversationActive)
+            yield return null;
+
+        if (_customDialogueUI != null)
+            _customDialogueUI.SetForcedAutoAdvance(false);
+
+        _controller?.SetBlock(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        GameStateService.SetState(GameState.Warehouse);
+
+        if (_flow is GameFlowController gfc)
+        {
+            gfc.EnterClientDialogueState(false, movePlayerToClient: false);
+            gfc.SetPendingDialogueReturnPackage(0);
+            gfc.SetPendingStoryCarryItemId(null);
+            gfc.StartRandomDeliveryTaskAndSetRequiredForReturn();
+            gfc.RefreshWarehouseDeliveryNote();
+            gfc.ShowWarehousePickHint();
+        }
+
+        _day2After4455LitWarehouseSequence = null;
+        _day2After60sMeetPlayVideoOnClientReturn = true;
+        _wait = WaitMode.WaitingClientConfirm;
+        string hintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
+            ? (GameConfig.Tutorial.emptyKey ?? "")
+            : (GameConfig.Tutorial.returnToClientKey ?? "");
+        _flow?.SetTravelTarget(TravelTarget.Client, hintKey);
+    }
+
     /// <summary> Показать диалог с клиентом со следующего кадра после телепорта, чтобы UI успел отрисоваться. </summary>
     /// <param name="lockMovement">Если false, игрок может передвигаться во время диалога (например Client_Day1.5.3).</param>
     private IEnumerator ShowClientDialogueNextFrame(string conversationTitle, bool lockMovement = true)
@@ -1458,6 +1643,232 @@ public sealed class StoryDirector : MonoBehaviour
         yield return null;
         if (string.IsNullOrEmpty(conversationTitle)) yield break;
         DialogueManager.StartConversation(conversationTitle);
+    }
+
+    private IEnumerator RestorePlayerPoseNextFrame(Vector3 position, Quaternion rotation, Quaternion cameraRotation)
+    {
+        yield return null;
+        if (_flow is not GameFlowController gfc || gfc.Player == null || gfc.Player.PlayerCamera == null)
+            yield break;
+        gfc.Player.TeleportTo(position, rotation);
+        gfc.Player.PlayerCamera.transform.rotation = cameraRotation;
+        gfc.Player.SyncRotationFromCamera();
+    }
+
+    private void PlayDay2After60sMeetWarehouseImpactSound()
+    {
+        if (_day2After60sMeetWarehouseImpactClip == null)
+            return;
+        Vector3 position = Vector3.zero;
+        if (_flow is GameFlowController gfc && gfc.Player != null)
+            position = gfc.Player.transform.position;
+        else if (Camera.main != null)
+            position = Camera.main.transform.position;
+        AudioSource.PlayClipAtPoint(_day2After60sMeetWarehouseImpactClip, position, _day2After60sMeetWarehouseImpactVolume);
+    }
+
+    private void PlayDay1AfterClient14WarehouseImpactSound()
+    {
+        if (_day1AfterClient14WarehouseImpactClip == null)
+            return;
+        Vector3 position = Vector3.zero;
+        if (_flow is GameFlowController gfc && gfc.Player != null)
+            position = gfc.Player.transform.position;
+        else if (Camera.main != null)
+            position = Camera.main.transform.position;
+        AudioSource.PlayClipAtPoint(_day1AfterClient14WarehouseImpactClip, position, _day1AfterClient14WarehouseImpactVolume);
+    }
+
+    private void OnSubtitleShown(Subtitle subtitle)
+    {
+        if (subtitle?.dialogueEntry == null || DialogueManager.masterDatabase == null)
+            return;
+        Conversation conv = DialogueManager.masterDatabase.GetConversation(subtitle.dialogueEntry.conversationID);
+        if (conv == null || !string.Equals(conv.Title, Day2After60sMeetAfterVideoConversation, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        _day2After60sMeetLastEntryId = subtitle.dialogueEntry.id;
+        // В этом диалоге id=4/5 — выбор игрока, часто не приходит в OnSubtitleShown
+        // (showPCSubtitlesDuringLine=0). Поэтому привязываем к первым ответным репликам:
+        // id=6 после "Ударить по лицу", id=10 после "Вылить энергетик".
+        if (_day2After60sMeetLastEntryId == 6 && !_day2After60sMeetSlapSoundPlayed)
+        {
+            _day2After60sMeetSlapSoundPlayed = true;
+            PlayClipAtPlayer(_day2After60sMeetSlapClip, _day2After60sMeetSlapVolume);
+        }
+        else if (_day2After60sMeetLastEntryId == 10 && !_day2After60sMeetEnergySoundPlayed)
+        {
+            _day2After60sMeetEnergySoundPlayed = true;
+            PlayClipAtPlayer(_day2After60sMeetEnergyClip, _day2After60sMeetEnergyVolume);
+        }
+    }
+
+    private void StartDay2After60sMeetEmergencyCall()
+    {
+        if (_flow is not GameFlowController gfc || gfc.Player == null)
+            return;
+
+        _day2After60sMeetEmergencyCallRunning = true;
+        _day2After60sMeetRestorePoseValid = gfc.Player.PlayerCamera != null;
+        _day2After60sMeetRestorePos = gfc.Player.transform.position;
+        _day2After60sMeetRestoreRot = gfc.Player.transform.rotation;
+        if (gfc.Player.PlayerCamera != null)
+            _day2After60sMeetRestoreCamRot = gfc.Player.PlayerCamera.transform.rotation;
+
+        GameStateService.UnlockPhone();
+        _client?.CloseUI();
+        GameStateService.SetState(GameState.None);
+        gfc.EnterClientDialogueState(false);
+        _controller?.SetBlock(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        PlayerHands hands = HandsRegistry.Hands;
+        if (hands != null && hands.HasItem)
+            hands.DropCurrentItem(gfc.Player.DropPoint.position, Quaternion.identity);
+        if (hands != null && hands.HasItem && hands.Current is not PhoneItemView)
+            hands.DestroyCurrentItem();
+        if (hands != null && _phoneItemView != null)
+            hands.TryTake(_phoneItemView, gfc.Player.PhoneHandPoint);
+
+        _wait = WaitMode.Idle;
+        // Важно: разговор 911 НЕ запускаем тут автоматически.
+        // Игрок должен сам набрать номер в телефоне, после чего PhoneStoryWiring запустит Phone_CallEmergency_911.
+        GameStateService.SetState(GameState.Phone);
+    }
+
+    private void StartDay2EndFlow()
+    {
+        if (_day2EndFlowStarted)
+            return;
+        _day2EndFlowStarted = true;
+        if (_day2EndFlowCoroutine != null)
+            StopCoroutine(_day2EndFlowCoroutine);
+        _day2EndFlowCoroutine = StartCoroutine(RunDay2EndFlowSequence());
+    }
+
+    private IEnumerator RunDay2EndFlowSequence()
+    {
+        _wait = WaitMode.WaitingDialogueEnd;
+        yield return StartCoroutine(PlayAutoDialogueFreeRoam(Day2EndAutoBeforeRadioConversation));
+
+        _wait = WaitMode.Idle;
+        GameStateService.SetState(GameState.None);
+        if (_flow is GameFlowController gfc)
+            gfc.EnterClientDialogueState(false);
+        _controller?.SetBlock(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        _day2EndWaitingForRadioInteract = true;
+        _day2EndRadioInteracted = false;
+        _flow?.ShowRadioHintOnce();
+        if (_radioInteractable != null)
+            _radioInteractable.SetForcedStaticOnlyMode(true);
+
+        while (!_day2EndRadioInteracted)
+            yield return null;
+
+        _day2EndWaitingForRadioInteract = false;
+        if (_radioInteractable != null)
+            _radioInteractable.SetForcedStaticOnlyMode(false);
+
+        _wait = WaitMode.WaitingDialogueEnd;
+        yield return StartCoroutine(PlayAutoDialogueFreeRoam(Day2EndAutoAfterRadioConversation));
+
+        _controller?.SetBlock(true);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        _flow?.HideHint();
+        _wait = WaitMode.WaitingFadeToBlack;
+        _flow?.PlayFadeToBlack(3f, () =>
+        {
+            _wait = WaitMode.Idle;
+            _controller?.SetBlock(false);
+        });
+
+        _day2EndFlowCoroutine = null;
+    }
+
+    private IEnumerator PlayAutoDialogueFreeRoam(string conversationTitle)
+    {
+        if (string.IsNullOrEmpty(conversationTitle))
+            yield break;
+        if (_customDialogueUI != null)
+            _customDialogueUI.SetForcedAutoAdvance(true, 6f);
+        DialogueManager.StartConversation(conversationTitle);
+        while (DialogueManager.isConversationActive)
+            yield return null;
+        if (_customDialogueUI != null)
+            _customDialogueUI.SetForcedAutoAdvance(false);
+    }
+
+    private void OnAnyRadioInteracted()
+    {
+        if (!_day2EndWaitingForRadioInteract)
+            return;
+        _day2EndRadioInteracted = true;
+    }
+
+    private void RestoreAfterDay2After60sMeetEmergencyCall()
+    {
+        if (_flow is not GameFlowController gfc || gfc.Player == null)
+            return;
+
+        PlayerHands hands = HandsRegistry.Hands;
+        if (hands != null && hands.Current is PhoneItemView)
+            hands.DropCurrentItem(gfc.Player.DropPoint.position, Quaternion.identity);
+
+        if (_day2After60sMeetRestorePoseValid)
+        {
+            gfc.Player.TeleportTo(_day2After60sMeetRestorePos, _day2After60sMeetRestoreRot);
+            if (gfc.Player.PlayerCamera != null)
+            {
+                gfc.Player.PlayerCamera.transform.rotation = _day2After60sMeetRestoreCamRot;
+                gfc.Player.SyncRotationFromCamera();
+            }
+        }
+
+        _wait = WaitMode.WaitingDialogueEnd;
+        _controller?.SetBlock(true);
+        GameStateService.SetState(GameState.ClientDialog);
+        StartCoroutine(ShowClientDialogueNextFrame(Day2After60sMeetAfterAmbulanceConversation, lockMovement: true));
+    }
+
+    private void PlayClipAtPlayer(AudioClip clip, float volume)
+    {
+        if (clip == null)
+            return;
+        Vector3 position = Vector3.zero;
+        if (_flow is GameFlowController gfc && gfc.Player != null)
+            position = gfc.Player.transform.position;
+        else if (Camera.main != null)
+            position = Camera.main.transform.position;
+        AudioSource.PlayClipAtPoint(clip, position, Mathf.Clamp01(volume));
+    }
+
+    private void EnsureCustomDialogueUISubscription()
+    {
+        CustomDialogueUI runtimeUi = _customDialogueUIRef ?? GameFlowController.Instance?.CustomDialogueUI;
+        if (runtimeUi == _customDialogueUI && _isSubscribedToSubtitleShown)
+            return;
+        if (runtimeUi == _customDialogueUI && runtimeUi == null)
+            return;
+
+        UnsubscribeCustomDialogueUI();
+        _customDialogueUI = runtimeUi;
+        if (_customDialogueUI != null)
+        {
+            _customDialogueUI.OnSubtitleShown += OnSubtitleShown;
+            _isSubscribedToSubtitleShown = true;
+        }
+    }
+
+    private void UnsubscribeCustomDialogueUI()
+    {
+        if (_customDialogueUI != null && _isSubscribedToSubtitleShown)
+            _customDialogueUI.OnSubtitleShown -= OnSubtitleShown;
+        _isSubscribedToSubtitleShown = false;
     }
 
     /// <summary> Показать только портрет клиента со следующего кадра после телепорта, чтобы спрайт и плашка не были пустыми. </summary>

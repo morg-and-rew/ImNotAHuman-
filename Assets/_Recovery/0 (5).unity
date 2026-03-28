@@ -2324,6 +2324,7 @@ MonoBehaviour:
   - day: 1
     conversationTitle: Window_Day1.2
   _hintSprite: {fileID: 21300000, guid: 3c204f045647a4a4281c6ed91b46c103, type: 3}
+  _closeHintSprite: {fileID: 21300000, guid: 5c563f2a7a2d30f41b7285529f5d28aa, type: 3}
   _lookAtPoint: {fileID: 160417895}
   _gameSoundController: {fileID: 1223147429}
 --- !u!1 &172427912 stripped
@@ -9689,7 +9690,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: bbcd5f8c028460742a82f6469bef6fa0, type: 3}
   - {fileID: 21300000, guid: 33552e1b13ec14a43b9de6195af7b9c3, type: 3}
   - {fileID: 21300000, guid: e6625e44e61e27347946cb1120581967, type: 3}
-  - {fileID: 21300000, guid: e6625e44e61e27347946cb1120581967, type: 3}
+  - {fileID: 21300000, guid: 6eb7f38ed37116c42bee81a934e9e1ae, type: 3}
   - {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
   - {fileID: 21300000, guid: e110d05fba058e342aa974ac0d7cd600, type: 3}
   _fadeDuration: 0.18
@@ -11385,6 +11386,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryCarryItem
   _itemId: day2_tools_box
+  _rb: {fileID: 0}
+  _col: {fileID: 0}
 --- !u!65 &702028611
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12735,6 +12738,7 @@ GameObject:
   - component: {fileID: 778332671}
   - component: {fileID: 778332670}
   - component: {fileID: 778332669}
+  - component: {fileID: 778332673}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -12827,6 +12831,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &778332673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 778332668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6127a20d5825b064bb5e8ff1e78d9309, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WindowCloseHintView
+  _root: {fileID: 815801399}
+  _image: {fileID: 1340108108}
+  _hintSprite: {fileID: 21300000, guid: 7868e66454e4a5348aba9483c3809388, type: 3}
+  _fadeDuration: 0.18
 --- !u!1001 &779225226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13540,6 +13560,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 811170429}
   m_CullTransparentMesh: 1
+--- !u!1 &815801399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 815801400}
+  m_Layer: 5
+  m_Name: WindowCloseHintView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &815801400
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815801399}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1340108107}
+  m_Father: {fileID: 1593070225}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &827004349
 GameObject:
   m_ObjectHideFlags: 0
@@ -14189,8 +14245,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractableOutline
   _outlineColor: {r: 1, g: 0.6, b: 0.3372549, a: 1}
-  _shellScale: 0.005
-  _outlineShader: {fileID: 4800000, guid: 2c9f60ff8c529174995465af17483e74, type: 3}
+  _shellScale: 0.015
+  _outlineShader: {fileID: 0}
   _targetRenderer: {fileID: 0}
   _targetRoot: {fileID: 0}
 --- !u!64 &843645450
@@ -15856,6 +15912,7 @@ MonoBehaviour:
   - day: 1
     conversationTitle: Window_Day1.3
   _hintSprite: {fileID: 21300000, guid: 3c204f045647a4a4281c6ed91b46c103, type: 3}
+  _closeHintSprite: {fileID: 21300000, guid: 5c563f2a7a2d30f41b7285529f5d28aa, type: 3}
   _lookAtPoint: {fileID: 931493371}
   _gameSoundController: {fileID: 1223147429}
 --- !u!1 &940443520
@@ -20640,7 +20697,7 @@ MonoBehaviour:
   _footstepClips: []
   _footstepVolume: 0.35
   _dialogueResponseClickClip: {fileID: 8300000, guid: 10e8564607425ef4392c4874da520371, type: 3}
-  _dialogueResponseClickVolume: 0.5
+  _dialogueResponseClickVolume: 1
   _windowOpenClip: {fileID: 8300000, guid: ac45b9819e4ce8249b7737033dbdd8c6, type: 3}
   _windowCloseClip: {fileID: 8300000, guid: 8d57d0a06e4866b4d97a42a9f6f61a0b, type: 3}
   _windowSoundVolume: 0.5
@@ -23486,6 +23543,81 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1 &1340108106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1340108107}
+  - component: {fileID: 1340108109}
+  - component: {fileID: 1340108108}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1340108107
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340108106}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 815801400}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 713, y: -481}
+  m_SizeDelta: {x: 500, y: 250}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1340108108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340108106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 3c204f045647a4a4281c6ed91b46c103, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1340108109
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340108106}
+  m_CullTransparentMesh: 1
 --- !u!1 &1347104151
 GameObject:
   m_ObjectHideFlags: 0
@@ -24643,6 +24775,16 @@ MonoBehaviour:
   _knockAudioSource: {fileID: 0}
   _computer: {fileID: 90947205}
   _customDialogueUIRef: {fileID: 0}
+  _day2After60sMeetWarehouseImpactClip: {fileID: 8300000, guid: 794f2ddc332702b4e94d268c822cff56, type: 3}
+  _day2After60sMeetWarehouseImpactVolume: 0.85
+  _phoneItemView: {fileID: 975431278}
+  _day2After60sMeetSlapClip: {fileID: 8300000, guid: e8b3f8f0e29291748b54bf8168f631a0, type: 3}
+  _day2After60sMeetSlapVolume: 1
+  _day2After60sMeetEnergyClip: {fileID: 8300000, guid: ba3642b7b2569cb49999d1a89d0e66c8, type: 3}
+  _day2After60sMeetEnergyVolume: 1
+  _day1AfterClient14WarehouseImpactClip: {fileID: 8300000, guid: 794f2ddc332702b4e94d268c822cff56, type: 3}
+  _day1AfterClient14WarehouseImpactVolume: 0.85
+  _radioInteractable: {fileID: 638363680}
 --- !u!4 &1407435834
 Transform:
   m_ObjectHideFlags: 0
@@ -28729,6 +28871,7 @@ RectTransform:
   - {fileID: 1494380314}
   - {fileID: 1359877864}
   - {fileID: 1965244493}
+  - {fileID: 815801400}
   - {fileID: 2140404145}
   - {fileID: 1819003045}
   - {fileID: 1347104152}
@@ -29885,6 +30028,8 @@ MonoBehaviour:
   _fadeToBlackView: {fileID: 811170432}
   _travelFadeDuration: 0.5
   _gameSoundController: {fileID: 1223147429}
+  _clientArriveBellClip: {fileID: 8300000, guid: 0f686e7a91c5a5f4db783ac4ffbd2c8a, type: 3}
+  _clientArriveBellVolume: 0.7
   _uiTextTable: {fileID: 11400000, guid: 3bb7a3e023e0ead468a0dbf6788d2f83, type: 2}
   _language: ru
   _tutorialHint: {fileID: 613144413}
@@ -35084,6 +35229,7 @@ MonoBehaviour:
   - day: 1
     conversationTitle: Window_Day1.1
   _hintSprite: {fileID: 21300000, guid: 3c204f045647a4a4281c6ed91b46c103, type: 3}
+  _closeHintSprite: {fileID: 21300000, guid: 5c563f2a7a2d30f41b7285529f5d28aa, type: 3}
   _lookAtPoint: {fileID: 2029519917}
   _gameSoundController: {fileID: 1223147429}
 --- !u!4 &2029519917

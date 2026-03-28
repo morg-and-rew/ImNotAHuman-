@@ -30,6 +30,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [Tooltip("Длительность затемнения при переходе склад ↔ зона выдачи (сек). 0 = без затемнения.")]
     [SerializeField, Min(0f)] private float _travelFadeDuration = 0.5f;
     [SerializeField] private GameSoundController _gameSoundController;
+    [Header("Client Arrival Sound")]
+    [SerializeField] private AudioClip _clientArriveBellClip;
+    [SerializeField, Range(0f, 1f)] private float _clientArriveBellVolume = 0.7f;
 
     [Header("Localization (UI Text Table)")]
     [SerializeField] private TextTable _uiTextTable;
@@ -1293,8 +1296,17 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         }
         _preferEmptyOverMeetClient = false;
         _meetClientHintShown = true;
+        PlayClientArriveBell();
         ShowHintOnceByKey(GameConfig.Tutorial.meetClientKey);
         GameStateService.SetState(GameState.ClientDialog);
+    }
+
+    private void PlayClientArriveBell()
+    {
+        if (_clientArriveBellClip == null)
+            return;
+        Vector3 pos = _player != null ? _player.transform.position : (Camera.main != null ? Camera.main.transform.position : transform.position);
+        AudioSource.PlayClipAtPoint(_clientArriveBellClip, pos, Mathf.Clamp01(_clientArriveBellVolume));
     }
 
     /// <summary> Показать подсказку по ключу (для туториала показывается спрайт по ключу в TutorialHintView). </summary>

@@ -520,3 +520,427 @@ MonoBehaviour:
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.1.3_candles_unlit
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 2
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 5
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 7
+      nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 8
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.1.4_after_video_unlit
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 4
+      nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 5
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.2_order_8877
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 868ad5d00e18a9b47980a4262e6eb6f5, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 2
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.2_after_8877
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: add52c53770914d4289d7d2faa2ea921, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 2
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: add52c53770914d4289d7d2faa2ea921, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 8
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 9
+      nameSprite: {fileID: 21300000, guid: add52c53770914d4289d7d2faa2ea921, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 11
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 12
+      nameSprite: {fileID: 21300000, guid: add52c53770914d4289d7d2faa2ea921, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.1.4_after_warehouse_lit
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 2
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 4
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.2_candles_lit_after_4455
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.2_after_4455_lit_followup
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 6
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 5
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 8
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.2_after_tools_if_gave_5577
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 5
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.2_after_5577_if_not_gave
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 5
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.2_after_60s_meet
+    rules:
+    - entryID: 1
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 8
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 10
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 13
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 19
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 20
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 23
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 25
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 26
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 31
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 32
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 34
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 39
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 43
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 45
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 49
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.2_after_60s_after_video
+    rules:
+    - entryID: 6
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 10
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 13
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 48
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 21
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 22
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 17
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 25
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 26
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 31
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 33
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 37
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 39
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 42
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 45
+      nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 47
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  - conversation: Client_day2.2_after_60s_after_ambulance
+    rules:
+    - entryID: 3
+      nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 8
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 11
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 18
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 12
+      nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 21
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 24
+      nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 25
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 28
+      nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 34
+      nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+    - entryID: 35
+      nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
+      nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}

@@ -9,6 +9,7 @@ using static IGameFlowController;
 [RequireComponent(typeof(Collider))]
 public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 {
+    public static event System.Action OnAnyRadioInteracted;
     [Header("Distance Volume")]
     [SerializeField] private bool _useDistanceVolume = true;
     [SerializeField, Min(0f)] private float _fullVolumeDistance = 2f;
@@ -75,6 +76,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private float _lastLoggedStationVolume = -1f;
     private float _lastLoggedVoiceVolume = -1f;
     private float _currentStaticVolume;
+    private bool _forcedStaticOnlyMode;
 
     public Sprite HintSprite => _hintSprite;
 
@@ -241,12 +243,22 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     public void Interact(IPlayerInput input)
     {
+        OnAnyRadioInteracted?.Invoke();
+
         if (_waitingStoryEnd || _waitingPlayerReplica)
             return;
         if (_waitingForLeaveWarehouseBeforeVideo)
             return;
         if (_waitingVideoEnd)
             return;
+
+        if (_forcedStaticOnlyMode)
+        {
+            GameFlowController flowForced = GameFlowController.Instance;
+            flowForced?.HideHint();
+            PlayStatic();
+            return;
+        }
 
         GameFlowController flow = GameFlowController.Instance;
         if (flow == null)
@@ -295,8 +307,18 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         if (!CanInteractFromPlayerSide(flow))
             return false;
 
+        if (_forcedStaticOnlyMode)
+            return true;
+
         // Для радио показываем подсветку/иконку только когда есть доступный сюжетный запуск.
         return GetFirstAvailableStoryEvent(flow) != null;
+    }
+
+    public void SetForcedStaticOnlyMode(bool enabled)
+    {
+        _forcedStaticOnlyMode = enabled;
+        if (!enabled)
+            StopStatic();
     }
 
     private bool CanInteractFromPlayerSide(GameFlowController flow)

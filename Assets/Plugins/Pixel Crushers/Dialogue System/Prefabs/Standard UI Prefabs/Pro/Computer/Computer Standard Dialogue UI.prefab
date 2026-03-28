@@ -308,11 +308,12 @@ MonoBehaviour:
   - Client_day2.2_order_8877
   - Client_day2.2_after_8877
   - Client_day2.2_after_4455_lit_followup
+  - Client_day2.2_after_60s_meet
   keyHintPlaqueImage: {fileID: 126639180057814539}
   keyHintSpaceSprite: {fileID: 21300000, guid: 63ea0c0b6088fb7498770da7a1da7185, type: 3}
   keyHintFinishSprite: {fileID: 21300000, guid: 3568d7ae1d0d675468c3992a727540c2, type: 3}
   keyHintPlaqueUseCustomPositionForF: 1
-  keyHintPlaquePositionWhenF: {x: 881, y: -561}
+  keyHintPlaquePositionWhenF: {x: -208, y: 17}
   keyHintPlaqueFadeDuration: 0.18
   keyHintPlaqueChoiceColor: {r: 0.32156864, g: 0.30980393, b: 0.050980393, a: 1}
   keyHintPlaqueNormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -327,6 +328,9 @@ MonoBehaviour:
   namePlateImageRight: {fileID: 2754817527497569351}
   clientNamePlateMap: {fileID: 11400000, guid: 7125b8b4e99aba34b889432a82fc81eb, type: 2}
   namePlateCanvasSortOrder: 100
+  hideNamePlateEntries:
+  - conversationTitle: Client_day2.2_after_60s_after_video
+    entryIds: 02000000030000000400000005000000
   hideSubtitlePanelOnChoiceConversations:
   - PostVideo_Day1_2
   responseMenuRect: {fileID: 224833919691255960}
@@ -4141,10 +4145,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 224087908662240786}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -2250.8398, y: 1246}
-  m_SizeDelta: {x: 391.125, y: 245.5}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -42, y: 16}
+  m_SizeDelta: {x: 500, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4069421125523210683
 CanvasRenderer:
