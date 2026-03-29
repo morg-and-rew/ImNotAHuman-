@@ -72,9 +72,6 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private int _radioAdvanceIndex;
     private float _stationBaseVolume = 1f;
     private float _voiceBaseVolume = 1f;
-    private float _nextVolumeLogTime;
-    private float _lastLoggedStationVolume = -1f;
-    private float _lastLoggedVoiceVolume = -1f;
     private float _currentStaticVolume;
     private bool _forcedStaticOnlyMode;
 
@@ -704,7 +701,6 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         _stationSource.clip = entry.clip;
         _stationSource.loop = true;
         _stationSource.Play();
-        Debug.Log($"[Radio] Озвучивается: станция [{_currentStationIndex}] — «{entry.clip.name}» (громкость {entry.volume})");
     }
 
     private void ApplyDistanceVolumeToSources()
@@ -718,7 +714,6 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         if (_voiceSource != null)
             _voiceSource.volume = voiceVolume;
 
-        LogCurrentVolumes(stationVolume, voiceVolume);
     }
 
     private float GetDistanceVolumeMultiplier()
@@ -752,24 +747,6 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         }
 
         return Camera.main != null ? Camera.main.transform : null;
-    }
-
-    private void LogCurrentVolumes(float stationVolume, float voiceVolume)
-    {
-        // Логируем не чаще раза в 0.5 сек и только если громкость заметно изменилась.
-        if (Time.time < _nextVolumeLogTime)
-            return;
-
-        bool stationChanged = Mathf.Abs(stationVolume - _lastLoggedStationVolume) >= 0.01f;
-        bool voiceChanged = Mathf.Abs(voiceVolume - _lastLoggedVoiceVolume) >= 0.01f;
-        if (!stationChanged && !voiceChanged)
-            return;
-
-        _nextVolumeLogTime = Time.time + 0.5f;
-        _lastLoggedStationVolume = stationVolume;
-        _lastLoggedVoiceVolume = voiceVolume;
-
-        Debug.Log($"[Radio] Current volume -> station: {stationVolume:0.00}, voice/static: {voiceVolume:0.00}");
     }
 
     private RadioEventClipEntry GetEventClipEntry(string eventId)

@@ -28,6 +28,8 @@ public sealed class PlayerView : MonoBehaviour
     public Canvas PlayerCanvas => _playerCanvas;
     public CharacterController Controller => _controller;
     public Camera PlayerCamera => _playerCamera;
+    /// <summary> Родитель камеры (pitch). Для коротких процедурных сцен (головокружение и т.п.). </summary>
+    public Transform CameraHolder => _cameraHolder;
     public Image PlayerDialog => _playerDialogLeftClient;
     public Image PlayerDialog1 => _playerDialogRightClient;
     public DeliveryNoteView DeliveryNoteView => _deliveryNoteView;

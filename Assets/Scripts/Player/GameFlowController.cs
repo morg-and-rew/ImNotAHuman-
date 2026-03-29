@@ -3,6 +3,8 @@ using PixelCrushers.DialogueSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -24,6 +26,49 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     [Header("Intro")]
     [SerializeField] private IntroView _introView;
+
+    // День 2: головокружение и падение (только const — значения из сцены не перезаписывают код).
+    private const bool Day2DizzyFallAfterIntro = true;
+    private const float Day2DizzyAndStepDuration = 3.55f;
+    private const float Day2DizzyCameraSmoothTime = 0.28f;
+    private const float Day2DizzyRollFrequencyHz = 0.32f;
+    private const float Day2DizzyYawFrequencyHz = 0.24f;
+    private const float Day2DizzyPitchFrequencyHz = 0.4f;
+    private const float Day2DizzyHeadRollDegrees = 9.5f;
+    private const float Day2DizzyHeadYawDegrees = 4.2f;
+    private const float Day2DizzyHeadPitchDegrees = 3f;
+    private const float Day2StepBackDistance = 0.38f;
+    private const float Day2StepBackSmoothTime = 0.22f;
+    private const float Day2FallDuration = 2.05f;
+    private const float Day2FallCameraPitchDeltaFromSaved = -46f;
+    private const float Day2FallDropMeters = 0.22f;
+    private const float Day2FallBackSlideMeters = 0.035f;
+    // Запрокидывание по u начинается позже; дальше цель идёт по Эйлерам + SmoothDampAngle (не Slerp кватов).
+    private const float Day2FallHeadTiltDelayU = 0.18f;
+    private const float Day2FallHeadPitchSmoothTime = 0.68f;
+    private const float Day2FallHeadYawRollSmoothTime = 0.52f;
+    private const float Day2FallBodyPosSmoothTime = 0.14f;
+    // После этой доли u доводим голову Slerp к qSettled — без скачка после SmoothDampAngle.
+    private const float Day2FallHeadMergeFromU = 0.83f;
+    // К концу головокружения гасим только pitch-качание (вниз/вверх), не трогая yaw/roll.
+    private const float Day2DizzyPitchSettleStartLinear = 0.84f;
+    // Падение: ease-out на первой доле u, затем линейный дожим до 1 — иначе у u→1 скорость → 0 («лежим, а время ещё течёт»).
+    private const float Day2FallEaseOutPower = 1.78f;
+    private const float Day2FallPosEaseUntilU = 0.74f;
+    private const float Day2FallPosEaseAnchor = 0.82f;
+    // Раньше fade к чёрному: не залипаем в «уже лежим» на полном кадре.
+    private const float Day2FallFadeStartU = 0.88f;
+    private const float Day2FallTailDuration = 0.45f;
+    private const float Day2TailEaseInPower = 1.22f;
+    private const float Day2FallTailExtraDrop = 0.13f;
+    private const float Day2FallTailExtraPitchDegrees = 16f;
+    private const float Day2AfterFallFadeToBlackDuration = 1.05f;
+    private const float Day2AfterBlackFadeInDuration = 1.2f;
+    // TSV движения камеры (день 2). false — отключить запись на диск.
+    private const bool Day2CameraMotionLog = false;
+
+    private float _day2CamLogPrevHolderPitchX;
+    private bool _day2CamLogPitchPrevValid;
 
     [Header("Fade to black (end of day)")]
     [SerializeField] private FadeToBlackView _fadeToBlackView;
@@ -330,13 +375,548 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         float duration = GameConfig.Intro != null ? GameConfig.Intro.fadeDuration : 3f;
         if (_introView != null)
         {
-            _introView.PlayFadeFromBlack(duration, onComplete);
+            _introView.PlayFadeFromBlack(duration, () =>
+            {
+                if (Day2DizzyFallAfterIntro && _player != null)
+                    StartCoroutine(Day2PostIntroTempDizzyFallRoutine(onComplete));
+                else
+                    onComplete?.Invoke();
+            });
             _fadeToBlackView?.Hide();
         }
         else
         {
             _fadeToBlackView?.Hide();
-            onComplete?.Invoke();
+            if (Day2DizzyFallAfterIntro && _player != null)
+                StartCoroutine(Day2PostIntroTempDizzyFallRoutine(onComplete));
+            else
+                onComplete?.Invoke();
+        }
+    }
+
+    private IEnumerator Day2PostIntroTempDizzyFallRoutine(Action onComplete)
+    {
+        SetPlayerControlBlocked(true);
+
+        PlayerView p = _player;
+        RuntimeDizzyBlurVolume blurVol = p != null
+            ? RuntimeDizzyBlurVolume.TryCreate(p.PlayerCamera)
+            : null;
+        Vector3 flatPlayerFwd = new Vector3(p.transform.forward.x, 0f, p.transform.forward.z);
+        RuntimeDizzyVillainSilhouette villainSil = RuntimeDizzyVillainSilhouette.TryCreate(
+            p.transform.position,
+            flatPlayerFwd,
+            null,
+            p.PlayerCamera);
+        Transform holder = p.CameraHolder;
+        CharacterController cc = p.Controller;
+
+        float routineT = 0f;
+        if (Day2CameraMotionLog)
+        {
+            _day2CamLogPitchPrevValid = false;
+            try
+            {
+                File.WriteAllText(
+                    Day2CameraMotionLogPath,
+                    "routine_t\tphase\tlinear\tu\tk\tholderLx\tholderLy\tholderLz\tcamWx\tcamWy\tcamWz\t"
+                    + "camPx\tcamPy\tcamPz\tplayerY\tdHolderPitchDegPerSec\taux1\taux2\taux3\tnote\n");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"Day2 camera log init: {ex.Message}");
+            }
+
+            Debug.Log("[Day2] Camera TSV → " + Day2CameraMotionLogPath);
+        }
+
+        Vector3 savedPos = p.transform.position;
+        Quaternion savedRot = p.transform.rotation;
+        Vector3 savedHolderEuler = holder != null ? holder.localEulerAngles : Vector3.zero;
+
+        Vector3 flatBack = new Vector3(-p.transform.forward.x, 0f, -p.transform.forward.z);
+        if (flatBack.sqrMagnitude < 0.0001f)
+            flatBack = new Vector3(0f, 0f, -1f);
+        flatBack.Normalize();
+
+        Vector3 stepStartXZ = new Vector3(p.transform.position.x, 0f, p.transform.position.z);
+        Vector3 stepEndXZ = stepStartXZ + new Vector3(flatBack.x, 0f, flatBack.z) * Day2StepBackDistance;
+
+        Vector3 shakeSmoothed = Vector3.zero;
+        Vector3 shakeVel = Vector3.zero;
+        Vector2 smoothStepXZ = new Vector2(stepStartXZ.x, stepStartXZ.z);
+        Vector2 smoothStepXZVel = Vector2.zero;
+
+        float phaseT = 0f;
+        float phaseDur = Mathf.Max(0.5f, Day2DizzyAndStepDuration);
+
+        // --- Параллельно: плавное «кружение» головы (SmoothDamp) и отход назад (двойной SmoothStep) ---
+        while (phaseT < phaseDur)
+        {
+            phaseT += Time.deltaTime;
+            routineT += Time.deltaTime;
+            float linear = Mathf.Clamp01(phaseT / phaseDur);
+            float envelope = Mathf.SmoothStep(0f, 1f, Mathf.SmoothStep(0f, 1f, Mathf.SmoothStep(0f, 1f, linear)));
+
+            float t = phaseT;
+            float twoPi = Mathf.PI * 2f;
+            Vector3 targetShake = new Vector3(
+                Mathf.Sin(t * twoPi * Day2DizzyPitchFrequencyHz) * Day2DizzyHeadPitchDegrees,
+                Mathf.Sin(t * twoPi * Day2DizzyYawFrequencyHz) * Day2DizzyHeadYawDegrees,
+                Mathf.Sin(t * twoPi * Day2DizzyRollFrequencyHz) * Day2DizzyHeadRollDegrees
+            ) * envelope;
+
+            if (holder != null)
+            {
+                shakeSmoothed = Vector3.SmoothDamp(
+                    shakeSmoothed,
+                    targetShake,
+                    ref shakeVel,
+                    Day2DizzyCameraSmoothTime,
+                    Mathf.Infinity,
+                    Time.deltaTime);
+                float settleStart = Mathf.Clamp(Day2DizzyPitchSettleStartLinear, 0f, 0.95f);
+                if (linear > settleStart)
+                {
+                    float settleT = (linear - settleStart) / Mathf.Max(0.06f, 1f - settleStart);
+                    float settleK = Mathf.SmoothStep(0f, 1f, Mathf.SmoothStep(0f, 1f, settleT));
+                    shakeSmoothed.x = Mathf.Lerp(shakeSmoothed.x, 0f, settleK);
+                }
+
+                holder.localEulerAngles = savedHolderEuler + shakeSmoothed;
+            }
+
+            float uStep = Mathf.SmoothStep(0f, 1f, Mathf.SmoothStep(0f, 1f, linear));
+            if (cc != null)
+            {
+                Vector3 cur = p.transform.position;
+                Vector3 delta = Vector3.zero;
+                if (Day2StepBackDistance > 0.0001f)
+                {
+                    Vector3 wantXZ = Vector3.Lerp(stepStartXZ, stepEndXZ, uStep);
+                    Vector2 want2 = new Vector2(wantXZ.x, wantXZ.z);
+                    float stepSt = Mathf.Max(0.04f, Day2StepBackSmoothTime);
+                    smoothStepXZ = Vector2.SmoothDamp(
+                        smoothStepXZ,
+                        want2,
+                        ref smoothStepXZVel,
+                        stepSt,
+                        Mathf.Infinity,
+                        Time.deltaTime);
+                    delta.x = smoothStepXZ.x - cur.x;
+                    delta.z = smoothStepXZ.y - cur.z;
+                }
+
+                if (delta.sqrMagnitude > 1e-8f)
+                    cc.Move(delta);
+            }
+
+            if (blurVol != null)
+            {
+                float ramp = Mathf.Max(0.05f, RuntimeDizzyBlurVolume.RampInPhasePortion);
+                float blurIn = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(linear / ramp));
+                blurVol.SetWeight(blurIn * RuntimeDizzyBlurVolume.MaxVolumeWeight);
+            }
+
+            villainSil?.SetAlphaNormalized(RuntimeDizzyVillainSilhouette.EvaluateAlphaDizzy(linear));
+            villainSil?.FaceCamera(GetDay2DizzyCameraWorldPosition(p));
+
+            if (Day2CameraMotionLog && holder != null)
+            {
+                Day2LogCameraMotionTsv(
+                    routineT,
+                    "dizzy",
+                    linear,
+                    -1f,
+                    -1f,
+                    holder,
+                    p,
+                    shakeSmoothed.x,
+                    uStep,
+                    envelope,
+                    "");
+            }
+
+            yield return null;
+        }
+
+        if (holder != null)
+            holder.localEulerAngles = savedHolderEuler + shakeSmoothed;
+
+        Vector3 eDizzyCam = holder != null ? holder.localEulerAngles : Vector3.zero;
+        // Только запрокидывание от углов конца головокружения; не тянуть yaw/roll к saved (0,0) —
+        // иначе в TSV видно рывок: из (~0,357°,9°) в (-46°,0,0) и лишние ощущения «вниз»/скачка.
+        Vector3 eSettledCam = new Vector3(
+            eDizzyCam.x + Day2FallCameraPitchDeltaFromSaved,
+            eDizzyCam.y,
+            eDizzyCam.z);
+        Quaternion qSettled = Quaternion.Euler(eSettledCam);
+
+        if (Day2CameraMotionLog && holder != null)
+        {
+            Day2LogCameraMotionTsv(
+                routineT,
+                "handoff",
+                -1f,
+                -1f,
+                -1f,
+                holder,
+                p,
+                eDizzyCam.x,
+                eDizzyCam.y,
+                eDizzyCam.z,
+                "end_dizzy_eDizzyCam");
+            Day2LogCameraMotionTsv(
+                routineT,
+                "handoff",
+                -1f,
+                -1f,
+                -1f,
+                holder,
+                p,
+                eSettledCam.x,
+                eSettledCam.y,
+                eSettledCam.z,
+                "target_eSettledCam");
+        }
+
+        // --- Падение: капсула вертикальна. Камера — Quaternion. Кривая ease-out, часть опускания уже в конце фазы выше. ---
+        Vector3 fallStartPos = p.transform.position;
+        float yawDeg = p.transform.eulerAngles.y;
+        Quaternion uprightYaw = Quaternion.Euler(0f, yawDeg, 0f);
+        float fallRemainDrop = Mathf.Max(0.01f, Day2FallDropMeters);
+        Vector3 fallEndPos = fallStartPos + Vector3.down * fallRemainDrop + flatBack * Day2FallBackSlideMeters;
+
+        if (cc != null)
+            cc.enabled = false;
+
+        blurVol?.SetDefocusNormalized(0f);
+
+        float fallT = 0f;
+        float fallDur = Mathf.Max(0.1f, Day2FallDuration);
+        float easePow = Mathf.Max(1.02f, Day2FallEaseOutPower);
+        bool fadeOutDone = _fadeToBlackView == null;
+        bool fadeOutStarted = false;
+        float headEulerX = eDizzyCam.x;
+        float headEulerY = eDizzyCam.y;
+        float headEulerZ = eDizzyCam.z;
+        float headVelX = 0f;
+        float headVelY = 0f;
+        float headVelZ = 0f;
+        bool headMergeStarted = false;
+        Quaternion qHeadMergeStart = Quaternion.identity;
+        float posBlendSmoothed = 0f;
+        float posBlendVel = 0f;
+
+        while (fallT < fallDur)
+        {
+            fallT += Time.deltaTime;
+            routineT += Time.deltaTime;
+            float u = Mathf.Clamp01(fallT / fallDur);
+
+            float uEaseEnd = Mathf.Clamp(Day2FallPosEaseUntilU, 0.05f, 0.98f);
+            float posBlend;
+            if (u <= uEaseEnd)
+            {
+                float uu = u / uEaseEnd;
+                posBlend = (1f - Mathf.Pow(1f - uu, easePow)) * Day2FallPosEaseAnchor;
+            }
+            else
+            {
+                float linSpan = Mathf.Max(0.001f, 1f - uEaseEnd);
+                posBlend = Mathf.Lerp(Day2FallPosEaseAnchor, 1f, (u - uEaseEnd) / linSpan);
+            }
+
+            float bodySt = Mathf.Max(0.04f, Day2FallBodyPosSmoothTime);
+            posBlendSmoothed = Mathf.SmoothDamp(posBlendSmoothed, posBlend, ref posBlendVel, bodySt, Mathf.Infinity, Time.deltaTime);
+            p.transform.SetPositionAndRotation(
+                Vector3.Lerp(fallStartPos, fallEndPos, posBlendSmoothed),
+                uprightYaw);
+
+            float logMt = -1f;
+            float logMerge = 0f;
+            bool mergeStartedThisFrame = false;
+            if (holder != null)
+            {
+                float mergeFrom = Mathf.Clamp(Day2FallHeadMergeFromU, 0.55f, 0.98f);
+                if (u >= mergeFrom)
+                {
+                    if (!headMergeStarted)
+                    {
+                        headMergeStarted = true;
+                        mergeStartedThisFrame = true;
+                        qHeadMergeStart = Quaternion.Euler(headEulerX, headEulerY, headEulerZ);
+                    }
+
+                    float mtRaw = Mathf.InverseLerp(mergeFrom, 1f, u);
+                    float mt = Mathf.SmoothStep(0f, 1f, Mathf.SmoothStep(0f, 1f, mtRaw));
+                    logMt = mt;
+                    logMerge = 1f;
+                    holder.localRotation = Quaternion.Slerp(qHeadMergeStart, qSettled, mt);
+                }
+                else
+                {
+                    float delayU = Mathf.Clamp(Day2FallHeadTiltDelayU, 0f, 0.5f);
+                    float uHead = Mathf.Clamp01((u - delayU) / Mathf.Max(0.001f, 1f - delayU));
+                    float headProgress = Mathf.SmoothStep(0f, 1f, Mathf.SmoothStep(0f, 1f, Mathf.SmoothStep(0f, 1f, uHead)));
+                    float yzBlend = Mathf.SmoothStep(0f, 1f, Mathf.Pow(headProgress, 0.78f));
+                    float dPitch = Mathf.DeltaAngle(eDizzyCam.x, eSettledCam.x);
+                    float dYaw = Mathf.DeltaAngle(eDizzyCam.y, eSettledCam.y);
+                    float dRoll = Mathf.DeltaAngle(eDizzyCam.z, eSettledCam.z);
+                    float targetX = eDizzyCam.x + dPitch * headProgress;
+                    float targetY = eDizzyCam.y + dYaw * yzBlend;
+                    float targetZ = eDizzyCam.z + dRoll * yzBlend;
+                    float pitchSt = Mathf.Max(0.05f, Day2FallHeadPitchSmoothTime);
+                    float yzSt = Mathf.Max(0.05f, Day2FallHeadYawRollSmoothTime);
+                    headEulerX = Mathf.SmoothDampAngle(headEulerX, targetX, ref headVelX, pitchSt, Mathf.Infinity, Time.deltaTime);
+                    headEulerY = Mathf.SmoothDampAngle(headEulerY, targetY, ref headVelY, yzSt, Mathf.Infinity, Time.deltaTime);
+                    headEulerZ = Mathf.SmoothDampAngle(headEulerZ, targetZ, ref headVelZ, yzSt, Mathf.Infinity, Time.deltaTime);
+                    holder.localEulerAngles = new Vector3(headEulerX, headEulerY, headEulerZ);
+                }
+            }
+
+            if (blurVol != null)
+            {
+                blurVol.SetWeight(RuntimeDizzyBlurVolume.MaxVolumeWeight);
+                float defBegin = Mathf.Clamp01(RuntimeDizzyBlurVolume.DefocusFallBegin);
+                float defT = u <= defBegin
+                    ? 0f
+                    : Mathf.Clamp01((u - defBegin) / (1f - defBegin));
+                float defSmooth = 1f - Mathf.Pow(1f - defT, 1.25f);
+                blurVol.SetDefocusNormalized(defSmooth);
+            }
+
+            villainSil?.SetAlphaNormalized(RuntimeDizzyVillainSilhouette.EvaluateAlphaFall(u));
+            villainSil?.FaceCamera(GetDay2DizzyCameraWorldPosition(p));
+
+            if (Day2CameraMotionLog && holder != null)
+            {
+                Day2LogCameraMotionTsv(
+                    routineT,
+                    "fall",
+                    -1f,
+                    u,
+                    -1f,
+                    holder,
+                    p,
+                    posBlend,
+                    logMerge,
+                    logMt,
+                    mergeStartedThisFrame ? "merge_phase_start" : "");
+            }
+
+            if (!fadeOutStarted && _fadeToBlackView != null && u >= Day2FallFadeStartU)
+            {
+                fadeOutStarted = true;
+                _fadeToBlackView.Play(Day2AfterFallFadeToBlackDuration, () => fadeOutDone = true);
+            }
+
+            yield return null;
+        }
+
+        p.transform.SetPositionAndRotation(fallEndPos, uprightYaw);
+        if (holder != null)
+            holder.localRotation = headMergeStarted ? qSettled : Quaternion.Euler(headEulerX, headEulerY, headEulerZ);
+
+        if (Day2CameraMotionLog && holder != null)
+        {
+            Day2LogCameraMotionTsv(
+                routineT,
+                "handoff",
+                -1f,
+                -1f,
+                -1f,
+                holder,
+                p,
+                headMergeStarted ? 1f : 0f,
+                0f,
+                0f,
+                "after_fall_loop_holder");
+        }
+
+        // --- Хвост: плавное дожимание вниз + полный расфокус перед затемнением ---
+        Vector3 tailFrom = fallEndPos;
+        Vector3 tailTo = tailFrom + Vector3.down * Day2FallTailExtraDrop + flatBack * 0.028f;
+        float tailElapsed = 0f;
+        float tailDur = Mathf.Max(0.05f, Day2FallTailDuration);
+        Quaternion qAfterFall = holder != null ? holder.localRotation : Quaternion.identity;
+        Vector3 eTailLean = new Vector3(
+            eSettledCam.x - Day2FallTailExtraPitchDegrees,
+            eSettledCam.y,
+            eSettledCam.z);
+        Quaternion qTailLean = holder != null ? Quaternion.Euler(eTailLean) : Quaternion.identity;
+
+        float tailEasePow = Mathf.Max(1.02f, Day2TailEaseInPower);
+        while (tailElapsed < tailDur)
+        {
+            if (!fadeOutStarted && _fadeToBlackView != null)
+            {
+                fadeOutStarted = true;
+                _fadeToBlackView.Play(Day2AfterFallFadeToBlackDuration, () => fadeOutDone = true);
+            }
+
+            tailElapsed += Time.deltaTime;
+            routineT += Time.deltaTime;
+            float k = Mathf.Clamp01(tailElapsed / tailDur);
+            float k2 = 1f - Mathf.Pow(1f - k, tailEasePow);
+            float k2Soft = Mathf.SmoothStep(0f, 1f, k2);
+            p.transform.SetPositionAndRotation(Vector3.Lerp(tailFrom, tailTo, k2Soft), uprightYaw);
+            if (holder != null)
+                holder.localRotation = Quaternion.Slerp(qAfterFall, qTailLean, k2Soft);
+            if (blurVol != null)
+            {
+                blurVol.SetWeight(RuntimeDizzyBlurVolume.MaxVolumeWeight);
+                blurVol.SetDefocusNormalized(1f);
+            }
+
+            villainSil?.FaceCamera(GetDay2DizzyCameraWorldPosition(p));
+
+            if (Day2CameraMotionLog && holder != null)
+            {
+                Day2LogCameraMotionTsv(
+                    routineT,
+                    "tail",
+                    -1f,
+                    -1f,
+                    k2,
+                    holder,
+                    p,
+                    k,
+                    tailElapsed,
+                    0f,
+                    "");
+            }
+
+            yield return null;
+        }
+
+        p.transform.SetPositionAndRotation(tailTo, uprightYaw);
+        if (holder != null)
+            holder.localRotation = qTailLean;
+
+        if (Day2CameraMotionLog && holder != null)
+        {
+            Day2LogCameraMotionTsv(
+                routineT,
+                "handoff",
+                -1f,
+                -1f,
+                1f,
+                holder,
+                p,
+                0f,
+                0f,
+                0f,
+                "after_tail_snap_qTailLean");
+        }
+
+        if (cc != null)
+            cc.enabled = true;
+
+        villainSil?.DestroySelf();
+
+        if (!fadeOutStarted && _fadeToBlackView != null)
+        {
+            fadeOutStarted = true;
+            _fadeToBlackView.Play(Day2AfterFallFadeToBlackDuration, () => fadeOutDone = true);
+        }
+
+        while (!fadeOutDone)
+            yield return null;
+
+        blurVol?.DestroySelf();
+        blurVol = null;
+
+        p.TeleportTo(savedPos, savedRot);
+        if (holder != null)
+            holder.localEulerAngles = savedHolderEuler;
+        p.SyncRotationFromCamera();
+
+        bool fadeInDone = false;
+        if (_fadeToBlackView != null)
+            _fadeToBlackView.PlayFadeFromBlack(Day2AfterBlackFadeInDuration, () => fadeInDone = true);
+        else
+            fadeInDone = true;
+
+        while (!fadeInDone)
+            yield return null;
+
+        onComplete?.Invoke();
+    }
+
+    private static Vector3 GetDay2DizzyCameraWorldPosition(PlayerView p)
+    {
+        if (p != null && p.PlayerCamera != null)
+            return p.PlayerCamera.transform.position;
+        if (p != null)
+            return p.transform.position + Vector3.up * 1.65f;
+        return Vector3.zero;
+    }
+
+    private static string Day2CameraMotionLogPath =>
+        Path.Combine(Application.persistentDataPath, "Day2_CameraHolder_motion.tsv");
+
+    private void Day2LogCameraMotionTsv(
+        float routineT,
+        string phase,
+        float linear,
+        float u,
+        float k,
+        Transform holder,
+        PlayerView pv,
+        float aux1,
+        float aux2,
+        float aux3,
+        string note)
+    {
+        if (!Day2CameraMotionLog || holder == null)
+            return;
+
+        Vector3 h = holder.localEulerAngles;
+        Transform camTr = pv != null && pv.PlayerCamera != null ? pv.PlayerCamera.transform : null;
+        Vector3 w = camTr != null ? camTr.eulerAngles : Vector3.zero;
+        Vector3 camP = camTr != null ? camTr.position : Vector3.zero;
+        float playerY = pv != null ? pv.transform.position.y : 0f;
+
+        float dt = Mathf.Max(Time.deltaTime, 0.00001f);
+        float dPitchDegS = 0f;
+        if (_day2CamLogPitchPrevValid)
+            dPitchDegS = Mathf.DeltaAngle(_day2CamLogPrevHolderPitchX, h.x) / dt;
+        _day2CamLogPrevHolderPitchX = h.x;
+        _day2CamLogPitchPrevValid = true;
+
+        string safeNote = string.IsNullOrEmpty(note) ? "" : note.Replace('\t', ' ').Replace('\n', ' ').Replace('\r', ' ');
+        string line = string.Format(
+            CultureInfo.InvariantCulture,
+            "{0:F4}\t{1}\t{2:F4}\t{3:F4}\t{4:F4}\t{5:F3}\t{6:F3}\t{7:F3}\t{8:F3}\t{9:F3}\t{10:F3}\t{11:F4}\t{12:F4}\t{13:F4}\t{14:F4}\t{15:F2}\t{16:F5}\t{17:F5}\t{18:F5}\t{19}\n",
+            routineT,
+            phase,
+            linear,
+            u,
+            k,
+            h.x,
+            h.y,
+            h.z,
+            w.x,
+            w.y,
+            w.z,
+            camP.x,
+            camP.y,
+            camP.z,
+            playerY,
+            dPitchDegS,
+            aux1,
+            aux2,
+            aux3,
+            safeNote);
+
+        try
+        {
+            File.AppendAllText(Day2CameraMotionLogPath, line);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Day2 camera TSV append failed: {ex.Message}");
         }
     }
 

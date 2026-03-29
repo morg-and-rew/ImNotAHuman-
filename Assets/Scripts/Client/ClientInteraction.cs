@@ -383,9 +383,6 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
 
     private void HidePortraits()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        Debug.Log($"[ClientInteraction] HidePortraits called. leftRootNull={_leftRoot==null} rightRootNull={_rightRoot==null}");
-#endif
         if (_leftRoot != null) _leftRoot.gameObject.SetActive(false);
         if (_rightRoot != null) _rightRoot.gameObject.SetActive(false);
     }
