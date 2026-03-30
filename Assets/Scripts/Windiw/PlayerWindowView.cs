@@ -33,7 +33,11 @@ public sealed class PlayerWindowView
 
         if (WindowCloseHintView.Instance != null)
         {
-            bool canCloseNow = _isViewing && !DialogueManager.isConversationActive;
+            bool canCloseNow = _isViewing
+                               && _currentWindowView != null
+                               && _currentWindowView.IsFullyVisible
+                               && !DialogueManager.isConversationActive
+                               && !_currentWindowView.IsDialogueStarting;
             if (canCloseNow)
                 WindowCloseHintView.Instance.Show();
             else
@@ -44,7 +48,10 @@ public sealed class PlayerWindowView
         {
             if (_isViewing)
             {
-                if (DialogueManager.isConversationActive)
+                if (!_currentWindowView.IsFullyVisible)
+                    return;
+
+                if (DialogueManager.isConversationActive || _currentWindowView.IsDialogueStarting)
                     return;
                 _currentWindowView.ExitView(() => _playerController.SetBlock(false));
                 _isViewing = false;
@@ -72,7 +79,7 @@ public sealed class PlayerWindowView
         {
             if (_isViewing)
             {
-                if (!DialogueManager.isConversationActive)
+                if (!DialogueManager.isConversationActive && !_currentWindowView.IsDialogueStarting)
                 {
                     WindowView w = _currentWindowView;
                     _currentWindowView = null;
@@ -92,7 +99,7 @@ public sealed class PlayerWindowView
         {
             if (_isViewing && _currentWindowView != null)
             {
-                if (!DialogueManager.isConversationActive)
+                if (!DialogueManager.isConversationActive && !_currentWindowView.IsDialogueStarting)
                 {
                     WindowView w = _currentWindowView;
                     _isViewing = false;

@@ -28,12 +28,27 @@ public sealed class WindowView : MonoBehaviour
     private bool _isPlayerInZone = false;
     private PlayerView _playerInZone;
     private bool _isViewing = false;
+    // Есть короткий промежуток между вызовом StartConversation() и тем,
+    // когда DialogueManager успевает поднять isConversationActive.
+    // Флаг нужен, чтобы в этот момент окно нельзя было сразу закрыть.
+    private bool _isDialogueStarting = false;
+    private float _dialogueStartRequestTime = 0f;
+    private const float DialogueStartGraceSeconds = 1f;
+
+    // Блокируем закрытие окна, пока оно ещё не дофейдилось до полной видимости.
+    private bool _isFadingIn = false;
+    private bool _isFadeInComplete = false;
+    private bool _pendingExitAfterFadeIn = false;
+    private Action _pendingExitCallback = null;
+    private bool _suppressDayReplicaAfterFadeIn = false;
     private Coroutine _fadeRoutine;
     private int _originalCanvasSortOrder;
 
     public bool IsPlayerInZone => _isPlayerInZone;
     public Sprite HintSprite => _hintSprite;
     public Sprite CloseHintSprite => _closeHintSprite != null ? _closeHintSprite : _hintSprite;
+    public bool IsDialogueStarting => _isDialogueStarting;
+    public bool IsFullyVisible => _isFadeInComplete;
 
     public bool IsPlayerLookingAtMe(PlayerView player)
     {
@@ -70,6 +85,22 @@ public sealed class WindowView : MonoBehaviour
         WindowViewManager.Instance?.UnregisterWindow(this);
     }
 
+    private void Update()
+    {
+        if (!_isDialogueStarting) return;
+
+        // Как только диалог станет активным — лок можно снять.
+        if (DialogueManager.isConversationActive)
+        {
+            _isDialogueStarting = false;
+            return;
+        }
+
+        // На всякий случай: если диалог по какой-то причине не стартовал — снимаем лок через короткое время.
+        if (Time.unscaledTime - _dialogueStartRequestTime >= DialogueStartGraceSeconds)
+            _isDialogueStarting = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out PlayerView playerView))
@@ -87,6 +118,8 @@ public sealed class WindowView : MonoBehaviour
         string conversationTitle = SelectReplicaForDay(WindowViewManager.Instance != null ? WindowViewManager.Instance.CurrentDay : 1);
         if (string.IsNullOrEmpty(conversationTitle)) return;
 
+        _isDialogueStarting = true;
+        _dialogueStartRequestTime = Time.unscaledTime;
         DialogueManager.StartConversation(conversationTitle);
     }
 
@@ -133,7 +166,7 @@ public sealed class WindowView : MonoBehaviour
         {
             _isPlayerInZone = false;
             _playerInZone = null;
-            if (_isViewing && !DialogueManager.isConversationActive)
+            if (_isViewing && !DialogueManager.isConversationActive && !_isDialogueStarting)
                 ExitView();
         }
     }
@@ -142,7 +175,7 @@ public sealed class WindowView : MonoBehaviour
     {
         if (_isViewing)
         {
-            if (DialogueManager.isConversationActive)
+            if (!_isFadeInComplete || DialogueManager.isConversationActive || _isDialogueStarting)
                 return false;
             ExitView();
             return true;
@@ -159,8 +192,16 @@ public sealed class WindowView : MonoBehaviour
         _isViewing = true;
         _gameSoundController?.PlayWindowOpen();
 
+        _pendingExitAfterFadeIn = false;
+        _pendingExitCallback = null;
+        _suppressDayReplicaAfterFadeIn = false;
+        _isFadingIn = false;
+        _isFadeInComplete = false;
+
         if (_fullScreenImage == null)
         {
+            _isFadingIn = false;
+            _isFadeInComplete = true;
             return;
         }
 
@@ -183,11 +224,15 @@ public sealed class WindowView : MonoBehaviour
 
         if (_fadeInDuration <= 0f)
         {
+            _isFadingIn = false;
+            _isFadeInComplete = true;
             SetImageAlpha(1f);
             TryPlayDayReplica();
             return;
         }
 
+        _isFadingIn = true;
+        _isFadeInComplete = false;
         SetImageAlpha(0f);
         _fadeRoutine = StartCoroutine(FadeInRoutine());
     }
@@ -195,6 +240,16 @@ public sealed class WindowView : MonoBehaviour
     /// <param name="onFadeOutComplete">Вызывается когда спрайт полностью исчез (после fade-out или сразу при мгновенном скрытии).</param>
     public void ExitView(Action onFadeOutComplete = null)
     {
+        // Если закрытие вызвали, когда окно ещё "раскрывается", не делаем fade-out раньше времени.
+        // Вместо этого выйдем после полного fade-in.
+        if (_isFadingIn)
+        {
+            _pendingExitAfterFadeIn = true;
+            _pendingExitCallback = onFadeOutComplete;
+            _suppressDayReplicaAfterFadeIn = true;
+            return;
+        }
+
         _isViewing = false;
         _gameSoundController?.PlayWindowClose();
 
@@ -313,8 +368,22 @@ public sealed class WindowView : MonoBehaviour
         }
 
         SetImageAlpha(1f);
+        _isFadingIn = false;
+        _isFadeInComplete = true;
         _fadeRoutine = null;
-        TryPlayDayReplica();
+
+        if (!_suppressDayReplicaAfterFadeIn)
+            TryPlayDayReplica();
+        else
+            _suppressDayReplicaAfterFadeIn = false;
+
+        if (_pendingExitAfterFadeIn)
+        {
+            _pendingExitAfterFadeIn = false;
+            Action cb = _pendingExitCallback;
+            _pendingExitCallback = null;
+            ExitView(cb);
+        }
     }
 
     private void SetImageAlpha(float alpha)
