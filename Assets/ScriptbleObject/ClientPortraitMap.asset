@@ -1915,14 +1915,14 @@ MonoBehaviour:
       leftScale: 1
       rightScale: 1
       useCustomPositionAndSize: 1
-      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftAnchoredPos: {x: -3, y: 76, z: 181}
       customLeftScale: {x: 1, y: 1, z: 1}
       customLeftRotation: {x: 0, y: 0, z: 0}
       customRightAnchoredPos: {x: -13, y: 73, z: 181}
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 10
-      leftSprite: {fileID: 21300000, guid: ada91e80fc337ae4b9d3e1fe754045f8, type: 3}
+      leftSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
@@ -1947,7 +1947,7 @@ MonoBehaviour:
       leftScale: 1
       rightScale: 1
       useCustomPositionAndSize: 1
-      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftAnchoredPos: {x: -3, y: 76, z: 181}
       customLeftScale: {x: 1, y: 1, z: 1}
       customLeftRotation: {x: 0, y: 0, z: 0}
       customRightAnchoredPos: {x: -13, y: 73, z: 181}
@@ -1963,7 +1963,7 @@ MonoBehaviour:
       leftScale: 1
       rightScale: 1
       useCustomPositionAndSize: 1
-      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftAnchoredPos: {x: -3, y: 76, z: 181}
       customLeftScale: {x: 1, y: 1, z: 1}
       customLeftRotation: {x: 0, y: 0, z: 0}
       customRightAnchoredPos: {x: -13, y: 73, z: 181}
@@ -1979,7 +1979,7 @@ MonoBehaviour:
       leftScale: 1
       rightScale: 1
       useCustomPositionAndSize: 1
-      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftAnchoredPos: {x: -3, y: 76, z: 181}
       customLeftScale: {x: 1, y: 1, z: 1}
       customLeftRotation: {x: 0, y: 0, z: 0}
       customRightAnchoredPos: {x: -13, y: 73, z: 181}
@@ -1995,7 +1995,7 @@ MonoBehaviour:
       leftScale: 1
       rightScale: 1
       useCustomPositionAndSize: 1
-      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftAnchoredPos: {x: -3, y: 76, z: 181}
       customLeftScale: {x: 1, y: 1, z: 1}
       customLeftRotation: {x: 0, y: 0, z: 0}
       customRightAnchoredPos: {x: -13, y: 73, z: 181}
@@ -2011,7 +2011,7 @@ MonoBehaviour:
       leftScale: 1
       rightScale: 1
       useCustomPositionAndSize: 1
-      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftAnchoredPos: {x: -3, y: 76, z: 181}
       customLeftScale: {x: 1, y: 1, z: 1}
       customLeftRotation: {x: 0, y: 0, z: 0}
       customRightAnchoredPos: {x: -13, y: 73, z: 181}
@@ -2027,7 +2027,7 @@ MonoBehaviour:
       leftScale: 1
       rightScale: 1
       useCustomPositionAndSize: 1
-      customLeftAnchoredPos: {x: -3, y: 89, z: 181}
+      customLeftAnchoredPos: {x: -3, y: 76, z: 181}
       customLeftScale: {x: 1, y: 1, z: 1}
       customLeftRotation: {x: 0, y: 0, z: 0}
       customRightAnchoredPos: {x: -13, y: 73, z: 181}
