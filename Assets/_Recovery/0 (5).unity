@@ -1736,17 +1736,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 126726532}
-  m_LocalRotation: {x: 0, y: -0.11736395, z: 0, w: 0.99308896}
-  m_LocalPosition: {x: 0, y: 0, z: 2.69}
+  m_LocalRotation: {x: -0, y: -0.26457918, z: -0, w: 0.96436393}
+  m_LocalPosition: {x: 0, y: 0, z: 2.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 327708310}
-  m_LocalEulerAnglesHint: {x: 0, y: -13.48, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -30.684, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.73, y: 10.6}
-  m_SizeDelta: {x: 1.5, y: 1.5}
+  m_AnchoredPosition: {x: 1.87, y: 10.599996}
+  m_SizeDelta: {x: 1.94, y: 2.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &126726534
 MonoBehaviour:
@@ -4282,17 +4282,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 283871483}
-  m_LocalRotation: {x: 0, y: -0.11736395, z: 0, w: 0.99308896}
-  m_LocalPosition: {x: 0, y: 0, z: 3.05}
+  m_LocalRotation: {x: -0, y: -0.24237475, z: -0, w: 0.9701828}
+  m_LocalPosition: {x: 0, y: 0, z: 3.172}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 327708310}
-  m_LocalEulerAnglesHint: {x: 0, y: -13.48, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -28.053, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.94, y: 10.57}
-  m_SizeDelta: {x: 1.5, y: 1.5}
+  m_AnchoredPosition: {x: 3.169, y: 10.57}
+  m_SizeDelta: {x: 1.94, y: 2.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &283871485
 MonoBehaviour:
@@ -29946,7 +29946,7 @@ MonoBehaviour:
   _clientArriveBellClip: {fileID: 8300000, guid: 0f686e7a91c5a5f4db783ac4ffbd2c8a, type: 3}
   _clientArriveBellVolume: 0.7
   _uiTextTable: {fileID: 11400000, guid: 3bb7a3e023e0ead468a0dbf6788d2f83, type: 2}
-  _language: ru
+  _language: en
   _tutorialHint: {fileID: 613144413}
   _showMainMenuOnStart: 1
   _mainMenuBackground: {fileID: 21300000, guid: eae9010da23b6034e9f7b9d1fa5beae8, type: 3}

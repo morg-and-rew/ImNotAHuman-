@@ -252,8 +252,7 @@ MonoBehaviour:
         type: 0
         typeString: 
       - title: en
-        value: "Excuse me, we can\u2019t give you the order by QR. Only number codes
-          are working."
+        value: "Excuse me, we can\u2019t give you the order by QR. Only number codes are working."
         type: 4
         typeString: CustomFieldType_Localization
       - title: ru
@@ -322,10 +321,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u201C\u6211\u4EEC\u542C\u5230\u7684\u53EA\u662F\n          - \u8FD9\u662F\u4E00\u4E2A\u610F\u89C1\uFF0C\u4E0D\u662F\n         
-          \u4E8B\u5B9E\u3002\u6211\u4EEC\u7684\u4E00\u5207\n          \u6211\u4EEC\u770B\u5230\u7684\u662F\n         
-          \u89C2\u70B9,\n          \u800C\u4E0D\u662F\u4E8B\u5B9E\u201D\\r\\n\u9A6C\u514B\n         
-          \u5965\u52D2\u7559"
+        value: "Everything we hear is an opinion, not a fact. Everything we see is a perspective, not the truth. Marcus Avrelius"
         type: 4
         typeString: CustomFieldType_Localization
       - title: ru
@@ -437,7 +433,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: Some connection problems.
+        value: "Some connection problems."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 2
@@ -498,8 +494,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u554A\uFF0C\u8FD9\u662F\u4EC0\u4E48\u2026\u2026\r\n\u7B2C\u4E09\n         
-          \u6BCF\u5468\u4E00\u6B21\u4E0A\u7F51\n          \u6D88\u5931\u2026\u2026"
+        value: "What the hell… It’s the third time. No Internet, no connection. Great."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 2
@@ -662,8 +657,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5947\u602A\u2026\u2026\u4EE5\u524D\n          \u5B83\u8D77\u4F5C\u7528\u4E86\u3002\u6211\u4F1A\u6253\u7535\u8BDD\n         
-          \u7ED9\u63D0\u4F9B\u5546\u3002"
+        value: "Hmm\u2026 It used to work. I\u2019ll call the ISP."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 3
@@ -827,8 +821,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u67D0\u79CD\u8BE5\u6B7B\u7684\u4E1C\u897F...\n          \u597D\u5427\uFF0C\u8BA9\u6211\u4EEC\u770B\u770B\n         
-          \u4E5F\u8BB8\u662F\u522B\u7684\u4E1C\u897F\n          \u4F5C\u54C1\u3002"
+        value: "Hell no..Well, let me see. Maybe something is still working."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 4
@@ -989,7 +982,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u561F\u2026\u2026\u561F\u2026\u2026\u561F"
+        value: a whistle... a whistle.... Beep
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 5
@@ -1152,8 +1145,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5C45\u6C11\u4EEC\u65E9\u4E0A\u597D\n          \u6211\u4EEC\u7F8E\u4E3D\u7684\n         
-          \u57CE\u5E02\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1214,8 +1206,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ECA\u5929\u6211\u4EEC\u6709\n          7\u670813\u65E5\uFF0C\u51C6\u65F6\n         
-          10:07 - \u8FD9\u610F\u5473\u7740"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1275,7 +1266,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u5728\u542C\u4EC0\u4E48\n          \u65E9\u95F4\u5E7F\u64AD\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1337,8 +1328,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7ED9\u81EA\u5DF1\u5012\u4E00\u4E9B\n          \u6D53\u5496\u5561...\n         
-          \u6216\u4EFB\u4F55\u4E1C\u897F\n          \u66F4\u5F3A\u2014\u2014"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1399,8 +1389,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4E0D\u8BC4\u5224\u4EFB\u4F55\u4EBA\n          - \u7136\u540E\u6162\u6162\u6253\u5F00\n         
-          \u5728\u65B0\u7684\u4E00\u5929\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1460,7 +1449,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u4F1A\u5C1D\u8BD5\n          \u4F7F\u5176\u5BCC\u6709\u6210\u6548\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1520,7 +1509,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6216\u8005\u81F3\u5C11\n          \u6709\u5C0A\u4E25\u5730\u751F\u5B58\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1580,8 +1569,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u987A\u4FBF\u8BF4\u4E00\u4E0B\uFF0C\u6839\u636E\u5929\u6C14\u60C5\u51B5\uFF0C\n         
-          \u4E00\u5207\u90FD\u76F8\u5F53\u5927\u6C14\uFF1A"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1642,8 +1630,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u9884\u62A5\u5458\u627F\u8BFA\n          \u96E8\u96FE\u5DEE\u4E0D\u591A\n         
-          \u4E00\u6574\u5929\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1704,8 +1691,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6240\u4EE5\u96E8\u4F1E\n          \u96E8\u8863\u548C\u54F2\u5B66\n         
-          \u751F\u6D3B\u6001\u5EA6"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1765,7 +1751,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ECA\u5929\u662F\u4F60\u7684\n          \u6700\u597D\u7684\u670B\u53CB\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1824,7 +1810,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F46\u8BF4\u771F\u7684..."
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1884,7 +1870,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD9\u6837\u7684\u96FE\u2014\u2014\n          \u8FD9\u5F53\u7136\u662F\u503C\u5F97\u6000\u7591\u7684\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -1945,8 +1931,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E5F\u8BB8\u6211\u4EEC\u6700\u559C\u6B22\u7684\n          \u7814\u7A76\n         
-          \u7814\u7A76\u6240"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -2008,8 +1993,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u518D\u6B21\u6D4B\u8BD5\n          \u67D0\u79CD\u88C5\u7F6E\n         
-          \u5173\u4E8E\u7BA1\u7406\n          \u5929\u6C14\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -2068,7 +2052,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u54C8\u54C8\u2026\u2026\u5F00\u4E2A\u73A9\u7B11\u3002\u6216\u8BB8\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -2129,8 +2113,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F4F\u5BBF\n          \u4E0E\u6211\u4EEC\u4E00\u8D77 - \u524D\u8FDB\n         
-          \u8FD8\u6709\u66F4\u591A\u6709\u8DA3\u7684\u4E8B\u60C5\u3002"
+        value: "Good morning, my dear townees! It's 10:07 a.m., July 13, which means you're listening to the morning broadcast."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 6
@@ -2292,7 +2275,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5E74\u8F7B\u4EBA\n          \u4E0B\u5348\u597D\uFF01"
+        value: Good morning, my boy!
         type: 4
         typeString: CustomFieldType_Localization
       - title: EventGuid
@@ -2361,7 +2344,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0B\u5348\u597D"
+        value: "Hello."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2421,7 +2404,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u9A6C\u4E0A\u8BF4\n          \u6CA1\u6709\u4E92\u8054\u7F51\u3002"
+        value: "No internet connection, okay?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2483,8 +2466,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u62B1\u6B49\uFF0C\u901A\u8FC7\u4E8C\u7EF4\u7801\n          \u5C06\u65E0\u6CD5\u5F97\u5230\u5B83\n         
-          \u4EC5\u6309\u6570\u5B57\n          \u4EE3\u7801"
+        value: "Excuse me, we can\u2019t give you the order by QR. Only number codes are working."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2545,8 +2527,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4F1A\u628A\u5305\u88F9\u62FF\u51FA\u6765\u3002\n         
-          \u4ECE\u65E9\u4E0A\u5F00\u59CB\u4E0A\u7F51\n          \u95F4\u6B47\u6027\u5730\u3002"
+        value: "Some connection problems."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2608,8 +2589,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8BF7\u5907\u6CE8\u5305\u88F9\n          \u6211\u4E0D\u80FD\uFF0C\u8FD9\u5C31\u662F\u539F\u56E0\n         
-          \u4EC5\u6309\u6570\u5B57\n          \u6211\u5C06\u5305\u88F9\u4EA4\u4ED8\u7ED9\u4EE3\u7801\u3002"
+        value: "I can’t check orders by your QR, so give me the number code and I'll give you your order."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2671,8 +2651,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5947\u602A\u7684\u3002\u8FD8\u6709\u5929\u6C14\n          \u5947\u602A\u3002\u4E2D\n         
-          \u590F\u5929\uFF0C\u96E8\u4ECE\n          \u96FE\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2732,7 +2711,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "F\uFF01\u4F69\u4F69\uFF01\u4F60\u6709\n          \u5B83\u80FD\u4E0A\u7F51\u5417\uFF1F"
+        value: "Hi! Working?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2797,7 +2776,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u3002"
+        value: "No, it’s not."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2856,7 +2835,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\uFF0C\u65BD\u5948\u5948\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2916,7 +2895,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u4F1A\u7ACB\u5373\u6355\u6349\u5230\n          \u65E9\u4E0A\u3002"
+        value: "No connection since morning."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2976,8 +2955,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u5C31\u662F\u8FD9\u6837\u7684\u60C5\u51B5\n         
-          \u50F5\u5C40\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3038,8 +3016,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u4F1A\u7ACB\u5373\u6355\u6349\u5230\n          \u65E9\u4E0A\uFF0C\u5176\u5B9E\u6CA1\u4EC0\u4E48\n         
-          \u4E0D\u8D77\u4F5C\u7528\u3002"
+        value: "And the internet connection is already dead."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3099,7 +3076,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u771F\u7CDF\u7CD5\uFF0C\u6211\u53EF\u4EE5\n          \u8BF4\u3002"
+        value: "Fuck, bad news."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3159,7 +3136,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u90A3\u4E48\u4F60\u600E\u4E48\u8BF4\u5462\n          \u4E0E\u957F\u8F88\uFF1F"
+        value: "Watch your tongue, young boy!"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3219,7 +3196,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C01\u5728\u4E4E\n          \u51FA\u4ED5\u524D\uFF1F"
+        value: "Who cares?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3279,7 +3256,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u662F\u4EC0\u4E48\n          \u4F60\u8BF4\uFF1F"
+        value: What are you talking about?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3339,7 +3316,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u7238\u7238\u6B63\u5728\u5DE5\u4F5C\n          \u5728\u7814\u7A76\u6240\u3002"
+        value: "My dad is working in our research institute."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3400,8 +3377,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u55EF\uFF0C\u4F60\u60F3\u8981\u4EC0\u4E48\uFF1F\n          \u4F60\u5DF2\u7ECF\u6709\u4E09\u4E2A\u661F\u671F\u4E00\u4E86\n         
-          \u79BB\u5F00\u4E86\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3462,8 +3438,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6B63\u662F\u56E0\u4E3A\u8FD9\u4E9B\n          \u4F60\u597D\u5417\uFF0C\u66F4\u9AD8\u7684\u529B\u91CF\n         
-          \u4ED6\u4EEC\u4F1A\u5BF9\u6211\u4EEC\u505A\u51FA\u5C1D\u8BD5\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3525,8 +3500,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u7ACB\u523B\u660E\u767D\u4E86\n          \u8FD9\u4E0D\u662F\u96FE\uFF0C\u8FD9\u662F\n         
-          \u67D0\u79CD\u53E4\u8001\u7684\n          \u9B54\u6CD5\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3587,8 +3561,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u6709\u4E00\u4E2A\u7956\u6BCD\n          \u5973\u5DEB\uFF0C\u5979\u7ACB\u5373\n         
-          \u6211\u6CE8\u610F\u5230\u4E86\u8FD9\u4E00\u70B9\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3648,8 +3621,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u8FD9\u4E9B\u90FD\u662F\u7AE5\u8BDD\u6545\u4E8B\n         
-          \u5C31\u662F\u8FD9\u6837\u3002"
+        value: Witch? Like in RPG?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3711,8 +3683,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7AE5\u8BDD\u662F\u8C0E\u8A00\n          \u662F\u7684\uFF0C\u91CC\u9762\u6709\u4E00\u4E2A\u6697\u793A\uFF0C\n         
-          \u597D\u4F19\u4F34\n          \u6559\u8BAD\uFF01"
+        value: She was a wise woman, healed villagers.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3771,7 +3742,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5976\u5976\uFF0C\u4E0B\u5730\u72F1\u53BB\u5427\u3002"
+        value: Ok, she was a healer, not a witch. But I prefer to be a warlord.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3826,8 +3797,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u611F\u53D7\u4F60\u7684\u819D\u76D6\n          - \u6C14\u6C1B\u4E0D\u662F\n         
-          \u6709\u5229\u7684\u3002"
+        value: "The aura around is negative, I can feel it in my bones."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3888,8 +3858,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u53EF\u80FD\u4F1A\u6B7B\n          \u660E\u5929\u3002\u9700\u8981\u662F\n         
-          \u4F60\u81EA\u5DF1\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -3949,7 +3918,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD8\u6709\u8FD9\u6837\u7684\u96FE\n          \u6D53\u5BC6\u3001\u4E0D\u81EA\u7136\u3002"
+        value: "And the fog…So thick and unnatural."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -4011,8 +3980,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u4EEC\u6709\u67D0\u79CD\n          \u5783\u573E\u6B63\u5728\u53D1\u751F\n         
-          \u4E00\u4E9B\u539F\u5B50\uFF0C\n          \u73BB\u8272\u5B50\uFF0C\u6211\u4E0D\u77E5\u9053\u3002"
+        value: "Something is happening right now like Nolan’s films."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -4074,8 +4042,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5BF9\u6211\u6765\u8BF4\u5C31\u50CF\n          \u53EF\u80FD\u8FD8\u6709\u4E00\u4E2A\u9009\u62E9\u3002\n         
-          \u5C31\u8D70\u5427\n          \u65E0\u5904\u53EF\u53BB\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -4135,7 +4102,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u65E0\u803B\u4E4B\u5F92\n          \u7537\u5B69\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -4195,7 +4162,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u6709\u819D\u76D6\n          \u4ED6\u4EEC\u4E0D\u53EA\u662F\u62B1\u6028\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -4224,7 +4191,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 1091.6461, y: 0}
+    canvasScrollPosition: {x: 0, y: 0}
     canvasZoom: 0.7899998
   - id: 8
     fields:
@@ -4364,8 +4331,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6536\u5230\u5305\u88F9\u3002\n          \u6211\u4F1A\u5728\u7CFB\u7EDF\u4E2D\u6CE8\u660E\uFF0C\n         
-          \u4E92\u8054\u7F51\u5C06\u5982\u4F55\u51FA\u73B0\uFF1F"
+        value: "Get the order. I’ll update the order as soon as the connection is back."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 8
@@ -4427,9 +4393,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C22\u8C22\u4F60\uFF0C\u4EB2\u7231\u7684\uFF01\n          \u5C0F\u5FC3\n         
-          \u8857\u5934\uFF0C\u4F60\u6C38\u8FDC\u4E0D\u77E5\u9053\uFF0C\n         
-          \u8FD9\u662F\u4EC0\u4E48\u6837\u7684\u96FE\uFF1F"
+        value: Thank you, sweet boy! Be careful. No one knows what this fog is hiding.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 8
@@ -4488,7 +4452,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6293\u4F4F\u4EE3\u7801"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 8
@@ -4649,7 +4613,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u9519\u8BEF\u7684\u5305\u88F9"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 9
@@ -4812,8 +4776,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u56DE\u7B54\u4F60\uFF0C\u8FD9\u4E2A\n          \u8FD9\u4E2A\u7814\u7A76\u6240\u7684\u4E1C\u897F\n         
-          \u6B63\u5728\u53D1\u751F\u3002"
+        value: "I’m telling you, there is something in this institute."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -4874,8 +4837,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5DF2\u7ECF\u6709\u4E86\n          \u7EA2\u773C\u775B\uFF0C\n         
-          \u7A81\u7136\u95F4\u6211\u5DF2\u7ECF\u53D8\u6210\u8FD9\u6837\u4E86\u2026\u2026\u50F5\u5C38\uFF01"
+        value: "See my eyes?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -4935,7 +4897,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ECA\u5929\u7D27\u6025\n          \u88AB\u53EC\u96C6\u53BB\u5F00\u4F1A\u3002"
+        value: "Maybe I’m..a zombie."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -4996,8 +4958,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4E0D\u77E5\u9053\u53D1\u751F\u4E86\u4EC0\u4E48\u4E8B\n         
-          \u4F46\u5728\u6211\u770B\u6765\n          \u5F00\u59CB..."
+        value: "He didn’t say anything…"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5069,7 +5030,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E5F\u8BB8\u662F\u90AA\u7075\n          \u4E00\u4E9B\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5128,7 +5089,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7537\u5B69\uFF0C\u6211\u4E0D\u5728\u4E4E\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5190,8 +5151,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5728\u5B66\u6821\u4ED6\u4EEC\u8BF4\n          \u4EE5\u524D\u8FD9\u91CC\u662F\u4EC0\u4E48\n         
-          \u4E00\u4E9B\u5F02\u6559\u5F92\n          \u4F4F\u8FC7\uFF0C"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5253,8 +5213,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5B9E\u9A8C\u7684\u53D7\u5BB3\u8005\n          \u9999\u6C34\u5C31\u662F\u5783\u573E\u3002\n         
-          \u6211\u5B81\u613F\u6709\u4E92\u8054\u7F51\n          \u51FA\u73B0\u4E86\u3002"
+        value: "I don’t care and need subjects of experiments, supernatural forces. I need the Internet."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5313,7 +5272,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD9\u53EF\u80FD\u6B63\u5728\u53D1\u751F\u3002"
+        value: "Well, maybe."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5378,8 +5337,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E5F\u8BB8\u73B0\u5728\n          \u4E00\u5207\u90FD\u4E0D\u662F\u8FD9\u6837\u8FDB\u884C\u7684\n         
-          \u6709\u4E9B\u4E8B\u60C5\u662F\u53EF\u4EE5\u4FEE\u590D\u7684\u3002"
+        value: "Maybe, everything is alright and can be fixed."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5441,8 +5399,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u9B54\u9B3C\u4F1A\u89E3\u51B3\u4ED6\u4EEC\n          \u5728\u8FD9\u4E2A\u7814\u7A76\u6240\u3002\n         
-          \u4F46\u5982\u679C\u6709\u7684\u8BDD\uFF0C\u6211\u6709\n          \u6709\u8054\u7CFB\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5504,8 +5461,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u67D0\u79CD\u6E23\u6ED3\n          \u5F53\u5B83\u5F00\u59CB\u65F6
-          - \u6253\u7535\u8BDD\n          \u6211\u6216\u6765\n          \u8FD9\u662F\u5730\u5740\u548C\u7535\u8BDD\u53F7\u7801\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5565,8 +5521,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4EE5\u53CA\u4F60\u4EEC\u6240\u6709\u4EBA\u4E4B\u540E\n         
-          20\u5E74\u5C31\u8FD9\u4E48\u65E0\u804A\u5417\uFF1F"
+        value: "Why are people so boring after their twenties?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5628,9 +5583,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u597D\u5427\uFF0C\u5982\u679C\u8FD9\u662F\u771F\u7684\u5C31\u597D\u4E86\n         
-          \u6709\u4E8B\u53D1\u751F\n          \u53EF\u80FD\u5DF2\u901A\u77E5\n         
-          \u4F1A\u7684\u3002"
+        value: "But if something really had happened, probably we would have been warned."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5692,8 +5645,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u73B0\u5728\u5DF2\u7ECF\u51E0\u5929\u4E86\n          \u5E76\u4E14\u4F1A\u6709\u7A81\u53D8\u4F53\n         
-          \u5C31\u50CF\u7535\u5F71\u91CC\u5F00\u8F66\u4E00\u6837\n          \u6211\u56DE\u7B54\u4F60\u3002"
+        value: "We will see real walking deads in a few days, I guarantee."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5753,7 +5705,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6628\u5929\u7ED9\u6211\u7236\u4EB2\n          \u4E0B\u73ED\u6253\u7535\u8BDD\u3002"
+        value: "It’s red as hell."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5813,7 +5765,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u56DE\u6765\u665A\u4E86\n          \u5E76\u6CA1\u6709\u89E3\u91CA\u4EFB\u4F55\u4E8B\u60C5\u3002"
+        value: "You see, someone called my father this morning."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5875,8 +5827,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u53EA\u662F\u8BF4\u8981\u6536\u96C6\n          \u4E8B\u7269\u5E76\u8FD0\u884C\n         
-          \u6742\u8D27\u5E97\n          \u4E24\u5468\u3002"
+        value: "He was called for an urgent meeting."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -5936,7 +5887,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u51FA\u57CE\u5427\n          \u5728\u4E00\u8D77\u3002\u5170\uFF0C\u518D\u89C1\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6004,8 +5955,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u6211\u5E0C\u671B\u5982\u6B64\n          \u4E16\u754C\u672B\u65E5\u5C06\u4F1A\u53D1\u751F\n         
-          \u5728\u6211\u6210\u4E3A\u4E4B\u524D\n          \u50CF\u8FD9\u6837\u3002\u5170\uFF0C\u518D\u89C1\uFF01"
+        value: "I hope to die in this apocalypse when I'm only seventeen."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6059,8 +6009,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C01\u77E5\u9053\uFF1F\u662F\u7684\uFF0C\u5C31\u662F\u8FD9\u6837\n         
-          \u4E5F\u8BB8\u5427\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6121,8 +6070,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u5F88\u5FEB\u5C31\u53BB\n          \u67D0\u4E2A\u9065\u8FDC\u7684\u5730\u65B9\n         
-          \u51FA\u57CE\u3002"
+        value: "Came back and said to pack all your bags and buy products for two weeks."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6182,7 +6130,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C22\u8C22\u4F60\u7684\u53F7\u7801\u3002\n          \u518D\u89C1\u3002"
+        value: "Thanks for your phone number. See you later."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6236,8 +6184,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u518D\u89C1\u3002\u4E5F\u8BB8\u6211\u4F1A\u89C1\u5230\u4F60\n         
-          \u8FD8\u6CA1\u6709\u3002"
+        value: "Bye. See you later maybe."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6290,7 +6237,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u771F\u4ED6\u5988\u5947\u602A\u3002"
+        value: "You are fuckin’ strange, man."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6350,7 +6297,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u770B\u6211\u5C31\u662F\u4F60\n          \u8B66\u544A\u3002"
+        value: "See, I’ve warned you."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6411,8 +6358,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5982\u679C\u4F60\u6210\u4E3A\u7B2C\u4E00\u4E2A\n          \u50F5\u5C38\uFF0C\u6211\u5FEB\u70B9\u544A\u8BC9\u4F60\n         
-          \u6211\u4F1A\u6253\u7206\u4F60\u7684\u5934\u3002"
+        value: "If you become a zombie, I will shoot you, got it?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6471,7 +6417,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5170\uFF0C\u518D\u89C1\uFF01"
+        value: "Bye!"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6524,7 +6470,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7EC3\u4E60\u9B54\u6CD5\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 10
@@ -6691,7 +6637,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u561F\u2026\u2026\u561F\u2026\u2026\u561F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 11
@@ -6853,7 +6799,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u518D\u6B21\u795D\u5927\u5BB6\u597D\u8FD0\n          \u5929\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -6913,7 +6859,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7EE7\u7EED\u524D\u5F80\u5DE5\u4F5C\u5BA4\n          \u6D88\u606F\u4F20\u5165"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -6973,7 +6919,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6765\u81EA\u542C\u4F17\n          \u5173\u4E8E\u4E92\u8054\u7F51\u4E2D\u65AD\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -7034,8 +6980,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u8FC7\u5E78\u8FD0\u7684\u662F\n          \u5982\u679C\u6536\u97F3\u673A\u4E00\u76F4\u5F00\u7740\u5C31\u597D\u4E86\n         
-          \u6D6E\u8D77\u6765\u4E86\uFF0C\u54C8\u54C8"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -7095,7 +7040,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5982\u679C\n          \u53C8\u662F\u4E00\u4E9B"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -7155,7 +7100,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u7684\u6280\u5DE7\n          \u7814\u7A76\u6240..."
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -7216,8 +7161,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u987A\u4FBF\u8BF4\u4E00\u53E5\uFF0C\u597D\u5947\n          \u4E8B\u5B9E\uFF1A\u4F60\u77E5\u9053\u5417\n         
-          \u65E9\u4E9B\u65F6\u5019"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -7279,8 +7223,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5728\u9886\u571F\u4E0A\n          \u6211\u4EEC\u7684\u57CE\u9547\n         
-          \u6709\u4E00\u4E2A\u5F02\u6559\u5F92\n          \u907F\u96BE\u6240\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -7341,8 +7284,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u81EA\u5DF1\u53D1\u73B0\u4E86\u5173\u4E8E\n          \u8FD9\u662F\u6700\u8FD1\u7684\u4E8B\n         
-          \u2014"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -7403,8 +7345,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6458\u81EA\u300A\u4F20\u5947\u300B\u4E00\u4E66\n          \u4EE5\u53CA\u5F53\u5730\u4EBA\u7684\u795E\u8BDD\n         
-          \u8FB9\u7F18\u201D"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -7464,8 +7405,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6C99\u7C73\u5C14\xB7\u7C73\u54C8\u4F0A\u6D1B\u7EF4\u5947\n         
-          \u57C3\u5229\u4E9A\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 12
@@ -7627,8 +7567,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6C99\u7C73\u5C14\xB7\u7C73\u54C8\u4F0A\u6D1B\u7EF4\u5947\n         
-          \u4E91\u6749...Sh.M.\u4E91\u6749...\u5927\u9EC4\u8702\u3002"
+        value: "Brian Ethan Bumble? B.E. Bumble\u2026 Bumble B.E. Bumblebee?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 13
@@ -7789,7 +7728,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4EC0\u4E48\uFF1F\u871C\u8702\uFF1F"
+        value: What? Bumblebee?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -7850,8 +7789,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u201C\u4ED6\u4EEC\u8BF4\n          \u9ED1\u6697\u6B63\u5728\u964D\u4E34\n         
-          \u5230\u57CE\u5E02"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -7912,8 +7850,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5176\u5B9E\n          \u597D\u5427\uFF0C\u83AB\u7F57\u514B\u53D1\u9001\n         
-          \u6D53\u96FE"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -7973,7 +7910,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6709\u51E0\u4E2A\n          \u83AB\u6D1B\u5361\u7684\u5F81\u5146\uFF1A\u2026\u2026\u201D"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8044,7 +7981,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8BFB"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8103,7 +8040,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u628A\u5B83\u653E\u56DE\u53BB"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8162,7 +8099,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u8981\u6D6A\u8D39\u65F6\u95F4"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8222,8 +8159,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u73B0\u5728\u5230\u5E95\u5728\u505A\u4EC0\u4E48\uFF1F\n         
-          \u4F60\u8BFB\u4E86\u5417\uFF1F"
+        value: "What the hell did I read?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8284,8 +8220,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E3A\u6211\u505A\u66F4\u591A\n          \u6CA1\u4EC0\u4E48\u53EF\u8BFB\u7684\n         
-          \u6211\u4EEC\u7A46\u970D\u65AF\u5170\u65AF\u514B\u7684\u795E\u8BDD\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8346,8 +8281,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E92\u8054\u7F51\u5DF2\u7ECF\u6D88\u5931\n          \u96E8\u6709\u96FE\n         
-          - \u5C31\u662F\u8FD9\u6837\uFF0C\u4E16\u754C\u672B\u65E5\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8409,8 +8343,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u201C\u7B2C\u4E00\u4E2A\u6807\u5FD7\n          - \u964D\u4E34\u5728\u57CE\u5E02\u4E0A\n         
-          \u6D53\u96FE\u3002\u201D\n          \u5230\u76EE\u524D\u4E3A\u6B62\uFF0C\u5B83\u5339\u914D\u3002"
+        value: "“The first sign. A thick fog descends on the city.” So far, so good."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8472,8 +8405,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u201C\u7B2C\u4E8C\u4E2A\u6807\u5FD7\n          - \u4E00\u4E2A\u4EBA\u5F00\u59CB\n         
-          \u6DF7\u6DC6\u65B9\u5411\n          -"
+        value: "“The second sign."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8534,8 +8466,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u201C\u7B2C\u4E09\u4E2A\u6807\u5FD7\n          - \u601D\u60F3\u5D29\u6E83\n         
-          \u4E00\u56E2\u4E71\uFF0C\u6211\u7684\u7075\u9B42\u53D7\u4F24\u4E86\u3002\u201D"
+        value: "All thoughts become jumbled and the soul aches.” “The fourth sign."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8596,8 +8527,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u201C\u7B2C\u56DB\u4E2A\u6807\u5FD7\n          - \u4F60\u4ECE\u6BCF\u4E2A\u4EBA\u5F00\u59CB\n         
-          \u767D\u5929\u80E1\u8BF4\u516B\u9053\u3002"
+        value: "You start to lose your appearance every day."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8658,8 +8588,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u201C\u6BCF\u5929\n          \u4E00\u5207\u90FD\u53D8\u6210\n         
-          \u8D8A\u6765\u8D8A\u7CDF"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8722,8 +8651,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7136\u800C\uFF0C\u6211\u8BE5\u5982\u4F55\n          \u770B\u8D77\u6765\u662F\u8FD9\u6837\u7684\n         
-          \u610F\u89C1\u542F\u53D1\n          \u57FA\u7763\u6559\n          \u52A8\u673A\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8786,9 +8714,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5982\u679C\u4F60\u5DF2\u7ECF\u6709\u4E86\n          \u8BBE\u6CD5\u9003\u8131\n         
-          \u7EA0\u7ED3\u7684\n          \u83AB\u6D1B\u5361\u8FF7\u5BAB\n         
-          -"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8849,8 +8775,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5BB6\u5728\u54EA\u91CC\uFF1F\n          \u654C\u4EBA\u7684\u5C0F\u5C4B\u5728\u54EA\u91CC\uFF1F\n         
-          \u55EF\uFF0C\u6211\u4E0D\u77E5\u9053\u3002"
+        value: "People begin to confuse directions—north and south, home and enemy territory.” Well, not bad."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8911,8 +8836,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u76AE\u80A4\u5C31\u53D8\u6210\u4E86\n          \u677E\u5F1B\uFF0C\u773C\u775B\n         
-          \u8138\u7EA2\u3002"
+        value: "Your skin becomes flabby, your eyes turn red."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -8973,8 +8897,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u5F00\u59CB\u8F6C\u8EAB\n          \u53D8\u6210\u4E00\u4E2A\u8001\u4EBA\uFF0C\u751A\u81F3\n         
-          \u5982\u679C\u4F60\u8FD8\u5E74\u8F7B\u7684\u8BDD\u3002\u201D"
+        value: "You start to look old, even if you are young.” “It gets worse and worse every day."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9034,8 +8957,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u80FD\u95FB\u5230\u9EBB\u70E6\u7684\u5473\u9053\n         
-          - \u5954\u8DD1\u5427\uFF0C\u4E0D\u8981\u56DE\u5934\u201D"
+        value: "If you sense Morok, run, reader, run.”"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9089,7 +9011,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5C31\u597D\u50CF\u7B2C\u4E00\u4E2A\n          \u6B21\u3002\u6211\u4EEC\u4F4F\u5728\u9488\u53F6\u6797\u91CC\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9143,8 +9065,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u5373\u4F7F\u8FD9\u662F\u771F\u7684\n         
-          \u6709\u4E8B\u53D1\u751F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9203,7 +9124,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F46\u4E0D\u662F\u8FD9\u4E2A\u5E9F\u8BDD\u3002"
+        value: "But not in this shit."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9258,8 +9179,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5F53\u4E0D\u4E49\u7684\u65F6\u5019\n          \u592A\u591A\u4E86\n         
-          \u5F88\u591A\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9320,8 +9240,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5F53\u4EBA\u4EEC\u9700\u8981\u65F6\n          \u627E\u5230\u81EA\u5DF1\u7684\u529B\u91CF\n         
-          \u53D8\u5F97\u66F4\u597D"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9382,8 +9301,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8E0F\u4E0A\u65B0\u7684\n          \u4F60\u4EBA\u751F\u7684\u8F6C\u6298\u70B9\n         
-          \u65B9\u5F0F\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9444,8 +9362,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8003\u8651\u5230\n          \u4F60\u505A\u5230\u4E86\n         
-          \u4E0E\u4EFB\u52A1\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9505,7 +9422,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5317\u5728\u54EA\u91CC\uFF0C\u5728\u54EA\u91CC\n          \u5357\u8FB9\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9567,8 +9484,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5982\u679C\u4F60\u4E0D\u51FA\u53BB\n          \u8D70\u51FA\u8FD9\u4E2A\u5669\u68A6\n         
-          - \u4F60\u4F1A\u53D1\u73B0\u81EA\u5DF1\u53D8\u76F4\u4E86\n          \u5728\u6B7B\u4EA1\u7684\u9B54\u638C\u4E2D\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9628,7 +9544,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u751A\u81F3\u8FD8\u6709\u201C\u6ECB\u8865\u201D\n          - \u671F\u95F4\u201D\u6CA1\u6709\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9689,8 +9605,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u90A3\u6211\u5C31\u76F8\u4FE1\u5B83\n          \u8FDB\u5165\u6838\u7206\u70B8\n         
-          \u67D0\u79CD\u6CC4\u6F0F..."
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 14
@@ -9858,7 +9773,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u8FD8\u6CA1\u6709\u8DB3\u591F\n          \u5728\u4F20\u9053\u4E4B\u57CE\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 15
@@ -9918,7 +9833,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u5230\u5E95\u662F\u8C01\n          \u4ED6\u4F1A\u542C\u5417\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 15
@@ -9978,8 +9893,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5373\u4F7F\u4ECE\u8FD9\u91CC\u4E5F\u80FD\u542C\u5230\n         
-          \u4ED6\u5728\u8BF4\u4EC0\u4E48\u2026\u2026"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 15
@@ -10041,9 +9955,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5982\u679C\n          \u4ED6\u4F1A\u6253\u7535\u8BDD\n         
-          \u4ED6\u81EA\u5DF1\u662F\u5171\u6D4E\u4F1A\u7684\u6210\u5458\n         
-          \u5C0F\u5C4B\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 15
@@ -10103,7 +10015,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F20\u6559\u58EB\n          \u8BE5\u6B7B\u7684\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 15
@@ -10158,8 +10070,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5173\u4E8E\u722C\u884C\u52A8\u7269\n          \u548C\u6D17\u8111\n         
-          \u79D8\u5BC6\u653F\u5E9C"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 15
@@ -10328,8 +10239,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u611F\u8C22\u4E0A\u5E1D\u6211\u603B\u662F\n          \u6211\u4FDD\u7559\u8FD9\u4E2A\u7A97\u53E3\n         
-          \u5173\u95ED\u3002"
+        value: "Thank God I always keep this window closed."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 16
@@ -10389,7 +10299,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u7136\u4F1A\u53D1\u81ED\n          \u5BF9\u4E8E\u6574\u4E2A\u4EA4\u8D27\u70B9\u3002"
+        value: "Or the whole room would stink."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 16
@@ -10449,7 +10359,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u800C\u4E14\u87D1\u8782\u4F1A\n          \u4ED6\u4EEC\u5230\u5904\u722C\u3002"
+        value: "And cockroaches would be everywhere."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 16
@@ -10509,7 +10419,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u4EEC\u8FD8\u600E\u6837\n          \u8FD8\u6CA1\u5230\u8FD9\u91CC\u5417\uFF1F"
+        value: "How have they not gotten in here yet?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 16
@@ -10672,8 +10582,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u73B0\u5728\u4E5F\u613F\u610F\n          \u60F3\u6210\u4E3A\n         
-          \u5728\u4ED6\u4EEC\u7684\u4F4D\u7F6E..."
+        value: "I would also like to be in their place right now..."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 17
@@ -10734,8 +10643,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u800C\u4E14\u6700\u597D\u662F\u5728\u5B89\u9759\u7684\u5730\u65B9\n         
-          \u4E00\u70B9\u949F\u5728\u6258\u513F\u6240\n          \u82B1\u56ED\u3002"
+        value: "Or sleep at kindergarten."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 17
@@ -10794,7 +10702,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u751A\u81F3\u66F4\u597D - \u5728\u5BB6\u91CC\u3002"
+        value: "Or better, at home."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 17
@@ -10955,7 +10863,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5973\u58EB\u4F18\u5148\u3002"
+        value: Ladies first.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 18
@@ -11016,8 +10924,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C22\u8C22\u3002\u4EE3\u7801 8335\u3002\n          \u6211\u77E5\u9053\uFF0C\u4E92\u8054\u7F51\n         
-          \u4E0D\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 18
@@ -11079,8 +10986,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5FC5\u987B\n          \u662F\u53E6\u4E00\u4E2A\u5305\uFF0C\n         
-          \u4F46\u6211\u4E0D\u77E5\u9053\u4EE3\u7801\u3002\n          \u6211\u7A0D\u540E\u4F1A\u518D\u6765\u3002"
+        value: "I’ll come later again."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 18
@@ -11245,9 +11151,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C22\u8C22\u3002\u5982\u4F55\n          \u60A8\u6807\u8BB0\u4EA7\u54C1\uFF0C\n         
-          \u5DF2\u53D1\u51FA\n          \u4E92\u8054\u7F51\u65F6\u4EE3\n         
-          \u4E0D\uFF1F"
+        value: "Thank you! How do you update orders on a programme? There is no internet connection."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11314,8 +11218,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u770B\u8D77\u6765\u5982\u4F55\n          - \u6240\u4EE5\u5728\u7CFB\u7EDF\u4E2D    
-          \n          \u6211\u5E86\u795D\u3002"
+        value: "As soon as it appears I update."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11375,7 +11278,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "On my word of honor\n          \u6211\u6B63\u5728\u5DE5\u4F5C\u3002"
+        value: "Everyone just believes me."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11437,9 +11340,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0E\u6B64\u540C\u65F6\uFF0C\u4EE5\u8001\u5F0F\u7684\u65B9\u5F0F\uFF1A\n         
-          \u0437\u0430\u043F\u0438\u0441\u044B\u0432\u0430\u044E \u043A\u043E\u0434\n         
-          on a piece of paper to\n          \u522B\u5FD8\u4E86\u3002"
+        value: "But as for now, I just write down numbers on a paper."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11501,8 +11402,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7F3A\u4E4F\u4E92\u8054\u7F51\n          \u4ECE\u672A\u53D1\u751F\u8FC7\n         
-          \u5145\u5206\u7684\u7406\u7531\n          \u4E0D\u53BB\u5DE5\u4F5C\u3002"
+        value: "I need to work even without the Internet."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11564,8 +11464,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u613F\u4E0D\u518D\u6709\n          \u4F0A\u5185\u5854\uFF0C\u4F60\u4E3A\u4EC0\u4E48\u4E0D\u5462\uFF1F\n         
-          \u4F60\u8D76\u4E0A\u4E86\u5417\uFF1F\u5168\u90E8\uFF01\n          \u6211\u4EEC\u88AB\u56F0\u5728\u8FD9\u91CC\u4E86\u3002"
+        value: "IT\u2019S OVER! No more Internet here! We\u2019re stuck here!"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11625,7 +11524,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u522B\u4E71\u8BF4\n          \u7537\u4EBA\u3002"
+        value: "That\u2019s nonsense, don\u2019t say that."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11687,8 +11586,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u770B\u4E0D\u5230\u5417\uFF1F\n          \u6574\u4E2A\u661F\u671F\u4E00\u4E9B\n         
-          \u901A\u8BAF\u4E2D\u65AD\uFF0C\n          \u6CA1\u6709\u4E92\u8054\u7F51\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11748,8 +11646,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u4EEC\u60F3\u8981\u6211\u4EEC\u6240\u6709\u4EBA\n         
-          \u5220\u9664\u3002"
+        value: "Someone wants us to die."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11814,7 +11711,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C01\u5462\uFF1F\u722C\u884C\u52A8\u7269\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11876,8 +11773,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6216\u8005\u4E5F\u8BB8\u8FD9\u662F\u79D8\u5BC6\n          \u5B89\u5170\u7279\u6587\u660E\uFF0C\n         
-          \u8C01\u4F4F\n          \u5730\u4E0B\u3002"
+        value: "Secret civilization of Antlanteans living underground?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11937,7 +11833,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u5F53\u7136\u662F\u53D7\u5BB3\u8005\n          \u5B9E\u9A8C"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11996,7 +11892,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5916\u661F\u6587\u660E\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12055,7 +11951,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u90A3\u4E48\u4F60\u4E5F\u610F\u8BC6\u5230\u4E86\u5417\uFF1F"
+        value: Do you know about that too?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12121,7 +12017,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F19\u8BA1\uFF0C\u6253\u7535\u8BDD\n          \u4EE3\u7801\u6216\u79BB\u5F00\u3002"
+        value: "Dude, just tell me your code or go away."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12181,8 +12077,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD9\u4E9B\u5BF9\u6211\u6765\u8BF4\u662F\u989D\u5916\u7684\n         
-          \u65E0\u9700\u4EA4\u8C08\u3002"
+        value: "I don’t need this extra chatting."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12243,8 +12138,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u90A3\u65F6\u4ED6\u4EEC\n          \u4F1A\u6765\u627E\u4F60\n         
-          - \u4E0D\u8981\u5BFB\u6C42\u5E2E\u52A9\u3002"
+        value: "When THEY come for you don\u2019t ask for help, buddy."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12304,8 +12198,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u4ED6\u4EEC\u4F1A\u6765\u3002\u4ED6\u81EA\u5DF1\n         
-          \u624E\u514B\u4F2F\u683C\u3002"
+        value: "Hell yeah, they\u2019ll come for me. With Zukerberg personally."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12359,7 +12252,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5C31\u662F\u8FD9\u4E2A\u5E9F\u8BDD\n          \u6211\u4E0D\u60F3\u542C\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12419,7 +12312,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F0F\u7279\u52A0\u6765\u81EA\u4F60\n          \u63A0\u8FC7\u4E00\u516C\u91CC\u8FDC\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12479,8 +12372,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5DF2\u7ECF\u5728\u8FD9\u91CC\u4E00\u4E2A\u6708\u4E86\n         
-          \u6211\u6CA1\u6709\u4F11\u606F\u65E5\u5C31\u4EE5\u7269\u6613\u7269"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12541,8 +12433,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u64CD\u4F60\u5988\n          \u6D88\u8017\u6027\u7684\u3002\u5230\u6CD5\u5EAD\n         
-          \u6211\u4F1A\u8D77\u8BC9\u4F60\u3002"
+        value: "Fuck you, man. I\u2019ll file a lawsuit."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12598,8 +12489,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u518D\u591A\u4E00\u70B9\n          \u548C\u6BCF\u4E2A\u4EBA\u7684\u5934\u53D1\n         
-          \u6500\u767B\u3001\u6280\u672F\n          \u5C06\u4F1A\u5931\u8D25\u3002"
+        value: "We will go bald soon, all the equipment will break down."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12660,8 +12550,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5916\u661F\u4EBA\u5C31\u5728\u6211\u4EEC\u8EAB\u8FB9\n         
-          \u8FB9\u770B\u8FB9\u7B11\n          \u6211\u4EEC\u591A\u4E48\u611A\u8822\u554A\u3002"
+        value: "Aliens are looking at us and laughing at how stupid we are."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12723,8 +12612,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u6839\u672C\u4E0D\u5728\u4E4E\n          \u641E\u7838\u4E86\u6211\u5988\u5988\u7684\u72D7\u5C4E\n         
-          \u9634\u8C0B\u8BBA\u8005\n          \u542C\u7740\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12784,7 +12672,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u600E\u4E48\u51FA\u73B0\u7684\n          \u6211\u6CE8\u610F\u5230\u3002"
+        value: "So I update as soon as it works."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -12954,9 +12842,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u4E0D\u5E94\u8BE5\u8FD9\u4E48\u7C97\u9C81\u3002\n         
-          \u7814\u7A76\u6240\u90A3\u91CC\n          \u4ED6\u4EEC\u90FD\u5728\u76D1\u72F1\u91CC\n         
-          \u722C\u884C\u52A8\u7269\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 20
@@ -13018,9 +12904,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6240\u4EE5\u4ED6\u4EEC\u628A\n          \u5404\u79CD\u5B9E\u9A8C\n         
-          \u5728\u6211\u4EEC\u4E4B\u4E0A\u3002\u5728\u8033\u6735\u91CC\n         
-          \u5B83\u5728\u54CD\uFF0C\u4F60\u611F\u89C9\u4E0D\u5230\u5417\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 20
@@ -13080,7 +12964,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7537\u4EBA\uFF0C\u603B\u8BA1\n          \u795D\u4F60\u597D\u8FD0\uFF01"
+        value: Good bye, man!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 20
@@ -13242,7 +13126,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E92\u8054\u7F51\u51FA\u73B0\u4E86\n          \u5B57\u9762\u610F\u4E49\u4E0A\u76842\u5206\u949F\u3002"
+        value: "Oh, I found the number for my second order."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 21
@@ -13302,7 +13186,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u627E\u5230\u4E86\u4EE3\u7801\n          \u7B2C\u4E8C\u4E2A\u5305\u88F9\u3002"
+        value: "The Internet appeared for a few seconds."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 21
@@ -13465,8 +13349,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u9700\u8981\u503E\u542C\n          \u6536\u97F3\u673A\u3002\u4E92\u8054\u7F51\n         
-          \u4ECE\u672A\u51FA\u73B0\u3002"
+        value: I need to listen to the radio. Still no Internet.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 23
@@ -13628,7 +13511,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u665A\u4E0A\u597D\uFF0C\n          \u4EB2\u7231\u7684\u542C\u4F17\u4EEC\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -13690,8 +13573,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5B83\u6765\u4E86\n          \u5230\u6700\u540E......\u8BA9\u6211\u4EEC\u8BF4\n         
-          \u5982\u6B64...\u4E0D\u5BFB\u5E38\n          \u65E5"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -13752,8 +13634,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u627F\u8BA4\u5427\n          \u5947\u602A\u7684\u611F\u89C9\n         
-          \u2014"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -13813,7 +13694,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E00\u6574\u5929\u6CA1\u6709\n          \u4E92\u8054\u7F51\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -13873,7 +13754,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u6709\u6D88\u606F\u7ED9\u4F60\uFF0C\n          \u6CA1\u6709\u65B0\u95FB\u63D0\u8981\uFF0C"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -13935,8 +13816,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u6709\u7A81\u7136\n          \u5DE5\u4F5C\u804A\u5929\n         
-          \u5728\u6700\u4E0D\u5408\u65F6\u5B9C\u7684\u65F6\u5019\n          \u65F6\u523B\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -13997,8 +13877,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6C89\u9ED8\u3002\u51E0\u4E4E\n          \u53EF\u6015\uFF0C\u5BF9\u5427\uFF1F\u4F46\u662F\n         
-          \u4EC0\u4E48\u4E5F\u6CA1\u6709\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -14058,7 +13937,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u660E\u5929\u80AF\u5B9A\n          \u4F1A\u66F4\u597D\u7684\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -14118,7 +13997,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u81F3\u5C11\n          \u6211\u4EEC\u4F1A\u6307\u671B\u5B83"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -14178,7 +14057,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "- \u6211\u4EEC\u8FD8\u6709\u66F4\u591A\n          \u4EC0\u4E48\u90FD\u6CA1\u6709\u7559\u4E0B\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -14239,8 +14118,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4EE5\u9632\u4E07\u4E00\n          \u50A8\u5907\u8721\u70DB...\n         
-          \u54C8\u54C8\u54C8\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -14299,7 +14177,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u6C38\u8FDC\u4E0D\u77E5\u9053\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -14360,8 +14238,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5982\u679C\u4ED6\u4EEC\u51B3\u5B9A\u4FDD\u7559\u600E\u4E48\u529E\n         
-          \u5B9E\u9A8C\u4E0D\u662F\n          \u4EC5\u5177\u6709\u8FDE\u63A5\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -14421,8 +14298,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5F53\u7136\uFF0C\u53EA\u662F\u5F00\u73A9\u7B11\u3002\n         
-          \u6216\u8BB8\u3002"
+        value: "Good evening, everyone! The day is coming to an end. Pretty odd day, huh?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -14445,7 +14321,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
+    canvasScrollPosition: {x: 1251.455, y: 0}
     canvasZoom: 0.7600002
   - id: 25
     fields:
@@ -14586,8 +14462,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u201C\u6211\u6CA1\u542C\u8BF4\u600E\u4E48\n          \u5979\u53C8\u8FDB\u6765\u4E86\u3002\n         
-          \u6211\u4E0D\u8BB0\u5F97\u4E86\n          \u5979\u4ECE\u672A\u79BB\u5F00\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 25
@@ -14647,7 +14522,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5947\u602A\u7684\u3002\u6709\u5FC5\u8981\n          \u68C0\u67E5\u76F8\u673A\u201D"
+        value: "Need to check the camera.”"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 25
@@ -14808,7 +14683,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C22\u8C22"
+        value: "Thank you."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 26
@@ -14970,7 +14845,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u65E9\u4E0A\u597D\u4EB2\u7231\u7684\n          \u542C\u4F17\u4EEC\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 27
@@ -15032,9 +14907,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ECA\u5929\u662F7\u670815\u65E5\uFF0C\n          \u65F6\u949F\u662F
-          10:13 - \u800C\u6211\u4EEC\uFF0C\n          \u50CF\u5F80\u5E38\u4E00\u6837\uFF0C\u8BA9\u6211\u4EEC\u5F00\u59CB\u5427\n         
-          \u65E9\u95F4\u5E7F\u64AD\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 27
@@ -15097,9 +14970,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7A97\u5916\u6709\u96FE\u2026\u2026\n          \u6240\u4EE5\u8BF7\n         
-          \u7ED9\u9A7E\u8F66\u8005\n          \u548C\u884C\u4EBA - \u662F\n         
-          \u7279\u522B\u7EC6\u5FC3\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 27
@@ -15161,8 +15032,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E2D\u65AD\u4E5F\u662F\u53EF\u80FD\u7684\n          \u6709\u7535\n         
-          - \u6CA1\u4EC0\u4E48\u65B0\u610F\uFF0C\n          \u4F60\u660E\u767D\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 27
@@ -15224,8 +15094,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F46\u4E0D\u7528\u62C5\u5FC3\uFF1A\n          \u8FDF\u65E9\n         
-          \u5C06\u4F1A\u6709\u4E00\u4E2A\u5047\u671F\n          \u5728\u6211\u4EEC\u7684\u8857\u9053\u4E0A\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 27
@@ -15287,8 +15156,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u867D\u7136\u2026\u2026\u6211\u60F3\u8981\n          \u8BF4\u8FDE\u63A5\n         
-          \u548C\u4E92\u8054\u7F51\u3002\u5F53\u7136\n          \u55EF\uFF0C\u901A\u8BAF\u548C\u4E92\u8054\u7F51\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 27
@@ -15348,8 +15216,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0E\u6B64\u540C\u65F6\u2014\u2014\u97F3\u4E50\u5267\n         
-          \u6682\u505C\u3002"
+        value: Good morning, dear listeners!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 27
@@ -15372,8 +15239,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.7600002
+    canvasScrollPosition: {x: 20.219772, y: 0}
+    canvasZoom: 0.9100001
   - id: 28
     fields:
     - title: Title
@@ -15512,8 +15379,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u90A3\u4E48\u6BCF\u5929\n          \u65B0\u7B11\u8BDD\u3002\n         
-          \u662F\u7684\u3002"
+        value: Yeah, right. New day, new surprises.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 28
@@ -15674,7 +15540,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u597D\u3002"
+        value: Hey.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -15684,13 +15550,7 @@ MonoBehaviour:
       delaySimStatus: 0
       falseConditionAction: Block
       conditionPriority: 2
-      outgoingLinks:
-      - originConversationID: 29
-        originDialogueID: 1
-        destinationConversationID: 29
-        destinationDialogueID: 2
-        isConnector: 0
-        priority: 2
+      outgoingLinks: []
       conditionsString: 
       userScript: 
       onExecute:
@@ -15735,8 +15595,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0B\u5348\u597D\u3002\u5982\u679C\n          \u60A8\u5DF2\u9000\u6B3E\uFF0C\u518D\u89C1\n         
-          \u6211\u65E0\u6CD5\u53D1\u51FA\u5B83\u3002"
+        value: "If you want to bring your order back, I can’t take it now."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -15797,8 +15656,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u6709\u4E92\u8054\u7F51\n          \u4E0D\u5141\u8BB8\u7533\u8BF7\n         
-          \u505A\u3002"
+        value: "No Internet."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -15859,8 +15717,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4EC0\u4E48\uFF1F\u4E0D\uFF0C\u505A\u5427\n          \u56DE\u62A5\uFF0C\u56DE\u62A5\n         
-          \u7ED9\u6211\u94B1\u3002\u73B0\u91D1\u3002"
+        value: What? No way, take this shitty order, give me my money back. In cash.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -15922,9 +15779,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u90A3\u6837\u7684\u8BDD\u662F\u884C\u4E0D\u901A\u7684\u3002\n         
-          \u6211\u4E0D\u662F\u5356\u5BB6\u5E76\u4E14\n          \u9000\u8FD8\u4F60\u7684\u94B1\n         
-          \u6211\u4E0D\u80FD\u3002"
+        value: "That won't work. I'm not a salesman and I can't give you your money back"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -15984,7 +15839,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u662F\u8C01\n          \u7136\u540E\u5462\uFF1F\u6CA1\u6709\u4EBA\u5417\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16045,8 +15900,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u4EEC\u5750\u5728\u8FD9\u91CC\uFF0C\u5E26\u7740\u4E0D\u6EE1\n         
-          \u4E0E\u9762\u5B54\u3002\u4EC0\u4E48\u90FD\u6CA1\u6709\n          \u4ED6\u4EEC\u505A\u4E0D\u5230\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16108,8 +15962,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u81F4\u7535\u60A8\u7684\n          \u7ED9\u8001\u677F\uFF0C\u6211\u4F1A\n         
-          \u8C08\u8BDD\n          \u548C\u4ED6\u5728\u4E00\u8D77\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16171,8 +16024,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u8FD8\u662F\u4E0D\n          \u6211\u4EEC\u65E0\u80FD\u4E3A\u529B\n         
-          \u505A\u3001\u542C\n          \u6211\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16233,8 +16085,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u6709\u4E92\u8054\u7F51\n          \u2013 \u6211\u4EEC\u65E0\u6CD5\u53D1\u884C\n         
-          \u9000\u6B3E\uFF0C\u53EF\u4EE5\u5417\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16295,8 +16146,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u60CA\u4EBA\u7684\uFF01\u6211\u6709\n          \u5934\u53D1\u51FA\u6765\u4E86\n         
-          \u6765\u81EA\u8FD9\u4EF6\u4E8B\uFF01"
+        value: Awesome! This thing made my hair fall out!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16357,8 +16207,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5E76\u5199\u9053\uFF1A\u201C\u539A\n          \u5934\u53D1\u7A7F\u8FC7\n         
-          \u4FDD\u8BC1\u4E09\u5468\uFF01"
+        value: "It says, “Guaranteed thick hair in three weeks!” I’m almost bald!"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16418,8 +16267,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u54C7\uFF0C\u6211\u53D1\u51FA\u4E86\u58F0\u97F3\u3002\n         
-          \u518D\u4F1A\u3002"
+        value: "Wow, she\u2019s loud. Good afternoon."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16478,7 +16326,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u597D\u3002"
+        value: Hey.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16540,9 +16388,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u80FD\u60F3\u8C61\u5417\uFF1F\n          \u4E0D\u60F3\u6CE8\u518C\n         
-          \u6211\u6B63\u5728\u6536\u5230\u9000\u6B3E\u3002\u8FD8\u6709\u8FD9\u91CC\n         
-          \u4EA7\u54C1\u662F\u5047\u7684\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16603,8 +16449,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u7684\u5934\u53D1\u5168\u90E8\u6389\u5149\u4E86\n         
-          \u51FA\u53BB\n          \u803B\u8FB1\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16663,7 +16508,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u54C7\uFF0C\u8FD9\u662F\u65B0\u95FB\u3002"
+        value: "Wow, that’s news."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16724,8 +16569,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5F53\\_\u516B\u5341\u5C81\u65F6\n          \u7B2C\u516D\u4E2A\u4F4F\u5728\u53E6\u4E00\u4E2A\n         
-          \u57CE\u5E02"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16786,8 +16630,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u90A3\u662F\u6240\u6709\u5973\u4EBA\u90FD\u5728\u7684\u5730\u65B9\n         
-          \u7136\u540E\u5C31\u79C3\u5934\u4E86\n          - \u653E\u5C04\u75C5\u3002"
+        value: "All the women went bald from radiation sickness."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16847,7 +16690,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u7ED9\u4F60\u63D0\u793A\n          \u5728\u820C\u5934\u4E0A\uFF01"
+        value: Shut your mouth!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16906,7 +16749,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u8BF8\u5982\u6B64\u7C7B\u7684\u4E8B\u60C5\u3002"
+        value: "Yeah, that’s right."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -16968,8 +16811,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7136\u540E\u51E0\u5929\n          \u6216\u51E0\u5468\u2014\u2014\u4EC5\u6B64\u800C\u5DF2\uFF0C\n         
-          \u5361\u666E\u7279\u3002\u6CA1\u6709\u4E00\u4E2A\n          \u5E78\u5B58\u4E0B\u6765\u3002"
+        value: "After a few days or weeks they all died."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17028,7 +16870,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8D6B\u96F7\u5229\u5C31\u5728\u6211\u4EEC\u773C\u524D\u3002"
+        value: "No one is alive."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17088,7 +16930,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u64CD\u4F60\u4EEC\u6240\u6709\u4EBA\n          \u89C1\u9B3C\u53BB\u5427\uFF01"
+        value: Go to hell! Everyone!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17149,8 +16991,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u600E\u4E48\u8BA4\u4E3A\uFF1F\n          \u53D1\u751F\u4E86\u4EC0\u4E48\uFF1F\n         
-          \u5728\u4E16\u754C\u4E0A\uFF1F"
+        value: What do think? What has happened in the world?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17223,8 +17064,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4E0D\u8FD9\u4E48\u8BA4\u4E3A\n          \u8FD9\u662F\u67D0\u79CD\u95EE\u9898\n         
-          \u653E\u5C04\u75C5\u3002"
+        value: "Well, I don’t think it's radiation sickness."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17284,7 +17124,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u6709\u4EC0\u4E48\uFF0C\u6838\uFF1F\n          \u53CD\u5E94\u5806\u5728\u8FD9\u91CC\u5417\uFF1F"
+        value: "We don’t have any nuclear reactors here."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17346,9 +17186,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5BF9\u6211\u6765\u8BF4\uFF0C\u662F\u8FD9\u6837\u7684\n         
-          \u8FD8\u6D89\u53CA\u5176\u4ED6\u4E8B\u60C5\u3002\n          \u54C7\uFF0C\u597D\u5927\u7684\u96FE\u554A\uFF01\n         
-          \u7A20\u5BC6\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17409,8 +17247,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u54C7\uFF0C\u5929\u53D8\u4E86\n          \u665A\u4E0A\u56E0\u4E3A\n         
-          \u4E9A\u91CC\u6D1B\u53BB\u7761\u89C9\u4E86\u3002"
+        value: "Wow, and days change nights because Helios, the God of the Sun, goes to sleep."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17470,8 +17307,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u5728\u7528\u4F60\u7684\u5934\u505A\u4EC0\u4E48\uFF1F\n         
-          \u6253\uFF1F"
+        value: "Are you okay?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17532,8 +17368,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u53EA\u662F\u731C\u6D4B\u3002\n          \u4F60\u6C38\u8FDC\u4E0D\u77E5\u9053\n         
-          \u76F8\u4FE1\u4EC0\u4E48\u3002"
+        value: I'm just guessing. You never know what to believe.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17592,7 +17427,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u89C9\u5F97\u6CA1\u4EC0\u4E48"
+        value: "I don’t think anything."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17655,9 +17490,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u6211\uFF0C\u6295\u673A\u8005\n          \u548C\u9634\u8C0B\u8BBA\u8005\uFF0C\n         
-          \u5DF2\u7ECF\u5F97\u5230\u4E86\u3002\u4E00\u5207\n          \u8FD9\u662F\u80E1\u8BF4\u516B\u9053\n         
-          \u6BCD\u9A6C\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17719,8 +17552,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u751F\u6D3B\u5728\u8FD9\u6837\u7684\n          \u8BE5\u56FD\u7684\u90E8\u5206\u5730\u533A\n         
-          \u96E8\u548C\u96FE\n          - \u8FD9\u662F\u5E38\u6001\u3002"
+        value: "We live in the town where foggy and rainy weather is normal."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17780,7 +17612,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5B89\u6392\u5728\u8FD9\u91CC\n          \u8C01\u6709\u66F4\u5DEE\u7684\u7248\u672C\uFF1F"
+        value: "Do you have some “whose-story-is-more-creepy” contest?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17839,7 +17671,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u7684\u771F\u76F8\u3002"
+        value: Your truth.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17899,7 +17731,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u503E\u5411\u4E8E\u4E00\u4E9B\n          \u611F\u67D3\u3002"
+        value: "I believe in sickness."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17960,8 +17792,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u90A3\u4E48\u8FD9\u4E9B\u662F\u600E\u4E48\u56DE\u4E8B\n         
-          \u5973\u4EBA\uFF1F\u8FD8\u6709\u4EC0\u4E48\n          \u6709\u4EC0\u4E48\u75C7\u72B6\u5417\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -18022,8 +17853,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u54C7\uFF0C\u597D\u5427\uFF0C\u6211\u4E0D\u662F\u4E13\u5BB6\u3002\n         
-          \u53EA\u6709\u6211\n          \u6CE8\u610F\u5230\u4E86\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -18085,8 +17915,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u9002\uFF0C\n          \u6E29\u5EA6\u3001\u635F\u8017\n         
-          \u5934\u53D1\u3002\u751A\u81F3\u6709\u4EBA\n          \u6211\u6CA1\u6709\u4E0B\u5395\u6240\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -18148,9 +17977,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u77E5\u9053\uFF0C\u8FD9\u592A\u75AF\u72C2\u4E86\n         
-          \u643A\u5E26\u7740\u4ED6\u4EEC\u7684\u60F3\u6CD5\n          \u5F88\u56F0\u60D1\u3002\u4E0D\u597D\n         
-          \u53D8\u5F97\u611A\u8822\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -18212,8 +18039,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7136\u540E\u5C31\u6D41\u8840\u4E86\n          - \u5C31\u662F\u8FD9\u6837\uFF01\u51E0\u5929\n         
-          \u7136\u540E\u6B7B\u4E86\u3002\u8FD9\u6837\u7684\n          \u4E8B\u60C5\u662F\u8FD9\u6837\u7684\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -18274,8 +18100,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4E3A\u4EC0\u4E48\u6765\uFF1F\n          \u9700\u8981\u4E00\u4E2A\u5305\u88F9\n         
-          \u83B7\u53D6\u4EE3\u7801 5574\u3002"
+        value: Oh well, why am I here? The order, code 5574.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -18328,7 +18153,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u7684\u53D1\u9645\u7EBF\u540E\u79FB\uFF01"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -18389,8 +18214,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u51FA\u4E86\u4E8B\u6545\n          \u6838\u7535\u7AD9\n         
-          \u53D1\u751F\u4E86\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -18558,7 +18382,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u575A\u6301\u4F4F\uFF0C\u4F60\u7684\n          \u5305\u3002"
+        value: Your order is here
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 30
@@ -18617,7 +18441,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u54C7\uFF0C\u597D\u7684\uFF0C\u8C22\u8C22\u3002"
+        value: Wow, thank you
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 30
@@ -18779,8 +18603,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u597D\uFF0C\u6211\u53BB\u53D6\u5305\u88F9\u3002\n         
-          \u4EE3\u7801 5574"
+        value: "Hey! Need my order. Code 5574."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 31
@@ -18840,7 +18663,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u53EF\u80FD\u3002\n          \u8FD9\u662F\u6211\u7B2C\u4E00\u6B21\u3002"
+        value: "It can be true. It\u2019s my first time."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 31
@@ -18894,7 +18717,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u53EA\u662F\n          \u5728\u8FD9\u91CC\u3002"
+        value: "You\u2019ve already been here. Like a few hours ago."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 31
@@ -19062,7 +18885,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u795D\u60A8\u8EAB\u4F53\u5065\u5EB7\uFF0C\n          \u5965\u5C14\u6D1B\u592B\u8239\u957F\u3002"
+        value: "Good afternoon. Captain Eagle."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 32
@@ -19123,8 +18946,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0B\u5348\u597D\u6BD4\n          \u6211\u53EF\u4EE5\u5E2E\u5FD9\u5417\uFF1F\u81F4\u7535\n         
-          \u5305\u88F9\uFF1F"
+        value: "Hello. How can I help you? Order?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 32
@@ -19185,8 +19007,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u9760\u8FD1\u5165\u53E3\u5904\n          PVZ\u53D1\u73B0\u5C38\u4F53\n         
-          \u7537\u4EBA\u3002"
+        value: "We have found a corpse just right in front of your door."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 32
@@ -19246,8 +19067,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u4EC0\u4E48\u90FD\u4E0D\u77E5\u9053\u5417\uFF1F\n         
-          \u4F60\u6CA1\u89C1\u8FC7\u5417\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 32
@@ -19307,7 +19127,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\uFF0C\u6CA1\u4EC0\u4E48\n          \u770B\u5230\u4E86\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 32
@@ -19369,8 +19189,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD9\u91CC\u6709\u98CE\n          \u6700\u8FD1\u5F3A\u52BF\u3002\n         
-          \u6216\u8BB8\u5DF2\u7ECF\u88AB\u9489\u7262\u4E86\n          \u4E1C\u897F\uFF1F"
+        value: "No, I didn’t. It was extremely windy outside. Maybe, an accident."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 32
@@ -19430,7 +19249,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u6709\u76F8\u673A\u5417\uFF1F\n          \u6709\u6CA1\u6709\uFF1F"
+        value: Do you have cameras?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 32
@@ -19489,7 +19308,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u6211\u6709\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 32
@@ -19512,7 +19331,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 61.607018, y: 173.18681}
+    canvasScrollPosition: {x: 45.78283, y: 0}
     canvasZoom: 0.9100001
   - id: 33
     fields:
@@ -19651,7 +19470,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u6709\u5305\u88F9\u3002\u6211\n          \u6211\u5DF2\u7ECF\u7ED9\u4F60\u4E86\u3002"
+        value: "We don\u2019t have your order. I\u2019ve already given it to you."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 33
@@ -19711,8 +19530,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u8BA9\u6211\u770B\u8D77\u6765\u50CF\u4E2A\u50BB\u74DC\n         
-          \u4F60\u62FF\u7740\u5417\uFF1F\u6211\u4F1A\u8BB0\u5F97\u7684\u3002"
+        value: "No way! You think I\u2019m stupid? I would remember that."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 33
@@ -19773,8 +19591,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\uFF0C\u4E5F\u8BB8\u5DF2\u7ECF\n          \u5FD8\u4E86\uFF0C\u5E74\u9F84\n         
-          \u6240\u6709\u8FD9\u4E00\u5207..."
+        value: "No, we don’t have it. Maybe you just don’t remember? You’re like…old, you know…"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 33
@@ -19834,7 +19651,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u54C7\uFF0C\u770B\n          \u5BF9\u4ED6\uFF01\u54C8\u59C6\u6D1B\u8FD8\u672A\u6210\u5E74\u3002"
+        value: "Wow, watch your mouth, stupid kid."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 33
@@ -19997,8 +19814,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5947\u602A\u7684\u3002\u8FD8\u6709\u5173\u4E8E\n          \u043A\u0430\u043A\u043E\u0439
-          \u0432\u0435\u0442\u0435\u0440 \u0432\u044B\n          \u4F60\u8BF4\uFF1F"
+        value: "What do you mean it was windy outside?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 34
@@ -20059,8 +19875,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u81F3\u5C11\u5728\u8857\u4E0A\n          \u548C\u96FE\uFF0C\u4F46\u662F\u98CE\n         
-          \u4E0D\u3002"
+        value: "It was just foggy but not windy."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 34
@@ -20121,8 +19936,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5F3A\u98CE\n          \u662F\u5BF9\u7684\uFF0C\u5BF9\u7684\n         
-          \u5728\u60A8\u62B5\u8FBE\u4E4B\u524D\u3002"
+        value: "It was extremely windy right before you came in."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 34
@@ -20183,8 +19997,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5E74\u8F7B\u4EBA\n          \u4F60\u8FD8\u597D\u5417\uFF1F\n         
-          \u4F60\u6CA1\u7528\u8FC7\u5417\uFF1F"
+        value: "Are you okay, sir? Are you using something?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 34
@@ -20245,8 +20058,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u542C\u7740\uFF0C\u6211\u66F4\n          \u6211\u5DF2\u7ECF\u5DE5\u4F5C\u51E0\u4E2A\u6708\u4E86\n         
-          \u6CA1\u6709\u4F11\u606F\u65E5\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 34
@@ -20307,8 +20119,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u505A\u7B14\u8BB0\n          \u4ECE\u6444\u50CF\u673A\u89C6\u9891\n         
-          \u89C2\u5BDF\u5E76\u524D\u5F80\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 34
@@ -20470,8 +20281,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u6709\u4E24\u4E2A\u5305\u88F9\n          8877 \u548C
-          4455\u3002"
+        value: "We have two orders. 8877 and 4455."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 35
@@ -20531,7 +20341,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u597D\uFF0C\n          \u73B0\u5728\u3002"
+        value: "Hello. Okay."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 35
@@ -20694,8 +20504,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u6CA1\u6709\u5C4B\u9876\u5417\uFF1F\n          \u6700\u540E\u4E00\u4E2A\u8D70\u4E86\n         
-          \u65F6\u95F4\uFF1F"
+        value: Have you been losing your damn mind lately?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -20754,7 +20563,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ECE\u4EC0\u4E48\u610F\u4E49\u4E0A\u8BF4\uFF1F"
+        value: Excuse me, what do you mean?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -20814,7 +20623,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u55EF\uFF0C\u6709\u70B9\u4E0D\u5B89\n          \u6700\u8FD1\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -20876,8 +20685,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u6709\u7F51\u7EDC\uFF0C\u5149\n          \u95EA\u70C1\u3002\u4F60\u77E5\u9053\n         
-          \u559C\u6B22\uFF0C\u5371\u8A00\u8038\u542C\n          \u51FB\u4E2D\u5927\u8111\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -20939,8 +20747,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5403\u836F\n          \u5404\u79CD\u5404\u6837\u7684\u4E8B\u60C5\uFF0C\u4F46\u5B83\u53D8\u6210\u4E86\n         
-          \u4E00\u5207\u90FD\u53D8\u5F97\u66F4\u7CDF\u5E76\u4E14\n          \u66F4\u7CDF\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -21000,7 +20807,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u6709\u80C3\u53E3\n          \u751F\u75C5\u4E86\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -21066,8 +20873,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u559D\u5854\u5E03\u62C9\u9152\u6CA1\u6709\u610F\u4E49\n         
-          \u4E0D\u503C\u5F97\u3002"
+        value: "It's not worth taking pills without a prescription."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -21128,8 +20934,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD9\u4E0D\u5173\u6211\u7684\u4E8B\uFF0C\u4F46\u662F\n         
-          \u4E5F\u8BB8\u4F60\u53EA\u662F\n          \u6000\u5B55\u4E86\uFF1F"
+        value: "It’s not my concern but are you just pregnant?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -21188,7 +20993,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4EC0\u4E48\uFF1F\u4E0D\u3002"
+        value: "What? Of course, I’m not."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -21242,7 +21047,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u5750\u5728\u5BB6\u91CC\u662F\u56E0\u4E3A\n          \u4EC0\u4E48\u3002"
+        value: "It’s because you spend all your time at home."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -21303,8 +21108,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E5F\u8BB8\u5B83\u66F4\u64C5\u957F\n          \u6211\u4F1A\u7ECF\u5E38\u51FA\u53BB\uFF0C\n         
-          \u547C\u5438\u7A7A\u6C14\u3002"
+        value: "You need to go outside and just breathe."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -21364,7 +21168,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u5F53\u7136\uFF0C\u901A\u8FC7\n          \u884C\u8D70\u5728\u96FE\u4E2D\u3002"
+        value: "Hell yeah, and get lost in the fog."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 36
@@ -21387,8 +21191,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 1
+    canvasScrollPosition: {x: 1367.6688, y: 0}
+    canvasZoom: 0.97
   - id: 37
     fields:
     - title: Title
@@ -21525,7 +21329,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD9\u662F\u4F60\u7684\u5305\u88F9\u3002"
+        value: "This is your second order."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 37
@@ -21586,8 +21390,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u73B0\u5728\u611F\u8C22\u4E0A\u5E1D\n          \u6709\u4E8B\u8981\u505A\n         
-          \u6CA1\u6709\u4E92\u8054\u7F51\u3002"
+        value: "Finally we have something to do without the Internet."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 37
@@ -21652,7 +21455,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u90A3\u91CC\u6709\u4EC0\u4E48\uFF1F"
+        value: "What have you ordered?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 37
@@ -21711,7 +21514,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u62B1\u6B49\u597D\u5947\u3002"
+        value: "Excuse me, I’m just curious."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 37
@@ -21770,7 +21573,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u795D\u4F60\u4E00\u5207\u987A\u5229\u3002"
+        value: "That’s good!"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 37
@@ -21829,7 +21632,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u518D\u6765\u5427\u3002"
+        value: "See you again, bye."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 37
@@ -21891,8 +21694,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u300A\u5730\u4E0B\u57CE\u300B\u8463\u4E8B\u4F1A\n          \u548C\u9F99\u201D\n         
-          \u539F\u6765\u3002\u7C7B\u4F3C\u7684\u4E1C\u897F\n          \u4E8B\u3002"
+        value: "Some sort of a “Dungeon and Dragons” board game, but not the original one. Something similar."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 37
@@ -21945,7 +21747,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u518D\u89C1\u3002"
+        value: "Bye."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 37
@@ -21968,7 +21770,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 88.8}
+    canvasScrollPosition: {x: 46.4, y: 0}
     canvasZoom: 1
   - id: 39
     fields:
@@ -22107,7 +21909,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u518D\u4F1A\u3002\u6211\n          \u5BF9\u4E8E\u5305\u88F9\u3002"
+        value: Good afternoon!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 39
@@ -22172,7 +21974,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u53C8\u662F\u4F60\u5417\uFF1F"
+        value: "You?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 39
@@ -22233,8 +22035,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u6765\u4E86\n          \u5927\u7EA6\u4E24\u4E2A\u5C0F\u65F6\u524D\u3002\n         
-          \u6211\u628A\u5305\u88F9\u7ED9\u4F60\u4E86\u3002"
+        value: "1. You? Again? You’ve already been here 2 hours ago. And I have given you your order."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 39
@@ -22294,7 +22095,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u54E6\u4E3B\u554A\u4F60\n          \u5728\u5BB6\u65E0\u4E8B\u53EF\u505A\uFF1F"
+        value: "Oh my God!"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 39
@@ -22353,7 +22154,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u60F3\u5F97\u5230\u6211\u3002"
+        value: "You’re playing on my nerves."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 39
@@ -22413,7 +22214,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5176\u5B9E\u662F\u7B2C\u4E00\u4E2A\n          \u6B21\u3002\u4EC0\u4E48\u6837\u7684\u53CD\u5E94\uFF1F"
+        value: "Nonsense!"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 39
@@ -22472,7 +22273,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u628A\u5305\u88F9\u62FF\u51FA\u6765\u3002"
+        value: "Give me my order."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 39
@@ -22526,7 +22327,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7537\u5B69\uFF0C\u4F60\u4E0D\u662F\u5417\n          \u75AF\u4E86\u5417\uFF1F"
+        value: "Are you fucking serious?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 39
@@ -22585,7 +22386,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u628A\u6211\u7684\u5305\u88F9\u62FF\u51FA\u6765\u3002"
+        value: "Now!"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 39
@@ -22608,7 +22409,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 493.71408, y: 0}
+    canvasScrollPosition: {x: 0, y: 0}
     canvasZoom: 0.7000003
   - id: 40
     fields:
@@ -22746,7 +22547,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C22\u8C22\uFF0C\u6211\u662F\u5728\u670D\u52A1\u3002"
+        value: Thank you a lot, kid.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 40
@@ -22811,7 +22612,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5DF2\u7ECF\u8D70\u4E86\uFF0C\u518D\u89C1\u3002"
+        value: "Just go away, goodbye."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 40
@@ -22871,7 +22672,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5E76\u4E14\u4E0D\u8981\u6765\n          \u66F4\u591A\u3002"
+        value: "Do not come here again."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 40
@@ -22926,8 +22727,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u201C\u8C22\u8C22\u201D\n          \u63A8\u5B83\uFF0C\u4F60\u77E5\u9053\u7684\n         
-          \u54EA\u91CC\uFF1F"
+        value: "You know what to do with your shitty “thank you”?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 40
@@ -22987,7 +22787,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6309\u65B9\u5411\n          \u5230\u7B2C\u4E94\u70B9\u3002"
+        value: "Wipe your “you-know-what”."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 40
@@ -23046,7 +22846,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u518D\u89C1\u3002"
+        value: "Bye."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 40
@@ -23209,8 +23009,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6240\u4EE5\uFF0C\u4F60\u8BF4\uFF1A\n          \u201C\u4F60\u7684\u5305\u88F9\u4E0D\u89C1\u4E86\uFF0C\n         
-          \u4E0D\u3002\u201D\u4E00\u5207\u90FD\u5728\u90A3\u91CC\u3002"
+        value: See? My order in flesh and blood. And you was telling me the opposite.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 41
@@ -23275,7 +23074,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5DF2\u7ECF\u8D70\u4E86\uFF0C\u518D\u89C1\u3002"
+        value: "Just go away, goodbye."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 41
@@ -23335,7 +23134,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5E0C\u671B\u4F60\u66F4\n          \u4F60\u4E0D\u4F1A\u6765\u7684\u3002"
+        value: "I hope you won’t come again, please."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 41
@@ -23388,7 +23187,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u795D\u4F60\u4E00\u5207\u987A\u5229\u3002"
+        value: "Not-a-good bye."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 41
@@ -23449,8 +23248,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5FD8\u8BB0\u8DEF\n          \u8FD9\u662F\u5BC6\u7801\n         
-          \u4F60\u7684\u5E10\u6237\u3002"
+        value: "Forget the path to our delivery service and your password for the app."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 41
@@ -23612,7 +23410,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u9700\u8981\u628A\u5B83\u7ED9\u4ED6\n          \u81F3\u5C11\u5DF2\u7ECF\u6709\u4E00\u4E9B\u4E1C\u897F\u4E86"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 42
@@ -23674,8 +23472,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5426\u5219\u4ED6\u4F1A\n          \u4F1A\u6EF4\u5728\n         
-          \u8111\u5B50\u6765\u5427\n          \u5BF9\u6211\u4EEC\u6765\u8BF4\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 42
@@ -23734,7 +23531,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u53EF\u80FD\u6709"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 42
@@ -23796,8 +23593,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E5F\u5DF2\u7ECF\u6709\u5C4B\u9876\u4E86\n          \u5F00\u8F66\u8FDC\u79BB\u4ED6\u4EEC\u6240\u6709\u4EBA\n         
-          \u8C08\u8BBA\n          \u9ED1\u6697\u548C\u75DB\u82E6\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 42
@@ -23857,7 +23653,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6216\u8005\u4E5F\u8BB8\u53EA\u662F\n          - \u75AF\u72C2\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 42
@@ -24019,7 +23815,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u751A\u81F3\u7ED9\u4ED6\u4E00\u4E9B\u4E1C\u897F\n          \u4EC0\u4E48\u4E5F\u6CA1\u6709\u3002"
+        value: "I have nothing to give him anyway."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 43
@@ -24080,8 +23876,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5728\u67D0\u4E2A\u5730\u65B9\u6709\u8FC7\u5B83\n         
-          \u88C5\u6709\u4E1C\u897F\u7684\u76D2\u5B50\n          \u65E0\u7528\u7684\u5783\u573E\u3002"
+        value: "Well, I have a box with some useless junk."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 43
@@ -24141,7 +23936,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u53EF\u4EE5\u7ED9\u4ED6\n          \u6211\u8FD8\u662F\u4E0D\u4F7F\u7528\u5B83\u3002"
+        value: "I don’t use it anyway, I can give it to him."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 43
@@ -24303,8 +24098,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6240\u4EE5\uFF0C\u5F53\u7136\uFF0C\u8FD9\u6837\u505A\n         
-          \u8FD9\u662F\u4E0D\u53EF\u80FD\u7684\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 44
@@ -24364,7 +24158,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F46\u8FD9\u4E9B\u9189\u6C49\n          \u6BCF\u4E2A\u4EBA\u53EF\u80FD\u90FD\u4E92\u76F8\u8BA4\u8BC6"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 44
@@ -24425,8 +24219,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6240\u4EE5\u5C31\u8BA9\u5B83\u5427\n          \u81EA\u5DF1\u60F3\u529E\u6CD5\n         
-          \u5728\u4F60\u7684\u5305\u88F9\u91CC\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 44
@@ -24588,7 +24381,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5C31\u662F\u8FD9\u6837\u8F93\u7684\n          \u5DE5\u5177\u96C6\u3002"
+        value: "Well, this is how I got rid of my useless tools."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 45
@@ -24648,7 +24441,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5E76\u6446\u8131\u4E86\n          \u75F4\u8FF7\u7684\u7C89\u4E1D\u3002"
+        value: "And  my obsessive admirer."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 45
@@ -24809,7 +24602,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u665A\u4E0A\u597D\uFF01"
+        value: Good evening!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -24874,7 +24667,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u665A\u4E0A\u597D\uFF01"
+        value: Good evening!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -24934,7 +24727,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u6709\u5C0F\n          \u4E92\u8054\u7F51\u4E2D\u65AD\uFF0C"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -24995,8 +24788,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u56E0\u6B64\u5305\u88F9\n          \u901A\u8FC7\u4EE3\u7801\u53D1\u51FA\n         
-          \u51FA\u53D1\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25057,8 +24849,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u5E78\u7684\u662F\uFF0C\u5982\u679C\n          \u8BA2\u5355\u5C1A\u672A\u4ED8\u6B3E\uFF0C\n         
-          \u6211\u4EC0\u81F3\u65E0\u6CD5\u653E\u5F03\u5B83"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25119,8 +24910,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u56E0\u4E3A\u6211\u4E0D\u80FD\n          \u6CE8\u9500\u94B1\n         
-          \u901A\u8FC7\u7CFB\u7EDF\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25180,7 +24970,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u597D\u4E92\u8054\u7F51\n          \u4E0D\u3002"
+        value: "Hi, no Internet."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25242,8 +25032,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u53D1\u51FA\u5305\u88F9\n          \u6839\u636E\u4EE3\u7801\uFF0C\u90A3\u4E48\n         
-          \u5B83\u770B\u8D77\u6765\u5982\u4F55\n          \u7CFB\u7EDF\u4E2D\u6CE8\u660E\u3002"
+        value: "Need a code number to give you your order."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25304,8 +25093,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5982\u679C\u5305\n          \u6CA1\u6709\u4ED8\u6B3E\uFF0C\u90A3\u4E48\n         
-          \u6211\u4E0D\u80FD\u628A\u5B83\u653E\u5F03\u3002"
+        value: "If your order is not paid, I can’t give you it."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25364,7 +25152,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E00\u4E2A\uFF1F\u6CA1\u5173\u7CFB\u3002"
+        value: "What?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25423,7 +25211,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5DF2\u7ECF\u4ED8\u6E05\u4E00\u5207\u8D39\u7528\u4E86\u3002"
+        value: "My order is paid."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25482,7 +25270,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8BE5\u6B7B\u7684\u8FD9\u662F\u600E\u4E48\u56DE\u4E8B\u3002"
+        value: "What the hell is going on in this town?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25547,7 +25335,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u660E\u767D\u4E86\u3002"
+        value: "Understood."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25607,7 +25395,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u5173\u7CFB\n          \u4E00\u5207\u90FD\u5DF2\u4ED8\u8D39"
+        value: "Well, my order is paid."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25674,8 +25462,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5BF9\u4E0D\u8D77\uFF0C\n          \u6211\u4EEC\u4E4B\u524D\u548C\u4F60\u5728\u4E00\u8D77\n         
-          \u6CA1\u89C1\u8FC7\uFF1F"
+        value: "Excuse me, have we met before?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25736,8 +25523,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5BF9\u4E0D\u8D77\uFF0C\n          \u6211\u4EEC\u4E4B\u524D\u548C\u4F60\u5728\u4E00\u8D77\n         
-          \u6CA1\u89C1\u8FC7\uFF1F"
+        value: "Excuse me, have we met before?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25796,7 +25582,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD9\u5F88\u597D\u3002"
+        value: "That’s good."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25855,7 +25641,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD9\u5F88\u597D\u3002"
+        value: "That’s good."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25915,7 +25701,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u7684\u5F88\u719F\u6089\n          \u8138\u3002"
+        value: "You look pretty familiar to me."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -25976,8 +25762,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u800C\u4E14\u6CA1\u6709\u62A5\u916C\n          \u9012\u9001\u5305\u88F9\n         
-          \u56F0\u96BE\u3002"
+        value: "It’s pretty difficult to give someone an unpaid order."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26037,7 +25822,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u6709\u4E00\u4E9B\u5417\n          \u8FD9\u5F20\u8138\u5F88\u719F\u6089\u3002"
+        value: "You look familiar."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26098,8 +25883,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u6765\n          \u6765\u8FD9\u91CC\u51B2\u7A81\uFF0C\n         
-          \u5076\u7136\uFF1F"
+        value: "You didn't come here to cause trouble, did you?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26160,8 +25944,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EC0\u81F3\u4E0D\u77E5\u9053\n          \u4ECE\u5B9E\u9A8C\u5BA4\n         
-          \u6211\u4E0D\u51FA\u53BB\u3002"
+        value: "I don’t even know."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26221,7 +26004,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5728\u7814\u7A76\u6240\u5DE5\u4F5C\u3002\n          \u6211\u8BA4\u4E3A\u4E0D\u662F\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26288,8 +26071,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E00\u5207\u90FD\u662F\u6709\u507F\u7684\n          \u522B\u62C5\u5FC3\u3002\n         
-          \u6211\uFF0C\u55EF\u2026\u2026"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26350,8 +26132,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u6309\u72B6\u6001\n          \u81F4\u8BE5\u7814\u7A76\u6240\u7684\u4E00\u540D\u96C7\u5458\n         
-          \u5236\u9020\u51B2\u7A81\u3002"
+        value: "Can’t cause trouble."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26416,7 +26197,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5929\u6C14\u6674\u6717\u3002"
+        value: "I see."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26476,7 +26257,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD1\u5149\u706F\n          \u4F60\u5E94\u8BE5\u53BB\u8FD9\u91CC\u3002"
+        value: "So far from here."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26535,7 +26316,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5929\u6C14\u6674\u6717\u3002"
+        value: "I see."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26595,7 +26376,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD1\u5149\u706F\n          \u4F60\u5E94\u8BE5\u53BB\u8FD9\u91CC\u3002"
+        value: "So far from here."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26656,8 +26437,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u4E3A\u4EC0\u4E48\u8BA2\u8D2D\n          \u5305\u88F9\u5728\u8FD9\u91CC\u5417\uFF1F\u8FDC\u65B9\n         
-          \u4E00\u6837\u3002"
+        value: "1. I see. So, why have you ordered here? Pretty far, huh?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26718,8 +26498,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u597D\u50CF\u6709\n          \u79BB\u7814\u7A76\u6240\u8F83\u8FD1\n         
-          \u6709\u4E00\u70B9\u3002"
+        value: "As I remember, there is a pickup point near the university."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26778,7 +26557,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u53EF\u4EE5\u5728\u90A3\u91CC\u8BA2\u8D2D\u3002"
+        value: "I could order there."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26838,8 +26617,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u8FD9\u5C31\u662F\u6211\uFF0C\u7531\n         
-          \u5728\u56DE\u5BB6\u7684\u8DEF\u4E0A..."
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26899,7 +26677,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u73B0\u5728\u6709\u4E00\u70B9\n          \u4E0D\u518D\u6709\u6548\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -26959,7 +26737,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u800C\u8FD9\u91CC\u662F\u76F8\u5BF9\u7684\n          \u8FD8\u53EF\u4EE5\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27026,8 +26804,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5C31\u662F\u8FD9\u6837\u3002\u4E00\u4E2A\n          \u90A3\u91CC\u53D1\u751F\u4E86\u4EC0\u4E48\n         
-          \u5728\u7814\u7A76\u6240\uFF1F"
+        value: "So, what happened at the university?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27086,7 +26863,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u55EF\uFF0C\u662F\u7684\u3002"
+        value: "Yeah, sure."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27146,7 +26923,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5404\u79CD\u8C23\u8A00\n          \u6B65\u884C\u3002"
+        value: "There are so many rumors."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27206,7 +26983,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u662F\u4EC0\u4E48\n          \u4ED6\u4EEC\u4F1A\u60F3\u51FA\u6765\u7684\u3002"
+        value: "There are so many rumors."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27268,8 +27045,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6709\u4EBA\u8BF4\n          \u4F60\u90A3\u91CC\u6709\u4E00\u4E2A\u6D1E\n         
-          \u5728\u592A\u7A7A\u4E2D\n          \u6253\u5F00\u3002"
+        value: "Someone tells about a hole in space."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27329,7 +27105,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6709\u4EBA\u8BF4\n          \u5173\u4E8E\u5B9E\u9A8C\u3002"
+        value: "Someone says that it’s just experiments."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27391,8 +27167,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7136\u540E\uFF0C\u4ED6\u4EEC\u8BF4\uFF0C\n          \u4F60\u6709\u67D0\u79CD\n         
-          \u7CDF\u7CD5\u7684\u4E8B\u60C5\u53D1\u751F\u4E86\u3002\n          \u6211\u4EEC\u4F1A\u518D\u6B21\u6B7B\u53BB\u3002"
+        value: "Yeah, sure."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27451,7 +27226,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F46\u6211\u4E0D\u76F8\u4FE1\u5B83\u3002"
+        value: "But I don't believe it."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27511,8 +27286,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u5657\u2026\u2026\u5443\u5443\u2026\u2026\u6B63\u5E38\n         
-          \u6211\u4EEC\u62E5\u6709\u4E00\u5207\u5417\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27572,7 +27346,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u4E00\u5207\u90FD\u5F88\u597D\n          \u90A3\u91CC\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27631,7 +27405,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4EC0\u4E48\u4E5F\u6CA1\u53D1\u751F\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27690,7 +27464,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD9\u662F\u5305\u88F9\u53F7\u7801\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27749,7 +27523,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u597D\u5427\uFF0C\u73B0\u5728\u3002"
+        value: Well, okay.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27910,7 +27684,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u6709\u70B9\u5947\u602A\u3002"
+        value: "He’s strange."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 47
@@ -27969,7 +27743,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u800C\u4E14\u4ED6\u7684\u8138\u5F88\u719F\u6089\u3002"
+        value: "And looks so familiar."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 47
@@ -28028,7 +27802,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u6109\u5FEB\u7684\u611F\u89C9\u3002"
+        value: "It's such an unpleasant feeling."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 47
@@ -28190,7 +27964,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u6655\u5012\u4E86\n          \u8BE5\u6B7B\u7684"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28255,7 +28029,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8D4B\u4E88\u751F\u547D"
+        value: Try to bring to life
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28320,7 +28094,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6253\u7535\u8BDD\u53EB\u6551\u62A4\u8F66"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28373,7 +28147,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6253\u5728\u8138\u4E0A\u3002"
+        value: "Punch in the face"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28433,7 +28207,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5012\u51FA\u80FD\u91CF\u996E\u6599\n          \u5728\u8138\u4E0A\u3002"
+        value: "Pour an energy drink"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28492,7 +28266,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u75AF\u4E86\uFF01\uFF1F"
+        value: "A-ARE Y-YOU C-CRAZ-ZY?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28551,7 +28325,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5657\u2026\u2026"
+        value: "Hmph…"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28610,7 +28384,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5728\u54EA\u91CC\uFF1F"
+        value: "Where am I?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28669,7 +28443,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u53D1\u751F\u4EC0\u4E48\u4E8B\u4E86\uFF1F"
+        value: "What’s happening?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28729,8 +28503,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u554A\u554A\u554A\u554A\u2026\u2026\u5657\u2026\u2026\u54EA\u91CC\n         
-          \u6211\uFF1F"
+        value: "AAAAAAAAAAA….Hmph…Where am I?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28789,7 +28562,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4E3A\u4EC0\u4E48\u6E7F\u4E86\uFF1F"
+        value: "Why am I wet?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28848,7 +28621,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u53D1\u751F\u4E86\u4EC0\u4E48\u4E8B\uFF1F"
+        value: "What’s happening?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28908,7 +28681,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4E0D\u77E5\u9053\uFF0C\u4F60\u53EA\u662F\n          \u6655\u5012\u4E86\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -28969,8 +28742,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u53EF\u80FD\u6709\u8840\u538B\n          \u90A3\u91CC\u6216\u5176\u4ED6\u4EC0\u4E48\u5730\u65B9\n         
-          \u5B83\u53D1\u751F\u4E86"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29030,7 +28802,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5F53\u4EBA\u4EEC\u6655\u5012\u65F6\n          \u79CB\u5929\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29089,7 +28861,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u597D\u5427\uFF0C\u5446\u5728\u5BB6\u91CC\u5427\u3002"
+        value: "Well, just stay at home."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29149,8 +28921,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E3A\u4EC0\u4E48\u8981\u53BB\u67D0\u4E2A\u5730\u65B9\n         
-          \u4F60\u51FA\u6765\u4E86\u5417\uFF1F"
+        value: "Why go out anywhere?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29210,7 +28981,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5982\u679C\u6CA1\u6709\u4EBA\u600E\u4E48\u529E\n          \u4E0D\u5728\u9644\u8FD1\u5417\uFF1F"
+        value: "What if there was no one around?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29269,7 +29040,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F1A\u53D1\u751F\u4EC0\u4E48\uFF1F"
+        value: "What would happen?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29329,7 +29100,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u6765\u4E86\u771F\u597D\n          \u8FDB\u5165\u4F60\u81EA\u5DF1\u3002"
+        value: "It's good that you came to your senses."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29390,8 +29161,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u6C38\u8FDC\u4E0D\u77E5\u9053\uFF0C\u4ED6\u4EEC\u72B9\u8C6B\u4E86\uFF0C\n         
-          \u66F4\u7CDF\u7CD5\u7684\u662F\n          \u4F1A..."
+        value: "Maybe, it would have been worse..."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29450,7 +29220,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8FD8\u6709\u522B\u8BF4..."
+        value: "Yeah, you’re right…"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29509,7 +29279,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C22\u8C22\u3002"
+        value: "Thank you."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29569,7 +29339,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4E0D\u77E5\u9053\uFF0C\u5C31\u50CF\n          \u751F\u75C5\u4E86\u3002"
+        value: "I don’t know, I feel sick."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29629,7 +29399,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E00\u5207\u90FD\u662F\u6700\u540E\u7684\n          \u4EBA\u4EEC\u4E00\u76F4\u5728\u62B1\u6028\u5B83\u3002"
+        value: Everyone has been complaining about this lately.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29690,8 +29460,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u5FC5\u987B\u79BB\u5F00\n          \u5927\u5BB6\uFF0C\u9003\u79BB\n         
-          \u57CE\u5E02\u3002"
+        value: "Everyone must leave, flee the town."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29751,7 +29520,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u63A5\u4E0B\u6765\u4F1A\u53D1\u751F\u4EC0\u4E48\n          \u53EA\u4F1A\u66F4\u7CDF..."
+        value: "It will only get worse..."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29810,7 +29579,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u4F1A\u518D\u6709\u4EBA\u7559\u4E0B\u4E86\u3002"
+        value: "No one will remain."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29870,7 +29639,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4EC5\u5E72\n          \u5730\u7403\u3002"
+        value: "Only parched earth."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29936,7 +29705,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u53E6\u4E00\u4E2A\u4E1A\u4F59\u7231\u597D\u8005\n          \u731C\u6D4B\u3002"
+        value: "Another guesswork enthusiast."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -29995,7 +29764,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5DF2\u7ECF\u660E\u767D\u4E86\uFF0C\u6211\u660E\u767D\u4E86\u3002"
+        value: "I understand, I understand."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30056,8 +29825,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4EC5\u9650\u63D0\u524D\u9884\u8BA2\n          \u6211\u9A6C\u4E0A\u53BB\u62FF\n         
-          \u6211\u4F1A\u628A\u5B83\u6254\u6389\u3002"
+        value: "I'll just get my salary and leave immediately."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30117,7 +29885,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u4EEC\u90FD\u662F\u4EBA\u8D28\n          \u6750\u6599\u3002"
+        value: "You are all hostages to material things."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30176,7 +29944,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u6709\u4E00\u4E2A\u751F\u6D3B\u3002"
+        value: "We only have one life."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30235,7 +30003,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u73A9\u5F97\u5F00\u5FC3\u3002"
+        value: "Enjoy it."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30294,7 +30062,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5F80\u54EA\u91CC\u8DD1\uFF1F"
+        value: "Where would I go?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30354,7 +30122,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u51FA\u751F\u5728\u8FD9\u91CC\n          \u957F\u5927\u4E86\u2026\u2026"
+        value: "I was born and raised here..."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30413,7 +30181,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u65E0\u5904\u53EF\u9003\u3002"
+        value: "I have nowhere to go."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30472,7 +30240,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u5927\u5BB6\u4E5F\u662F\u5982\u6B64\u3002"
+        value: "Just like all of us."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30532,7 +30300,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u51FA\u751F\u5728\u8FD9\u91CC\n          \u6211\u4EEC\u4F1A\u6B7B\u5728\u8FD9\u91CC\u3002"
+        value: "We were born here, and we will die here."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30591,7 +30359,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6076\u6027\u5FAA\u73AF\u3002"
+        value: "It's a vicious circle."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30651,8 +30419,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5C31\u662F\u8FD9\u6837\uFF0C\u53D4\u53D4\u3002\u6765\u5427\uFF0C\n         
-          \u518D\u89C1\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30711,7 +30478,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u9886\u53D6\u5305\u88F9\u3002"
+        value: "Take your order."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30773,9 +30540,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F46\u5982\u679C\u7A81\u7136\u53D1\u751F\u4EC0\u4E48\u4E8B\u60C5\n         
-          \u5982\u679C\u5B83\u5F00\u59CB\n          \u67D0\u79CD\u8FD0\u52A8\n         
-          \u6211\u5C06\u662F\u7B2C\u4E00\u4E2A\u79BB\u5F00\u7684\u4EBA\u3002"
+        value: "If something happens I will go away from this town immediately."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30834,7 +30599,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C22\u8C22\u4F60\u6551\u4E86\u6211\u3002"
+        value: "Thank you a lot for saving me."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30894,7 +30659,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5F88\u611F\u6FC0\n          \u7531\u4F60\u3002"
+        value: "I owe you."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -30954,7 +30719,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u9886\u53D6\u5305\u88F9\n          \u4EC5\u6709\u3002"
+        value: "Don\u2019t forget the order."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -31008,7 +30773,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u611F\u8C22\u4E0A\u5E1D\uFF0C\u4E00\u5207\n          \u6210\u529F\u4E86\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -31067,7 +30832,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4E0D\u77E5\u9053\uFF0C\u4F19\u8BA1\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -31128,8 +30893,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6700\u8FD1\n          \u603B\u662F\u8FD9\u6837\uFF1A\n         
-          \u6211\u4F1A\u8DCC\u5012\u4E00\u6B21\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -31188,7 +30952,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u7684\u5934\u6709\u95EE\u9898\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 48
@@ -31223,7 +30987,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 252.68289, y: 0}
+    canvasScrollPosition: {x: 1.9512329, y: 2763.9053}
     canvasZoom: 0.8200002
   - id: 49
     fields:
@@ -31361,7 +31125,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u665A\u4E0A\u597D\uFF01"
+        value: Good evening!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 49
@@ -31421,7 +31185,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u7537\u4EBA\u53D8\u6210\u4E86\n          \u4E0D\u597D\u4E86\uFF0C\u6655\u5012\u4E86\u3002"
+        value: "A man has fainted, he felt unwell recently, I think."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 49
@@ -31480,7 +31244,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8BF7\u8FC7\u6765\u3002"
+        value: "Please, come as fast as you can."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 49
@@ -31641,7 +31405,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u600E\u4E48\u4E86\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -31702,8 +31466,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u53D7\u4E0D\u4E86\u4E86\n          \u5230\u5BB6\u7136\u540E\n         
-          \u6655\u5012\uFF1F"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -31762,7 +31525,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u665A\u4E0A\u597D\u3002"
+        value: "Good evening!"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -31821,7 +31584,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u600E\u4E48\u4E86\uFF1F"
+        value: "What happened?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -31880,7 +31643,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u554A\uFF0C\u6211\u660E\u767D\u4E86\u3002"
+        value: "Oh, I see."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -31939,7 +31702,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u547C\u5438\uFF1F"
+        value: "Is he breathing?"
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32004,7 +31767,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u5B83\u4F3C\u4E4E\u5728\u547C\u5438\u3002"
+        value: "Well, I think so."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32066,9 +31829,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u9760\u8FD1\u5B83\n          \u6211\u5BB3\u6015\u63A5\u8FD1\n         
-          \u7136\u540E\u60C5\u51B5\u7A81\u7136\u53D8\u5F97\u66F4\u7CDF\n         
-          \u6211\u4F1A\u505A\u7684\u3002"
+        value: "I didn't want to make it worse."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32128,7 +31889,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4EEC\u6CA1\u6709\u53D7\u8FC7\u8BAD\u7EC3\n          \u6025\u6551\u3002"
+        value: "We’re not taught first aid."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32188,7 +31949,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u6709\u7ACB\u5373\u68C0\u67E5\n          \u53EB\u3002"
+        value: "I didn’t check."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32248,7 +32009,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u4E0D\u77E5\u9053\u4EC0\u4E48\n          \u53D1\u751F\u5728\u4ED6\u8EAB\u4E0A\u3002"
+        value: "I don’t know the reason why he fell."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32308,8 +32069,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u597D\u5427\uFF0C\u5982\u679C\u4ED6\u4EEC\u68C0\u67E5\u4E00\u4E0B\u5C31\u597D\u4E86\n         
-          \u4ED6\u7684\u547C\u5438"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32369,7 +32129,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6CA1\u5173\u7CFB\n          \u4E0D\u4F1A\u53D1\u751F\u7684\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32431,8 +32191,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6700\u8FD1\n          \u7ECF\u5E38\u4E0D\u5F97\u4E0D\n         
-          \u9A91\u8FD9\u4E9B\n          \u6311\u6218..."
+        value: "Lately, we often have to respond to calls like this..."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32491,7 +32250,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6709\u7684\u751A\u81F3\u6B7B\u4EA1\u3002"
+        value: "Some people even die."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32551,7 +32310,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u9B54\u9B3C\u77E5\u9053\n          \u9700\u8981\u505A\u4EC0\u4E48\u3002"
+        value: "Hell knows what to do."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32617,7 +32376,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4ED6\u4EEC\u8BF4\u8FD9\u662F\u4E00\u79CD\u75C5\n          \u67D0\u79CD\u6B65\u884C\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32676,7 +32435,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u611A\u5F04\u4EBA..."
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32737,8 +32496,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u53BB\u4E86\u4ED3\u5E93\n          \u542C\u5230\u4E00\u58F0\u54CD\u52A8\u3002\u56DE\u6765\u4E86\n         
-          \u4ED6\u5DF2\u7ECF\u660F\u8FC7\u53BB\u4E86\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32797,7 +32555,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E0D\u6109\u5FEB\u7684\u60C5\u51B5\u3002"
+        value: "An unpleasant situation."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32858,8 +32616,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u5176\u5B9E\u5E76\u4E0D\u60F3\n          \u4F1A\u5728\u4E2D\u95F4\n         
-          \u70B9\u4EBA"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32919,7 +32676,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6655\u5012\u4E86\n          \u6216\u8005\u6B7B\u4E86\u3002"
+        value: 
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -32980,8 +32737,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u53EA\u662F\u4E00\u4E9B\n          \u9690\u85CF\u7684\u529B\u91CF\u6B63\u5728\u5C1D\u8BD5\n         
-          \u6765\u60F9\u607C\u6211\u3002"
+        value: "It's as if some hidden forces are trying to mess with me."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33041,7 +32797,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u800C\u5728\u6B64\u4E4B\u524D\u8FD8\u6709\n          \u6709\u4EC0\u4E48\u75C7\u72B6\u5417\uFF1F"
+        value: Have you noticed any symptoms?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33101,8 +32857,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u4ED6\u53EA\u662F\u5F88\u5947\u602A\n         
-          \u662F\u3002"
+        value: "He was just strange."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33162,7 +32917,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5168\u7EA2\n          \u62BD\u6410\u3002"
+        value: "All red, twitchy."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33222,8 +32977,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6211\u544A\u8BC9\u4F60\uFF0C\u8FD9\u662F\u4E00\u79CD\u75C5\n         
-          \u53EF\u80FD\u3002"
+        value: "I'm telling you, it must have been an sickness."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33283,8 +33037,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u662F\u7684\uFF0C\u4E5F\u8BB8\u662F\u4E00\u79CD\u75BE\u75C5\n         
-          \u6563\u6B65\u3002"
+        value: "Maybe the sickness."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33343,7 +33096,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F46\u4F60\u77E5\u9053..."
+        value: "But you know…If I were you, I'd be praying."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33403,7 +33156,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u5982\u679C\u6211\u662F\u4F60\u6211\u4F1A\u7684\n          \u7948\u7977\u3002"
+        value: "You never know who's next."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33463,7 +33216,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4F60\u6C38\u8FDC\u4E0D\u77E5\u9053\n          \u4E0B\u4E00\u4E2A\u4F1A\u662F\u8C01\u3002"
+        value: "Maybe even you."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33523,7 +33276,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u4E5F\u8BB8\u751A\u81F3\n          \u4F60\u3002"
+        value: "Okay, enough with the poetry."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33584,8 +33337,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u597D\u7684\uFF0C\u6B4C\u8BCD\n          \u6240\u6709\u8FD9\u4E00\u5207\u3002\u6211\u4EEC\u4F1A\u5E26\u4F60\u8D70\n         
-          \u4ED6\u53BB\u533B\u9662\u3002"
+        value: "We'll take him to the hospital."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33646,8 +33398,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u6700\u4E3B\u8981\u7684\u662F\n          \u6CA1\u6709\u53D1\u751F\u4EFB\u4F55\u4E8B\u4EF6\u3002\n         
-          \u795D\u4F60\u597D\u8FD0\u3002"
+        value: Well, I hope no accidents will happen. Good luck.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33707,7 +33458,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: "\u8C22\u8C22\u3002\u6211\u91CD\u590D\u4E00\u904D\n          - \u522B\u5FD8\u4E86\u7948\u7977\u3002"
+        value: "Thank you. And I tell you again - don\u2019t forget to pray."
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 50
@@ -33730,7 +33481,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
+    canvasScrollPosition: {x: 885.83716, y: 0}
     canvasZoom: 0.74324965
   syncInfo:
     syncActors: 0

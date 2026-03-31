@@ -28,7 +28,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [SerializeField] private IntroView _introView;
 
     // День 2: головокружение и падение (только const — значения из сцены не перезаписывают код).
-    private const bool Day2DizzyFallAfterIntro = true;
+    private const bool Day2DizzyFallAfterIntro = false;
     private const float Day2DizzyAndStepDuration = 3.55f;
     private const float Day2DizzyCameraSmoothTime = 0.28f;
     private const float Day2DizzyRollFrequencyHz = 0.32f;

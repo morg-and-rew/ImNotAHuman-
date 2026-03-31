@@ -9,7 +9,7 @@ public sealed class PhoneStoryWiring
 
     private const string SkepticNumber = "333111333";
     private const string SkepticCallConversation = "Phone_CallSkeptic_Number";
-    private const string EmergencyNumber = "911";
+    private const string EmergencyNumber = "112";
     private const string EmergencyCallConversation = "Phone_CallEmergency_911";
     private const string LuaUnlockFunc = "UnlockSkepticPhone";
 
