@@ -30218,7 +30218,7 @@ MonoBehaviour:
   _clientArriveBellClip: {fileID: 8300000, guid: 0f686e7a91c5a5f4db783ac4ffbd2c8a, type: 3}
   _clientArriveBellVolume: 0.7
   _uiTextTable: {fileID: 11400000, guid: 3bb7a3e023e0ead468a0dbf6788d2f83, type: 2}
-  _language: en
+  _language: ru
   _tutorialHint: {fileID: 613144413}
   _showMainMenuOnStart: 1
   _mainMenuBackground: {fileID: 21300000, guid: eae9010da23b6034e9f7b9d1fa5beae8, type: 3}

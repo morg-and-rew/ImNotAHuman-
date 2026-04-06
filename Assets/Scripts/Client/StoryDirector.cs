@@ -937,6 +937,8 @@ public sealed class StoryDirector : MonoBehaviour
         if (string.Equals(conv, "Client_Day1.4.1", StringComparison.OrdinalIgnoreCase))
         {
             _flow?.RemovePackageFromHands();
+            if (DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool)
+                PlayDay1AfterClient14WarehouseImpactSound();
             GameStateService.SetState(GameState.None);
             ((GameFlowController)_flow).EnterClientDialogueState(false);
             _wait = WaitMode.Idle;
@@ -990,6 +992,15 @@ public sealed class StoryDirector : MonoBehaviour
         if (string.Equals(conv, "Client_day2.1.2", StringComparison.OrdinalIgnoreCase))
         {
             GameSoundController.Instance?.StartWindLoop();
+
+            // После 5574-ветки на шаге return_to_client_day2_1 в GameState остаётся RequiredPackageNumber;
+            // в свободном роуме до свечей склад не должен требовать посылку и должен отпускать к клиенту без коробки.
+            if (_flow is GameFlowController gfcDay212)
+            {
+                gfcDay212.SetFixedPackageForNextWarehouse(0);
+                gfcDay212.SetPendingDialogueReturnPackage(0);
+                gfcDay212.SetRequiredPackageForReturn(0);
+            }
 
             string nextConversation = CandleInteractable.IsAnyCandleLit
                 ? Day2CandlesLitConversation
@@ -1109,8 +1120,15 @@ public sealed class StoryDirector : MonoBehaviour
 
         if (string.Equals(conv, "Client_day2.2_candles_lit_after_4455", StringComparison.OrdinalIgnoreCase))
         {
+            // После return_to_client_day2_order_4455 в состоянии может остаться RequiredPackageNumber — сбрасываем перед свободным роумом.
+            if (_flow is GameFlowController gfcCandlesLit4455)
+            {
+                gfcCandlesLit4455.SetFixedPackageForNextWarehouse(0);
+                gfcCandlesLit4455.SetPendingDialogueReturnPackage(0);
+                gfcCandlesLit4455.SetRequiredPackageForReturn(0);
+            }
             // Развилка после 4455:
-            // - свечи зажжены -> followup + складская ветка;
+            // - свечи зажжены -> при следующем E — Client_day2.2_after_4455_lit_followup, затем игрок сам идёт на склад (без авто-телепорта);
             // - свечи не зажжены -> при следующем E у стойки сразу Client_day2.2_after_60s_meet.
             _pendingClientApproachConversation = CandleInteractable.IsAnyCandleLit
                 ? Day2After4455LitFollowupConversation
@@ -1136,8 +1154,14 @@ public sealed class StoryDirector : MonoBehaviour
                 gfcPrep.SetRequiredPackageForReturn(0);
             }
             _flow?.SetTutorialWarehouseVisit(true); // Отключаем генерацию складской записки/задачи на этом переходе.
+            GameStateService.SetState(GameState.None);
+            ((GameFlowController)_flow).EnterClientDialogueState(false);
+            _controller?.SetBlock(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
             _wait = WaitMode.WaitingWarehouseConfirm;
-            _flow?.ForceTravel(TravelTarget.Warehouse);
+            string whKey = GameConfig.Tutorial.goWarehouseKey ?? "";
+            _flow?.SetTravelTarget(TravelTarget.Warehouse, whKey);
             return;
         }
 
@@ -1262,10 +1286,10 @@ public sealed class StoryDirector : MonoBehaviour
     {
         DialogueLua.SetVariable("RunWarehouse5577Steps", false);
         bool choseToGive = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
-        // После Client_Day1.4 звук падения должен прозвучать при следующем попадании на склад независимо от выбора.
-        _day1PlayWarehouseImpactOnNextTeleport = true;
+        // Звук падения: без отдачи — при телепорте на склад; с отдачей — в конце Client_Day1.4.1.
         if (!choseToGive)
         {
+            _day1PlayWarehouseImpactOnNextTeleport = true;
             _client?.CloseUI();
             GameStateService.SetState(GameState.None);
             ((GameFlowController)_flow).EnterClientDialogueState(false);
