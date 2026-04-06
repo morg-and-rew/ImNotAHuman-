@@ -782,9 +782,18 @@ public sealed class StoryDirector : MonoBehaviour
     private void OnDialogueRadioStyleEnded(Transform _)
     {
         if (string.IsNullOrEmpty(_waitingRadioStyleConversation)) return;
+        string endedConversation = _waitingRadioStyleConversation;
         _waitingRadioStyleConversation = null;
         if (DialogueManager.instance != null)
             DialogueManager.instance.conversationEnded -= OnDialogueRadioStyleEnded;
+        // После Client_Day1.6 посылка дня уже отыграна: снимаем задачу склада, иначе остаётся номер с go_warehouse_after_day1_5
+        // и игрок снова может подбирать коробки до конца дня.
+        if (string.Equals(endedConversation, "Client_Day1.6", System.StringComparison.OrdinalIgnoreCase)
+            && _flow is GameFlowController gfcAfterDay16)
+        {
+            gfcAfterDay16.SetFixedPackageForNextWarehouse(0);
+            gfcAfterDay16.SetRequiredPackageForReturn(0);
+        }
         _wait = WaitMode.Idle;
         Advance();
     }
