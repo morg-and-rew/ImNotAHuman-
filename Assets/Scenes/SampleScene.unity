@@ -23947,7 +23947,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PhoneUnlockDirector
   _flagVar: unlock_phone
   _numberVar: unlock_phone_number
-  _notePrefab: {fileID: 0}
+  _notePrefab: {fileID: 4578333529546880128, guid: 2d54217e246f6c04bb3243cc3e6e844d, type: 3}
   _spawnPoint: {fileID: 1225411773}
 --- !u!4 &1588828733
 Transform:
