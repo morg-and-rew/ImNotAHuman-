@@ -78,6 +78,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [Header("Client Arrival Sound")]
     [SerializeField] private AudioClip _clientArriveBellClip;
     [SerializeField, Range(0f, 1f)] private float _clientArriveBellVolume = 0.7f;
+    [Tooltip("После Client_Day1.2 — звонок через N сек (клиент «пришёл»). Если к этому моменту игрок уже прошёл цепочку Radio_Day1_2 и звонок не был — один раз в конце PostVideo_Day1_2.")]
+    [SerializeField, Min(1f)] private float _clientArrivalBellDelayAfterDay12Seconds = 30f;
 
     [Header("Localization (UI Text Table)")]
     [SerializeField] private TextTable _uiTextTable;
@@ -133,6 +135,15 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _providerCallDone;
     private bool _preferEmptyOverMeetClient;
     private bool _meetClientHintShown;
+
+    /// <summary> Звонок «клиент пришёл» после Client_Day1.2 уже прозвучал (по таймеру или сразу после PostVideo_Day1_2). </summary>
+    private bool _clientArrivalBellAfterDay12Played;
+    private Coroutine _clientArrivalBellAfterDay12Routine;
+    /// <summary> Пока true и звонок ещё не прозвучал — впуск клиента в ветке после Client_Day1.2 запрещён. </summary>
+    private bool _clientArrivalGateAfterDay12Active;
+    private bool _pendingMeetClientHintAfterDay12Gate;
+    /// <summary> Отложить звонок до завершения PostVideo_Day1_2, если таймер истёк в цепочке Radio_Day1_2.</summary>
+    private bool _deferClientArrivalBellUntilPostVideoDay12;
 
     public bool ProviderCallDone => _providerCallDone;
 
@@ -233,6 +244,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public event Action<string> OnExitZonePassed;
     public event Action OnComputerVideoEnded;
 
+    /// <summary> Видео с радио начало воспроизведение (eventId из конфига радио, например day1_2_radio_video). </summary>
+    public event Action<string> OnRadioStoryVideoStarted;
+
+    /// <summary> Завершён диалог за столом после <see cref="TeleportToTableAndFixPosition"/> (title из Dialogue System). </summary>
+    public event Action<string> OnPostVideoTableDialogueCompleted;
+
     public void NotifyComputerVideoEnded()
     {
         MarkTutorialStepCompleted(GameConfig.Tutorial.watchVideoKey);
@@ -255,9 +272,16 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         OnRadioStoryCompleted?.Invoke();
     }
 
+    public void NotifyRadioStoryVideoStarted(string eventId)
+    {
+        if (string.IsNullOrEmpty(eventId)) return;
+        OnRadioStoryVideoStarted?.Invoke(eventId);
+    }
+
     public void NotifyRadioDay1_2Started()
     {
         _radioDay1_2ConversationStarted = true;
+        _deferClientArrivalBellUntilPostVideoDay12 = true;
     }
 
     public void NotifyPlayerDay1_2ReplicaCompleted(string postVideoConversation)
@@ -289,6 +313,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_clientInteraction != null && (_clientInteraction.IsActive || _clientInteraction.IsWaitingForContinue))
             return true;
+
+        if (_clientArrivalGateAfterDay12Active && !_clientArrivalBellAfterDay12Played)
+            return false;
 
         if (_storyDirector == null)
             return false;
@@ -934,7 +961,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             _customDialogueUI.OnClientDialogueFinishedByKey -= OnClientDialogueFinishedByKey;
 
         if (DialogueManager.instance != null)
+        {
             DialogueManager.instance.conversationStarted -= OnDialogueSystemConversationStarted;
+            DialogueManager.instance.conversationEnded -= OnConversationEndedAfterClientDay12;
+        }
+
+        StopClientArrivalBellAfterDay12DelayedRoutine();
 
         if (_clientInteraction != null)
         {
@@ -960,8 +992,38 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (string.IsNullOrEmpty(title)) return;
         bool isRadioConversation = title.StartsWith("Radio_", StringComparison.OrdinalIgnoreCase)
             || title.StartsWith("Hero_Replic", StringComparison.OrdinalIgnoreCase);
-        if (isRadioConversation)
-            _controller?.SetBlock(false);
+        if (!isRadioConversation)
+            return;
+        // Не снимать блок в состоянии диалога у стойки — иначе из-за порядка событий остаётся свободная камера и скрытый курсор во время меню выбора.
+        if (GameStateService.CurrentState == GameState.ClientDialog)
+            return;
+        _controller?.SetBlock(false);
+    }
+
+    private static bool IsRadioStyleConversationTitle(string title)
+    {
+        if (string.IsNullOrEmpty(title)) return false;
+        return title.StartsWith("Radio_", StringComparison.OrdinalIgnoreCase)
+            || title.StartsWith("Hero_Replic", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Гарантирует мышь и блок камеры/хода для клиентских диалогов (выбор ответов), если другой код успел снять блок раньше в том же кадре.
+    /// Вызывать в начале <see cref="Update"/> (до тика игрока).
+    /// </summary>
+    private void EnforceClientDialogueControlsForMouseChoices()
+    {
+        if (_controller == null || !_initialized) return;
+        if (GameStateService.CurrentState != GameState.ClientDialog) return;
+        if (!DialogueManager.isConversationActive) return;
+
+        string title = DialogueManager.lastConversationStarted ?? "";
+        if (string.IsNullOrEmpty(title) || IsRadioStyleConversationTitle(title))
+            return;
+
+        _controller.SetBlock(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void Init(PlayerView player, IPlayerBlocker controller, IPlayerInput input, IClientInteraction clientInteraction, DeliveryNoteView deliveryNoteView, CustomDialogueUI customDialogueUI = null)
@@ -998,6 +1060,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         {
             DialogueManager.instance.conversationStarted -= OnDialogueSystemConversationStarted;
             DialogueManager.instance.conversationStarted += OnDialogueSystemConversationStarted;
+            DialogueManager.instance.conversationEnded -= OnConversationEndedAfterClientDay12;
+            DialogueManager.instance.conversationEnded += OnConversationEndedAfterClientDay12;
         }
 
         _storyDirector.Initialize(this, _input, controller, deliveryNoteView);
@@ -1216,6 +1280,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private void Update()
     {
         if (_input == null) return;
+
+        EnforceClientDialogueControlsForMouseChoices();
 
         if (!_isTravelFading && _travelTarget != TravelTarget.None && _input.ConfirmPressed)
         {
@@ -1488,6 +1554,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private void HandleClientDialog()
     {
         if (_clientInteraction == null || _input == null) return;
+        if (_clientArrivalGateAfterDay12Active && !_clientArrivalBellAfterDay12Played) return;
         bool isDay2Start = _storyDirector != null && string.Equals(_storyDirector.CurrentStepId, "day2_start", StringComparison.OrdinalIgnoreCase);
         // Для обычного старта сюжета проверяем StoryStartOnClientInteract; для дня 2 (day2_start) всегда разрешаем
         if (!isDay2Start && !GameConfig.StoryStartOnClientInteract) return;
@@ -1755,17 +1822,30 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private void OnClientDialogueStepCompleted(ClientDialogueStepCompletionData data)
     {
-        _player?.ClearDialogueCameraOffset();
+        CompletePostVideoTableDialogueIfAwaiting(data.ConversationTitle ?? "");
+    }
 
+    /// <summary>
+    /// Завершение диалога после TeleportToTableAndFixPosition. Дублируется из <see cref="OnConversationEndedAfterClientDay12"/>,
+    /// если ClientInteraction не вызвал step completed (например ранний return при !IsActive).
+    /// </summary>
+    private void CompletePostVideoTableDialogueIfAwaiting(string completedConversationTitle)
+    {
+        if (string.IsNullOrEmpty(completedConversationTitle)) return;
         if (string.IsNullOrEmpty(_awaitingPostVideoDialogueComplete)) return;
-        if (!string.Equals(data.ConversationTitle, _awaitingPostVideoDialogueComplete, StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(completedConversationTitle, _awaitingPostVideoDialogueComplete, StringComparison.OrdinalIgnoreCase))
             return;
 
+        _player?.ClearDialogueCameraOffset();
         _awaitingPostVideoDialogueComplete = null;
         GameStateService.SetState(GameState.None);
         _controller?.SetBlock(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        if (string.Equals(completedConversationTitle, "PostVideo_Day1_2", StringComparison.OrdinalIgnoreCase))
+            _deferClientArrivalBellUntilPostVideoDay12 = false;
+        TryPlayClientArrivalBellAfterDay12Once();
+        OnPostVideoTableDialogueCompleted?.Invoke(completedConversationTitle);
     }
 
     private void OnClientDialogueFinished()
@@ -1866,6 +1946,11 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         if (_tutorialHint == null) return;
         if (_tutorialPendingAction != TutorialPendingAction.None) return;
+        if (_clientArrivalGateAfterDay12Active && !_clientArrivalBellAfterDay12Played)
+        {
+            _pendingMeetClientHintAfterDay12Gate = true;
+            return;
+        }
 
         if (_preferEmptyOverMeetClient || _meetClientHintShown)
         {
@@ -1887,6 +1972,64 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             return;
         Vector3 pos = _player != null ? _player.transform.position : (Camera.main != null ? Camera.main.transform.position : transform.position);
         AudioSource.PlayClipAtPoint(_clientArriveBellClip, pos, Mathf.Clamp01(_clientArriveBellVolume));
+    }
+
+    private void OnConversationEndedAfterClientDay12(Transform _)
+    {
+        string ended = DialogueManager.lastConversationEnded;
+        if (string.IsNullOrEmpty(ended))
+            ended = DialogueManager.lastConversationStarted ?? "";
+
+        if (string.Equals(ended, "Client_Day1.2", StringComparison.OrdinalIgnoreCase))
+            ScheduleClientArrivalBellAfterDay12Delayed();
+
+        CompletePostVideoTableDialogueIfAwaiting(ended);
+    }
+
+    private void ScheduleClientArrivalBellAfterDay12Delayed()
+    {
+        StopClientArrivalBellAfterDay12DelayedRoutine();
+        if (_clientArrivalBellAfterDay12Played) return;
+        if (_clientArriveBellClip == null) return;
+        _clientArrivalGateAfterDay12Active = true;
+        _pendingMeetClientHintAfterDay12Gate = false;
+        _clientArrivalBellAfterDay12Routine = StartCoroutine(ClientArrivalBellAfterDay12DelayedRoutine());
+    }
+
+    private IEnumerator ClientArrivalBellAfterDay12DelayedRoutine()
+    {
+        float delay = Mathf.Max(1f, _clientArrivalBellDelayAfterDay12Seconds);
+        yield return new WaitForSeconds(delay);
+        _clientArrivalBellAfterDay12Routine = null;
+        TryPlayClientArrivalBellAfterDay12Once();
+    }
+
+    /// <summary> Один звонок для ветки после Client_Day1.2: либо по таймеру, либо сразу после PostVideo_Day1_2, если к тому моменту ещё не звучало. </summary>
+    private void TryPlayClientArrivalBellAfterDay12Once()
+    {
+        if (_clientArrivalBellAfterDay12Played) return;
+        if (_clientArriveBellClip == null) return;
+        if (_deferClientArrivalBellUntilPostVideoDay12)
+            return;
+        _clientArrivalBellAfterDay12Played = true;
+        _clientArrivalGateAfterDay12Active = false;
+        StopClientArrivalBellAfterDay12DelayedRoutine();
+        PlayClientArriveBell();
+        if (_pendingMeetClientHintAfterDay12Gate)
+        {
+            _pendingMeetClientHintAfterDay12Gate = false;
+            _preferEmptyOverMeetClient = false;
+            _meetClientHintShown = true;
+            ShowHintOnceByKey(GameConfig.Tutorial.meetClientKey);
+            GameStateService.SetState(GameState.ClientDialog);
+        }
+    }
+
+    private void StopClientArrivalBellAfterDay12DelayedRoutine()
+    {
+        if (_clientArrivalBellAfterDay12Routine == null) return;
+        StopCoroutine(_clientArrivalBellAfterDay12Routine);
+        _clientArrivalBellAfterDay12Routine = null;
     }
 
     /// <summary> Показать подсказку по ключу (для туториала показывается спрайт по ключу в TutorialHintView). </summary>

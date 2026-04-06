@@ -67,6 +67,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private RadioEventData _phasedStory;
     private bool _teleportToTableAfterVideo;
     private bool _playerReplicaPlayed;
+    private string _playingVideoEventId;
     private bool _radioAdvanceByTimestamps;
     private float[] _radioAdvanceTimestamps;
     private int _radioAdvanceIndex;
@@ -589,6 +590,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
         _storyPlaying = true;
         _waitingVideoEnd = true;
+        _playingVideoEventId = eventId;
         _teleportToTableAfterVideo = teleportToTableAfter;
         SetVideoControlLock(true);
         if (_videoRoot != null)
@@ -610,6 +612,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     {
         if (!_waitingVideoEnd) return;
         source.Play();
+        GameFlowController.Instance?.NotifyRadioStoryVideoStarted(_playingVideoEventId);
     }
 
     private void OnVideoError(VideoPlayer source, string message)
@@ -625,6 +628,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private void FinishVideoPlayback(bool notifyStoryCompletion)
     {
         _waitingVideoEnd = false;
+        _playingVideoEventId = null;
         SetRadioDialogueAutoAdvance(false);
         if (_videoPlayer != null)
             _videoPlayer.loopPointReached -= OnVideoEnded;
