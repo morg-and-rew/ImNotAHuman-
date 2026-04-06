@@ -30,6 +30,7 @@ public sealed class StoryDirector : MonoBehaviour
     private const string Day2EndAutoAfterRadioConversation = "Client_day2.2_end_auto_after_radio_static";
     private const string Day2ToolsCarryItemId = "day2_tools_box";
     private const float Day2After4455LitNextClientDelaySeconds = 60f;
+    private const float Day1AfterClient14WarehouseImpactDelaySeconds = 10f;
 
     [SerializeField] private AttitudeChoiceRecorder _attitudeRecorder;
     [SerializeField] private PhoneUnlockDirector _phoneUnlock;
@@ -87,7 +88,8 @@ public sealed class StoryDirector : MonoBehaviour
     private bool _day2EndWaitingForRadioInteract;
     private bool _day2EndRadioInteracted;
     private Coroutine _day2EndFlowCoroutine;
-    private bool _day1PlayWarehouseImpactOnNextTeleport;
+    private Coroutine _day1AfterClient14ImpactSoundCoroutine;
+    private Coroutine _day2IntroBellThenAdvanceRoutine;
     public string CurrentStepId => (_index >= 0 && _index < _steps.Count) ? _steps[_index].stepId : "";
     public bool HasStoryStarted => _index >= 0;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
@@ -238,6 +240,10 @@ public sealed class StoryDirector : MonoBehaviour
         if (_day2EndFlowCoroutine != null)
             StopCoroutine(_day2EndFlowCoroutine);
         _day2EndFlowCoroutine = null;
+        if (_day1AfterClient14ImpactSoundCoroutine != null)
+            StopCoroutine(_day1AfterClient14ImpactSoundCoroutine);
+        if (_day2IntroBellThenAdvanceRoutine != null)
+            StopCoroutine(_day2IntroBellThenAdvanceRoutine);
         RadioInteractable.OnAnyRadioInteracted -= OnAnyRadioInteracted;
         UnsubscribeCustomDialogueUI();
         _flow.OnTeleportedToWarehouse -= OnTeleportedToWarehouse;
@@ -838,7 +844,20 @@ public sealed class StoryDirector : MonoBehaviour
         if (_flow is GameFlowController gfc)
             gfc.MarkDay1TutorialCompleted();
         _controller?.SetBlock(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         _wait = WaitMode.Idle;
+        if (_day2IntroBellThenAdvanceRoutine != null)
+            StopCoroutine(_day2IntroBellThenAdvanceRoutine);
+        _day2IntroBellThenAdvanceRoutine = StartCoroutine(CoDay2IntroControlsThenBellThenAdvanceStory());
+    }
+
+    private IEnumerator CoDay2IntroControlsThenBellThenAdvanceStory()
+    {
+        yield return null;
+        if (_flow is GameFlowController gfcBell)
+            gfcBell.PlayDay2IntroClientArrivalBell();
+        _day2IntroBellThenAdvanceRoutine = null;
         Advance();
     }
 
@@ -938,7 +957,7 @@ public sealed class StoryDirector : MonoBehaviour
         {
             _flow?.RemovePackageFromHands();
             if (DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool)
-                PlayDay1AfterClient14WarehouseImpactSound();
+                ScheduleDay1AfterClient14WarehouseImpactSound();
             GameStateService.SetState(GameState.None);
             ((GameFlowController)_flow).EnterClientDialogueState(false);
             _wait = WaitMode.Idle;
@@ -1286,10 +1305,10 @@ public sealed class StoryDirector : MonoBehaviour
     {
         DialogueLua.SetVariable("RunWarehouse5577Steps", false);
         bool choseToGive = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
-        // Звук падения: без отдачи — при телепорте на склад; с отдачей — в конце Client_Day1.4.1.
+        // Звук падения: через 10 с после Client_Day1.4 (без отдачи) или после Client_Day1.4.1 (с отдачей).
         if (!choseToGive)
         {
-            _day1PlayWarehouseImpactOnNextTeleport = true;
+            ScheduleDay1AfterClient14WarehouseImpactSound();
             _client?.CloseUI();
             GameStateService.SetState(GameState.None);
             ((GameFlowController)_flow).EnterClientDialogueState(false);
@@ -1315,12 +1334,6 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void OnTeleportedToWarehouse()
     {
-        if (_day1PlayWarehouseImpactOnNextTeleport)
-        {
-            _day1PlayWarehouseImpactOnNextTeleport = false;
-            PlayDay1AfterClient14WarehouseImpactSound();
-        }
-
         void EnsureControlsAfterWarehouseTeleport()
         {
             if (_flow is GameFlowController gfc)
@@ -1698,6 +1711,22 @@ public sealed class StoryDirector : MonoBehaviour
         else if (Camera.main != null)
             position = Camera.main.transform.position;
         AudioSource.PlayClipAtPoint(_day2After60sMeetWarehouseImpactClip, position, _day2After60sMeetWarehouseImpactVolume);
+    }
+
+    private void ScheduleDay1AfterClient14WarehouseImpactSound()
+    {
+        if (_day1AfterClient14WarehouseImpactClip == null)
+            return;
+        if (_day1AfterClient14ImpactSoundCoroutine != null)
+            StopCoroutine(_day1AfterClient14ImpactSoundCoroutine);
+        _day1AfterClient14ImpactSoundCoroutine = StartCoroutine(CoDay1AfterClient14WarehouseImpactDelayed());
+    }
+
+    private IEnumerator CoDay1AfterClient14WarehouseImpactDelayed()
+    {
+        yield return new WaitForSeconds(Day1AfterClient14WarehouseImpactDelaySeconds);
+        _day1AfterClient14ImpactSoundCoroutine = null;
+        PlayDay1AfterClient14WarehouseImpactSound();
     }
 
     private void PlayDay1AfterClient14WarehouseImpactSound()

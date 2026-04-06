@@ -144,6 +144,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _pendingMeetClientHintAfterDay12Gate;
     /// <summary> Отложить звонок до завершения PostVideo_Day1_2, если таймер истёк в цепочке Radio_Day1_2.</summary>
     private bool _deferClientArrivalBellUntilPostVideoDay12;
+    /// <summary> После интро дня 2: один звонок перед взаимодействием с клиентом на шаге day2_start / до Client_day2.1. </summary>
+    private bool _day2PostIntroClientBellPlayed;
 
     public bool ProviderCallDone => _providerCallDone;
 
@@ -321,7 +323,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             return false;
 
         if (string.Equals(_storyDirector.CurrentStepId, "day2_start", StringComparison.OrdinalIgnoreCase))
-            return true;
+            return _day2PostIntroClientBellPlayed;
 
         if (!_storyDirector.HasStoryStarted)
             return GameConfig.StoryStartOnClientInteract;
@@ -393,9 +395,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     /// <summary> Начало второго дня: телепорт в PlayerSpawnPoint, интро из чёрного в прозрачный (после показа интро скрываем fade-to-black). </summary>
     public void PlayDay2Intro(Action onComplete)
     {
+        _day2PostIntroClientBellPlayed = false;
         if (_playerSpawnPoint != null && _player != null)
         {
             Teleport(_playerSpawnPoint);
+            // День 2 должен стартовать с тем же взглядом, что и обычный спавн (без переноса наклона головы из конца дня 1).
+            _player.SetCameraPitch(0f);
             _lastTeleportDestination = TravelTarget.None;
         }
 
@@ -1556,6 +1561,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_clientInteraction == null || _input == null) return;
         if (_clientArrivalGateAfterDay12Active && !_clientArrivalBellAfterDay12Played) return;
         bool isDay2Start = _storyDirector != null && string.Equals(_storyDirector.CurrentStepId, "day2_start", StringComparison.OrdinalIgnoreCase);
+        if (isDay2Start && !_day2PostIntroClientBellPlayed)
+            return;
         // Для обычного старта сюжета проверяем StoryStartOnClientInteract; для дня 2 (day2_start) всегда разрешаем
         if (!isDay2Start && !GameConfig.StoryStartOnClientInteract) return;
         // Если в руках предмет (телефон и т.д.) — E должен сначала положить его, а не запускать диалог с клиентом
@@ -1972,6 +1979,13 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             return;
         Vector3 pos = _player != null ? _player.transform.position : (Camera.main != null ? Camera.main.transform.position : transform.position);
         AudioSource.PlayClipAtPoint(_clientArriveBellClip, pos, Mathf.Clamp01(_clientArriveBellVolume));
+    }
+
+    /// <summary> Звонок у стойки после интро дня 2: вызывать после разблокировки управления и завершения затемнения/проявления. </summary>
+    public void PlayDay2IntroClientArrivalBell()
+    {
+        PlayClientArriveBell();
+        _day2PostIntroClientBellPlayed = true;
     }
 
     private void OnConversationEndedAfterClientDay12(Transform _)
