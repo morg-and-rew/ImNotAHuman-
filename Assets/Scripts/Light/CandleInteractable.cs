@@ -39,6 +39,8 @@ public sealed class CandleInteractable : MonoBehaviour, IWorldInteractable
 
     public Sprite HintSprite => CanInteractNow() ? _hintSprite : null;
 
+    public bool CanShowInteractionFeedback() => CanInteractNow();
+
     private void Awake()
     {
         if (!AllCandles.Contains(this))
@@ -69,7 +71,9 @@ public sealed class CandleInteractable : MonoBehaviour, IWorldInteractable
             return false;
         if (!_availableOnlyFromDay2)
             return true;
-        return _flow != null && _flow.IsDay2OrLater();
+        if (_flow == null || !_flow.IsDay2OrLater())
+            return false;
+        return _flow.IsCandleLightingAllowedByStory();
     }
 
     private void IgniteAll()

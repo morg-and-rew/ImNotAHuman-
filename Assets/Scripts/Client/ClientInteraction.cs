@@ -292,6 +292,8 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         if (string.IsNullOrEmpty(conversationTitle))
             return;
 
+        GameFlowController.Instance?.NotifyClientDay21StartedIfNeeded(conversationTitle);
+
         if (DialogueManager.isConversationActive)
             DialogueManager.StopConversation();
 

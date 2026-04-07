@@ -10,6 +10,8 @@ using TutorialPendingAction = IGameFlowController.TutorialPendingAction;
 public sealed class StoryDirector : MonoBehaviour
 {
     private const float KnockAfterFreeRoamDelaySeconds = 10f;
+    /// <summary> Первый диалог дня 2 у стойки; после старта — свечи на складе не зажигаются и без подсказки/обводки. </summary>
+    public const string Day21ClientConversationTitle = "Client_day2.1";
     private const string Day2CandlesLitConversation = "Client_day2.1.3_candles_lit";
     private const string Day2CandlesUnlitConversation = "Client_day2.1.3_candles_unlit";
     private const string Day2CandlesUnlitAfterVideoConversation = "Client_day2.1.4_after_video_unlit";
@@ -22,14 +24,21 @@ public sealed class StoryDirector : MonoBehaviour
     private const string Day2After4455LitMoveDialogueTools = "Client_day2.2_move_dialogue_after_tools";
     private const string Day2After4455LitMoveDialogue5577 = "Client_day2.2_move_dialogue_after_5577";
     private const string Day2After4455LitDelayedClientConversation = "Client_day2.2_after_60s_meet";
+    private const string Day2CandlesLitAfter4455Conversation = "Client_day2.2_candles_lit_after_4455";
     private const string Day2After60sMeetWarehouseAutoConversation = "Client_day2.2_warehouse_after_60s_auto";
     private const string Day2After60sMeetAfterVideoConversation = "Client_day2.2_after_60s_after_video";
+    /// <summary> Lua-флаг в Client_day2.2_after_60s_after_video: true на ветке «Позвонить в скорую» (см. userScript у узлов в DialogueDatabase). </summary>
+    private const string Day2After60sAfterVideoLuaCallAmbulance = "Day2After60s_CallAmbulance";
     private const string Day2After60sMeetAfterAmbulanceConversation = "Client_day2.2_after_60s_after_ambulance";
     private const string Day2After60sMeetEmergencyCallConversation = "Phone_CallEmergency_911";
-    private const string Day2EndAutoBeforeRadioConversation = "Client_day2.2_end_auto_before_radio";
-    private const string Day2EndAutoAfterRadioConversation = "Client_day2.2_end_auto_after_radio_static";
+    /// <summary> После after_video / after_ambulance — первый финальный диалог, затем радио (только помехи), затем <see cref="Day2EndConversationAfterRadioStatic"/>. </summary>
+    private const string Day2EndConversationBeforeRadio = "Client_day2.2_end";
+    /// <summary> После взаимодействия с радио — второй финальный диалог, затем затемнение и конец игры. </summary>
+    private const string Day2EndConversationAfterRadioStatic = "Client_day2.2_end2";
     private const string Day2ToolsCarryItemId = "day2_tools_box";
     private const float Day2After4455LitNextClientDelaySeconds = 60f;
+    private const float Day2AfterDay212CandlesApproachDelaySeconds = 30f;
+    private const string Day2FreeRoamBeforeOrder8877StepId = "day2_free_roam_before_order_8877";
     private const float Day1AfterClient14WarehouseImpactDelaySeconds = 10f;
 
     [SerializeField] private AttitudeChoiceRecorder _attitudeRecorder;
@@ -58,6 +67,7 @@ public sealed class StoryDirector : MonoBehaviour
     private bool _pendingRemovePackageAfterDialogue;
     private Step _currentStep;
     private bool _clientDay14HandledByConversationEnded;
+    private bool _clientDay21Started;
 
     private enum WaitMode { Idle, WaitingDialogueEnd, WaitingWarehouseConfirm, WaitingReturnToClientArea, WaitingClientConfirm, WaitingClientReturnForDialogue, WaitingRadioComplete, WaitingTrigger, WaitingFreeRoamClientConfirm, WaitingKnockThenWarehouse, WaitingClientPortraitOnlySpace, WaitingComputerVideo, WaitingFadeToBlack, WaitingTeleportToWarehouse, WaitingTeleportToClient }
     private WaitMode _wait = WaitMode.Idle;
@@ -76,6 +86,12 @@ public sealed class StoryDirector : MonoBehaviour
     private bool _day2After60sMeetGoToWarehousePending;
     private bool _day2After60sMeetPlayVideoOnClientReturn;
     private int _day2After60sMeetLastEntryId = -1;
+    private bool _day212AfterClient212ApproachReady;
+    private Coroutine _day212AfterClient212Routine;
+    private bool _day214AfterCandlesApproachReady = true;
+    private Coroutine _day214AfterCandlesRoutine;
+    private bool _day22AfterCandlesLit4455ApproachReady = true;
+    private Coroutine _day22AfterCandlesLit4455Routine;
     private bool _day2After60sMeetSlapSoundPlayed;
     private bool _day2After60sMeetEnergySoundPlayed;
     private bool _day2After60sMeetEmergencyCallRunning;
@@ -89,9 +105,10 @@ public sealed class StoryDirector : MonoBehaviour
     private bool _day2EndRadioInteracted;
     private Coroutine _day2EndFlowCoroutine;
     private Coroutine _day1AfterClient14ImpactSoundCoroutine;
-    private Coroutine _day2IntroBellThenAdvanceRoutine;
     public string CurrentStepId => (_index >= 0 && _index < _steps.Count) ? _steps[_index].stepId : "";
     public bool HasStoryStarted => _index >= 0;
+    /// <summary> True после того как был запущен диалог <see cref="Day21ClientConversationTitle"/> в этой сессии сюжета. </summary>
+    public bool IsClientDay21Started => _clientDay21Started;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
     public bool IsWaitingForRadioComplete => _wait == WaitMode.WaitingRadioComplete;
     public bool IsWaitingComputerVideo => _wait == WaitMode.WaitingComputerVideo;
@@ -111,6 +128,12 @@ public sealed class StoryDirector : MonoBehaviour
         DialogueManager.isConversationActive
         && (string.Equals(DialogueManager.lastConversationStarted, Day2After4455LitMoveDialogueTools, StringComparison.OrdinalIgnoreCase)
             || string.Equals(DialogueManager.lastConversationStarted, Day2After4455LitMoveDialogue5577, StringComparison.OrdinalIgnoreCase));
+    /// <summary> После Client_day2.1.2: первые 30 с без диалога у стойки; затем звонок и можно подойти к клиенту (свечи). </summary>
+    public bool IsDay212CandlesClientApproachCooldownActive => IsDay212CandlesApproachStillCoolingDown();
+    /// <summary> После Client_day2.1.4_* (свечи): 30 с, звонок, затем Client_day2.2_order_8877 по E. </summary>
+    public bool IsDay214AfterCandlesOrder8877CooldownActive => IsDay214Order8877ApproachStillCoolingDown();
+    /// <summary> После Client_day2.2_candles_lit_after_4455: 30 с, звонок, затем followup / after_60s по E. </summary>
+    public bool IsDay22AfterCandlesLit4455PendingCooldownActive => IsDay22AfterCandlesLit4455PendingApproachStillCoolingDown();
     public bool IsWaitingForClientInteraction =>
         _wait == WaitMode.WaitingFreeRoamClientConfirm
         || _wait == WaitMode.WaitingClientConfirm
@@ -242,8 +265,12 @@ public sealed class StoryDirector : MonoBehaviour
         _day2EndFlowCoroutine = null;
         if (_day1AfterClient14ImpactSoundCoroutine != null)
             StopCoroutine(_day1AfterClient14ImpactSoundCoroutine);
-        if (_day2IntroBellThenAdvanceRoutine != null)
-            StopCoroutine(_day2IntroBellThenAdvanceRoutine);
+        if (_day212AfterClient212Routine != null)
+            StopCoroutine(_day212AfterClient212Routine);
+        if (_day214AfterCandlesRoutine != null)
+            StopCoroutine(_day214AfterCandlesRoutine);
+        if (_day22AfterCandlesLit4455Routine != null)
+            StopCoroutine(_day22AfterCandlesLit4455Routine);
         RadioInteractable.OnAnyRadioInteracted -= OnAnyRadioInteracted;
         UnsubscribeCustomDialogueUI();
         _flow.OnTeleportedToWarehouse -= OnTeleportedToWarehouse;
@@ -282,8 +309,16 @@ public sealed class StoryDirector : MonoBehaviour
     public void StartStory()
     {
         _index = -1;
+        _clientDay21Started = false;
         _wait = WaitMode.Idle;
         Advance();
+    }
+
+    public void NotifyClientDay21StartedIfNeeded(string conversationTitle)
+    {
+        if (string.IsNullOrEmpty(conversationTitle)) return;
+        if (!string.Equals(conversationTitle, Day21ClientConversationTitle, StringComparison.OrdinalIgnoreCase)) return;
+        _clientDay21Started = true;
     }
 
     /// <summary> True, если сюжет ещё не запущен и можно стартовать с шага после go_to_radio (игрок уже прослушал Radio_Tutorial). </summary>
@@ -388,6 +423,8 @@ public sealed class StoryDirector : MonoBehaviour
         if (_currentStep != null && _currentStep.optional && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed
             && (HandsRegistry.Hands == null || !HandsRegistry.Hands.HasItem))
         {
+            if (GameFlowController.IsRadioDay21StoryConversationPlaying())
+                return;
             _wait = WaitMode.Idle;
             Advance();
             Advance();
@@ -397,8 +434,14 @@ public sealed class StoryDirector : MonoBehaviour
         if (_wait == WaitMode.WaitingFreeRoamClientConfirm && _client != null && _client.IsPlayerLookingAtClient(_flow.Player) && _input.InteractPressed
             && (HandsRegistry.Hands == null || !HandsRegistry.Hands.HasItem))
         {
+            if (GameFlowController.IsRadioDay21StoryConversationPlaying())
+                return;
             if (!string.IsNullOrEmpty(_pendingClientApproachConversation))
             {
+                if (IsDay212CandlesApproachStillCoolingDown())
+                    return;
+                if (IsDay22AfterCandlesLit4455PendingApproachStillCoolingDown())
+                    return;
                 string nextConversation = _pendingClientApproachConversation;
                 _pendingClientApproachConversation = null;
                 _pendingRemovePackageAfterDialogue = false;
@@ -413,6 +456,8 @@ public sealed class StoryDirector : MonoBehaviour
             // День 2: после радио ждём, пока игрок сам подойдёт к клиенту и нажмёт E — тогда запускаем Client_day2.1
             if (_currentStep != null && !string.IsNullOrEmpty(_currentStep.conversationTitle))
             {
+                if (IsDay214Order8877ApproachStillCoolingDown())
+                    return;
                 _pendingRemovePackageAfterDialogue = _currentStep.removePackageAfterDialogue;
                 _controller?.SetBlock(true);
                 GameStateService.SetState(GameState.ClientDialog);
@@ -452,6 +497,78 @@ public sealed class StoryDirector : MonoBehaviour
         {
             Advance();
         }
+    }
+
+    private bool IsDay212CandlesApproachStillCoolingDown()
+    {
+        if (_wait != WaitMode.WaitingFreeRoamClientConfirm || string.IsNullOrEmpty(_pendingClientApproachConversation))
+            return false;
+        if (!string.Equals(_pendingClientApproachConversation, Day2CandlesLitConversation, StringComparison.OrdinalIgnoreCase)
+            && !string.Equals(_pendingClientApproachConversation, Day2CandlesUnlitConversation, StringComparison.OrdinalIgnoreCase))
+            return false;
+        return !_day212AfterClient212ApproachReady;
+    }
+
+    private IEnumerator CoDay212AfterClient212DelayThenBell()
+    {
+        yield return new WaitForSeconds(Day2AfterDay212CandlesApproachDelaySeconds);
+        if (_flow is GameFlowController gfc)
+            gfc.PlayClientCounterBellTwoDimensional();
+        _day212AfterClient212ApproachReady = true;
+        _day212AfterClient212Routine = null;
+    }
+
+    private bool IsDay214Order8877ApproachStillCoolingDown()
+    {
+        if (_wait != WaitMode.WaitingFreeRoamClientConfirm || _currentStep == null)
+            return false;
+        if (!string.Equals(_currentStep.stepId, Day2FreeRoamBeforeOrder8877StepId, StringComparison.OrdinalIgnoreCase))
+            return false;
+        return !_day214AfterCandlesApproachReady;
+    }
+
+    private void StartDay214AfterCandlesDelayThenBell()
+    {
+        _day214AfterCandlesApproachReady = false;
+        if (_day214AfterCandlesRoutine != null)
+            StopCoroutine(_day214AfterCandlesRoutine);
+        _day214AfterCandlesRoutine = StartCoroutine(CoDay214AfterCandlesDelayThenBell());
+    }
+
+    private IEnumerator CoDay214AfterCandlesDelayThenBell()
+    {
+        yield return new WaitForSeconds(Day2AfterDay212CandlesApproachDelaySeconds);
+        if (_flow is GameFlowController gfc)
+            gfc.PlayClientCounterBellTwoDimensional();
+        _day214AfterCandlesApproachReady = true;
+        _day214AfterCandlesRoutine = null;
+    }
+
+    private bool IsDay22AfterCandlesLit4455PendingApproachStillCoolingDown()
+    {
+        if (_wait != WaitMode.WaitingFreeRoamClientConfirm || string.IsNullOrEmpty(_pendingClientApproachConversation))
+            return false;
+        if (!string.Equals(_pendingClientApproachConversation, Day2After4455LitFollowupConversation, StringComparison.OrdinalIgnoreCase)
+            && !string.Equals(_pendingClientApproachConversation, Day2After4455LitDelayedClientConversation, StringComparison.OrdinalIgnoreCase))
+            return false;
+        return !_day22AfterCandlesLit4455ApproachReady;
+    }
+
+    private void StartDay22AfterCandlesLit4455DelayThenBell()
+    {
+        _day22AfterCandlesLit4455ApproachReady = false;
+        if (_day22AfterCandlesLit4455Routine != null)
+            StopCoroutine(_day22AfterCandlesLit4455Routine);
+        _day22AfterCandlesLit4455Routine = StartCoroutine(CoDay22AfterCandlesLit4455DelayThenBell());
+    }
+
+    private IEnumerator CoDay22AfterCandlesLit4455DelayThenBell()
+    {
+        yield return new WaitForSeconds(Day2AfterDay212CandlesApproachDelaySeconds);
+        if (_flow is GameFlowController gfc)
+            gfc.PlayClientCounterBellTwoDimensional();
+        _day22AfterCandlesLit4455ApproachReady = true;
+        _day22AfterCandlesLit4455Routine = null;
     }
 
     private void OnTriggerFired(string triggerId)
@@ -841,24 +958,17 @@ public sealed class StoryDirector : MonoBehaviour
 
     private void OnDay2IntroComplete()
     {
-        if (_flow is GameFlowController gfc)
-            gfc.MarkDay1TutorialCompleted();
         _controller?.SetBlock(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         _wait = WaitMode.Idle;
-        if (_day2IntroBellThenAdvanceRoutine != null)
-            StopCoroutine(_day2IntroBellThenAdvanceRoutine);
-        _day2IntroBellThenAdvanceRoutine = StartCoroutine(CoDay2IntroControlsThenBellThenAdvanceStory());
-    }
-
-    private IEnumerator CoDay2IntroControlsThenBellThenAdvanceStory()
-    {
-        yield return null;
-        if (_flow is GameFlowController gfcBell)
-            gfcBell.PlayDay2IntroClientArrivalBell();
-        _day2IntroBellThenAdvanceRoutine = null;
-        Advance();
+        if (_flow is GameFlowController gfc)
+        {
+            gfc.MarkDay1TutorialCompleted();
+            gfc.RunAfterDay2IntroUnlockRoutine(Advance);
+        }
+        else
+            Advance();
     }
 
     private void TrySaveDay1Progress()
@@ -1025,8 +1135,12 @@ public sealed class StoryDirector : MonoBehaviour
                 ? Day2CandlesLitConversation
                 : Day2CandlesUnlitConversation;
 
-            // Ветка дня 2: сначала свободное перемещение, затем игрок сам подходит к клиенту и жмет E.
+            // Ветка дня 2: 30 с и звонок — затем можно подойти к клиенту и начать диалог про свечи.
             _pendingClientApproachConversation = nextConversation;
+            _day212AfterClient212ApproachReady = false;
+            if (_day212AfterClient212Routine != null)
+                StopCoroutine(_day212AfterClient212Routine);
+            _day212AfterClient212Routine = StartCoroutine(CoDay212AfterClient212DelayThenBell());
             GameStateService.SetState(GameState.None);
             ((GameFlowController)_flow).EnterClientDialogueState(false);
             _controller?.SetBlock(false);
@@ -1102,6 +1216,7 @@ public sealed class StoryDirector : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             _wait = WaitMode.Idle;
             Advance();
+            StartDay214AfterCandlesDelayThenBell();
             return;
         }
 
@@ -1115,6 +1230,7 @@ public sealed class StoryDirector : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             _wait = WaitMode.Idle;
             Advance();
+            StartDay214AfterCandlesDelayThenBell();
             return;
         }
 
@@ -1129,15 +1245,27 @@ public sealed class StoryDirector : MonoBehaviour
             _wait = WaitMode.Idle;
             if (string.Equals(conv, Day2After4455LitReturnDialogueTools, StringComparison.OrdinalIgnoreCase))
                 TryDestroyHeldStoryToolsBox();
+            else
+            {
+                // Override-диалог: ClientDialogueFinished не вызывается — убираем посылку и сбрасываем задачу 5577,
+                // иначе на складе остаётся RequiredPackage и блокируется выход к клиенту.
+                _flow?.RemovePackageFromHands();
+                if (_flow is GameFlowController gfcAfter5577)
+                {
+                    gfcAfter5577.SetPendingDialogueReturnPackage(0);
+                    gfcAfter5577.SetRequiredPackageForReturn(0);
+                }
+            }
             _day2After4455LitAwaitingNextClientDelay = true;
+            // После инструментов — move_dialogue_after_5577; после посылки 5577 — move_dialogue_after_tools (на ходу).
             string moveDialogue = string.Equals(conv, Day2After4455LitReturnDialogueTools, StringComparison.OrdinalIgnoreCase)
-                ? Day2After4455LitMoveDialogueTools
-                : Day2After4455LitMoveDialogue5577;
+                ? Day2After4455LitMoveDialogue5577
+                : Day2After4455LitMoveDialogueTools;
             StartCoroutine(StartDialogueNextFrame(moveDialogue)); // Диалог идет на фоне свободного передвижения.
             return;
         }
 
-        if (string.Equals(conv, "Client_day2.2_candles_lit_after_4455", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(conv, Day2CandlesLitAfter4455Conversation, StringComparison.OrdinalIgnoreCase))
         {
             // После return_to_client_day2_order_4455 в состоянии может остаться RequiredPackageNumber — сбрасываем перед свободным роумом.
             if (_flow is GameFlowController gfcCandlesLit4455)
@@ -1148,7 +1276,7 @@ public sealed class StoryDirector : MonoBehaviour
             }
             // Развилка после 4455:
             // - свечи зажжены -> при следующем E — Client_day2.2_after_4455_lit_followup, затем игрок сам идёт на склад (без авто-телепорта);
-            // - свечи не зажжены -> при следующем E у стойки сразу Client_day2.2_after_60s_meet.
+            // - свечи не зажжены -> после 30 с и звонка — E у стойки → Client_day2.2_after_60s_meet.
             _pendingClientApproachConversation = CandleInteractable.IsAnyCandleLit
                 ? Day2After4455LitFollowupConversation
                 : Day2After4455LitDelayedClientConversation;
@@ -1158,6 +1286,7 @@ public sealed class StoryDirector : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             _wait = WaitMode.WaitingFreeRoamClientConfirm;
+            StartDay22AfterCandlesLit4455DelayThenBell();
             return;
         }
 
@@ -1169,7 +1298,7 @@ public sealed class StoryDirector : MonoBehaviour
                 // Жестко очищаем возможные хвосты прошлых шагов (в т.ч. 5577), чтобы на складе не появлялась записка.
                 gfcPrep.SetFixedPackageForNextWarehouse(0);
                 gfcPrep.SetPendingDialogueReturnPackage(0);
-                gfcPrep.SetPendingStoryCarryItemId(null);
+                gfcPrep.SetPendingStoryCarryItemId(null); // toolbox: только после складских автодиалогов, если отдавали 5577 в день 1.
                 gfcPrep.SetRequiredPackageForReturn(0);
             }
             _flow?.SetTutorialWarehouseVisit(true); // Отключаем генерацию складской записки/задачи на этом переходе.
@@ -1201,20 +1330,24 @@ public sealed class StoryDirector : MonoBehaviour
         }
         if (string.Equals(conv, Day2After60sMeetAfterVideoConversation, StringComparison.OrdinalIgnoreCase))
         {
-            // В этом диалоге финалы "обычных" веток — id 9 и id 12.
-            // Если диалог завершился на другом id, это ветка "Позвонить в скорую":
-            // нужно перейти к телефону, а не отпускать игрока в свободный режим.
-            bool finishedRegularBranch = _day2After60sMeetLastEntryId == 9 || _day2After60sMeetLastEntryId == 12;
-            if (!finishedRegularBranch)
+            // Ветку «Позвонить в скорую» нельзя надёжно определить по последнему entry id: субтитры игрока
+            // (showPCSubtitlesDuringLine=0) и длинный граф не обновляют _day2After60sMeetLastEntryId до id=3.
+            // Флаг выставляется Lua userScript в DialogueDatabase на узлах выбора (см. Day2After60s_CallAmbulance).
+            bool isCallAmbulanceBranch = DialogueLua.GetVariable(Day2After60sAfterVideoLuaCallAmbulance).AsBool;
+            DialogueLua.SetVariable(Day2After60sAfterVideoLuaCallAmbulance, false);
+            if (isCallAmbulanceBranch)
             {
                 StartDay2After60sMeetEmergencyCall();
                 return;
             }
+            ClearHandsAndDeliveryStateAfterDay2After60sAfterVideoNonEmergency();
             StartDay2EndFlow();
             return;
         }
         if (string.Equals(conv, Day2After60sMeetAfterAmbulanceConversation, StringComparison.OrdinalIgnoreCase))
         {
+            // Override-диалог: ClientDialogueFinished не вызывается — убираем посылку и сбрасываем задачу доставки.
+            ClearHandsAndDeliveryStateAfterDay2After60sAfterVideoNonEmergency();
             StartDay2EndFlow();
             return;
         }
@@ -1284,6 +1417,7 @@ public sealed class StoryDirector : MonoBehaviour
         if (!_day2After4455LitAwaitingNextClientDelay)
             yield break;
         _day2After4455LitAwaitingNextClientDelay = false;
+        // Как и после Client_day2.2_candles_lit_after_4455 (свечи не зажжены): 30 с + звонок, затем E у стойки → Client_day2.2_after_60s_meet.
         _pendingClientApproachConversation = Day2After4455LitDelayedClientConversation;
         GameStateService.SetState(GameState.None);
         ((GameFlowController)_flow).EnterClientDialogueState(false);
@@ -1291,6 +1425,7 @@ public sealed class StoryDirector : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         _wait = WaitMode.WaitingFreeRoamClientConfirm;
+        StartDay22AfterCandlesLit4455DelayThenBell();
     }
 
     private static void TryDestroyHeldStoryToolsBox()
@@ -1597,44 +1732,42 @@ public sealed class StoryDirector : MonoBehaviour
 
         _controller?.SetBlock(false);
         GameStateService.SetState(GameState.Warehouse);
-        if (_flow is GameFlowController gfc)
+        if (_flow is GameFlowController gfcCommon)
         {
-            gfc.EnterClientDialogueState(false, movePlayerToClient: false);
-            gfc.SetPendingDialogueReturnPackage(0);
-            gfc.SetRequiredPackageForReturn(0);
-            gfc.SetPendingStoryCarryItemId(Day2ToolsCarryItemId);
+            gfcCommon.EnterClientDialogueState(false, movePlayerToClient: false);
+            gfcCommon.SetPendingDialogueReturnPackage(0);
+            gfcCommon.SetRequiredPackageForReturn(0);
         }
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         _day2After4455LitWarehouseSequence = null;
 
+        string litReturnHintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
+            ? (GameConfig.Tutorial.emptyKey ?? "")
+            : (GameConfig.Tutorial.returnToClientKey ?? "");
+
         if (gave5577InDay1)
         {
+            if (_flow is GameFlowController gfcGive)
+                gfcGive.SetPendingStoryCarryItemId(Day2ToolsCarryItemId);
             _pendingDialogueAfterReturn = Day2After4455LitReturnDialogueTools;
             _wait = WaitMode.WaitingClientConfirm;
-            string toolsHintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
-                ? (GameConfig.Tutorial.emptyKey ?? "")
-                : (GameConfig.Tutorial.returnToClientKey ?? "");
-            _flow?.SetTravelTarget(TravelTarget.Client, toolsHintKey);
+            _flow?.SetTravelTarget(TravelTarget.Client, litReturnHintKey);
             yield break;
         }
 
-        // Если в дне 1 не отдавали 5577 — после базового автодиалога на складе несём 5577.
+        // День 1 без отдачи 5577 — с посылкой 5577; диалоги у стойки: after_5577_if_not_gave, затем на ходу move_after_tools.
         _pendingDialogueAfterReturn = Day2After4455LitReturnDialogue5577;
         _wait = WaitMode.WaitingClientReturnForDialogue;
         if (_flow is GameFlowController gfcNoGive)
         {
             gfcNoGive.SetPendingStoryCarryItemId(null);
-            // В этой ветке записка не должна появляться — задаем требуемую посылку напрямую без показа note.
             GameStateService.SetRequiredPackage(5577, enforceOnly: false);
             GameStateService.SetPackageDropLocked(false);
             _deliveryNoteView?.Hide();
             gfcNoGive.SetPendingDialogueReturnPackage(5577);
         }
-        string noGiveHintKey = (_flow != null && _flow.PreferEmptyOverMeetClient && !IsRunning)
-            ? (GameConfig.Tutorial.emptyKey ?? "")
-            : (GameConfig.Tutorial.returnToClientKey ?? "");
-        _flow?.SetTravelTarget(TravelTarget.Client, noGiveHintKey);
+        _flow?.SetTravelTarget(TravelTarget.Client, litReturnHintKey);
     }
 
     private IEnumerator RunDay2After60sMeetWarehouseSequence()
@@ -1765,6 +1898,18 @@ public sealed class StoryDirector : MonoBehaviour
         }
     }
 
+    private void ClearHandsAndDeliveryStateAfterDay2After60sAfterVideoNonEmergency()
+    {
+        _flow?.RemovePackageFromHands();
+        if (_flow is not GameFlowController gfc || gfc.Player == null)
+            return;
+        PlayerHands hands = HandsRegistry.Hands;
+        if (hands != null && hands.Current is PhoneItemView)
+            hands.DropCurrentItem(gfc.Player.DropPoint.position, Quaternion.identity);
+        gfc.SetPendingDialogueReturnPackage(0);
+        gfc.SetRequiredPackageForReturn(0);
+    }
+
     private void StartDay2After60sMeetEmergencyCall()
     {
         if (_flow is not GameFlowController gfc || gfc.Player == null)
@@ -1777,6 +1922,8 @@ public sealed class StoryDirector : MonoBehaviour
         if (gfc.Player.PlayerCamera != null)
             _day2After60sMeetRestoreCamRot = gfc.Player.PlayerCamera.transform.rotation;
 
+        ClearHandsAndDeliveryStateAfterDay2After60sAfterVideoNonEmergency();
+
         GameStateService.UnlockPhone();
         _client?.CloseUI();
         GameStateService.SetState(GameState.None);
@@ -1786,10 +1933,6 @@ public sealed class StoryDirector : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         PlayerHands hands = HandsRegistry.Hands;
-        if (hands != null && hands.HasItem)
-            hands.DropCurrentItem(gfc.Player.DropPoint.position, Quaternion.identity);
-        if (hands != null && hands.HasItem && hands.Current is not PhoneItemView)
-            hands.DestroyCurrentItem();
         if (hands != null && _phoneItemView != null)
             hands.TryTake(_phoneItemView, gfc.Player.PhoneHandPoint);
 
@@ -1812,7 +1955,7 @@ public sealed class StoryDirector : MonoBehaviour
     private IEnumerator RunDay2EndFlowSequence()
     {
         _wait = WaitMode.WaitingDialogueEnd;
-        yield return StartCoroutine(PlayAutoDialogueFreeRoam(Day2EndAutoBeforeRadioConversation));
+        yield return StartCoroutine(PlayAutoDialogueFreeRoam(Day2EndConversationBeforeRadio));
 
         _wait = WaitMode.Idle;
         GameStateService.SetState(GameState.None);
@@ -1836,7 +1979,7 @@ public sealed class StoryDirector : MonoBehaviour
             _radioInteractable.SetForcedStaticOnlyMode(false);
 
         _wait = WaitMode.WaitingDialogueEnd;
-        yield return StartCoroutine(PlayAutoDialogueFreeRoam(Day2EndAutoAfterRadioConversation));
+        yield return StartCoroutine(PlayAutoDialogueFreeRoam(Day2EndConversationAfterRadioStatic));
 
         _controller?.SetBlock(true);
         Cursor.visible = false;
@@ -1846,7 +1989,8 @@ public sealed class StoryDirector : MonoBehaviour
         _flow?.PlayFadeToBlack(3f, () =>
         {
             _wait = WaitMode.Idle;
-            _controller?.SetBlock(false);
+            if (_flow is GameFlowController gfcEnd)
+                gfcEnd.QuitApplicationAfterStoryEnding();
         });
 
         _day2EndFlowCoroutine = null;

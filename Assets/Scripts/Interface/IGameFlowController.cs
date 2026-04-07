@@ -63,6 +63,8 @@ public interface IGameFlowController
     void SetAllowReturnToClientWithoutExitZone(bool allow);
     void SetPendingDialogueReturnPackage(int packageNumber);
     void SetPendingStoryCarryItemId(string itemId);
+    /// <summary> true, если сюжет разрешает поднять этот story-carry сейчас (сверка с pending id). </summary>
+    bool IsStoryCarryItemPickupAllowed(StoryCarryItem item);
     bool TryPerformPendingReturnToClient();
     TravelTarget CurrentTravelTarget { get; }
     void RemovePackageFromHands();

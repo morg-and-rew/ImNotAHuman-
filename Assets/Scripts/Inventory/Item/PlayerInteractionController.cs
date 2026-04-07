@@ -127,6 +127,8 @@ public sealed class PlayerInteractionController
             return GetOutlineFrom((worldInteractable as MonoBehaviour));
         if (holdable is PackageHoldable pkg && IsHoldableAllowed(pkg) && !_hands.HasItem && IsPackageFrontAccessible(pkg))
             return GetOutlineFrom(pkg as MonoBehaviour);
+        if (holdable is StoryCarryItem sc && IsHoldableAllowed(sc) && !_hands.HasItem)
+            return GetOutlineFrom(sc as MonoBehaviour);
         if (holdable is PhoneItemView && IsHoldableAllowed(holdable))
             return GetOutlineFrom((holdable as MonoBehaviour));
         return null;
@@ -136,6 +138,8 @@ public sealed class PlayerInteractionController
     {
         if (worldInteractable is RadioInteractable radio)
             return radio.CanShowInteractionFeedback();
+        if (worldInteractable is CandleInteractable candle)
+            return candle.CanShowInteractionFeedback();
         return true;
     }
 
@@ -157,6 +161,8 @@ public sealed class PlayerInteractionController
         // Посылки: только на складе и только когда по сюжету нужно принести посылку (не при каждом заходе на склад).
         if (holdable is PackageHoldable)
             return GameStateService.IsWarehouse && _flow != null && _flow.IsPackagePickAllowedByStory;
+        if (holdable is StoryCarryItem storyCarry)
+            return GameStateService.IsWarehouse && _flow != null && _flow.IsStoryCarryItemPickupAllowed(storyCarry);
         return GameStateService.IsWarehouse;
     }
 

@@ -144,8 +144,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _pendingMeetClientHintAfterDay12Gate;
     /// <summary> Отложить звонок до завершения PostVideo_Day1_2, если таймер истёк в цепочке Radio_Day1_2.</summary>
     private bool _deferClientArrivalBellUntilPostVideoDay12;
-    /// <summary> После интро дня 2: один звонок перед взаимодействием с клиентом на шаге day2_start / до Client_day2.1. </summary>
+    /// <summary> После интро дня 2 — колокольчик перед Client_day2.1 (шаг day2_start). </summary>
     private bool _day2PostIntroClientBellPlayed;
+    private Coroutine _day2IntroBellAdvanceCoroutine;
 
     public bool ProviderCallDone => _providerCallDone;
 
@@ -322,8 +323,21 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_storyDirector == null)
             return false;
 
+        // До проверки day2_start: иначе «после звонка» снова показываем подсказку у клиента во время Radio_day2.1.
+        if (IsRadioDay21StoryConversationPlaying())
+            return false;
+
         if (string.Equals(_storyDirector.CurrentStepId, "day2_start", StringComparison.OrdinalIgnoreCase))
             return _day2PostIntroClientBellPlayed;
+
+        if (_storyDirector.IsDay212CandlesClientApproachCooldownActive)
+            return false;
+
+        if (_storyDirector.IsDay214AfterCandlesOrder8877CooldownActive)
+            return false;
+
+        if (_storyDirector.IsDay22AfterCandlesLit4455PendingCooldownActive)
+            return false;
 
         if (!_storyDirector.HasStoryStarted)
             return GameConfig.StoryStartOnClientInteract;
@@ -340,6 +354,19 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         string stepId = _storyDirector.CurrentStepId;
         return !string.IsNullOrEmpty(stepId)
             && stepId.IndexOf("day2", StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    /// <summary> Свечи (_availableOnlyFromDay2): разрешены на день 2 до первого старта диалога Client_day2.1. </summary>
+    public bool IsCandleLightingAllowedByStory()
+    {
+        if (_storyDirector == null)
+            return true;
+        return !_storyDirector.IsClientDay21Started;
+    }
+
+    public void NotifyClientDay21StartedIfNeeded(string conversationTitle)
+    {
+        _storyDirector?.NotifyClientDay21StartedIfNeeded(conversationTitle);
     }
 
     public void NotifyExitZonePassed(string zoneId)
@@ -390,6 +417,20 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             _fadeToBlackView.Play(durationSeconds, onComplete);
         else
             onComplete?.Invoke();
+    }
+
+    /// <summary> Вызывается после финального fade-to-black (конец дня 2): блокировка ввода и выход из приложения. </summary>
+    public void QuitApplicationAfterStoryEnding()
+    {
+        HideHint();
+        _controller?.SetBlock(true);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     /// <summary> Начало второго дня: телепорт в PlayerSpawnPoint, интро из чёрного в прозрачный (после показа интро скрываем fade-to-black). </summary>
@@ -1357,6 +1398,13 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             && string.Equals(DialogueManager.lastConversationStarted, "Radio_Tutorial", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary> Сюжетное радио начала дня 2 — пока идёт, нельзя «пустить клиента» (E у стойки / сюжетный диалог), перемещение склад ↔ выдача не блокируется. </summary>
+    public static bool IsRadioDay21StoryConversationPlaying()
+    {
+        return DialogueManager.isConversationActive
+            && string.Equals(DialogueManager.lastConversationStarted, "Radio_day2.1", StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary> True, если сюжет в процессе и ждёт действия игрока (например, «иди к радио», «возьми телефон»). </summary>
     private bool HasActiveTutorial()
     {
@@ -1559,6 +1607,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private void HandleClientDialog()
     {
         if (_clientInteraction == null || _input == null) return;
+        if (IsRadioDay21StoryConversationPlaying())
+            return;
         if (_clientArrivalGateAfterDay12Active && !_clientArrivalBellAfterDay12Played) return;
         bool isDay2Start = _storyDirector != null && string.Equals(_storyDirector.CurrentStepId, "day2_start", StringComparison.OrdinalIgnoreCase);
         if (isDay2Start && !_day2PostIntroClientBellPlayed)
@@ -1981,11 +2031,41 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         AudioSource.PlayClipAtPoint(_clientArriveBellClip, pos, Mathf.Clamp01(_clientArriveBellVolume));
     }
 
-    /// <summary> Звонок у стойки после интро дня 2: вызывать после разблокировки управления и завершения затемнения/проявления. </summary>
+    /// <summary> Колокольчик у стойки в 2D (тот же клип, что после Client_Day1.2), без привязки к позиции игрока. </summary>
+    public void PlayClientCounterBellTwoDimensional()
+    {
+        if (_clientArriveBellClip == null)
+            return;
+        GameObject go = new GameObject("ClientCounterBellOneShot");
+        AudioSource src = go.AddComponent<AudioSource>();
+        src.spatialBlend = 0f;
+        src.dopplerLevel = 0f;
+        src.playOnAwake = false;
+        src.PlayOneShot(_clientArriveBellClip, Mathf.Clamp01(_clientArriveBellVolume));
+        Destroy(go, _clientArriveBellClip.length + 0.15f);
+    }
+
+    /// <summary> Звонок после интро дня 2, перед шагом day2_start / Client_day2.1. </summary>
     public void PlayDay2IntroClientArrivalBell()
     {
-        PlayClientArriveBell();
+        PlayClientCounterBellTwoDimensional();
         _day2PostIntroClientBellPlayed = true;
+    }
+
+    /// <summary> Кадр после разблокировки управления — звонок, затем продолжение сюжета (Advance). </summary>
+    public void RunAfterDay2IntroUnlockRoutine(Action onAfterBell)
+    {
+        if (_day2IntroBellAdvanceCoroutine != null)
+            StopCoroutine(_day2IntroBellAdvanceCoroutine);
+        _day2IntroBellAdvanceCoroutine = StartCoroutine(CoAfterDay2IntroBell(onAfterBell));
+    }
+
+    private IEnumerator CoAfterDay2IntroBell(Action onAfterBell)
+    {
+        yield return null;
+        PlayDay2IntroClientArrivalBell();
+        _day2IntroBellAdvanceCoroutine = null;
+        onAfterBell?.Invoke();
     }
 
     private void OnConversationEndedAfterClientDay12(Transform _)
@@ -2225,6 +2305,13 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public void SetPendingStoryCarryItemId(string itemId)
     {
         _pendingStoryCarryItemId = string.IsNullOrWhiteSpace(itemId) ? null : itemId.Trim();
+    }
+
+    public bool IsStoryCarryItemPickupAllowed(StoryCarryItem item)
+    {
+        if (item == null || string.IsNullOrEmpty(item.ItemId) || string.IsNullOrEmpty(_pendingStoryCarryItemId))
+            return false;
+        return string.Equals(item.ItemId, _pendingStoryCarryItemId, StringComparison.OrdinalIgnoreCase);
     }
 
     public void SetAcceptAnyPackageForReturn(bool acceptAny)
