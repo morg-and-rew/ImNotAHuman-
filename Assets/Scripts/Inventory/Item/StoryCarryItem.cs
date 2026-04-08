@@ -6,8 +6,15 @@ public sealed class StoryCarryItem : HoldableViewBase, IHandPointProvider
     [SerializeField] private string _itemId = "";
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private Collider _col;
+    [Header("Подсказка (E) — PlayerHintView")]
+    [Tooltip("Спрайт подсказки по умолчанию (например RU).")]
+    [SerializeField] private Sprite _hintSprite;
+    [Tooltip("Спрайт для английского UI. Если пусто — показывается Hint Sprite.")]
+    [SerializeField] private Sprite _hintSpriteEnglish;
 
     public string ItemId => _itemId;
+    public Sprite HintSprite => _hintSprite;
+    public Sprite HintSpriteEnglish => _hintSpriteEnglish;
     public override HoldableAvailability Availability => HoldableAvailability.WarehouseOnly;
     public HandPointType HandPointType => HandPointType.Default;
 

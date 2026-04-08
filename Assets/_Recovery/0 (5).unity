@@ -25240,6 +25240,8 @@ MonoBehaviour:
   _itemId: day2_tools_box
   _rb: {fileID: 0}
   _col: {fileID: 1368642025}
+  _hintSprite: {fileID: 21300000, guid: 0213e2ed0ab888e43a1964f4c47c7909, type: 3}
+  _hintSpriteEnglish: {fileID: 21300000, guid: b68c499923b519c4fa9e775af54100c5, type: 3}
 --- !u!1001 &1372302081
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -19,8 +19,14 @@ public sealed class Computer : MonoBehaviour
     [Header("Video")]
     [SerializeField] private VideoPlayer _videoPlayer;
     [SerializeField] private GameObject _videoRoot;
+    [Tooltip("Ролик «улица» (по умолчанию RU / основной язык).")]
     [SerializeField] private VideoClip _streetClip;
+    [Tooltip("Ролик «помещение» (по умолчанию RU / основной язык). Для дня 1 — шаг watch_computer_indoor_day1_5, kind indoor.")]
     [SerializeField] private VideoClip _indoorClip;
+    [Tooltip("Опционально: «улица» для английского UI. Если пусто — используется Street Clip.")]
+    [SerializeField] private VideoClip _streetClipEnglish;
+    [Tooltip("Опционально: «помещение» для английского UI. Если пусто — используется Indoor Clip.")]
+    [SerializeField] private VideoClip _indoorClipEnglish;
 
     private bool _isPlayerInZone;
     private bool _computerOpen;
@@ -153,13 +159,31 @@ public sealed class Computer : MonoBehaviour
         TryPlayVideo(KindIndoor);
     }
 
+    private VideoClip ResolveClipForCurrentLanguage(string kind)
+    {
+        bool english = GameFlowController.Instance != null && GameFlowController.Instance.IsUiEnglishLocale;
+        if (string.Equals(kind, KindStreet, System.StringComparison.OrdinalIgnoreCase))
+        {
+            if (english && _streetClipEnglish != null)
+                return _streetClipEnglish;
+            return _streetClip;
+        }
+        if (string.Equals(kind, KindIndoor, System.StringComparison.OrdinalIgnoreCase))
+        {
+            if (english && _indoorClipEnglish != null)
+                return _indoorClipEnglish;
+            return _indoorClip;
+        }
+        return null;
+    }
+
     private void TryPlayVideo(string kind)
     {
         if (_videoPlaying)
             return;
         if (s_allowedVideoKind != kind)
             return;
-        VideoClip clip = kind == KindStreet ? _streetClip : _indoorClip;
+        VideoClip clip = ResolveClipForCurrentLanguage(kind);
         if (clip == null || _videoPlayer == null)
             return;
 

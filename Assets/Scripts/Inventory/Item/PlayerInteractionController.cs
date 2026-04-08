@@ -93,6 +93,8 @@ public sealed class PlayerInteractionController
                 else
                     sprite = pkg.HintSprite;
             }
+            else if (holdable is StoryCarryItem storyCarry && IsHoldableAllowed(storyCarry) && !_hands.HasItem)
+                sprite = ResolveStoryCarryHintSprite(storyCarry);
         }
 
         if (PlayerHintView.Instance != null)
@@ -150,6 +152,15 @@ public sealed class PlayerInteractionController
         return mb.GetComponent<InteractableOutline>()
             ?? mb.GetComponentInParent<InteractableOutline>()
             ?? mb.GetComponentInChildren<InteractableOutline>();
+    }
+
+    private Sprite ResolveStoryCarryHintSprite(StoryCarryItem item)
+    {
+        if (item == null)
+            return null;
+        if (_flow != null && _flow.IsUiEnglishLocale && item.HintSpriteEnglish != null)
+            return item.HintSpriteEnglish;
+        return item.HintSprite;
     }
 
     private bool IsHoldableAllowed(IHoldable holdable)

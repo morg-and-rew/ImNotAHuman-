@@ -33782,7 +33782,7 @@ MonoBehaviour:
   - id: 51
     fields:
     - title: Title
-      value: end
+      value: Client_day2.2_end
       type: 0
       typeString: CustomFieldType_Text
     - title: Description
@@ -34066,7 +34066,7 @@ MonoBehaviour:
   - id: 52
     fields:
     - title: Title
-      value: end2
+      value: Client_day2.2_end2
       type: 0
       typeString: CustomFieldType_Text
     - title: Description

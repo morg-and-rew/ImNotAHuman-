@@ -82,4 +82,7 @@ public interface IGameFlowController
     void TeleportToTableAndFixPosition(string postVideoConversation = null);
     string ResolveHintText(string hintText, string fallbackLocalizationKey);
     void PlayFadeToBlack(float durationSeconds, Action onComplete);
+
+    /// <summary> Текущий язык UI — английский (включая колонку Text Table «Default»). </summary>
+    bool IsUiEnglishLocale { get; }
 }
