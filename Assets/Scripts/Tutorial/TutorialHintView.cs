@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using PixelCrushers;
 
 public sealed class TutorialHintView : MonoBehaviour
 {
@@ -9,11 +10,17 @@ public sealed class TutorialHintView : MonoBehaviour
     [SerializeField] private Image _image;
     [Tooltip("Ключи подсказок (tutorial.press_space, tutorial.door_warehouse и т.д.). Порядок должен совпадать с Hint Sprites.")]
     [SerializeField] private string[] _hintKeys;
-    [Tooltip("Спрайты для подсказок. Добавь сюда все картинки туториала в том же порядке, что и ключи в Hint Keys.")]
+    [Tooltip("Спрайты для подсказок по умолчанию (например, RU). Добавь сюда все картинки туториала в том же порядке, что и ключи в Hint Keys.")]
     [SerializeField] private Sprite[] _hintSprites;
+    [Tooltip("Спрайты для подсказок на английском. Порядок должен совпадать с Hint Keys. Если массив пустой или неполный, используется Hint Sprites.")]
+    [SerializeField] private Sprite[] _hintSpritesEnglish;
     [SerializeField, Min(0.01f)] private float _fadeDuration = 0.18f;
     [Tooltip("Sorting order канваса туториала — должен быть меньше, чем у окна (-50), чтобы подсказка рисовалась под спрайтом окна.")]
     [SerializeField] private int _canvasSortOrder = -100;
+    [Tooltip("Ключ языка в PlayerPrefs (должен совпадать с UI Localization Manager).")]
+    [SerializeField] private string _languagePlayerPrefsKey = "Language";
+    [Tooltip("Код английского языка, при котором используются Hint Sprites English.")]
+    [SerializeField] private string _englishLanguageCode = "en";
 
     public static TutorialHintView Instance { get; private set; }
     private CanvasGroup _canvasGroup;
@@ -47,19 +54,30 @@ public sealed class TutorialHintView : MonoBehaviour
         TickFade();
     }
 
+    /// <summary> Ключ из GameConfig без отдельной строки в Hint Keys — тот же спрайт, что у door_warehouse. </summary>
+    private static string ResolveSpriteLookupKey(string key)
+    {
+        if (string.IsNullOrEmpty(key)) return key;
+        string k = key.Trim();
+        if (string.Equals(k, "tutorial.press_f_to_warehouse", System.StringComparison.OrdinalIgnoreCase))
+            return "tutorial.door_warehouse";
+        return k;
+    }
+
     /// <summary> Показать подсказку по ключу (например tutorial.press_space). Спрайт берётся из массивов в инспекторе. </summary>
     public void Show(string key)
     {
         bool found = false;
-        if (_image != null && _hintKeys != null && _hintSprites != null && _hintKeys.Length == _hintSprites.Length)
+        Sprite[] sprites = GetSpritesForCurrentLanguage();
+        if (_image != null && _hintKeys != null && sprites != null && _hintKeys.Length == sprites.Length)
         {
-            string keyTrim = key?.Trim() ?? "";
+            string keyTrim = ResolveSpriteLookupKey(key?.Trim() ?? "");
             for (int i = 0; i < _hintKeys.Length; i++)
             {
                 string entry = _hintKeys[i]?.Trim() ?? "";
                 if (string.Equals(entry, keyTrim, System.StringComparison.OrdinalIgnoreCase))
                 {
-                    _image.sprite = _hintSprites[i];
+                    _image.sprite = sprites[i];
                     _image.enabled = true;
                     _image.gameObject.SetActive(true);
                     found = true;
@@ -133,6 +151,27 @@ public sealed class TutorialHintView : MonoBehaviour
         if (_canvasGroup != null)
             _canvasGroup.alpha = Mathf.Clamp01(alpha);
         _targetAlpha = Mathf.Clamp01(alpha);
+    }
+
+    private Sprite[] GetSpritesForCurrentLanguage()
+    {
+        if (IsEnglishLanguage() && _hintSpritesEnglish != null && _hintKeys != null && _hintSpritesEnglish.Length == _hintKeys.Length)
+            return _hintSpritesEnglish;
+        return _hintSprites;
+    }
+
+    private bool IsEnglishLanguage()
+    {
+        if (GameFlowController.Instance != null)
+            return GameFlowController.Instance.IsUiEnglishLocale;
+
+        string lang = "";
+        if (UILocalizationManager.instance != null)
+            lang = UILocalizationManager.instance.currentLanguage ?? "";
+        else if (!string.IsNullOrWhiteSpace(_languagePlayerPrefsKey))
+            lang = PlayerPrefs.GetString(_languagePlayerPrefsKey, "");
+
+        return GameFlowController.LocaleIndicatesEnglish(lang);
     }
 }
 

@@ -3118,6 +3118,29 @@ MonoBehaviour:
   _root: {fileID: 4949569083819676637}
   _image: {fileID: 3776396472315092856}
   _fadeDuration: 0.18
+  _englishSpritePairs:
+  - source: {fileID: 21300000, guid: 27b5a59be68dd7f46bcacb49dc3f4c4b, type: 3}
+    english: {fileID: 21300000, guid: 887405d506b1d99438c0aa40e792d0ce, type: 3}
+  - source: {fileID: 21300000, guid: df1c0da4db2aba047ae61876f6a27a9d, type: 3}
+    english: {fileID: 21300000, guid: 87cd6b43a3913454eaafeb70b459e557, type: 3}
+  - source: {fileID: 21300000, guid: 7868e66454e4a5348aba9483c3809388, type: 3}
+    english: {fileID: 21300000, guid: cc8c358ee01fd5c49bc5b50e7b3ecaa1, type: 3}
+  - source: {fileID: 21300000, guid: 3c204f045647a4a4281c6ed91b46c103, type: 3}
+    english: {fileID: 21300000, guid: aa9ca1f8da9e3404ea44060094c22347, type: 3}
+  - source: {fileID: 21300000, guid: beae437c99746db42b29787d4707adc0, type: 3}
+    english: {fileID: 21300000, guid: 212f8b5c4d6679f4d96dc6276d06b50e, type: 3}
+  - source: {fileID: 21300000, guid: 7d7210c3f05c7b6448ddb6b57abb6d19, type: 3}
+    english: {fileID: 21300000, guid: 8d4f95565bc09bf49a224220544390e0, type: 3}
+  - source: {fileID: 21300000, guid: aeba32a445ca9ff4daf46d2a4e818a63, type: 3}
+    english: {fileID: 21300000, guid: 9c5ecb225d614e54ea16d2d803540154, type: 3}
+  - source: {fileID: 21300000, guid: 5ce0484ebdb9f4d4b966fe9c10003dd0, type: 3}
+    english: {fileID: 21300000, guid: e7200663025894742a07ffe6231ee332, type: 3}
+  - source: {fileID: 21300000, guid: 587b3e15b1f891a41ba97139766ae4f6, type: 3}
+    english: {fileID: 21300000, guid: 575a3105694de2c42b8f967a5c73a2a7, type: 3}
+  - source: {fileID: 21300000, guid: 3cc23863476a33f4e87ba1d850b648b3, type: 3}
+    english: {fileID: 21300000, guid: cc331b748a75e1845be51c3c2ab9b864, type: 3}
+  _languagePlayerPrefsKey: Language
+  _englishLanguageCode: en
 --- !u!1 &7583265386675106752
 GameObject:
   m_ObjectHideFlags: 0

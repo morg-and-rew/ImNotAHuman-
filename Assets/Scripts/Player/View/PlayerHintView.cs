@@ -1,13 +1,26 @@
 using UnityEngine;
 using UnityEngine.UI;
+using PixelCrushers;
 
 public sealed class PlayerHintView : MonoBehaviour
 {
+    [System.Serializable]
+    private struct LocalizedSpritePair
+    {
+        public Sprite source;
+        public Sprite english;
+    }
+
     public static PlayerHintView Instance { get; private set; }
 
     [SerializeField] private GameObject _root;
     [SerializeField] private Image _image;
     [SerializeField, Min(0.01f)] private float _fadeDuration = 0.18f;
+    [Header("Localization")]
+    [Tooltip("Пары спрайтов для английского: source (текущий/RU) -> english (перевод).")]
+    [SerializeField] private LocalizedSpritePair[] _englishSpritePairs;
+    [SerializeField] private string _languagePlayerPrefsKey = "Language";
+    [SerializeField] private string _englishLanguageCode = "en";
 
     private Sprite _raycastSprite;
     private Sprite _windowSprite;
@@ -46,25 +59,25 @@ public sealed class PlayerHintView : MonoBehaviour
 
     public void SetRaycastHint(Sprite sprite)
     {
-        _raycastSprite = sprite;
+        _raycastSprite = ResolveLocalizedSprite(sprite);
         _raycastSetFrame = Time.frameCount;
     }
 
     public void SetWindowHint(Sprite sprite)
     {
-        _windowSprite = sprite;
+        _windowSprite = ResolveLocalizedSprite(sprite);
         _windowSetFrame = Time.frameCount;
     }
 
     public void SetDoorHint(Sprite sprite)
     {
-        _doorSprite = sprite;
+        _doorSprite = ResolveLocalizedSprite(sprite);
         _doorSetFrame = Time.frameCount;
     }
 
     public void SetClientHint(Sprite sprite)
     {
-        _clientSprite = sprite;
+        _clientSprite = ResolveLocalizedSprite(sprite);
         _clientSetFrame = Time.frameCount;
     }
 
@@ -173,5 +186,37 @@ public sealed class PlayerHintView : MonoBehaviour
         if (_canvasGroup != null)
             _canvasGroup.alpha = Mathf.Clamp01(alpha);
         _targetAlpha = Mathf.Clamp01(alpha);
+    }
+
+    private Sprite ResolveLocalizedSprite(Sprite sprite)
+    {
+        if (sprite == null)
+            return null;
+        if (!IsEnglishLanguage())
+            return sprite;
+        if (_englishSpritePairs == null || _englishSpritePairs.Length == 0)
+            return sprite;
+
+        for (int i = 0; i < _englishSpritePairs.Length; i++)
+        {
+            if (_englishSpritePairs[i].source == sprite && _englishSpritePairs[i].english != null)
+                return _englishSpritePairs[i].english;
+        }
+
+        return sprite;
+    }
+
+    private bool IsEnglishLanguage()
+    {
+        if (GameFlowController.Instance != null)
+            return GameFlowController.Instance.IsUiEnglishLocale;
+
+        string lang = "";
+        if (UILocalizationManager.instance != null)
+            lang = UILocalizationManager.instance.currentLanguage ?? "";
+        else if (!string.IsNullOrWhiteSpace(_languagePlayerPrefsKey))
+            lang = PlayerPrefs.GetString(_languagePlayerPrefsKey, "");
+
+        return GameFlowController.LocaleIndicatesEnglish(lang);
     }
 }

@@ -411,6 +411,24 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         return GetUIText(fallbackLocalizationKey ?? "");
     }
 
+    /// <summary> Единый код языка для UI, туториала и Dialogue System. </summary>
+    public string CurrentUiLanguage => GetUnifiedLanguage();
+
+    /// <summary>
+    /// Английский UI: код "en…" или колонка <see cref="TextTable"/> "Default" (как в New Text Table).
+    /// </summary>
+    public bool IsUiEnglishLocale => LocaleIndicatesEnglish(GetUnifiedLanguage());
+
+    /// <summary> Та же логика, что <see cref="IsUiEnglishLocale"/>, для произвольной строки языка. </summary>
+    public static bool LocaleIndicatesEnglish(string lang)
+    {
+        if (string.IsNullOrWhiteSpace(lang)) return false;
+        lang = lang.Trim();
+        if (lang.StartsWith("en", StringComparison.OrdinalIgnoreCase)) return true;
+        if (string.Equals(lang, "Default", StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    }
+
     public void PlayFadeToBlack(float durationSeconds, Action onComplete)
     {
         if (_fadeToBlackView != null)
@@ -1112,7 +1130,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         _storyDirector.Initialize(this, _input, controller, deliveryNoteView);
 
-        DialogueManager.SetLanguage(_language);
+        DialogueManager.SetLanguage(GetUnifiedLanguage());
 
         if (_showMainMenuOnStart)
         {
@@ -1780,13 +1798,39 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_uiTextTable == null || string.IsNullOrWhiteSpace(key))
             return "";
 
-        string lang = string.IsNullOrWhiteSpace(_language) ? "ru" : _language;
+        string lang = GetUnifiedLanguage();
 
         string text = _uiTextTable.GetFieldTextForLanguage(key, lang);
+        if (string.IsNullOrEmpty(text) && LocaleIndicatesEnglish(lang))
+            text = _uiTextTable.GetFieldTextForLanguage(key, "Default");
         if (string.IsNullOrEmpty(text) && lang != "ru")
             text = _uiTextTable.GetFieldTextForLanguage(key, "ru");
 
         return text.Replace("\\r\\n", "\n").Replace("\r\n", "\n").Replace("\r", "\n");
+    }
+
+    private string GetUnifiedLanguage()
+    {
+        const string prefsKey = "Language";
+
+        // 1) То же значение, что у субтитров Dialogue System (после SetLanguage / InitializeLocalization)
+        if (!string.IsNullOrWhiteSpace(Localization.language))
+            return Localization.language.Trim();
+
+        // 2) UILocalizationManager (часто подхватывает PlayerPrefs при старте)
+        if (UILocalizationManager.instance != null && !string.IsNullOrWhiteSpace(UILocalizationManager.instance.currentLanguage))
+            return UILocalizationManager.instance.currentLanguage.Trim();
+
+        // 3) Явный выбор в PlayerPrefs (меню / сохранённая сессия)
+        string fromPrefs = PlayerPrefs.GetString(prefsKey, "");
+        if (!string.IsNullOrWhiteSpace(fromPrefs))
+            return fromPrefs.Trim();
+
+        // 4) Значение по умолчанию из инспектора (не должно перекрывать рантайм выше)
+        if (!string.IsNullOrWhiteSpace(_language))
+            return _language.Trim();
+
+        return "ru";
     }
 
     public void NotifyTutorialActionCompleted(TutorialPendingAction action)

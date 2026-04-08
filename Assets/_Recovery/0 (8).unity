@@ -13029,7 +13029,10 @@ MonoBehaviour:
   _root: {fileID: 815801399}
   _image: {fileID: 1340108108}
   _hintSprite: {fileID: 21300000, guid: 3cc23863476a33f4e87ba1d850b648b3, type: 3}
+  _hintSpriteEnglish: {fileID: 21300000, guid: cc331b748a75e1845be51c3c2ab9b864, type: 3}
   _fadeDuration: 0.18
+  _languagePlayerPrefsKey: Language
+  _englishLanguageCode: en
 --- !u!1001 &779225226
 PrefabInstance:
   m_ObjectHideFlags: 0

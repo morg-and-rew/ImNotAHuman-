@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using PixelCrushers;
 
 /// <summary>
 /// Плашка «Нажми F» (иконка) на игроке — показывается, когда после диалога нужно нажать F для перехода на склад.
@@ -12,7 +13,11 @@ public sealed class PressFToWarehouseHintView : MonoBehaviour
     [SerializeField] private GameObject _root;
     [Tooltip("Иконка «Нажми F». Если не задана, используется Image.sprite на объекте.")]
     [SerializeField] private Sprite _iconSprite;
+    [Tooltip("Иконка «Press F» для английского языка. Если не задана — используется обычная иконка.")]
+    [SerializeField] private Sprite _iconSpriteEnglish;
     [SerializeField] private Image _image;
+    [SerializeField] private string _languagePlayerPrefsKey = "Language";
+    [SerializeField] private string _englishLanguageCode = "en";
 
     private void Awake()
     {
@@ -33,13 +38,38 @@ public sealed class PressFToWarehouseHintView : MonoBehaviour
     public void Show()
     {
         if (_root == null) return;
-        if (_image != null && _iconSprite != null)
-            _image.sprite = _iconSprite;
+        if (_image != null)
+        {
+            Sprite icon = ResolveLocalizedIcon();
+            if (icon != null)
+                _image.sprite = icon;
+        }
         _root.SetActive(true);
     }
 
     public void Hide()
     {
         if (_root != null) _root.SetActive(false);
+    }
+
+    private Sprite ResolveLocalizedIcon()
+    {
+        if (IsEnglishLanguage() && _iconSpriteEnglish != null)
+            return _iconSpriteEnglish;
+        return _iconSprite;
+    }
+
+    private bool IsEnglishLanguage()
+    {
+        if (GameFlowController.Instance != null)
+            return GameFlowController.Instance.IsUiEnglishLocale;
+
+        string lang = "";
+        if (UILocalizationManager.instance != null)
+            lang = UILocalizationManager.instance.currentLanguage ?? "";
+        else if (!string.IsNullOrWhiteSpace(_languagePlayerPrefsKey))
+            lang = PlayerPrefs.GetString(_languagePlayerPrefsKey, "");
+
+        return GameFlowController.LocaleIndicatesEnglish(lang);
     }
 }

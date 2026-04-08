@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using PixelCrushers;
 
 /// <summary>
 /// Нижняя плашка "E - закрыть окно". Показывается отдельным UI-объектом,
@@ -12,7 +13,11 @@ public sealed class WindowCloseHintView : MonoBehaviour
     [SerializeField] private GameObject _root;
     [SerializeField] private Image _image;
     [SerializeField] private Sprite _hintSprite;
+    [Tooltip("Вариант плашки для английского языка. Если не задан — используется обычный спрайт.")]
+    [SerializeField] private Sprite _hintSpriteEnglish;
     [SerializeField, Min(0.01f)] private float _fadeDuration = 0.18f;
+    [SerializeField] private string _languagePlayerPrefsKey = "Language";
+    [SerializeField] private string _englishLanguageCode = "en";
 
     private CanvasGroup _canvasGroup;
     private float _targetAlpha;
@@ -45,8 +50,12 @@ public sealed class WindowCloseHintView : MonoBehaviour
 
     public void Show()
     {
-        if (_image != null && _hintSprite != null)
-            _image.sprite = _hintSprite;
+        if (_image != null)
+        {
+            Sprite s = IsEnglishLanguage() && _hintSpriteEnglish != null ? _hintSpriteEnglish : _hintSprite;
+            if (s != null)
+                _image.sprite = s;
+        }
         _targetAlpha = 1f;
         if (_root != null && !_root.activeSelf)
             _root.SetActive(true);
@@ -93,5 +102,19 @@ public sealed class WindowCloseHintView : MonoBehaviour
         if (_canvasGroup != null)
             _canvasGroup.alpha = Mathf.Clamp01(alpha);
         _targetAlpha = Mathf.Clamp01(alpha);
+    }
+
+    private bool IsEnglishLanguage()
+    {
+        if (GameFlowController.Instance != null)
+            return GameFlowController.Instance.IsUiEnglishLocale;
+
+        string lang = "";
+        if (UILocalizationManager.instance != null)
+            lang = UILocalizationManager.instance.currentLanguage ?? "";
+        else if (!string.IsNullOrWhiteSpace(_languagePlayerPrefsKey))
+            lang = PlayerPrefs.GetString(_languagePlayerPrefsKey, "");
+
+        return GameFlowController.LocaleIndicatesEnglish(lang);
     }
 }

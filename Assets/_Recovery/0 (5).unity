@@ -10081,8 +10081,25 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6eb7f38ed37116c42bee81a934e9e1ae, type: 3}
   - {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
   - {fileID: 21300000, guid: e110d05fba058e342aa974ac0d7cd600, type: 3}
+  _hintSpritesEnglish:
+  - {fileID: 21300000, guid: fd957cf473fe4d74bab4d0b95565aba5, type: 3}
+  - {fileID: 21300000, guid: 098d155135388504b9c293210cb65790, type: 3}
+  - {fileID: 21300000, guid: 10157258e74bbc9459d97e579f55553f, type: 3}
+  - {fileID: 21300000, guid: bbe43700dfbeda74d8e09208185af101, type: 3}
+  - {fileID: 21300000, guid: 1dd4f5724e9a3ec4fbe11549c44a2790, type: 3}
+  - {fileID: 21300000, guid: 15dd60b3a939c9c4586e175484ee033f, type: 3}
+  - {fileID: 21300000, guid: bdd1263b3154b384282835c054f597ae, type: 3}
+  - {fileID: 21300000, guid: 261bd95cb0aea8d43b6805bc6f3d2d44, type: 3}
+  - {fileID: 21300000, guid: 66f011edf080c1d4093049bff3e298e1, type: 3}
+  - {fileID: 21300000, guid: e6bbd971650f1584c864379132453ed8, type: 3}
+  - {fileID: 21300000, guid: 66f011edf080c1d4093049bff3e298e1, type: 3}
+  - {fileID: 21300000, guid: 17fb37246dc000e45b36ef7590a2687a, type: 3}
+  - {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+  - {fileID: 21300000, guid: ae81a44a35acdce438c37b9c2499438b, type: 3}
   _fadeDuration: 0.18
   _canvasSortOrder: -100
+  _languagePlayerPrefsKey: Language
+  _englishLanguageCode: en
 --- !u!1001 &616548505
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13294,7 +13311,10 @@ MonoBehaviour:
   _root: {fileID: 815801399}
   _image: {fileID: 1340108108}
   _hintSprite: {fileID: 21300000, guid: 3cc23863476a33f4e87ba1d850b648b3, type: 3}
+  _hintSpriteEnglish: {fileID: 0}
   _fadeDuration: 0.06
+  _languagePlayerPrefsKey: Language
+  _englishLanguageCode: en
 --- !u!1001 &779225226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31249,7 +31269,7 @@ MonoBehaviour:
   _clientArriveBellVolume: 0.7
   _clientArrivalBellDelayAfterDay12Seconds: 30
   _uiTextTable: {fileID: 11400000, guid: 3bb7a3e023e0ead468a0dbf6788d2f83, type: 2}
-  _language: ru
+  _language: en
   _tutorialHint: {fileID: 613144413}
   _showMainMenuOnStart: 1
   _mainMenuBackground: {fileID: 21300000, guid: eae9010da23b6034e9f7b9d1fa5beae8, type: 3}
