@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -36,6 +37,7 @@ public sealed class GameSoundController : MonoBehaviour
     [Tooltip("Зацикленный звук ветра. Запускается по сюжету (после Client_day2.1.2).")]
     [SerializeField] private AudioClip _windLoopClip;
     [SerializeField, Range(0f, 1f)] private float _windLoopVolume = 0.45f;
+    [SerializeField, Min(0f)] private float _windLoopFadeInDuration = 2f;
     [Tooltip("Источник для ветра. Если пусто — будет создан автоматически.")]
     [SerializeField] private AudioSource _windLoopSource;
 
@@ -63,6 +65,7 @@ public sealed class GameSoundController : MonoBehaviour
     [SerializeField] private AudioSource _phoneOngoingSource;
 
     private AudioSource _cachedFootstepSource;
+    private Coroutine _windFadeCoroutine;
 
     private void Awake()
     {
@@ -140,15 +143,51 @@ public sealed class GameSoundController : MonoBehaviour
 
         _windLoopSource.clip = _windLoopClip;
         _windLoopSource.loop = true;
-        _windLoopSource.volume = _windLoopVolume;
         if (!_windLoopSource.isPlaying)
             _windLoopSource.Play();
+        if (_windFadeCoroutine != null)
+            StopCoroutine(_windFadeCoroutine);
+        _windFadeCoroutine = StartCoroutine(FadeWindLoopToTargetVolume());
     }
 
     public void StopWindLoop()
     {
+        if (_windFadeCoroutine != null)
+        {
+            StopCoroutine(_windFadeCoroutine);
+            _windFadeCoroutine = null;
+        }
         if (_windLoopSource != null && _windLoopSource.isPlaying)
             _windLoopSource.Stop();
+    }
+
+    private IEnumerator FadeWindLoopToTargetVolume()
+    {
+        if (_windLoopSource == null)
+            yield break;
+
+        float target = Mathf.Clamp01(_windLoopVolume);
+        float duration = Mathf.Max(0f, _windLoopFadeInDuration);
+        if (duration <= 0.001f)
+        {
+            _windLoopSource.volume = target;
+            _windFadeCoroutine = null;
+            yield break;
+        }
+
+        _windLoopSource.volume = 0f;
+        float t = 0f;
+        while (t < duration && _windLoopSource != null)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / duration);
+            _windLoopSource.volume = Mathf.Lerp(0f, target, k);
+            yield return null;
+        }
+
+        if (_windLoopSource != null)
+            _windLoopSource.volume = target;
+        _windFadeCoroutine = null;
     }
 
     /// <summary> Воспроизвести звук при нажатии на вариант ответа в диалоге. </summary>
@@ -166,13 +205,31 @@ public sealed class GameSoundController : MonoBehaviour
         AudioSource.PlayClipAtPoint(clip, pos, _phoneSoundVolume);
     }
 
-    /// <param name="digit">Цифра '0'–'9'. Индекс в массиве _phoneDigitClips.</param>
+    /// <param name="digit">Клавиша телефона: '0'–'9', '*' или '#'. Для цифр — индекс в _phoneDigitClips.</param>
     public void PlayPhoneDigit(char digit)
     {
+        if (digit == '*' || digit == '#')
+        {
+            AudioClip fb = FirstAssignedPhoneDigitClip();
+            if (fb != null) PlayPhoneAtCamera(fb);
+            return;
+        }
+
         int i = digit >= '0' && digit <= '9' ? (digit - '0') : -1;
         if (i < 0 || _phoneDigitClips == null || i >= _phoneDigitClips.Length) return;
         AudioClip clip = _phoneDigitClips[i];
         if (clip != null) PlayPhoneAtCamera(clip);
+    }
+
+    private AudioClip FirstAssignedPhoneDigitClip()
+    {
+        if (_phoneDigitClips == null) return null;
+        for (int i = 0; i < _phoneDigitClips.Length; i++)
+        {
+            if (_phoneDigitClips[i] != null)
+                return _phoneDigitClips[i];
+        }
+        return null;
     }
     public void PlayPhoneBackspace() => PlayPhoneAtCamera(_phoneBackspaceClip);
     public void PlayPhoneCallButton() => PlayPhoneAtCamera(_phoneCallButtonClip);

@@ -18,11 +18,17 @@ public sealed class PhoneModel
     public void AddDigit(char digit)
     {
         if (!IsOpen) return;
-        if (digit < '0' || digit > '9') return;
+        if (!IsDialKey(digit)) return;
 
         if (Number.Length >= 16) return;
 
         Number += digit;
+    }
+
+    private static bool IsDialKey(char c)
+    {
+        if (c >= '0' && c <= '9') return true;
+        return c == '*' || c == '#';
     }
 
     public void Backspace()

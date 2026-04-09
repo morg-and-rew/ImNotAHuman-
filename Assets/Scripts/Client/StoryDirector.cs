@@ -109,6 +109,8 @@ public sealed class StoryDirector : MonoBehaviour
     public bool HasStoryStarted => _index >= 0;
     /// <summary> True после того как был запущен диалог <see cref="Day21ClientConversationTitle"/> в этой сессии сюжета. </summary>
     public bool IsClientDay21Started => _clientDay21Started;
+    /// <summary> True после <see cref="StartDay2After60sMeetEmergencyCall"/> пока игрок не завершит сюжетный звонок на 112. </summary>
+    public bool IsAwaitingStoryEmergency112Call => _day2After60sMeetEmergencyCallRunning;
     public bool IsRunning => _index >= 0 && _index < _steps.Count && _wait != WaitMode.Idle;
     public bool IsWaitingForRadioComplete => _wait == WaitMode.WaitingRadioComplete;
     public bool IsWaitingComputerVideo => _wait == WaitMode.WaitingComputerVideo;

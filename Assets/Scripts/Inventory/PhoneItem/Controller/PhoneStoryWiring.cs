@@ -10,7 +10,10 @@ public sealed class PhoneStoryWiring
     private const string SkepticNumber = "333111333";
     private const string SkepticCallConversation = "Phone_CallSkeptic_Number";
     private const string EmergencyNumber = "112";
-    private const string EmergencyCallConversation = "Phone_CallEmergency_911";
+    /// <summary> Сюжетный звонок в скорую (день 2, ветка «позвонить в скорую»). </summary>
+    private const string EmergencyCallStoryConversation = "Phone_CallEmergency_911";
+    /// <summary> Обычный звонок на 112 вне сюжетного бита. </summary>
+    private const string EmergencyCallCasualConversation = "Phone_Call112_Casual";
     private const string LuaUnlockFunc = "UnlockSkepticPhone";
 
     private enum CallMode { None, ProviderBeeps, ProviderAfter, SkepticCall, EmergencyCall }
@@ -79,7 +82,11 @@ public sealed class PhoneStoryWiring
         _mode = CallMode.EmergencyCall;
         DialogueManager.instance.conversationEnded -= OnConversationEnded;
         DialogueManager.instance.conversationEnded += OnConversationEnded;
-        DialogueManager.StartConversation(EmergencyCallConversation);
+        bool story = _flow != null && _flow.IsAwaitingStoryEmergency112Call;
+        string convo = story ? EmergencyCallStoryConversation : EmergencyCallCasualConversation;
+        if (!story)
+            _gameSoundController?.PlayPhoneBeeps();
+        DialogueManager.StartConversation(convo);
     }
 
     private void OnConversationEnded(Transform actor)
@@ -116,6 +123,7 @@ public sealed class PhoneStoryWiring
         }
         if (_mode == CallMode.EmergencyCall)
         {
+            _gameSoundController?.StopPhoneSounds();
             _gameSoundController?.PlayPhoneCallEnd();
             _mode = CallMode.None;
             DialogueManager.instance.conversationEnded -= OnConversationEnded;

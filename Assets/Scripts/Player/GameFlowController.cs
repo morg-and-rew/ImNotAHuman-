@@ -181,6 +181,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private bool _useFreeTeleportPointForNextClientTravel;
     private float _lastTeleportToClientTime = -999f;
     private bool _isTravelFading;
+    /// <summary> Radio day1_2: перед телепортом к клиенту выставляется — экран после F остаётся чёрным до первого кадра видео (нет вспышки сцены/NPC). </summary>
+    private bool _deferTravelFadeFromBlackForDay12RadioVideo;
+    /// <summary> Телепорт к клиенту уже сделан под чёрным; ждём старт видео day1_2 чтобы проявить картинку. </summary>
+    private bool _travelFadeHeldForRadioVideo;
     /// <summary> True, когда переход на склад из диалога идёт через «сначала полное затемнение, потом телепорт» — StoryDirector не должен вызывать ForceTravel. </summary>
     private bool _warehouseTravelFromDialogueAfterFade;
 
@@ -276,7 +280,56 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public void NotifyRadioStoryVideoStarted(string eventId)
     {
         if (string.IsNullOrEmpty(eventId)) return;
+        bool releaseHeldBlack = _travelFadeHeldForRadioVideo
+            && string.Equals(eventId, "day1_2_radio_video", StringComparison.OrdinalIgnoreCase);
         OnRadioStoryVideoStarted?.Invoke(eventId);
+        if (releaseHeldBlack)
+        {
+            _travelFadeHeldForRadioVideo = false;
+            StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, () => { _isTravelFading = false; }));
+        }
+    }
+
+    /// <summary> Выставляет <see cref="RadioController"/> перед телепортом к клиенту в цепочке day1_2 (реплика → видео). </summary>
+    public void SetDeferTravelFadeFromBlackForDay12RadioVideo(bool value)
+    {
+        _deferTravelFadeFromBlackForDay12RadioVideo = value;
+        if (!value)
+            _travelFadeHeldForRadioVideo = false;
+    }
+
+    /// <summary> Если экран держали под чёрным для day1_2 видео, но видео не стартовало — проявить сцену. </summary>
+    public void ReleaseTravelFadeHoldIfAny()
+    {
+        if (!_travelFadeHeldForRadioVideo)
+            return;
+        _travelFadeHeldForRadioVideo = false;
+        StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, () => { _isTravelFading = false; }));
+    }
+
+    /// <summary> Конец видео с радио с телепортом к столу: затемнение → телепорт и диалог под чёрным → проявление. </summary>
+    public void BeginPostRadioVideoTeleportToTable(string postVideoConversation, bool notifyStoryCompletion, Action radioCleanupBeforeTeleport)
+    {
+        float d = _travelFadeDuration;
+        void afterBlack()
+        {
+            radioCleanupBeforeTeleport?.Invoke();
+            TeleportToTableAndFixPosition(postVideoConversation);
+            if (notifyStoryCompletion)
+                NotifyRadioStoryCompleted();
+            if (d > 0f && _fadeToBlackView != null)
+                StartCoroutine(FadeFromBlackNextFrame(d, () => { _isTravelFading = false; }));
+            else
+                _isTravelFading = false;
+        }
+
+        if (d <= 0f || _fadeToBlackView == null)
+        {
+            afterBlack();
+            return;
+        }
+        _isTravelFading = true;
+        PlayFadeToBlack(d, afterBlack);
     }
 
     public void NotifyRadioDay1_2Started()
@@ -309,6 +362,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     {
         return _storyDirector == null || _storyDirector.IsAtOrPastStep("go_to_phone");
     }
+
+    /// <summary> Сюжетная фаза: игрок должен набрать 112 — тогда открывается <c>Phone_CallEmergency_911</c>, не обычный диалог линии. </summary>
+    public bool IsAwaitingStoryEmergency112Call =>
+        _storyDirector != null && _storyDirector.IsAwaitingStoryEmergency112Call;
 
     public bool ShouldShowClientInteractHint()
     {
@@ -2520,10 +2577,20 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             bool ok = PerformTravel(target, ignoreClientRequirements, freeTeleport, forceIgnoreSameDestination);
             if (ok)
             {
-                StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, onSuccess));
+                bool holdBlackForDay12Video = target == TravelTarget.Client && _deferTravelFadeFromBlackForDay12RadioVideo;
+                if (holdBlackForDay12Video)
+                {
+                    _deferTravelFadeFromBlackForDay12RadioVideo = false;
+                    _travelFadeHeldForRadioVideo = true;
+                    onSuccess();
+                }
+                else
+                    StartCoroutine(FadeFromBlackNextFrame(_travelFadeDuration, onSuccess));
             }
             else
             {
+                _deferTravelFadeFromBlackForDay12RadioVideo = false;
+                _travelFadeHeldForRadioVideo = false;
                 _fadeToBlackView.Hide();
                 _isTravelFading = false;
             }

@@ -491,6 +491,8 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         GameFlowController flow = GameFlowController.Instance;
         if (flow != null)
         {
+            flow.ReleaseTravelFadeHoldIfAny();
+            flow.SetDeferTravelFadeFromBlackForDay12RadioVideo(false);
             flow.OnTeleportedToWarehouse -= OnTeleportedToWarehouseForVideo;
             flow.OnTeleportedToClient -= OnTeleportedToClientForVideo;
             flow.OnTeleportedToClient -= OnTeleportedToClientForDay12Video;
@@ -534,7 +536,10 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
                 _day12PostVideoConversation = postConv;
                 var gfc = GameFlowController.Instance;
                 if (gfc != null)
+                {
                     gfc.OnTeleportedToClient += OnTeleportedToClientForDay12Video;
+                    gfc.SetDeferTravelFadeFromBlackForDay12RadioVideo(true);
+                }
                 return;
             }
             _waitingForLeaveWarehouseBeforeVideo = true;
@@ -627,13 +632,11 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     private void FinishVideoPlayback(bool notifyStoryCompletion)
     {
+        GameFlowController.Instance?.ReleaseTravelFadeHoldIfAny();
+
         _waitingVideoEnd = false;
         _playingVideoEventId = null;
         SetRadioDialogueAutoAdvance(false);
-        if (_videoPlayer != null)
-            _videoPlayer.loopPointReached -= OnVideoEnded;
-        if (_videoRoot != null)
-            _videoRoot.SetActive(false);
 
         bool teleportToTable = _teleportToTableAfterVideo;
         string postVideoConv = _phasedStory?.postVideoConversation ?? _pendingPostVideoConversationForPlayback;
@@ -648,14 +651,39 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         StopStatic();
         PlayCurrentStation();
 
+        void cleanupVideoUi()
+        {
+            if (_videoPlayer != null)
+                _videoPlayer.loopPointReached -= OnVideoEnded;
+            if (_videoRoot != null)
+                _videoRoot.SetActive(false);
+        }
+
         if (teleportToTable)
         {
             string dialogueToStart = !string.IsNullOrEmpty(postVideoConv) ? postVideoConv : "PostVideo_Day1_2";
-            SetVideoControlLock(false);
-            GameFlowController.Instance?.TeleportToTableAndFixPosition(dialogueToStart);
+            GameFlowController gfc = GameFlowController.Instance;
+            if (gfc != null)
+            {
+                gfc.BeginPostRadioVideoTeleportToTable(dialogueToStart, notifyStoryCompletion, () =>
+                {
+                    cleanupVideoUi();
+                    SetVideoControlLock(false);
+                });
+            }
+            else
+            {
+                cleanupVideoUi();
+                SetVideoControlLock(false);
+                GameFlowController.Instance?.TeleportToTableAndFixPosition(dialogueToStart);
+                if (notifyStoryCompletion)
+                    GameFlowController.Instance?.NotifyRadioStoryCompleted();
+            }
+            return;
         }
-        else
-            SetVideoControlLock(false);
+
+        cleanupVideoUi();
+        SetVideoControlLock(false);
         if (notifyStoryCompletion)
             GameFlowController.Instance?.NotifyRadioStoryCompleted();
     }
