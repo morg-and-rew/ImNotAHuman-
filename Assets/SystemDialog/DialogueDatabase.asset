@@ -334,7 +334,7 @@ MonoBehaviour:
           \u0444\u0430\u043A\u0442. \u0412\u0441\u0435, \u0447\u0442\u043E \u043C\u044B
           \u0432\u0438\u0434\u0438\u043C, \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F
           \u043F\u0435\u0440\u0441\u043F\u0435\u043A\u0442\u0438\u0432\u043E\u0439,
-          \u0430 \u043D\u0435 \u043F\u0440\u0430\u0432\u0434\u043E\u0439\xBB\\r\\n\u041C\u0430\u0440\u043A
+          \u0430 \u043D\u0435 \u043F\u0440\u0430\u0432\u0434\u043E\u0439\xBB \u041C\u0430\u0440\u043A
           \u0410\u0432\u0440\u0435\u043B\u0438\u0439"
         type: 4
         typeString: CustomFieldType_Localization
@@ -353,7 +353,7 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 277.49316
+        x: 278.5458
         y: 253.01428
         width: 160
         height: 30
@@ -2339,11 +2339,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u0414\u043E\u0431\u0440\u044B\u0439 \u0434\u0435\u043D\u044C! "
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u0414\u043E\u0431\u0440\u044B\u0439 \u0434\u0435\u043D\u044C! "
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -2376,7 +2376,7 @@ MonoBehaviour:
       canvasRect:
         serializedVersion: 2
         x: 380
-        y: 30
+        y: 31.454544
         width: 160
         height: 30
     - id: 3
@@ -2398,12 +2398,12 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u0421\u0440\u0430\u0437\u0443 \u0433\u043E\u0432\u043E\u0440\u044E,
-          \u0438\u043D\u0442\u0435\u0440\u043D\u0435\u0442\u0430 \u043D\u0435\u0442. "
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u0421\u0440\u0430\u0437\u0443 \u0433\u043E\u0432\u043E\u0440\u044E,
+          \u0438\u043D\u0442\u0435\u0440\u043D\u0435\u0442\u0430 \u043D\u0435\u0442. "
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -4203,7 +4203,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
+    canvasScrollPosition: {x: 3178.182, y: 0}
     canvasZoom: 0.55
   - id: 8
     fields:
@@ -6514,7 +6514,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 2675.8599, y: 0}
+    canvasScrollPosition: {x: 0, y: 1.379303}
     canvasZoom: 0.5800005
   - id: 11
     fields:
@@ -9652,7 +9652,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 1902.188, y: 0}
+    canvasScrollPosition: {x: 0, y: 0}
     canvasZoom: 0.61000025
   - id: 15
     fields:
@@ -12723,8 +12723,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 49.80912, y: 2.285675}
-    canvasZoom: 0.6999998
+    canvasScrollPosition: {x: 1509.2222, y: 8.818017}
+    canvasZoom: 0.7299998
   - id: 20
     fields:
     - title: Title
@@ -14344,7 +14344,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 2259.999, y: 0}
+    canvasScrollPosition: {x: 0, y: 0}
     canvasZoom: 0.7900002
   - id: 25
     fields:
@@ -18342,7 +18342,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
+    canvasScrollPosition: {x: 4228.0576, y: 0}
     canvasZoom: 0.6700002
   - id: 30
     fields:
@@ -21292,8 +21292,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 1011.19995, y: 0}
-    canvasZoom: 1
+    canvasScrollPosition: {x: 0, y: 0}
+    canvasZoom: 1.03
   - id: 37
     fields:
     - title: Title
@@ -22511,7 +22511,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 236.57138, y: 4.571411}
+    canvasScrollPosition: {x: 0, y: 13.714294}
     canvasZoom: 0.7000003
   - id: 40
     fields:
@@ -27650,8 +27650,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 4326.216, y: 0}
-    canvasZoom: 0.5800005
+    canvasScrollPosition: {x: 0, y: 0}
+    canvasZoom: 0.6100005
   - id: 47
     fields:
     - title: Title
@@ -31091,7 +31091,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 1771.2593}
+    canvasScrollPosition: {x: 26.206848, y: 0}
     canvasZoom: 0.58000034
   - id: 49
     fields:
@@ -33586,7 +33586,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 5.1729736}
+    canvasScrollPosition: {x: 4660.85, y: 0}
     canvasZoom: 0.7732496
   - id: 51
     fields:

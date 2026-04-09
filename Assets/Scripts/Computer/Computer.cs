@@ -23,6 +23,8 @@ public sealed class Computer : MonoBehaviour
     [SerializeField] private VideoClip _streetClip;
     [Tooltip("Ролик «помещение» (по умолчанию RU / основной язык). Для дня 1 — шаг watch_computer_indoor_day1_5, kind indoor.")]
     [SerializeField] private VideoClip _indoorClip;
+    [Tooltip("Опционально: отдельный ролик «помещение» для дня 2+. Если пусто — используется Indoor Clip.")]
+    [SerializeField] private VideoClip _indoorClipDay2;
     [Tooltip("Опционально: «улица» для английского UI. Если пусто — используется Street Clip.")]
     [SerializeField] private VideoClip _streetClipEnglish;
     [Tooltip("Опционально: «помещение» для английского UI. Если пусто — используется Indoor Clip.")]
@@ -170,6 +172,9 @@ public sealed class Computer : MonoBehaviour
         }
         if (string.Equals(kind, KindIndoor, System.StringComparison.OrdinalIgnoreCase))
         {
+            bool isDay2OrLater = GameFlowController.Instance != null && GameFlowController.Instance.IsDay2OrLater();
+            if (isDay2OrLater && _indoorClipDay2 != null)
+                return _indoorClipDay2;
             if (english && _indoorClipEnglish != null)
                 return _indoorClipEnglish;
             return _indoorClip;

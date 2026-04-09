@@ -2143,8 +2143,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 2502.9075, y: 25.850536}
-    canvasZoom: 0.8200002
+    canvasScrollPosition: {x: 0, y: 5.098999}
+    canvasZoom: 0.85000014
   - id: 7
     fields:
     - title: Title
@@ -2351,7 +2351,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: Good morning!
+        value: Good afternoon!
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2411,7 +2411,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: No internet connection, okay?
+        value: Just so you know, there's no Internet.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 7
@@ -2774,11 +2774,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041D\u0435\u0442."
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041D\u0435\u0442."
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -2833,11 +2833,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: " \u041D\u0435\u0442, \u0448\u043D\u0435\u0439\u043D\u0435!"
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: " \u041D\u0435\u0442, \u0448\u043D\u0435\u0439\u043D\u0435!"
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -4203,7 +4203,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 271.39563, y: 0}
+    canvasScrollPosition: {x: 0, y: 0}
     canvasZoom: 0.55
   - id: 8
     fields:
@@ -5030,12 +5030,12 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041C\u043E\u0436\u0435\u0442, \u0437\u043B\u044B\u0435 \u0434\u0443\u0445\u0438
-          \u043A\u0430\u043A\u0438\u0435-\u0442\u043E?"
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041C\u043E\u0436\u0435\u0442, \u0437\u043B\u044B\u0435 \u0434\u0443\u0445\u0438
+          \u043A\u0430\u043A\u0438\u0435-\u0442\u043E?"
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -5067,8 +5067,8 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 1820
-        y: 30
+        x: 1818.6206
+        y: 31.379303
         width: 160
         height: 30
     - id: 6
@@ -5090,11 +5090,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041F\u0430\u0440\u0435\u043D\u044C, \u043C\u043D\u0435 \u043F\u043E\u0444\u0438\u0433."
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041F\u0430\u0440\u0435\u043D\u044C, \u043C\u043D\u0435 \u043F\u043E\u0444\u0438\u0433."
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -5273,11 +5273,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041C\u043E\u0436\u0435\u0442 \u0438 \u043F\u0440\u043E\u0438\u0441\u0445\u043E\u0434\u0438\u0442. "
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041C\u043E\u0436\u0435\u0442 \u0438 \u043F\u0440\u043E\u0438\u0441\u0445\u043E\u0434\u0438\u0442. "
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -6514,7 +6514,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
+    canvasScrollPosition: {x: 2675.8599, y: 0}
     canvasZoom: 0.5800005
   - id: 11
     fields:
@@ -7443,8 +7443,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.52000064
+    canvasScrollPosition: {x: 1890.9067, y: 6.6083703}
+    canvasZoom: 0.5500006
   - id: 13
     fields:
     - title: Title
@@ -7984,11 +7984,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C"
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C"
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -8043,11 +8043,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u044C \u043E\u0431\u0440\u0430\u0442\u043D\u043E"
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u044C \u043E\u0431\u0440\u0430\u0442\u043D\u043E"
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -8102,11 +8102,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041D\u0435 \u0442\u0440\u0430\u0442\u0438\u0442\u044C \u0432\u0440\u0435\u043C\u044F"
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041D\u0435 \u0442\u0440\u0430\u0442\u0438\u0442\u044C \u0432\u0440\u0435\u043C\u044F"
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -11171,8 +11171,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: Thank you! How do you update orders on a programme? There is no internet
-          connection.
+        value: Thanks. And how do you mark an order as handed out if there's no Internet?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11225,13 +11224,13 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u0414\u0430 \u043A\u0430\u043A \u043F\u043E\u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F
-          \u2013 \u0442\u0430\u043A \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435     
-          \u0438 \u043E\u0442\u043C\u0435\u0447\u0430\u044E."
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u0414\u0430 \u043A\u0430\u043A \u043F\u043E\u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F
+          \u2013 \u0442\u0430\u043A \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435     
+          \u0438 \u043E\u0442\u043C\u0435\u0447\u0430\u044E."
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -11286,12 +11285,12 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041D\u0430 \u0447\u0435\u0441\u0442\u043D\u043E\u043C \u0441\u043B\u043E\u0432\u0435
-          \u0440\u0430\u0431\u043E\u0442\u0430\u044E."
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041D\u0430 \u0447\u0435\u0441\u0442\u043D\u043E\u043C \u0441\u043B\u043E\u0432\u0435
+          \u0440\u0430\u0431\u043E\u0442\u0430\u044E."
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -11423,8 +11422,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: I need to work even without the Internet. So I update as soon as it
-          works.
+        value: A lack of Internet has never been a good reason not to work.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 19
@@ -11722,11 +11720,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u0418 \u043A\u0442\u043E \u0436\u0435? \u0420\u0435\u043F\u0442\u0438\u043B\u043E\u0438\u0434\u044B?"
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u0418 \u043A\u0442\u043E \u0436\u0435? \u0420\u0435\u043F\u0442\u0438\u043B\u043E\u0438\u0434\u044B?"
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -11786,7 +11784,7 @@ MonoBehaviour:
         typeString: CustomFieldType_Text
       - title: Dialogue Text
         value: "\u0410 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u0442\u0430\u0439\u043D\u0430\u044F
-          \u0446\u0438\u0432\u0438\u043B\u0430\u0446\u0438\u044F \u0430\u043D\u043B\u0430\u043D\u0442\u043E\u0432,
+          \u0446\u0438\u0432\u0438\u043B\u0430\u0446\u0438\u044F \u0430\u0442\u043B\u0430\u043D\u0442\u043E\u0432,
           \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u0436\u0438\u0432\u0435\u0442
           \u043F\u043E\u0434 \u0437\u0435\u043C\u043B\u0435\u0439. "
         type: 0
@@ -11843,12 +11841,12 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041A\u043E\u043D\u0435\u0447\u043D\u043E, \u043C\u044B \u0436\u0435\u0440\u0442\u0432\u044B
-          \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430"
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041A\u043E\u043D\u0435\u0447\u043D\u043E, \u043C\u044B \u0436\u0435\u0440\u0442\u0432\u044B
+          \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430"
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -12027,12 +12025,12 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041C\u0443\u0436\u0447\u0438\u043D\u0430, \u043D\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435
-          \u043A\u043E\u0434 \u0438\u043B\u0438 \u0443\u0445\u043E\u0434\u0438\u0442\u0435."
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041C\u0443\u0436\u0447\u0438\u043D\u0430, \u043D\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435
+          \u043A\u043E\u0434 \u0438\u043B\u0438 \u0443\u0445\u043E\u0434\u0438\u0442\u0435."
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -12124,7 +12122,7 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 2180
+        x: 2178.8572
         y: 30
         width: 160
         height: 30
@@ -12725,7 +12723,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 2350.381, y: 8}
+    canvasScrollPosition: {x: 49.80912, y: 2.285675}
     canvasZoom: 0.6999998
   - id: 20
     fields:
@@ -13718,7 +13716,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: a whole day without the internet.
+        value: No Internet all day long.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 24
@@ -15688,8 +15686,8 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: Good morning. If you want to bring your order back, I can't take it
-          now.
+        value: Good afternoon. If you want to return something, I can't process it
+          right now.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 29
@@ -17146,13 +17144,13 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041D\u0435 \u0434\u0443\u043C\u0430\u044E \u044F, \u0447\u0442\u043E
-          \u0434\u0435\u043B\u043E \u0432 \u043A\u0430\u043A\u043E\u0439-\u0442\u043E
-          \u043B\u0443\u0447\u0435\u0432\u043E\u0439 \u0431\u043E\u043B\u0435\u0437\u043D\u0438."
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041D\u0435 \u0434\u0443\u043C\u0430\u044E \u044F, \u0447\u0442\u043E
+          \u0434\u0435\u043B\u043E \u0432 \u043A\u0430\u043A\u043E\u0439-\u0442\u043E
+          \u043B\u0443\u0447\u0435\u0432\u043E\u0439 \u0431\u043E\u043B\u0435\u0437\u043D\u0438."
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -17184,8 +17182,8 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 5060
-        y: 30
+        x: 5058.6885
+        y: 28.688522
         width: 160
         height: 30
     - id: 28
@@ -17513,11 +17511,11 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0434\u0443\u043C\u0430\u044E."
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0434\u0443\u043C\u0430\u044E."
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -17818,12 +17816,12 @@ MonoBehaviour:
         type: 5
         typeString: CustomFieldType_Actor
       - title: Menu Text
-        value: "\u0421\u043A\u043B\u043E\u043D\u044F\u044E\u0441\u044C \u043A \u043A\u0430\u043A\u043E\u0439-\u0442\u043E
-          \u0437\u0430\u0440\u0430\u0437\u0435."
+        value: 
         type: 0
         typeString: CustomFieldType_Text
       - title: Dialogue Text
-        value: 
+        value: "\u0421\u043A\u043B\u043E\u043D\u044F\u044E\u0441\u044C \u043A \u043A\u0430\u043A\u043E\u0439-\u0442\u043E
+          \u0437\u0430\u0440\u0430\u0437\u0435."
         type: 0
         typeString: CustomFieldType_Text
       - title: Sequence
@@ -18344,8 +18342,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 4904.3584, y: 0}
-    canvasZoom: 0.5800003
+    canvasScrollPosition: {x: 0, y: 0}
+    canvasZoom: 0.6700002
   - id: 30
     fields:
     - title: Title
@@ -19047,7 +19045,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: Hello. How can I help you? Order?
+        value: Good afternoon! How can I help you? Here for a package?
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 32
@@ -19432,8 +19430,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 61.607018, y: 173.18681}
-    canvasZoom: 0.9100001
+    canvasScrollPosition: {x: 0, y: 0}
+    canvasZoom: 0.94000006
   - id: 33
     fields:
     - title: Title
@@ -20245,8 +20243,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 106.12039, y: 140.40579}
-    canvasZoom: 1.03
+    canvasScrollPosition: {x: 101.08652, y: 0}
+    canvasZoom: 1.06
   - id: 35
     fields:
     - title: Title
@@ -21294,7 +21292,7 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 1506.3999, y: 0}
+    canvasScrollPosition: {x: 1011.19995, y: 0}
     canvasZoom: 1
   - id: 37
     fields:
@@ -21493,7 +21491,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: Finally we have something to do without the Internet.
+        value: Thank God we finally have something to do without the Internet.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 37
@@ -22855,7 +22853,7 @@ MonoBehaviour:
           m_Calls: []
       canvasRect:
         serializedVersion: 2
-        x: 268.80002
+        x: 267.65717
         y: 153.20001
         width: 160
         height: 30
@@ -24797,7 +24795,7 @@ MonoBehaviour:
       canvasRect:
         serializedVersion: 2
         x: 380
-        y: 192.5
+        y: 191.04547
         width: 160
         height: 30
     - id: 3
@@ -25075,7 +25073,7 @@ MonoBehaviour:
         type: 0
         typeString: CustomFieldType_Text
       - title: en
-        value: Hi, no Internet.
+        value: Hi. No Internet.
         type: 4
         typeString: CustomFieldType_Localization
       conversationID: 46
@@ -27652,8 +27650,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 0, y: 0}
-    canvasZoom: 0.55000055
+    canvasScrollPosition: {x: 4326.216, y: 0}
+    canvasZoom: 0.5800005
   - id: 47
     fields:
     - title: Title
@@ -31093,8 +31091,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 8.571472, y: 2174.314}
-    canvasZoom: 0.2800004
+    canvasScrollPosition: {x: 0, y: 1771.2593}
+    canvasZoom: 0.58000034
   - id: 49
     fields:
     - title: Title
@@ -33588,8 +33586,8 @@ MonoBehaviour:
         width: 160
         height: 30
     entryGroups: []
-    canvasScrollPosition: {x: 4979.215, y: 0}
-    canvasZoom: 0.74324965
+    canvasScrollPosition: {x: 0, y: 5.1729736}
+    canvasZoom: 0.7732496
   - id: 51
     fields:
     - title: Title

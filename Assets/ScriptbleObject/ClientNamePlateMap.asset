@@ -17,930 +17,1311 @@ MonoBehaviour:
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 7
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 8
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 11
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 12
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 0.9716981, b: 0.9716981, a: 1}
     - entryID: 13
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 14
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 15
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 16
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 17
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 18
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 20
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 23
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 24
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 25
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 0.98490566, g: 0.98490566, b: 0.98490566, a: 1}
     - entryID: 26
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 0.98490566, g: 0.98490566, b: 0.98490566, a: 1}
     - entryID: 28
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 0.98490566, g: 0.98490566, b: 0.98490566, a: 1}
     - entryID: 32
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 0.98490566, g: 0.98490566, b: 0.98490566, a: 1}
     - entryID: 33
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 0.98490566, g: 0.98490566, b: 0.98490566, a: 1}
     - entryID: 27
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 0.98490566, g: 0.98490566, b: 0.98490566, a: 1}
     - entryID: 30
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 0.98490566, g: 0.98490566, b: 0.98490566, a: 1}
   - conversation: Client_Day1.1
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_Day1.2
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 7
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 8
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 14
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 10
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 11
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 12
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 13
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 26
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 21
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 20
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 16
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 17
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 18
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 22
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 23
       nameSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 30
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_Day1.3
     rules:
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 21f305dc61e858148b27c05e6372c895, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_Day1.4
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 21f305dc61e858148b27c05e6372c895, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 4
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 5
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 6
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 7
       nameSprite: {fileID: 21300000, guid: 21f305dc61e858148b27c05e6372c895, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 8
       nameSprite: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 23
       nameSprite: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 9
       nameSprite: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 11
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 13
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 14
       nameSprite: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 16
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 20
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 17
       nameSprite: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 21
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 18
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 22
       nameSprite: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 25
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 26
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_Day1.4.1
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_Day1.5
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 21f305dc61e858148b27c05e6372c895, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_Day1.5.2
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 21f305dc61e858148b27c05e6372c895, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.1
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 21fa257b7f1142f4eaaed287cf0703d3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 4
       nameSprite: {fileID: 21300000, guid: 21fa257b7f1142f4eaaed287cf0703d3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 5
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 6
       nameSprite: {fileID: 21300000, guid: 21fa257b7f1142f4eaaed287cf0703d3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 9
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 12
       nameSprite: {fileID: 21300000, guid: 21fa257b7f1142f4eaaed287cf0703d3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 14
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 15
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 16
       nameSprite: {fileID: 21300000, guid: 21fa257b7f1142f4eaaed287cf0703d3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 18
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 21
       nameSprite: {fileID: 21300000, guid: 21fa257b7f1142f4eaaed287cf0703d3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 22
       nameSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 25
       nameSprite: {fileID: 21300000, guid: 21fa257b7f1142f4eaaed287cf0703d3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 26
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 28
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 30
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 32
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 34
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 37
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 39
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 40
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 45
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 46
       nameSprite: {fileID: 21300000, guid: 21fa257b7f1142f4eaaed287cf0703d3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.1.2
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.1.3_candles_lit
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.1.3_candles_unlit
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 5
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 7
       nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 8
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.1.4_after_video_unlit
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 4
       nameSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 5
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.2_order_8877
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 868ad5d00e18a9b47980a4262e6eb6f5, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.2_after_8877
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: add52c53770914d4289d7d2faa2ea921, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: add52c53770914d4289d7d2faa2ea921, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 8
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 9
       nameSprite: {fileID: 21300000, guid: add52c53770914d4289d7d2faa2ea921, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 11
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 12
       nameSprite: {fileID: 21300000, guid: add52c53770914d4289d7d2faa2ea921, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.1.4_after_warehouse_lit
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 2
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 4
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.2_candles_lit_after_4455
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.2_after_4455_lit_followup
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 6
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 5
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 8
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.2_after_tools_if_gave_5577
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 5
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.2_after_5577_if_not_gave
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 5
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.2_after_60s_meet
     rules:
     - entryID: 1
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 8
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 10
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 13
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 19
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 20
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 23
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 25
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 26
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 31
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 32
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 34
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 39
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 43
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 45
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 49
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.2_after_60s_after_video
     rules:
     - entryID: 6
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 10
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 13
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 48
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 21
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 22
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 17
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 25
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 26
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 31
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 33
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 37
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 39
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 42
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 45
       nameSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 47
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
   - conversation: Client_day2.2_after_60s_after_ambulance
     rules:
     - entryID: 3
       nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 8
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 11
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 18
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 12
       nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 21
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 24
       nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 25
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 28
       nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 34
       nameSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
     - entryID: 35
       nameSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+      nameSpriteEnglish: {fileID: 0}
       nameSpriteColor: {r: 1, g: 1, b: 1, a: 1}
       nameSpriteRight: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
+      nameSpriteRightEnglish: {fileID: 0}
       nameSpriteColorRight: {r: 1, g: 1, b: 1, a: 1}
+  localizedSpritePairs:
+  - baseSprite: {fileID: 21300000, guid: 14283f76b5f0c8c46a7a8e9361be7ec8, type: 3}
+    englishSprite: {fileID: 21300000, guid: e5ef01c8dc6390148afe818a35e71815, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 31d2acc54122a194086f1a45f7d644da, type: 3}
+    englishSprite: {fileID: 21300000, guid: 02a21b65832cd1f49aa7b12be5eb9a9b, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 6e4ceb2933f2c694f8f336be14375ab7, type: 3}
+    englishSprite: {fileID: 21300000, guid: 1d0ce6eeb2f0c98458af3d05318cb91a, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 21f305dc61e858148b27c05e6372c895, type: 3}
+    englishSprite: {fileID: 21300000, guid: ed7ab57a7d0e02c40bac0b11016e8d6c, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 4c8a8b9a0f124034a9f6f61bd1c0cda3, type: 3}
+    englishSprite: {fileID: 21300000, guid: 7bd31fa428a030e48b6886a42b659f0f, type: 3}
+  - baseSprite: {fileID: 21300000, guid: add52c53770914d4289d7d2faa2ea921, type: 3}
+    englishSprite: {fileID: 21300000, guid: 65c6d4c3b21d92e4bb80830859e17099, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 868ad5d00e18a9b47980a4262e6eb6f5, type: 3}
+    englishSprite: {fileID: 21300000, guid: ae9aed53c821cc64d8464d009dd68846, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
+    englishSprite: {fileID: 21300000, guid: ae9aed53c821cc64d8464d009dd68846, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 5fbea1f1b081cce41b6abcb560108dcd, type: 3}
+    englishSprite: {fileID: 21300000, guid: ae9aed53c821cc64d8464d009dd68846, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}
+    englishSprite: {fileID: 21300000, guid: 94a5d35708f2f2448afce33196657eaa, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 21fa257b7f1142f4eaaed287cf0703d3, type: 3}
+    englishSprite: {fileID: 21300000, guid: d9e4f3e0ef724a049b5655a86d4a0974, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 039c203a30eb383478de6632ba33551d, type: 3}
+    englishSprite: {fileID: 21300000, guid: aa36eb28f04ff9547925bb257c335fe0, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 18a607704939c134b9e440dacb3f4ddc, type: 3}
+    englishSprite: {fileID: 21300000, guid: e1f28477c1f2bd5459d652c6cbec53eb, type: 3}

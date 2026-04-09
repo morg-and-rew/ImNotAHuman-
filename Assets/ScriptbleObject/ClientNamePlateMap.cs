@@ -10,16 +10,29 @@ using UnityEngine;
 public sealed class ClientNamePlateMap : ScriptableObject
 {
     [Serializable]
+    public struct LocalizedNameSpritePair
+    {
+        [Tooltip("Базовый спрайт имени (обычно RU из текущих правил NameRule).")]
+        public Sprite baseSprite;
+        [Tooltip("Английский вариант спрайта для baseSprite.")]
+        public Sprite englishSprite;
+    }
+
+    [Serializable]
     public struct NameRule
     {
         [Tooltip("ID реплики (Dialogue Entry). Если для текущей реплики нет правила — используется правило с наибольшим entryID меньше текущего (предыдущий).")]
         public int entryID;
         [Tooltip("Спрайт с именем левого говорящего. null — не показывать.")]
         public Sprite nameSprite;
+        [Tooltip("Спрайт с именем левого говорящего для английского языка (optional). Если пусто — используется Name Sprite.")]
+        public Sprite nameSpriteEnglish;
         [Tooltip("Цвет спрайта имени левого. (0,0,0,0) = белый.")]
         public Color nameSpriteColor;
         [Tooltip("Спрайт с именем правого говорящего. null — не показывать.")]
         public Sprite nameSpriteRight;
+        [Tooltip("Спрайт с именем правого говорящего для английского языка (optional). Если пусто — используется Name Sprite Right.")]
+        public Sprite nameSpriteRightEnglish;
         [Tooltip("Цвет спрайта имени правого. (0,0,0,0) = белый.")]
         public Color nameSpriteColorRight;
     }
@@ -35,8 +48,12 @@ public sealed class ClientNamePlateMap : ScriptableObject
 
     [Header("Шаги = диалоги (порядок и conversation как в Client Portrait Map)")]
     public List<Step> steps = new List<Step>();
+    [Header("Глобальная локализация плашек (заполняется один раз, работает для всех диалогов)")]
+    [Tooltip("Если выбран EN, для спрайта из NameRule будет использован englishSprite из этой таблицы.")]
+    public List<LocalizedNameSpritePair> localizedSpritePairs = new List<LocalizedNameSpritePair>();
 
     private List<List<NameRule>> _sortedRulesCache;
+    private Dictionary<Sprite, Sprite> _englishByBaseSprite;
 
     private void OnEnable()
     {
@@ -45,6 +62,8 @@ public sealed class ClientNamePlateMap : ScriptableObject
 
     private void BuildCache()
     {
+        BuildLocalizedSpriteCache();
+
         if (steps == null)
         {
             _sortedRulesCache = null;
@@ -62,6 +81,21 @@ public sealed class ClientNamePlateMap : ScriptableObject
             var sorted = new List<NameRule>(list);
             sorted.Sort((a, b) => a.entryID.CompareTo(b.entryID));
             _sortedRulesCache.Add(sorted);
+        }
+    }
+
+    private void BuildLocalizedSpriteCache()
+    {
+        _englishByBaseSprite = new Dictionary<Sprite, Sprite>();
+        if (localizedSpritePairs == null || localizedSpritePairs.Count == 0)
+            return;
+
+        for (int i = 0; i < localizedSpritePairs.Count; i++)
+        {
+            LocalizedNameSpritePair pair = localizedSpritePairs[i];
+            if (pair.baseSprite == null || pair.englishSprite == null)
+                continue;
+            _englishByBaseSprite[pair.baseSprite] = pair.englishSprite;
         }
     }
 
@@ -96,5 +130,20 @@ public sealed class ClientNamePlateMap : ScriptableObject
         if (bestIndex < 0) return false;
         rule = sorted[bestIndex];
         return true;
+    }
+
+    /// <summary> Возвращает локализованный спрайт имени. Если замены нет — исходный спрайт. </summary>
+    public Sprite ResolveLocalizedSprite(Sprite source, bool useEnglish)
+    {
+        if (!useEnglish || source == null)
+            return source;
+
+        if (_englishByBaseSprite == null)
+            BuildLocalizedSpriteCache();
+
+        if (_englishByBaseSprite != null && _englishByBaseSprite.TryGetValue(source, out Sprite english) && english != null)
+            return english;
+
+        return source;
     }
 }

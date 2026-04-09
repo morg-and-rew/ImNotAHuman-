@@ -21,10 +21,8 @@ MonoBehaviour:
   - m_fieldName: intro.quote.marc_aurelius
     m_keys: 0000000001000000
     m_values:
-    - "\u201C\u6211\u4EEC\u542C\u5230\u7684\u53EA\u662F           - \u8FD9\u662F\u4E00\u4E2A\u610F\u89C1\uFF0C\u4E0D\u662F          
-      \u4E8B\u5B9E\u3002\u6211\u4EEC\u7684\u4E00\u5207           \u6211\u4EEC\u770B\u5230\u7684\u662F          
-      \u89C2\u70B9,           \u800C\u4E0D\u662F\u4E8B\u5B9E\u201D\\r\\n\u9A6C\u514B          
-      \u5965\u52D2\u7559"
+    - Everything we hear is an opinion, not a fact. Everything we see is a perspective,
+      not the truth. Marcus Avrelius
     - "\xAB\u0412\u0441\u0435, \u0447\u0442\u043E \u043C\u044B \u0441\u043B\u044B\u0448\u0438\u043C,
       - \u044D\u0442\u043E \u043C\u043D\u0435\u043D\u0438\u0435, \u0430 \u043D\u0435
       \u0444\u0430\u043A\u0442. \u0412\u0441\u0435, \u0447\u0442\u043E \u043C\u044B

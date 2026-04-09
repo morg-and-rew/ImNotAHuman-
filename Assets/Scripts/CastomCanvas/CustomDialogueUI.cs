@@ -900,8 +900,12 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
             return;
         }
 
-        bool showLeft = nameRule.nameSprite != null;
-        bool showRight = nameRule.nameSpriteRight != null;
+        bool useEnglish = IsEnglishLanguage();
+        Sprite leftSprite = ResolveNamePlateSprite(nameRule.nameSprite, nameRule.nameSpriteEnglish, useEnglish);
+        Sprite rightSprite = ResolveNamePlateSprite(nameRule.nameSpriteRight, nameRule.nameSpriteRightEnglish, useEnglish);
+
+        bool showLeft = leftSprite != null;
+        bool showRight = rightSprite != null;
         bool showAny = showLeft || showRight;
         _namePlateVisibleByClientConversation = showAny;
         namePlateHideOnChoiceCanvas.gameObject.SetActive(showAny);
@@ -912,7 +916,7 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
                 namePlateImageLeft.gameObject.SetActive(showLeft);
                 if (showLeft)
                 {
-                    namePlateImageLeft.sprite = nameRule.nameSprite;
+                    namePlateImageLeft.sprite = leftSprite;
                     namePlateImageLeft.color = nameRule.nameSpriteColor.a < 0.001f ? Color.white : nameRule.nameSpriteColor;
                 }
             }
@@ -921,12 +925,38 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
                 namePlateImageRight.gameObject.SetActive(showRight);
                 if (showRight)
                 {
-                    namePlateImageRight.sprite = nameRule.nameSpriteRight;
+                    namePlateImageRight.sprite = rightSprite;
                     namePlateImageRight.color = nameRule.nameSpriteColorRight.a < 0.001f ? Color.white : nameRule.nameSpriteColorRight;
                 }
             }
             namePlateHideOnChoiceCanvas.sortingOrder = namePlateCanvasSortOrder;
         }
+    }
+
+    private Sprite ResolveNamePlateSprite(Sprite baseSprite, Sprite englishSprite, bool useEnglish)
+    {
+        if (useEnglish)
+        {
+            if (englishSprite != null)
+                return englishSprite;
+            if (baseSprite != null && clientNamePlateMap != null)
+                return clientNamePlateMap.ResolveLocalizedSprite(baseSprite, true);
+        }
+        return baseSprite;
+    }
+
+    private static bool IsEnglishLanguage()
+    {
+        if (GameFlowController.Instance != null)
+            return GameFlowController.Instance.IsUiEnglishLocale;
+
+        string lang = "";
+        if (UILocalizationManager.instance != null)
+            lang = UILocalizationManager.instance.currentLanguage ?? "";
+        else
+            lang = PlayerPrefs.GetString("Language", "");
+
+        return GameFlowController.LocaleIndicatesEnglish(lang);
     }
 
     private bool ShouldForceHideNamePlate(string conversationTitle, int entryID)
