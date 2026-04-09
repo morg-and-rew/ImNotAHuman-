@@ -1,0 +1,63 @@
+﻿=== Same EN used for multiple ids in one conversation (count >= 2) ===
+conv=7 x2 ids=['10', '13']
+  EN: "Hell no, I'm about to die. And the internet connection is already dead."
+
+conv=18 x2 ids=['3', '4']
+  EN: 'Thank you. Code 8335. I know about problems with connection. I have one more order, but I donтАЩt know the code. IтАЩll come later again.'
+
+conv=19 x2 ids=['15', '16']
+  EN: 'Dude, just tell me your code or go away. I donтАЩt need this extra chatting.'
+
+conv=20 x2 ids=['1', '2']
+  EN: 'DonтАЩt be that skeptic. The research institute is crowded with reptilians. They experiment on us. ItтАЩs ringing in ears, donтАЩt you hear?'
+
+conv=21 x2 ids=['1', '2']
+  EN: 'Oh, I found the number for my second order. The Internet appeared for a few seconds.'
+
+conv=25 x2 ids=['1', '2']
+  EN: 'тАЬI didnтАЩt hear she came back. And donтАЩt remember if she came out. Hm, strange. Need to check the camera.тАЭ'
+
+conv=32 x2 ids=['3', '4']
+  EN: 'We have found a corpse just right in front of your door. Do you know anything? Did you hear or see anything?'
+
+conv=34 x2 ids=['1', '2']
+  EN: 'Strange. What do you mean it was windy outside? It was just foggy but not windy.'
+
+conv=34 x2 ids=['5', '6']
+  EN: "No, IтАЩm not. Listen, I've been working more than a month without any day-off. I can give all the records from cameras and just go away."
+
+conv=45 x2 ids=['1', '2']
+  EN: 'Well, this is how I got rid of my useless tools. And  my obsessive admirer.'
+
+conv=46 x2 ids=['1', '2']
+  EN: 'Good evening!'
+
+conv=46 x2 ids=['17', '18']
+  EN: "That's good."
+
+conv=46 x2 ids=['19', '21']
+  EN: 'You look familiar.'
+
+conv=46 x2 ids=['27', '29']
+  EN: 'I see.'
+
+conv=46 x2 ids=['28', '30']
+  EN: 'So far from here.'
+
+conv=48 x2 ids=['9', '12']
+  EN: "What's happening?"
+
+conv=49 x2 ids=['2', '3']
+  EN: 'Good evening! A man has fainted, he felt unwell recently, I think. Please, come as fast as you can.'
+
+conv=51 x2 ids=['1', '2']
+  EN: "I'm so sick and tired today.  Too many extravagant personalities for one workday.  I need to listen to the radio."
+
+
+=== Possible merged EN (long EN vs short RU), sample 40 ===
+conv=14 id=4 ru_len=44 en_len=201 RU='╨б╤Г╤Й╨╡╤Б╤В╨▓╤Г╨╡╤В ╨╜╨╡╤Б╨║╨╛╨╗╤М╨║╨╛ ╨┐╤А╨╕╨╖╨╜╨░╨║╨╛╨▓ ╨Ь╨╛╤А╨╛╨║╨░:....."'
+conv=29 id=19 ru_len=48 en_len=156 RU='╨Ъ╨╛╨│╨┤╨░ \\_╨▓ ╨▓╨╛╤Б╨╡╨╝╤М╨┤╨╡╤Б╤П╤В ╤И╨╡╤Б╤В╨╛╨╝ ╨╢╨╕╨╗ ╨▓ ╨┤╤А╤Г╨│╨╛╨╝ ╨│╨╛╤А╨╛╨┤╨╡'
+conv=34 id=5 ru_len=46 en_len=135 RU='╨б╨╗╤Г╤И╨░╨╣╤В╨╡, ╤П ╨▒╨╛╨╗╤М╤И╨╡ ╨╝╨╡╤Б╤П╤Ж╨░ ╤А╨░╨▒╨╛╤В╨░╤О ╨▒╨╡╨╖ ╨▓╤Л╤Е╨╛╨╜╤Л╤Е.'
+conv=34 id=6 ru_len=50 en_len=135 RU='╨Т╨╛╨╖╤М╨╝╨╕╤В╨╡ ╨╖╨░╨┐╨╕╤Б╨╕ ╤Б ╨║╨░╨╝╨╡╤А╤Л ╨▓╨╕╨┤╨╡╨╛ ╨╜╨░╨▒╨╗╤О╨┤╨╡╨╜╨╕╤П ╨╕ ╨╕╨┤╨╕╤В╨╡.'
+conv=20 id=1 ru_len=65 en_len=134 RU='╨Ч╤А╤П ╤В╤Л ╤В╨░╨║ ╤С╤А╨╜╨╕╤З╨░╨╡╤И╤М. ╨в╨░╨╝ ╨▓ ╨╕╨╜╤Б╤В╨╕╤В╤Г╤В╨╡ ╤Б╨╕╨┤╤П╤В ╨┐╨╛╨│╨╛╨╗╨╛╨▓╨╜╨╛ ╤А╨╡╨┐╤В╨╕╨╗╨╛╨╕╨┤╤Л.'
+conv=18 id=3 ru_len=39 en_len=133 RU='╨б╨┐╨░╤Б╨╕╨▒╨╛. ╨Ъ╨╛╨┤ 8335. ╨Ч╨╜╨░╤О, ╨╕╨╜╤В╨╡╤А╨╜╨╡╤В╨░ ╨╜╨╡╤В.'

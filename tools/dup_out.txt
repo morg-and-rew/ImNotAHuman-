@@ -1,0 +1,231 @@
+﻿DUPLICATE x 34 : "Well, yeah. But this pickup point is on my way home. The pickup point near the university doesnтАЩt work any more. It's re"...
+   [('46', '3'), ('46', '4'), ('46', '5'), ('46', '6'), ('46', '7'), ('46', '8'), ('46', '9'), ('46', '10'), ('46', '11'), ('46', '12'), ('46', '13'), ('46', '14'), ('46', '15'), ('46', '16'), ('46', '17'), ('46', '18'), ('46', '19'), ('46', '20'), ('46', '21'), ('46', '22')]
+
+DUPLICATE x 15 : 'Okay, sir. You need to go, goodbye. Take your order. If something happens I will go away from this town immediately.'
+   [('48', '30'), ('48', '31'), ('48', '32'), ('48', '33'), ('48', '34'), ('48', '35'), ('48', '36'), ('48', '37'), ('48', '38'), ('48', '39'), ('48', '40'), ('48', '41'), ('48', '42'), ('48', '43'), ('48', '44')]
+
+DUPLICATE x 14 : 'Good afternoon, everyone!'
+   [('10', '24'), ('10', '25'), ('12', '1'), ('12', '2'), ('12', '3'), ('12', '4'), ('12', '5'), ('12', '6'), ('12', '7'), ('12', '8'), ('12', '9'), ('12', '10'), ('12', '11'), ('15', '4')]
+
+DUPLICATE x 13 : "Shit, I need to find something. Some like a fake order. He'll keep nagging us and coming to see us. He is also probably "...
+   [('39', '2'), ('39', '3'), ('39', '4'), ('39', '5'), ('39', '6'), ('39', '7'), ('39', '8'), ('39', '9'), ('42', '1'), ('42', '2'), ('42', '3'), ('42', '4'), ('42', '5')]
+
+DUPLICATE x 12 : 'Yeah, mmmтАж ItтАЩs okay there.  Yes, nothing to worry about. Everything is usual. Nothing has happened. This is my code num'...
+   [('46', '37'), ('46', '38'), ('46', '39'), ('46', '40'), ('46', '41'), ('46', '42'), ('46', '43'), ('46', '44'), ('46', '45'), ('46', '46'), ('46', '47'), ('46', '48')]
+
+DUPLICATE x 11 : 'тАЬThe first sign. A thick fog descends on the city.тАЭ So far, so good.'
+   [('14', '11'), ('14', '12'), ('14', '13'), ('14', '14'), ('14', '16'), ('14', '19'), ('14', '20'), ('14', '21'), ('14', '22'), ('14', '30'), ('14', '31')]
+
+DUPLICATE x 11 : "Good evening, everyone! The day is coming to an end. Pretty odd day, huh?\nYou have to admit, it's unusual to spend the w"...
+   [('24', '1'), ('24', '2'), ('24', '3'), ('24', '4'), ('24', '7'), ('24', '8'), ('24', '9'), ('24', '11'), ('24', '12'), ('24', '14'), ('24', '15')]
+
+DUPLICATE x 11 : 'Well, if you had checked his breathing, nothing terrible would have happened. Lately, we often have to respond to calls '...
+   [('48', '50'), ('50', '7'), ('50', '8'), ('50', '9'), ('50', '10'), ('50', '11'), ('50', '12'), ('50', '13'), ('50', '14'), ('50', '15'), ('50', '16')]
+
+DUPLICATE x 10 : 'I donтАЩt know. You have just fainted. Maybe, blood pressure or something like that. I donтАЩt know the reason why people fa'...
+   [('48', '6'), ('48', '7'), ('48', '8'), ('48', '9'), ('48', '10'), ('48', '11'), ('48', '12'), ('48', '13'), ('48', '14'), ('48', '15')]
+
+DUPLICATE x 9 : 'IтАЩm telling you, there is something in this institute. We will see real walking deads in a few days, I guarantee. See my'...
+   [('10', '1'), ('10', '2'), ('10', '3'), ('10', '4'), ('10', '16'), ('10', '17'), ('10', '18'), ('10', '19'), ('10', '23')]
+
+DUPLICATE x 9 : 'Yeah, youтАЩre rightтАж Thank you. I donтАЩt know, I feel sick.'
+   [('48', '16'), ('48', '17'), ('48', '18'), ('48', '19'), ('48', '20'), ('48', '21'), ('48', '22'), ('48', '23'), ('48', '24')]
+
+DUPLICATE x 8 : "Good morning, dear listeners!\nToday is July 15, it's 10:13 a.m., and we are starting our morning broadcast as usual."
+   [('27', '1'), ('27', '2'), ('27', '3'), ('27', '4'), ('27', '5'), ('27', '6'), ('27', '7'), ('27', '8')]
+
+DUPLICATE x 7 : 'Good afternoon!'
+   [('37', '4'), ('37', '5'), ('37', '6'), ('37', '7'), ('37', '8'), ('39', '1'), ('40', '6')]
+
+DUPLICATE x 7 : 'Well, itтАЩs not allowed. Though all these boozers here know each other. So, if I give him another drunkardтАЩs order, every'...
+   [('40', '2'), ('41', '2'), ('41', '4'), ('41', '5'), ('44', '1'), ('44', '2'), ('44', '3')]
+
+DUPLICATE x 7 : "They say that there is a sickness in the town. It messes with people's minds... I went to the staff room and heard a noi"...
+   [('50', '17'), ('50', '18'), ('50', '19'), ('50', '20'), ('50', '21'), ('50', '22'), ('50', '23')]
+
+DUPLICATE x 6 : 'ITтАЩS OVER! No more Internet here! WeтАЩre stuck here!'
+   [('19', '2'), ('19', '3'), ('19', '4'), ('19', '5'), ('19', '6'), ('19', '26')]
+
+DUPLICATE x 6 : 'Do you know about that too?'
+   [('19', '10'), ('19', '11'), ('19', '12'), ('19', '13'), ('19', '14'), ('19', '24')]
+
+DUPLICATE x 6 : "Maybe the sickness. But you knowтАжIf I were you, I'd be praying. You never know who's next. Maybe even you. Okay, enough "...
+   [('50', '28'), ('50', '29'), ('50', '30'), ('50', '31'), ('50', '32'), ('50', '33')]
+
+DUPLICATE x 5 : 'You are the reason why unseen forces are mad! Shame on you! ItтАЩs not fog. ItтАЩs ancient magic. I feel it in my bones! My '...
+   [('7', '20'), ('7', '21'), ('7', '22'), ('7', '32'), ('7', '33')]
+
+DUPLICATE x 5 : 'They say that Morok descends upon the city when there are too many unrighteous people. However, I believe that this opin'...
+   [('14', '18'), ('14', '26'), ('14', '27'), ('14', '28'), ('14', '29')]
+
+DUPLICATE x 5 : 'Of course, sermons in the morning! This is what we actually need in this town. WhoтАЩs even going to listen to him? I can '...
+   [('15', '1'), ('15', '2'), ('15', '3'), ('15', '5'), ('15', '6')]
+
+DUPLICATE x 5 : 'Well, this is how I got rid of my useless tools. And  my obsessive admirer.'
+   [('40', '3'), ('40', '4'), ('40', '5'), ('45', '1'), ('45', '2')]
+
+DUPLICATE x 4 : 'Watch your tongue, young boy!  What makes you think you can cut in line?'
+   [('7', '11'), ('7', '13'), ('7', '14'), ('7', '15')]
+
+DUPLICATE x 4 : 'My dad is working in our research institute. Something is happening right now like NolanтАЩs films. Atoms, bosons, quarks.'...
+   [('7', '18'), ('7', '19'), ('7', '30'), ('7', '31')]
+
+DUPLICATE x 4 : 'Well, maybe supernatural things or so? I heard about pagans here. They practiced magic and performed rituals. Who knows?'
+   [('10', '5'), ('10', '7'), ('10', '22'), ('10', '30')]
+
+DUPLICATE x 4 : 'You are fuckinтАЩ strange, man. See, IтАЩve warned you. If you become a zombie, I will shoot you, got it? Bye!'
+   [('10', '26'), ('10', '27'), ('10', '28'), ('10', '29')]
+
+DUPLICATE x 4 : 'What the hell did I read? Even though I only believe in nuclear explosions, leaks or soтАж But not in this shit.'
+   [('14', '8'), ('14', '24'), ('14', '25'), ('14', '33')]
+
+DUPLICATE x 4 : 'Hell no, I donтАЩt have time to read some BumfuckтАЩs legends. We donтАЩt even have McRonaldтАЩs here. Rainy and foggy weather d'...
+   [('14', '9'), ('14', '10'), ('14', '23'), ('14', '32')]
+
+DUPLICATE x 4 : 'Thank God I always keep this window closed. Or the whole room would stink. And cockroaches would be everywhere. How have'...
+   [('16', '1'), ('16', '2'), ('16', '3'), ('16', '4')]
+
+DUPLICATE x 4 : 'Hey, I donтАЩt want to hear your fucking nonsense at all. The whole room smells like vodka because of you! IтАЩm working the'...
+   [('19', '19'), ('19', '20'), ('19', '21'), ('19', '25')]
+
+DUPLICATE x 4 : 'I donтАЩt think anything. YouтАЩre all getting on my nerves, you damn speculators and conspiracy theorists. ItтАЩs just nonsen'...
+   [('29', '33'), ('29', '34'), ('29', '35'), ('29', '36')]
+
+DUPLICATE x 4 : 'Wow, IтАЩm not a doctor, only something I noticed. Feeling unwell, fever, hair loss. Some had stomach problems. / And you '...
+   [('29', '40'), ('29', '41'), ('29', '42'), ('29', '44')]
+
+DUPLICATE x 4 : 'This is your second order.'
+   [('36', '7'), ('36', '10'), ('36', '11'), ('36', '12')]
+
+DUPLICATE x 4 : 'Everyone must leave, flee the town. It will only get worse... No one will remain.  Only parched earth.'
+   [('48', '26'), ('48', '27'), ('48', '28'), ('48', '29')]
+
+DUPLICATE x 4 : 'Good evening. What happened? Oh, I see. Is he breathing?'
+   [('50', '3'), ('50', '4'), ('50', '5'), ('50', '6')]
+
+DUPLICATE x 3 : 'Well, maybe. But if something really had happened, probably we would have been warned. Maybe, everything is alright and '...
+   [('10', '9'), ('10', '10'), ('10', '14')]
+
+DUPLICATE x 3 : 'Dammit, who even knows? If god-knows-what will happen, IтАЩll be in touch. Call me if you need.  Here is my number and hom'...
+   [('10', '11'), ('10', '12'), ('10', '20')]
+
+DUPLICATE x 3 : 'Look around you, kids. Problems with phone and Internet connections the whole week. We will go bald soon, all the equipm'...
+   [('19', '8'), ('19', '9'), ('19', '23')]
+
+DUPLICATE x 3 : 'Good morning. If you want to bring your order back, I canтАЩt take it now. No Internet.'
+   [('29', '2'), ('29', '3'), ('29', '11')]
+
+DUPLICATE x 3 : 'And who the hell are you then? Nobody?\nJust sitting here with those pissed-off faces. CanтАЩt do a damn thing.\nCall your b'...
+   [('29', '6'), ('29', '7'), ('29', '8')]
+
+DUPLICATE x 3 : 'Awesome! This thing made my hair fall out! / It says, тАЬGuaranteed thick hair in three weeks!тАЭ IтАЩm almost bald!'
+   [('29', '12'), ('29', '13'), ('29', '46')]
+
+DUPLICATE x 3 : 'Wow, thatтАЩs news. When I was living in another city in 1986, we had an accident at the nuclear power plant. All the wome'...
+   [('29', '18'), ('29', '20'), ('29', '47')]
+
+DUPLICATE x 3 : 'Yeah, thatтАЩs right. After a few days or weeks they all died. No one is alive.'
+   [('29', '22'), ('29', '23'), ('29', '24')]
+
+DUPLICATE x 3 : "Well, I donтАЩt think it's radiation sickness. We donтАЩt have any nuclear reactors here. I think itтАЩs something moreтАжout of"...
+   [('29', '27'), ('29', '28'), ('29', '29')]
+
+DUPLICATE x 3 : 'I have nothing to give him anyway. Well, I have a box with some useless junk. I donтАЩt use it anyway, I can give it to hi'...
+   [('43', '1'), ('43', '2'), ('43', '3')]
+
+DUPLICATE x 3 : 'Good evening!'
+   [('46', '1'), ('46', '2'), ('49', '1')]
+
+DUPLICATE x 3 : "HeтАЩs strange. And looks so familiar. It's such an unpleasant feeling."
+   [('47', '1'), ('47', '2'), ('47', '3')]
+
+DUPLICATE x 3 : 'God bless, everything is okay. DonтАЩt know, man. Fainting has become usual recently. Just fall and thatтАЩs it. Maybe, some'...
+   [('48', '48'), ('48', '49'), ('48', '51')]
+
+DUPLICATE x 3 : "He was just strange. All red, twitchy. I'm telling you, it must have been an sickness."
+   [('50', '25'), ('50', '26'), ('50', '27')]
+
+DUPLICATE x 3 : "Not again. It doesnтАЩt work. And time is running out. That means it's time to go home, eat a cheeseburger, and drink suga"...
+   [('52', '1'), ('52', '2'), ('52', '3')]
+
+DUPLICATE x 2 : 'Ring... ring... ring...'
+   [('5', '1'), ('11', '1')]
+
+DUPLICATE x 2 : 'Good morning, my boy!'
+   [('7', '1'), ('34', '4')]
+
+DUPLICATE x 2 : 'ItтАЩs strange. And the weather is strange. Rainy and foggy in the middle of summer. The aura around is negative, I can fe'...
+   [('7', '7'), ('7', '26')]
+
+DUPLICATE x 2 : 'Who cares? We may die tomorrow. Relax, take it easy.'
+   [('7', '16'), ('7', '27')]
+
+DUPLICATE x 2 : 'I donтАЩt care and need subjects of experiments, supernatural forces. I need the Internet.'
+   [('10', '6'), ('10', '8')]
+
+DUPLICATE x 2 : "Why are people so boring after their twenties? I hope to die in this apocalypse when I'm only seventeen. Bye!"
+   [('10', '13'), ('10', '21')]
+
+DUPLICATE x 2 : 'I would also like to be in their place right now... Or sleep at kindergarten. Or better, at home.'
+   [('17', '1'), ('17', '2')]
+
+DUPLICATE x 2 : 'Thank you. Code 8335. I know about problems with connection. I have one more order, but I donтАЩt know the code. IтАЩll come'...
+   [('18', '3'), ('18', '4')]
+
+DUPLICATE x 2 : 'Dude, just tell me your code or go away. I donтАЩt need this extra chatting.'
+   [('19', '15'), ('19', '16')]
+
+DUPLICATE x 2 : 'DonтАЩt be that skeptic. The research institute is crowded with reptilians. They experiment on us. ItтАЩs ringing in ears, d'...
+   [('20', '1'), ('20', '2')]
+
+DUPLICATE x 2 : 'Oh, I found the number for my second order. The Internet appeared for a few seconds.'
+   [('21', '1'), ('21', '2')]
+
+DUPLICATE x 2 : 'I need to listen to the radio. Still no Internet.'
+   [('23', '1'), ('51', '3')]
+
+DUPLICATE x 2 : 'тАЬI didnтАЩt hear she came back. And donтАЩt remember if she came out. Hm, strange. Need to check the camera.тАЭ'
+   [('25', '1'), ('25', '2')]
+
+DUPLICATE x 2 : 'Wow, thank you'
+   [('26', '1'), ('30', '2')]
+
+DUPLICATE x 2 : 'Hey.'
+   [('29', '1'), ('29', '15')]
+
+DUPLICATE x 2 : 'Can you believe he doesnтАЩt want to take my order back? ItтАЩs fake! IтАЩm almost bald! I canтАЩt even go outside because itтАЩs '...
+   [('29', '16'), ('29', '17')]
+
+DUPLICATE x 2 : 'Wow, and days change nights because Helios, the God of the Sun, goes to sleep. Are you okay?'
+   [('29', '30'), ('29', '31')]
+
+DUPLICATE x 2 : 'I believe in sickness. And what about all those women? Any other symptoms?'
+   [('29', '38'), ('29', '39')]
+
+DUPLICATE x 2 : 'Your order is here'
+   [('30', '1'), ('37', '1')]
+
+DUPLICATE x 2 : 'We have found a corpse just right in front of your door. Do you know anything? Did you hear or see anything?'
+   [('32', '3'), ('32', '4')]
+
+DUPLICATE x 2 : 'Strange. What do you mean it was windy outside? It was just foggy but not windy.'
+   [('34', '1'), ('34', '2')]
+
+DUPLICATE x 2 : "No, IтАЩm not. Listen, I've been working more than a month without any day-off. I can give all the records from cameras an"...
+   [('34', '5'), ('34', '6')]
+
+DUPLICATE x 2 : 'You know, like feeling anxious all the time. No Internet, light blinking. I even take some medicine, but IтАЩm feeling wor'...
+   [('36', '4'), ('36', '6')]
+
+DUPLICATE x 2 : 'Thank you a lot for saving me. I owe you.'
+   [('48', '45'), ('48', '46')]
+
+DUPLICATE x 2 : 'Good evening! A man has fainted, he felt unwell recently, I think. Please, come as fast as you can.'
+   [('49', '2'), ('49', '3')]
+
+DUPLICATE x 2 : 'What even happened to you, man? CanтАЩt you just faint at home? Ahh, shitтАж'
+   [('50', '1'), ('50', '2')]
+
+DUPLICATE x 2 : "I'm so sick and tired today.  Too many extravagant personalities for one workday.  I need to listen to the radio."
+   [('51', '1'), ('51', '2')]
+

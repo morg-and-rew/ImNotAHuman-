@@ -141,6 +141,15 @@ public sealed class PlayerInstaller : MonoBehaviour
         }
 
         _warehouseDeliveryController.Initialize(hands, playerView.DeliveryNoteView);
+
+        // Dialogue System localization: project stores English in custom field "en".
+        // Attach applier to copy "en" -> Dialogue Text when English locale is active.
+        if (_dialogueSystemController != null)
+        {
+            var go = _dialogueSystemController.gameObject;
+            if (go.GetComponent<DialogueSystemEnFieldApplier>() == null)
+                go.AddComponent<DialogueSystemEnFieldApplier>();
+        }
     }
 
     private void Update()

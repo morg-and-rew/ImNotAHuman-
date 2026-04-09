@@ -1,0 +1,69 @@
+﻿DUPLICATE x 3 : 'Good evening!'
+   [('46', '1'), ('46', '2'), ('49', '1')]
+
+DUPLICATE x 2 : 'Ring... ring... ring...'
+   [('5', '1'), ('11', '1')]
+
+DUPLICATE x 2 : 'Good morning, my boy!'
+   [('7', '1'), ('34', '4')]
+
+DUPLICATE x 2 : "Hell no, I'm about to die. And the internet connection is already dead."
+   [('7', '10'), ('7', '13')]
+
+DUPLICATE x 2 : 'Thank you. Code 8335. I know about problems with connection. I have one more order, but I donтАЩt know the code. IтАЩll come'...
+   [('18', '3'), ('18', '4')]
+
+DUPLICATE x 2 : 'Dude, just tell me your code or go away. I donтАЩt need this extra chatting.'
+   [('19', '15'), ('19', '16')]
+
+DUPLICATE x 2 : 'DonтАЩt be that skeptic. The research institute is crowded with reptilians. They experiment on us. ItтАЩs ringing in ears, d'...
+   [('20', '1'), ('20', '2')]
+
+DUPLICATE x 2 : 'Oh, I found the number for my second order. The Internet appeared for a few seconds.'
+   [('21', '1'), ('21', '2')]
+
+DUPLICATE x 2 : 'I need to listen to the radio. Still no Internet.'
+   [('23', '1'), ('51', '3')]
+
+DUPLICATE x 2 : 'тАЬI didnтАЩt hear she came back. And donтАЩt remember if she came out. Hm, strange. Need to check the camera.тАЭ'
+   [('25', '1'), ('25', '2')]
+
+DUPLICATE x 2 : 'Wow, thank you'
+   [('26', '1'), ('30', '2')]
+
+DUPLICATE x 2 : 'We have found a corpse just right in front of your door. Do you know anything? Did you hear or see anything?'
+   [('32', '3'), ('32', '4')]
+
+DUPLICATE x 2 : 'Strange. What do you mean it was windy outside? It was just foggy but not windy.'
+   [('34', '1'), ('34', '2')]
+
+DUPLICATE x 2 : "No, IтАЩm not. Listen, I've been working more than a month without any day-off. I can give all the records from cameras an"...
+   [('34', '5'), ('34', '6')]
+
+DUPLICATE x 2 : 'Bye.'
+   [('37', '8'), ('40', '6')]
+
+DUPLICATE x 2 : 'Well, this is how I got rid of my useless tools. And  my obsessive admirer.'
+   [('45', '1'), ('45', '2')]
+
+DUPLICATE x 2 : "That's good."
+   [('46', '17'), ('46', '18')]
+
+DUPLICATE x 2 : 'You look familiar.'
+   [('46', '19'), ('46', '21')]
+
+DUPLICATE x 2 : 'I see.'
+   [('46', '27'), ('46', '29')]
+
+DUPLICATE x 2 : 'So far from here.'
+   [('46', '28'), ('46', '30')]
+
+DUPLICATE x 2 : "What's happening?"
+   [('48', '9'), ('48', '12')]
+
+DUPLICATE x 2 : 'Good evening! A man has fainted, he felt unwell recently, I think. Please, come as fast as you can.'
+   [('49', '2'), ('49', '3')]
+
+DUPLICATE x 2 : "I'm so sick and tired today.  Too many extravagant personalities for one workday.  I need to listen to the radio."
+   [('51', '1'), ('51', '2')]
+
