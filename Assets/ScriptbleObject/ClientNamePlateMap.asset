@@ -1314,7 +1314,7 @@ MonoBehaviour:
   - baseSprite: {fileID: 21300000, guid: 868ad5d00e18a9b47980a4262e6eb6f5, type: 3}
     englishSprite: {fileID: 21300000, guid: ae9aed53c821cc64d8464d009dd68846, type: 3}
   - baseSprite: {fileID: 21300000, guid: 873c35f0792eaea48aa3bd60f1b8b7f4, type: 3}
-    englishSprite: {fileID: 21300000, guid: ae9aed53c821cc64d8464d009dd68846, type: 3}
+    englishSprite: {fileID: 21300000, guid: ef9af15c9ad774945bf25f41985d58af, type: 3}
   - baseSprite: {fileID: 21300000, guid: 5fbea1f1b081cce41b6abcb560108dcd, type: 3}
     englishSprite: {fileID: 21300000, guid: ae9aed53c821cc64d8464d009dd68846, type: 3}
   - baseSprite: {fileID: 21300000, guid: 343eb86dc128b3346a083d7b18594dd7, type: 3}

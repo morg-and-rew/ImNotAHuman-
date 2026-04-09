@@ -1791,7 +1791,7 @@ MonoBehaviour:
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 10
-      leftSprite: {fileID: 21300000, guid: ada91e80fc337ae4b9d3e1fe754045f8, type: 3}
+      leftSprite: {fileID: 21300000, guid: 740bf3eae0896b64e91e2c86c3695600, type: 3}
       rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
@@ -1823,7 +1823,7 @@ MonoBehaviour:
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 22
-      leftSprite: {fileID: 21300000, guid: 930e4351d1aaac542b45fb7db413f708, type: 3}
+      leftSprite: {fileID: 21300000, guid: 312634c6b40915e44ad74d2b83895e1b, type: 3}
       rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}
@@ -1839,7 +1839,7 @@ MonoBehaviour:
       customRightScale: {x: 1, y: 1, z: 1}
       customRightRotation: {x: 0, y: 0, z: 0}
     - entryID: 26
-      leftSprite: {fileID: 21300000, guid: 206fe8a54812d54438b235673110b3a4, type: 3}
+      leftSprite: {fileID: 21300000, guid: d29e399e9b2b39e428807acadeb86cbb, type: 3}
       rightSprite: {fileID: 21300000, guid: 925987cee7ceb6944bc905eb0e753585, type: 3}
       leftSpriteColor: {r: 0, g: 0, b: 0, a: 0}
       rightSpriteColor: {r: 0, g: 0, b: 0, a: 0}

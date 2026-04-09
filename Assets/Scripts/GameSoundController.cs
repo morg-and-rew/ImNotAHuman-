@@ -15,11 +15,13 @@ public sealed class GameSoundController : MonoBehaviour
     [SerializeField, Range(0.2f, 1f)] private float _travelTransitionVolume = 0.55f;
 
     [Header("Шаги")]
-    [Tooltip("Источник для звуков шагов (если пусто — берётся AudioSource на этом же объекте).")]
+    [Tooltip("Только шаги. Если пусто — будет отдельный AudioSource на этом объекте (не делите его с телефоном/ветром).")]
     [SerializeField] private AudioSource _footstepSource;
     [Tooltip("Случайный клип из массива при каждом шаге. Если пусто — звуки шагов отключены.")]
     [SerializeField] private AudioClip[] _footstepClips;
     [SerializeField, Range(0.2f, 1f)] private float _footstepVolume = 0.5f;
+    [Tooltip("Множитель pitch для steps_1 / единственного клипа шагов (0.0625 ≈ в ~16 раз медленнее оригинала).")]
+    [SerializeField, Range(0.03f, 1f)] private float _footstepSteps1PitchScale = 0.0625f;
 
     [Header("Диалоги")]
     [Tooltip("Звук при нажатии на вариант ответа в диалоге.")]
@@ -64,7 +66,8 @@ public sealed class GameSoundController : MonoBehaviour
     [Tooltip("Источник для длительных звуков телефона (гудки и т.д.). Останавливается при закрытии телефона.")]
     [SerializeField] private AudioSource _phoneOngoingSource;
 
-    private AudioSource _cachedFootstepSource;
+    /// <summary> Один голос для шага: без наслоения PlayOneShot. </summary>
+    private AudioSource _footstepVoice;
     private Coroutine _windFadeCoroutine;
 
     private void Awake()
@@ -76,12 +79,16 @@ public sealed class GameSoundController : MonoBehaviour
         }
         Instance = this;
 
-        if (_footstepSource == null)
-            _cachedFootstepSource = GetComponent<AudioSource>();
-        else
-            _cachedFootstepSource = _footstepSource;
-        if (_cachedFootstepSource == null && _footstepClips != null && _footstepClips.Length > 0)
-            _cachedFootstepSource = gameObject.AddComponent<AudioSource>();
+        if (_footstepSource != null)
+            _footstepVoice = _footstepSource;
+        else if (_footstepClips != null && _footstepClips.Length > 0)
+        {
+            _footstepVoice = gameObject.AddComponent<AudioSource>();
+            _footstepVoice.playOnAwake = false;
+            _footstepVoice.loop = false;
+            _footstepVoice.spatialBlend = 0f;
+        }
+
         if (_phoneOngoingSource == null)
             _phoneOngoingSource = gameObject.AddComponent<AudioSource>();
         if (_windLoopSource == null && _windLoopClip != null)
@@ -104,19 +111,27 @@ public sealed class GameSoundController : MonoBehaviour
     /// <summary> Воспроизвести один шаг (при ходьбе). </summary>
     public void PlayFootstep()
     {
-        AudioSource source = _cachedFootstepSource != null ? _cachedFootstepSource : _footstepSource;
-        if (source == null || _footstepClips == null || _footstepClips.Length == 0) return;
+        if (_footstepVoice == null || _footstepClips == null || _footstepClips.Length == 0) return;
         AudioClip clip = _footstepClips[Random.Range(0, _footstepClips.Length)];
-        if (clip != null)
-            source.PlayOneShot(clip, _footstepVolume);
+        if (clip == null) return;
+
+        // Один активный шаг: иначе PlayOneShot даёт «оркестр» из длинных клипов при низком pitch.
+        _footstepVoice.Stop();
+        _footstepVoice.clip = clip;
+        _footstepVoice.volume = _footstepVolume;
+        float pitchMul = (IsSteps1FootstepClip(clip) || _footstepClips.Length == 1) ? _footstepSteps1PitchScale : 1f;
+        _footstepVoice.pitch = Mathf.Clamp(pitchMul, 0.03f, 3f);
+        _footstepVoice.Play();
     }
+
+    private static bool IsSteps1FootstepClip(AudioClip clip) =>
+        clip != null && string.Equals(clip.name, "steps_1", System.StringComparison.OrdinalIgnoreCase);
 
     /// <summary> Остановить звук шага (при остановке игрока — звук не доигрывается до конца). </summary>
     public void StopFootstep()
     {
-        AudioSource source = _cachedFootstepSource != null ? _cachedFootstepSource : _footstepSource;
-        if (source != null)
-            source.Stop();
+        if (_footstepVoice != null)
+            _footstepVoice.Stop();
     }
 
     /// <summary> Воспроизвести звук открытия окна. </summary>
