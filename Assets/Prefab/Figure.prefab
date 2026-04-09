@@ -3139,6 +3139,8 @@ MonoBehaviour:
     english: {fileID: 21300000, guid: 575a3105694de2c42b8f967a5c73a2a7, type: 3}
   - source: {fileID: 21300000, guid: 3cc23863476a33f4e87ba1d850b648b3, type: 3}
     english: {fileID: 21300000, guid: cc331b748a75e1845be51c3c2ab9b864, type: 3}
+  - source: {fileID: 21300000, guid: 5c563f2a7a2d30f41b7285529f5d28aa, type: 3}
+    english: {fileID: 21300000, guid: 239d55e42119f2b40beb1cbb90ac509c, type: 3}
   _languagePlayerPrefsKey: Language
   _englishLanguageCode: en
 --- !u!1 &7583265386675106752

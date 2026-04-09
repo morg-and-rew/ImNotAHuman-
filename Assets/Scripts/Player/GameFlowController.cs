@@ -91,10 +91,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [Header("Main Menu (Start Screen)")]
     [Tooltip("Показывать стартовое меню (Continue / New Game / Options / Exit) перед началом сюжета.")]
     [SerializeField] private bool _showMainMenuOnStart = true;
-    [Tooltip("Фоновая картинка для стартового меню (используется как обычный Image). Если не задана — будет черный фон.")]
-    [SerializeField] private Sprite _mainMenuBackground;
-    [Tooltip("Шрифт TextMeshPro для кнопок стартового меню. Если не задан — используется TMP default.")]
-    [SerializeField] private TMPro.TMP_FontAsset _mainMenuFont;
+    [Tooltip("Ссылка на главное меню, собранное на сцене (Canvas + кнопки + video background).")]
+    [SerializeField] private MainMenuUI _mainMenuSceneUI;
 
     [Header("Delivery (optional)")]
     [SerializeField] private WarehouseDeliveryController _delivery;
@@ -1107,6 +1105,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _input = input;
         _clientInteraction = clientInteraction;
         _customDialogueUI = customDialogueUI ?? (_dialogueSystemController?.DialogueUI as CustomDialogueUI);
+        if (_mainMenuSceneUI != null)
+            _mainMenuSceneUI.SetVisible(false);
 
         if (_clientInteraction != null)
         {
@@ -1173,9 +1173,18 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         MainMenuChoice choice = MainMenuChoice.None;
         bool exitRequested = false;
 
-        MainMenuUI menu = MainMenuUI.Create(
-            backgroundSprite: _mainMenuBackground,
-            font: _mainMenuFont != null ? _mainMenuFont : TMPro.TMP_Settings.defaultFontAsset,
+        MainMenuUI menu = _mainMenuSceneUI;
+        if (menu == null)
+        {
+            Debug.LogWarning("Main menu is enabled, but MainMenuSceneUI reference is missing. Starting New Game.");
+            GameSaveSystem.SetLoadFromSaveAtStartOverride(false);
+            EnterIntro();
+            yield break;
+        }
+
+        _mainMenuUI = menu;
+        menu.SetVisible(true);
+        menu.Configure(
             canContinue: canContinue,
             onContinue: () => choice = MainMenuChoice.Continue,
             onNewGame: () => choice = MainMenuChoice.NewGame,
@@ -1200,8 +1209,6 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                 exitRequested = true;
                 choice = MainMenuChoice.None;
             });
-
-        _mainMenuUI = menu;
         menu.SetButtonsInteractable(canContinue, newGameEnabled: true, exitEnabled: true, optionsEnabled: true);
 
         // Ждём выбора пользователя.
@@ -1228,7 +1235,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             rebindMenu.gameObject.SetActive(false);
 
         if (_mainMenuUI != null)
-            Destroy(_mainMenuUI.gameObject);
+            _mainMenuUI.SetVisible(false);
         _mainMenuUI = null;
 
         Cursor.visible = false;

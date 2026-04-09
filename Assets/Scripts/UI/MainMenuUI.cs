@@ -1,44 +1,74 @@
 using System;
+using PixelCrushers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 /// <summary>
-/// Runtime UI стартового меню: фон (Image) + кнопки.
-/// Не зависит от наличия Canvas/Prefab в сцене.
+/// Scene-driven main menu. Assign buttons and optional background video in Inspector.
 /// </summary>
 public sealed class MainMenuUI : MonoBehaviour
 {
-    private const float DefaultButtonWidth = 340f;
-    private const float DefaultButtonHeight = 56f;
-    private const float DefaultButtonSpacing = 14f;
+    [Serializable]
+    private sealed class LocalizedButtonSprite
+    {
+        public Button button;
+        public Sprite russianSprite;
+        public Sprite englishSprite;
+    }
 
-    private Button _continueButton;
-    private Button _newGameButton;
-    private Button _optionsButton;
-    private Button _exitButton;
+    [Header("Buttons")]
+    [SerializeField] private Button _continueButton;
+    [SerializeField] private Button _newGameButton;
+    [SerializeField] private Button _optionsButton;
+    [SerializeField] private Button _exitButton;
 
-    private TMP_Text _continueText;
-    private TMP_Text _newGameText;
-    private TMP_Text _optionsText;
-    private TMP_Text _exitText;
+    [Header("Localized Button Sprites (optional)")]
+    [SerializeField] private LocalizedButtonSprite _continueButtonSprites;
+    [SerializeField] private LocalizedButtonSprite _newGameButtonSprites;
+    [SerializeField] private LocalizedButtonSprite _optionsButtonSprites;
+    [SerializeField] private LocalizedButtonSprite _exitButtonSprites;
 
-    private GameObject _root;
+    [Header("Optional Label Overrides")]
+    [SerializeField] private TMP_Text _continueText;
+    [SerializeField] private TMP_Text _newGameText;
+    [SerializeField] private TMP_Text _optionsText;
+    [SerializeField] private TMP_Text _exitText;
 
-    public static MainMenuUI Create(
-        Sprite backgroundSprite,
-        TMP_FontAsset font,
+    [Header("Optional Background Video")]
+    [SerializeField] private VideoPlayer _backgroundVideo;
+    [SerializeField] private VideoClip _backgroundClip;
+    [SerializeField] private bool _forceVideoLoop = true;
+    [Tooltip("Optional RawImage that should display the video. If assigned, script routes VideoPlayer to this UI element.")]
+    [SerializeField] private RawImage _backgroundVideoRawImage;
+    [Tooltip("Optional target render texture for menu video. If empty and RawImage is assigned, it will be auto-created.")]
+    [SerializeField] private RenderTexture _backgroundVideoRenderTexture;
+
+    private Action _onContinue;
+    private Action _onNewGame;
+    private Action _onOptions;
+    private Action _onExit;
+
+    public void Configure(
         bool canContinue,
         Action onContinue,
         Action onNewGame,
         Action onOptions,
         Action onExit)
     {
-        var go = new GameObject("MainMenuUI");
-        var ui = go.AddComponent<MainMenuUI>();
-        ui.Build(backgroundSprite, font, canContinue, onContinue, onNewGame, onOptions, onExit);
-        return ui;
+        _onContinue = onContinue;
+        _onNewGame = onNewGame;
+        _onOptions = onOptions;
+        _onExit = onExit;
+
+        RebindButton(_continueButton, () => _onContinue?.Invoke());
+        RebindButton(_newGameButton, () => _onNewGame?.Invoke());
+        RebindButton(_optionsButton, () => _onOptions?.Invoke());
+        RebindButton(_exitButton, () => _onExit?.Invoke());
+
+        ApplyLocalizedButtonSprites();
+        SetButtonsInteractable(canContinue, newGameEnabled: true, exitEnabled: true, optionsEnabled: true);
     }
 
     public void SetButtonsInteractable(bool canContinue, bool newGameEnabled, bool exitEnabled, bool optionsEnabled)
@@ -53,228 +83,94 @@ public sealed class MainMenuUI : MonoBehaviour
         if (_continueText != null) _continueText.color = canContinue ? Color.white : new Color(1f, 1f, 1f, 0.35f);
     }
 
-    private void Build(
-        Sprite backgroundSprite,
-        TMP_FontAsset font,
-        bool canContinue,
-        Action onContinue,
-        Action onNewGame,
-        Action onOptions,
-        Action onExit)
+    public void SetVisible(bool value)
     {
-        EnsureEventSystemExists();
-
-        _root = new GameObject("Root");
-        _root.transform.SetParent(transform, worldPositionStays: false);
-
-        var canvas = gameObject.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
-        var scaler = gameObject.AddComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        scaler.matchWidthOrHeight = 0.5f;
-
-        gameObject.AddComponent<GraphicRaycaster>();
-
-        CreateBackground(backgroundSprite);
-        CreateButtons(font, onContinue, onNewGame, onOptions, onExit, canContinue);
+        gameObject.SetActive(value);
+        if (value) PlayBackgroundVideo();
+        else StopBackgroundVideo();
     }
 
-    private void CreateBackground(Sprite backgroundSprite)
+    private void OnEnable()
     {
-        var bg = new GameObject("Background");
-        bg.transform.SetParent(_root.transform, worldPositionStays: false);
-
-        var rt = bg.AddComponent<RectTransform>();
-        rt.anchorMin = Vector2.zero;
-        rt.anchorMax = Vector2.one;
-        rt.sizeDelta = Vector2.zero;
-        rt.anchoredPosition = Vector2.zero;
-
-        var img = bg.AddComponent<Image>();
-        img.sprite = backgroundSprite ?? CreateSolidSprite();
-        img.type = Image.Type.Sliced;
-        img.preserveAspect = true;
-        img.color = backgroundSprite != null ? Color.white : new Color(0f, 0f, 0f, 1f);
-
-        // Тонкая затемняющая вуаль поверх картинки, чтобы кнопки читались.
-        var overlay = new GameObject("BackgroundOverlay");
-        overlay.transform.SetParent(bg.transform, worldPositionStays: false);
-
-        var overlayRt = overlay.AddComponent<RectTransform>();
-        overlayRt.anchorMin = Vector2.zero;
-        overlayRt.anchorMax = Vector2.one;
-        overlayRt.sizeDelta = Vector2.zero;
-        overlayRt.anchoredPosition = Vector2.zero;
-
-        var overlayImg = overlay.AddComponent<Image>();
-        overlayImg.sprite = CreateSolidSprite();
-        overlayImg.color = new Color(0f, 0f, 0f, 0.35f);
+        ApplyLocalizedButtonSprites();
+        PlayBackgroundVideo();
     }
 
-    private void CreateButtons(
-        TMP_FontAsset font,
-        Action onContinue,
-        Action onNewGame,
-        Action onOptions,
-        Action onExit,
-        bool canContinue)
+    private void OnDisable()
     {
-        var container = new GameObject("ButtonsContainer");
-        container.transform.SetParent(_root.transform, worldPositionStays: false);
-
-        var containerRt = container.AddComponent<RectTransform>();
-        // Прижимаем к правому краю, как на скриншоте.
-        containerRt.anchorMin = new Vector2(1f, 0.5f);
-        containerRt.anchorMax = new Vector2(1f, 0.5f);
-        containerRt.pivot = new Vector2(1f, 0.5f);
-        containerRt.anchoredPosition = new Vector2(-360f, 0f);
-        containerRt.sizeDelta = new Vector2(420f, 320f);
-
-        var layout = container.AddComponent<VerticalLayoutGroup>();
-        layout.childControlHeight = false;
-        layout.childControlWidth = false;
-        layout.childForceExpandHeight = false;
-        layout.childForceExpandWidth = false;
-        layout.spacing = DefaultButtonSpacing;
-        layout.childAlignment = TextAnchor.MiddleCenter;
-
-        _continueButton = CreateButton(
-            "CONTINUE",
-            font,
-            container.transform,
-            DefaultButtonWidth,
-            DefaultButtonHeight,
-            onContinue,
-            out _continueText);
-
-        _newGameButton = CreateButton(
-            "NEW GAME",
-            font,
-            container.transform,
-            DefaultButtonWidth,
-            DefaultButtonHeight,
-            onNewGame,
-            out _newGameText);
-
-        _optionsButton = CreateButton(
-            "OPTIONS",
-            font,
-            container.transform,
-            DefaultButtonWidth,
-            DefaultButtonHeight,
-            onOptions,
-            out _optionsText);
-
-        _exitButton = CreateButton(
-            "EXIT",
-            font,
-            container.transform,
-            DefaultButtonWidth,
-            DefaultButtonHeight,
-            onExit,
-            out _exitText);
-
-        // Начальные состояния.
-        SetButtonsInteractable(canContinue, newGameEnabled: true, exitEnabled: true, optionsEnabled: true);
+        StopBackgroundVideo();
     }
 
-    private Button CreateButton(
-        string label,
-        TMP_FontAsset font,
-        Transform parent,
-        float width,
-        float height,
-        Action onClick,
-        out TMP_Text text)
+    private static void RebindButton(Button button, Action callback)
     {
-        var btnGo = new GameObject(label);
-        btnGo.transform.SetParent(parent, worldPositionStays: false);
-
-        var btnRt = btnGo.AddComponent<RectTransform>();
-        btnRt.sizeDelta = new Vector2(width, height);
-
-        // Outer = рамка, Inner = область кнопки под tint'ы.
-        var outer = new GameObject("OuterBackground");
-        outer.transform.SetParent(btnGo.transform, worldPositionStays: false);
-        var outerRt = outer.AddComponent<RectTransform>();
-        outerRt.anchorMin = Vector2.zero;
-        outerRt.anchorMax = Vector2.one;
-        outerRt.offsetMin = Vector2.zero;
-        outerRt.offsetMax = Vector2.zero;
-
-        var outerImg = outer.AddComponent<Image>();
-        outerImg.sprite = CreateSolidSprite();
-        outerImg.color = new Color(0.55f, 0.55f, 0.55f, 0.75f);
-
-        var inner = new GameObject("InnerBackground");
-        inner.transform.SetParent(btnGo.transform, worldPositionStays: false);
-        var innerRt = inner.AddComponent<RectTransform>();
-        innerRt.anchorMin = Vector2.zero;
-        innerRt.anchorMax = Vector2.one;
-        innerRt.offsetMin = new Vector2(2f, 2f);
-        innerRt.offsetMax = new Vector2(-2f, -2f);
-
-        var innerImg = inner.AddComponent<Image>();
-        innerImg.sprite = CreateSolidSprite();
-        innerImg.color = new Color(0.15f, 0.15f, 0.15f, 0.95f);
-
-        var button = btnGo.AddComponent<Button>();
-        button.targetGraphic = innerImg;
-
-        var colors = button.colors;
-        colors.normalColor = new Color(0.16f, 0.16f, 0.16f, 0.95f);
-        colors.highlightedColor = new Color(0.25f, 0.25f, 0.25f, 0.98f);
-        colors.pressedColor = new Color(0.08f, 0.08f, 0.08f, 0.98f);
-        colors.selectedColor = colors.highlightedColor;
-        colors.disabledColor = new Color(0.16f, 0.16f, 0.16f, 0.25f);
-        button.colors = colors;
-
-        if (onClick != null)
-            button.onClick.AddListener(() => onClick());
-
-        var textGo = new GameObject("Text");
-        textGo.transform.SetParent(btnGo.transform, worldPositionStays: false);
-        var textRt = textGo.AddComponent<RectTransform>();
-        textRt.anchorMin = Vector2.zero;
-        textRt.anchorMax = Vector2.one;
-        textRt.offsetMin = Vector2.zero;
-        textRt.offsetMax = Vector2.zero;
-
-        var t = textGo.AddComponent<TextMeshProUGUI>();
-        t.text = label;
-        t.font = font;
-        t.fontSize = 28;
-        t.alignment = TextAlignmentOptions.Center;
-        t.color = Color.white;
-
-        var shadow = t.gameObject.AddComponent<Shadow>();
-        shadow.effectColor = new Color(0f, 0f, 0f, 0.65f);
-        shadow.effectDistance = new Vector2(1f, -1f);
-
-        text = t;
-        return button;
+        if (button == null) return;
+        button.onClick.RemoveAllListeners();
+        if (callback != null) button.onClick.AddListener(() => callback());
     }
 
-    private static Sprite CreateSolidSprite()
+    private void PlayBackgroundVideo()
     {
-        // Небольшая фабрика 1x1 белого спрайта для Image.
-        // Чтобы не плодить текстуры, можно было бы кэшировать, но это меню создаётся 1 раз.
-        var tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-        tex.SetPixel(0, 0, Color.white);
-        tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1f);
+        if (_backgroundVideo == null) return;
+        if (_backgroundClip != null && _backgroundVideo.clip != _backgroundClip)
+            _backgroundVideo.clip = _backgroundClip;
+        ConfigureVideoOutput();
+        if (_forceVideoLoop) _backgroundVideo.isLooping = true;
+        _backgroundVideo.playOnAwake = false;
+        _backgroundVideo.waitForFirstFrame = true;
+        if (!_backgroundVideo.isPlaying) _backgroundVideo.Play();
     }
 
-    private static void EnsureEventSystemExists()
+    private void StopBackgroundVideo()
     {
-        if (EventSystem.current != null) return;
+        if (_backgroundVideo != null && _backgroundVideo.isPlaying)
+            _backgroundVideo.Stop();
+    }
 
-        var es = new GameObject("EventSystem");
-        es.AddComponent<EventSystem>();
-        es.AddComponent<StandaloneInputModule>();
+    private void ApplyLocalizedButtonSprites()
+    {
+        bool useEnglish = IsEnglishLanguage();
+        ApplyLocalizedButtonSprite(_continueButtonSprites, useEnglish);
+        ApplyLocalizedButtonSprite(_newGameButtonSprites, useEnglish);
+        ApplyLocalizedButtonSprite(_optionsButtonSprites, useEnglish);
+        ApplyLocalizedButtonSprite(_exitButtonSprites, useEnglish);
+    }
+
+    private static void ApplyLocalizedButtonSprite(LocalizedButtonSprite data, bool useEnglish)
+    {
+        if (data == null || data.button == null || data.button.image == null) return;
+        Sprite sprite = useEnglish ? data.englishSprite : data.russianSprite;
+        if (sprite != null) data.button.image.sprite = sprite;
+    }
+
+    private static bool IsEnglishLanguage()
+    {
+        if (GameFlowController.Instance != null)
+            return GameFlowController.Instance.IsUiEnglishLocale;
+
+        string lang = "";
+        if (UILocalizationManager.instance != null)
+            lang = UILocalizationManager.instance.currentLanguage ?? "";
+        else
+            lang = PlayerPrefs.GetString("Language", "");
+
+        return GameFlowController.LocaleIndicatesEnglish(lang);
+    }
+
+    private void ConfigureVideoOutput()
+    {
+        if (_backgroundVideoRawImage == null) return;
+
+        if (_backgroundVideoRenderTexture == null)
+        {
+            _backgroundVideoRenderTexture = new RenderTexture(1920, 1080, 0, RenderTextureFormat.ARGB32)
+            {
+                name = "MainMenuVideoRT"
+            };
+        }
+
+        _backgroundVideo.renderMode = VideoRenderMode.RenderTexture;
+        _backgroundVideo.targetTexture = _backgroundVideoRenderTexture;
+        _backgroundVideoRawImage.texture = _backgroundVideoRenderTexture;
     }
 }
 
