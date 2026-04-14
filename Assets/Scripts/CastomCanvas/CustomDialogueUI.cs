@@ -173,6 +173,38 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
     public bool IsDialogueActive => DialogueManager.isConversationActive;
 
+    /// <summary>
+    /// После перезагрузки сцены Dialogue Manager (DDOL) мог остаться с мусором в флагах; без сброса радио/клиентские режимы ломают авто-листание.
+    /// </summary>
+    public void ResetStaleStateAfterSceneReload()
+    {
+        SetForcedAutoAdvance(false);
+        SetManualAdvanceBlocked(false);
+        _awaitFinish = false;
+        _inChoiceMode = false;
+        _isThreeChoicesMode = false;
+        _subtitlePanelHiddenByChoiceRule = false;
+        _namePlateVisibleByClientConversation = false;
+        if (namePlateHideOnChoiceCanvas != null)
+            namePlateHideOnChoiceCanvas.gameObject.SetActive(false);
+        // Если вышли из игры на экране выбора ответа, ApplyChoiceState() уже сдвинула панель
+        // субтитров в «режим диалога»; без восстановления следующий ShowSubtitle покажет текст там же.
+        RestorePanelDefaults();
+        ApplyNormalState();
+        ApplyKeyHintPlaqueChoiceState(false);
+        RefreshChoiceModeHiddenObjectsVisibility();
+        RefreshAwaitingFinishKeyUI();
+        SetAutoAdvanceHiddenObjectsVisible(true);
+        HideContinueButtons();
+
+        if (DialogueManager.instance != null && DialogueManager.displaySettings != null
+            && DialogueManager.displaySettings.subtitleSettings != null)
+        {
+            DialogueManager.displaySettings.subtitleSettings.continueButton =
+                DisplaySettings.SubtitleSettings.ContinueButtonMode.Always;
+        }
+    }
+
     public override void Awake()
     {
         base.Awake();
@@ -284,6 +316,9 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
 
         if (!IsDialogueActive) return;
 
+        if (ShouldBlockDialogueInputForGamePause())
+            return;
+
         if (_awaitFinish)
         {
             if (Input.GetKeyDown(finishKey))
@@ -348,9 +383,16 @@ public sealed class CustomDialogueUI : StandardDialogueUI, ICustomDialogueUI
     /// </summary>
     public override void OnContinueConversation()
     {
+        if (ShouldBlockDialogueInputForGamePause())
+            return;
         if (TryAdvanceOrRequireFinishKey())
             return;
         base.OnContinueConversation();
+    }
+
+    private static bool ShouldBlockDialogueInputForGamePause()
+    {
+        return GameFlowController.Instance != null && GameFlowController.Instance.IsGamePaused;
     }
 
     /// <returns>true, если продолжать не нужно (ожидаем F).</returns>

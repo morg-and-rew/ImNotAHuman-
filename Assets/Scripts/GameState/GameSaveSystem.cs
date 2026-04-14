@@ -9,6 +9,7 @@ public sealed class Day1SaveData
     public bool ChoseToGivePackage5577;
     public bool GotPhoneNumberFromGuy;
     public string SavedPhoneNumber;
+    public bool SkepticPhoneUnlocked;
     public int NeutralChoicesCount;
     public int MysticalChoicesCount;
     public int SkepticalChoicesCount;
@@ -40,6 +41,8 @@ public sealed class GameSaveSystem : MonoBehaviour
 {
     private static GameSaveSystem _instance;
     private static bool? _loadFromSaveAtStartOverride;
+    private const string BuildStampPrefsKey = "save_data_build_stamp";
+    private static bool _startupBuildCheckDone;
 
     [Header("Save Settings")]
     [Tooltip("Имя основного файла сохранения в Application.persistentDataPath. Слоты 1–3 пишутся как save_slot1.json, save_slot2.json, save_slot3.json.")]
@@ -76,6 +79,37 @@ public sealed class GameSaveSystem : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(gameObject);
+        EnsureBuildStampCheckedAndMaybeClear();
+    }
+
+    private static void EnsureBuildStampCheckedAndMaybeClear()
+    {
+        if (_startupBuildCheckDone)
+            return;
+        _startupBuildCheckDone = true;
+
+        string version = Application.version ?? "";
+        string dataPath = Application.dataPath ?? "";
+        long dataPathWriteTicks = 0;
+        try
+        {
+            dataPathWriteTicks = Directory.Exists(dataPath)
+                ? Directory.GetLastWriteTimeUtc(dataPath).Ticks
+                : 0;
+        }
+        catch
+        {
+            dataPathWriteTicks = 0;
+        }
+
+        string currentStamp = $"{version}|{dataPath}|{dataPathWriteTicks}";
+        string savedStamp = PlayerPrefs.GetString(BuildStampPrefsKey, "");
+        if (string.Equals(savedStamp, currentStamp, StringComparison.Ordinal))
+            return;
+
+        ClearAllSaveFiles();
+        PlayerPrefs.SetString(BuildStampPrefsKey, currentStamp);
+        PlayerPrefs.Save();
     }
 
     private static string GetSavePath(int slot = 0)
@@ -94,6 +128,7 @@ public sealed class GameSaveSystem : MonoBehaviour
     /// <summary>Сохранить данные первого дня. Всегда пишется в основной файл; при _alsoSaveToSlot > 0 — также в выбранный слот.</summary>
     public static void SaveDay1(Day1SaveData day1)
     {
+        EnsureBuildStampCheckedAndMaybeClear();
         if (day1 == null)
             return;
 
@@ -128,6 +163,7 @@ public sealed class GameSaveSystem : MonoBehaviour
     /// <summary>Загрузить данные первого дня из указанного слота (0 = основной файл, 1–3 = слоты).</summary>
     public static Day1SaveData LoadDay1FromSlot(int slot)
     {
+        EnsureBuildStampCheckedAndMaybeClear();
         string path = GetSavePath(slot);
         if (!File.Exists(path))
             return null;
@@ -142,6 +178,43 @@ public sealed class GameSaveSystem : MonoBehaviour
         {
             Debug.LogError($"Failed to load game data from '{path}': {e}");
             return null;
+        }
+    }
+
+    /// <summary>
+    /// Очистить основной сейв (save.json), который используется кнопкой Continue.
+    /// </summary>
+    public static void ClearMainSave()
+    {
+        string path = GetSavePath(0);
+        try
+        {
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to clear main save '{path}': {e}");
+        }
+    }
+
+    /// <summary>
+    /// Удалить основной файл и слоты 1–3 — «Новая игра» должна совпадать с чистым первым запуском.
+    /// </summary>
+    public static void ClearAllSaveFiles()
+    {
+        for (int slot = 0; slot <= 3; slot++)
+        {
+            string path = GetSavePath(slot);
+            try
+            {
+                if (File.Exists(path))
+                    File.Delete(path);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to clear save slot {slot} at '{path}': {e}");
+            }
         }
     }
 }

@@ -33,6 +33,7 @@ public sealed class Computer : MonoBehaviour
     private bool _isPlayerInZone;
     private bool _computerOpen;
     private bool _videoPlaying;
+    private bool _computerVideoHeldPausedForGamePause;
 
     private static string s_allowedVideoKind;
 
@@ -57,6 +58,12 @@ public sealed class Computer : MonoBehaviour
             _indoorButton.onClick.AddListener(OnIndoorButtonClicked);
     }
 
+    private void Start()
+    {
+        if (GameFlowController.Instance != null)
+            GameFlowController.Instance.OnInGamePauseChanged += OnInGamePauseChanged;
+    }
+
     private void OnDestroy()
     {
         if (_videoPlayer != null)
@@ -68,6 +75,28 @@ public sealed class Computer : MonoBehaviour
             _streetButton.onClick.RemoveListener(OnStreetButtonClicked);
         if (_indoorButton != null)
             _indoorButton.onClick.RemoveListener(OnIndoorButtonClicked);
+        if (GameFlowController.Instance != null)
+            GameFlowController.Instance.OnInGamePauseChanged -= OnInGamePauseChanged;
+    }
+
+    private void OnInGamePauseChanged(bool paused)
+    {
+        if (!_videoPlaying || _videoPlayer == null)
+            return;
+
+        if (paused)
+        {
+            if (_videoPlayer.isPlaying)
+            {
+                _videoPlayer.Pause();
+                _computerVideoHeldPausedForGamePause = true;
+            }
+        }
+        else if (_computerVideoHeldPausedForGamePause)
+        {
+            _videoPlayer.Play();
+            _computerVideoHeldPausedForGamePause = false;
+        }
     }
 
     private void Update()
@@ -200,7 +229,9 @@ public sealed class Computer : MonoBehaviour
             _videoRoot.SetActive(true);
         _videoPlayer.Stop();
         _videoPlayer.clip = clip;
+        VideoRenderTextureUtil.ClearVideoTargetIfRenderTexture(_videoPlayer);
         _videoPlayer.isLooping = false;
+        _videoPlayer.waitForFirstFrame = true;
         _videoPlayer.prepareCompleted += OnVideoPrepared;
         _videoPlayer.Prepare();
         StartCoroutine(PlayVideoWhenReady());
@@ -239,6 +270,7 @@ public sealed class Computer : MonoBehaviour
     {
         if (!_videoPlaying) return;
         _videoPlaying = false;
+        _computerVideoHeldPausedForGamePause = false;
         if (_videoPlayer != null)
             _videoPlayer.prepareCompleted -= OnVideoPrepared;
         if (_videoRoot != null)

@@ -9,6 +9,8 @@ public sealed class PlayerController : IPlayerBlocker
 
     private bool _movementBlocked;
     private bool _lookBlocked;
+
+    public bool IsInputBlocked => _movementBlocked;
     private float _footstepCooldown;
     private const float FootstepInterval = 0.45f;
 

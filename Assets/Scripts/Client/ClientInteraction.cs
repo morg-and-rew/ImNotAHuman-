@@ -120,6 +120,17 @@ public sealed class ClientInteraction : MonoBehaviour, IClientInteraction
         SetClientPortraitsRootActive(false);
     }
 
+    public void SyncDialogueUi(ICustomDialogueUI customDialogueUI)
+    {
+        if (_customDialogueUI != null)
+            _customDialogueUI.OnSubtitleShown -= OnSubtitleShown;
+
+        _customDialogueUI = customDialogueUI;
+
+        if (_customDialogueUI != null)
+            _customDialogueUI.OnSubtitleShown += OnSubtitleShown;
+    }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

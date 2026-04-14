@@ -75,8 +75,16 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private float _voiceBaseVolume = 1f;
     private float _currentStaticVolume;
     private bool _forcedStaticOnlyMode;
+    private bool _voiceHeldPausedForGamePause;
+    private bool _radioVideoHeldPausedForGamePause;
 
     public Sprite HintSprite => _hintSprite;
+
+    /// <summary> После LoadScene: ссылка на CustomDialogueUI могла указывать на уничтоженный объект — авто-листание и тайм-коды не работали. </summary>
+    public void SyncCustomDialogueUi(CustomDialogueUI ui)
+    {
+        _customDialogueUI = ui != null ? ui : (_customDialogueUIRef ?? GameFlowController.Instance?.CustomDialogueUI);
+    }
 
     private void Start()
     {
@@ -104,6 +112,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         {
             gfc.OnRadioEventActivated += OnRadioEventActivated;
             gfc.OnRadioStaticVolumeRequested += OnRadioStaticVolumeRequested;
+            gfc.OnInGamePauseChanged += OnInGamePauseChanged;
         }
 
         if (_videoPlayer != null)
@@ -139,6 +148,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         {
             gfc.OnRadioEventActivated -= OnRadioEventActivated;
             gfc.OnRadioStaticVolumeRequested -= OnRadioStaticVolumeRequested;
+            gfc.OnInGamePauseChanged -= OnInGamePauseChanged;
             UnsubscribeTeleportForVideo();
         }
         if (_videoPlayer != null)
@@ -189,6 +199,38 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         }
     }
 
+    private void OnInGamePauseChanged(bool paused)
+    {
+        if (paused)
+        {
+            if (_voiceSource != null && _voiceSource.isPlaying)
+            {
+                _voiceSource.Pause();
+                _voiceHeldPausedForGamePause = true;
+            }
+
+            if (_waitingVideoEnd && _videoPlayer != null && _videoPlayer.isPlaying)
+            {
+                _videoPlayer.Pause();
+                _radioVideoHeldPausedForGamePause = true;
+            }
+        }
+        else
+        {
+            if (_voiceHeldPausedForGamePause && _voiceSource != null)
+            {
+                _voiceSource.UnPause();
+                _voiceHeldPausedForGamePause = false;
+            }
+
+            if (_radioVideoHeldPausedForGamePause && _videoPlayer != null)
+            {
+                _videoPlayer.Play();
+                _radioVideoHeldPausedForGamePause = false;
+            }
+        }
+    }
+
     private void PlayStatic(float? volumeOverride = null)
     {
         if (_voiceSource == null)
@@ -222,6 +264,7 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private void StopStatic()
     {
         if (!_staticPlaying || _voiceSource == null) return;
+        _voiceHeldPausedForGamePause = false;
         _voiceSource.Stop();
         _staticPlaying = false;
     }
@@ -609,7 +652,9 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
         _videoPlayer.loopPointReached += OnVideoEnded;
         _videoPlayer.Stop();
         _videoPlayer.clip = videoClip;
+        VideoRenderTextureUtil.ClearVideoTargetIfRenderTexture(_videoPlayer);
         _videoPlayer.isLooping = false;
+        _videoPlayer.waitForFirstFrame = true;
         _videoPlayer.Prepare();
     }
 
@@ -633,6 +678,9 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
     private void FinishVideoPlayback(bool notifyStoryCompletion)
     {
         GameFlowController.Instance?.ReleaseTravelFadeHoldIfAny();
+
+        _radioVideoHeldPausedForGamePause = false;
+        _voiceHeldPausedForGamePause = false;
 
         _waitingVideoEnd = false;
         _playingVideoEventId = null;
@@ -737,9 +785,10 @@ public sealed class RadioInteractable : MonoBehaviour, IWorldInteractable
 
     private void ApplyDistanceVolumeToSources()
     {
+        GameAudioSettings.EnsureLoaded();
         float distanceMultiplier = GetDistanceVolumeMultiplier();
-        float stationVolume = Mathf.Clamp01(_stationBaseVolume * distanceMultiplier);
-        float voiceVolume = Mathf.Clamp01(_voiceBaseVolume * distanceMultiplier);
+        float stationVolume = Mathf.Clamp01(_stationBaseVolume * distanceMultiplier * GameAudioSettings.MusicVolume01);
+        float voiceVolume = Mathf.Clamp01(_voiceBaseVolume * distanceMultiplier * GameAudioSettings.SfxVolume01);
 
         if (_stationSource != null)
             _stationSource.volume = stationVolume;

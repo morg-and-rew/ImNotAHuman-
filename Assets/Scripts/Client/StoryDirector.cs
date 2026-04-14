@@ -9,6 +9,7 @@ using TutorialPendingAction = IGameFlowController.TutorialPendingAction;
 
 public sealed class StoryDirector : MonoBehaviour
 {
+    private const string SkepticPhoneUnlockedLuaVar = "SkepticPhoneUnlocked";
     private const float KnockAfterFreeRoamDelaySeconds = 10f;
     /// <summary> Первый диалог дня 2 у стойки; после старта — свечи на складе не зажигаются и без подсказки/обводки. </summary>
     public const string Day21ClientConversationTitle = "Client_day2.1";
@@ -142,8 +143,11 @@ public sealed class StoryDirector : MonoBehaviour
         || (_currentStep != null && _currentStep.optional);
 
     public bool IsStepAllowingTravelToWarehouse =>
-        IsAtOrPastStep("free_roam_before_clients")
-        || (_currentStep != null && (_currentStep.type == StepType.GoToDoorWarehouse || _currentStep.type == StepType.GoWarehouse || _currentStep.type == StepType.GoWarehouseWaitReturn || _currentStep.type == StepType.GoToRadio));
+        HasStoryStarted
+        && (
+            IsAtOrPastStep("free_roam_before_clients")
+            || (_currentStep != null && (_currentStep.type == StepType.GoToDoorWarehouse || _currentStep.type == StepType.GoWarehouse || _currentStep.type == StepType.GoWarehouseWaitReturn || _currentStep.type == StepType.GoToRadio))
+        );
 
     public bool IsStepAllowingTravelToClient =>
         IsAtOrPastStep("free_roam_before_clients")
@@ -165,7 +169,10 @@ public sealed class StoryDirector : MonoBehaviour
     public bool IsAtOrPastStep(string stepId)
     {
         if (string.IsNullOrEmpty(stepId)) return true;
-        if (_steps == null || _steps.Count == 0 || _index < 0) return true;
+        if (_steps == null || _steps.Count == 0) return true;
+        // До первого Advance() _index == -1: нельзя считать, что мы «уже прошли» шаги сценария (иначе до StartStory()
+        // и до нажатия пробела на шаге PressSpace открывался переход на склад).
+        if (_index < 0) return false;
         int targetIndex = -1;
         for (int i = 0; i < _steps.Count; i++)
         {
@@ -206,6 +213,13 @@ public sealed class StoryDirector : MonoBehaviour
             gfc.OnTriggerFired += OnTriggerFired;
             gfc.OnComputerVideoEnded += OnComputerVideoEnded;
         }
+    }
+
+    /// <summary> Вызывается из GameFlowController после привязки Dialogue UI к новому экземпляру сцены. </summary>
+    public void ResyncDialogueUiReference()
+    {
+        _customDialogueUI = _customDialogueUIRef ?? GameFlowController.Instance?.CustomDialogueUI;
+        EnsureCustomDialogueUISubscription();
     }
 
     private static List<Step> BuildStepsFromConfig()
@@ -302,7 +316,7 @@ public sealed class StoryDirector : MonoBehaviour
     {
         yield return new WaitForSeconds(KnockAfterFreeRoamDelaySeconds);
         if (_knockAudioSource != null && _knockAudioSource.clip != null)
-            _knockAudioSource.PlayOneShot(_knockAudioSource.clip);
+            _knockAudioSource.PlayOneShot(_knockAudioSource.clip, GameAudioSettings.ScaleSfx(1f));
         _knockDelayCoroutine = null;
         _wait = WaitMode.Idle;
         Advance();
@@ -978,6 +992,7 @@ public sealed class StoryDirector : MonoBehaviour
         bool choseToGive = DialogueLua.GetVariable("ChoseToGivePackage5577").AsBool;
         bool gotPhoneNumber = _phoneUnlock != null && _phoneUnlock.HasSpawnedNote;
         string savedPhoneNumber = _phoneUnlock != null ? _phoneUnlock.GetSavedPhoneNumber() : "";
+        bool skepticPhoneUnlocked = DialogueLua.GetVariable(SkepticPhoneUnlockedLuaVar).AsBool;
 
         int neutral = 0, mystical = 0, skeptical = 0;
         if (_attitudeRecorder != null && _attitudeRecorder.Stats != null)
@@ -992,6 +1007,7 @@ public sealed class StoryDirector : MonoBehaviour
             ChoseToGivePackage5577 = choseToGive,
             GotPhoneNumberFromGuy = gotPhoneNumber,
             SavedPhoneNumber = savedPhoneNumber ?? "",
+            SkepticPhoneUnlocked = skepticPhoneUnlocked,
             NeutralChoicesCount = neutral,
             MysticalChoicesCount = mystical,
             SkepticalChoicesCount = skeptical,
@@ -1007,6 +1023,7 @@ public sealed class StoryDirector : MonoBehaviour
 
         DialogueLua.SetVariable("ChoseToGivePackage5577", data.ChoseToGivePackage5577);
         DialogueLua.SetVariable("RunWarehouse5577Steps", false);
+        DialogueLua.SetVariable(SkepticPhoneUnlockedLuaVar, data.SkepticPhoneUnlocked);
 
         if (_attitudeRecorder != null && _attitudeRecorder.Stats != null)
             _attitudeRecorder.Stats.SetCounts(data.NeutralChoicesCount, data.MysticalChoicesCount, data.SkepticalChoicesCount);
@@ -1019,6 +1036,9 @@ public sealed class StoryDirector : MonoBehaviour
 
         if (data.Packages != null && data.Packages.Count > 0 && PackageRegistry.Instance != null)
             PackageRegistry.Instance.RestoreFromSaveEntries(data.Packages);
+
+        if (data.SkepticPhoneUnlocked)
+            Lua.Run("if UnlockSkepticPhone ~= nil then UnlockSkepticPhone() end");
     }
 
     /// <summary>Запустить сюжет с указанного шага — выполнить этот шаг (для загрузки: отыграть fade_to_black_day1_end и интро 2-го дня).</summary>
@@ -1845,7 +1865,7 @@ public sealed class StoryDirector : MonoBehaviour
             position = gfc.Player.transform.position;
         else if (Camera.main != null)
             position = Camera.main.transform.position;
-        AudioSource.PlayClipAtPoint(_day2After60sMeetWarehouseImpactClip, position, _day2After60sMeetWarehouseImpactVolume);
+        AudioSource.PlayClipAtPoint(_day2After60sMeetWarehouseImpactClip, position, GameAudioSettings.ScaleSfx(_day2After60sMeetWarehouseImpactVolume));
     }
 
     private void ScheduleDay1AfterClient14WarehouseImpactSound()
@@ -1873,7 +1893,7 @@ public sealed class StoryDirector : MonoBehaviour
             position = gfc.Player.transform.position;
         else if (Camera.main != null)
             position = Camera.main.transform.position;
-        AudioSource.PlayClipAtPoint(_day1AfterClient14WarehouseImpactClip, position, _day1AfterClient14WarehouseImpactVolume);
+        AudioSource.PlayClipAtPoint(_day1AfterClient14WarehouseImpactClip, position, GameAudioSettings.ScaleSfx(_day1AfterClient14WarehouseImpactVolume));
     }
 
     private void OnSubtitleShown(Subtitle subtitle)
@@ -1991,6 +2011,8 @@ public sealed class StoryDirector : MonoBehaviour
         _flow?.PlayFadeToBlack(3f, () =>
         {
             _wait = WaitMode.Idle;
+            // После полного прохождения дня 2 Continue не должен быть доступен.
+            GameSaveSystem.ClearMainSave();
             if (_flow is GameFlowController gfcEnd)
                 gfcEnd.QuitApplicationAfterStoryEnding();
         });
@@ -2052,7 +2074,7 @@ public sealed class StoryDirector : MonoBehaviour
             position = gfc.Player.transform.position;
         else if (Camera.main != null)
             position = Camera.main.transform.position;
-        AudioSource.PlayClipAtPoint(clip, position, Mathf.Clamp01(volume));
+        AudioSource.PlayClipAtPoint(clip, position, GameAudioSettings.ScaleSfx(Mathf.Clamp01(volume)));
     }
 
     private void EnsureCustomDialogueUISubscription()

@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 using static IGameFlowController;
 
@@ -83,7 +86,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     [Header("Localization (UI Text Table)")]
     [SerializeField] private TextTable _uiTextTable;
-    [SerializeField] private string _language = "en";
+    [SerializeField] private string _language = "ru";
 
     [Header("Tutorial")]
     [SerializeField] private TutorialHintView _tutorialHint;
@@ -93,6 +96,16 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [SerializeField] private bool _showMainMenuOnStart = true;
     [Tooltip("Ссылка на главное меню, собранное на сцене (Canvas + кнопки + video background).")]
     [SerializeField] private MainMenuUI _mainMenuSceneUI;
+
+    [Header("Pause Menu (In-Game)")]
+    [Tooltip("Кнопка паузы на игровом UI (иконка в углу).")]
+    [SerializeField] private Button _pauseButton;
+    [Tooltip("Панель паузы с кнопками Continue / Exit to Main Menu.")]
+    [SerializeField] private GameObject _pauseMenuPanel;
+    [SerializeField] private Button _pauseContinueButton;
+    [SerializeField] private Button _pauseExitToMainMenuButton;
+    [Tooltip("Необязательно: корень UI паузы (кнопка в углу и т.п.). На главном меню скрывается целиком. Если пусто — скрывается только GameObject кнопки _pauseButton.")]
+    [SerializeField] private GameObject _pauseHudRoot;
 
     [Header("Delivery (optional)")]
     [SerializeField] private WarehouseDeliveryController _delivery;
@@ -109,6 +122,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     [SerializeField] private Transform _dialogueLookPoint;
     [SerializeField] private GameObject _skepticPhoneNoteObject;
     [SerializeField] private DialogueSystemController _dialogueSystemController;
+    [Tooltip("Главный диалоговый UI (субтитры у игрока). Если не задан — ищется CustomDialogueUI в иерархии игрока. Не вешай сюда UI монитора компьютера — иначе ломаются портреты и радио после перезахода.")]
+    [SerializeField] private CustomDialogueUI _primaryPlayerDialogueUi;
+    [Tooltip("Canvas игрока из префаба (всегда в сцене). CustomDialogueUI Pixel Crushers часто создаётся в рантайме — перетащи сюда родительский Canvas, под которым появится UI, чтобы мы могли найти компонент без ручной ссылки на него.")]
+    [SerializeField] private Canvas _playerHudCanvasForDialogueSearch;
 
     private readonly HashSet<string> _radioAvailable = new();
     private readonly HashSet<string> _radioPlayed = new();
@@ -125,6 +142,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private IClientInteraction _clientInteraction;
     private CustomDialogueUI _customDialogueUI;
+    /// <summary> На каком экземпляре висит подписка OnClientDialogueFinishedByKey — чтобы не дублировать и не оставлять её на «Computer» UI. </summary>
+    private CustomDialogueUI _boundDialogueUiForClientFinishedKeyEvent;
     private string _awaitingPostVideoDialogueComplete;
 
     private bool _radioDay1_2ConversationStarted;
@@ -156,6 +175,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public bool PreferEmptyOverMeetClient => _preferEmptyOverMeetClient;
     public bool MeetClientHintAlreadyShown => _meetClientHintShown;
     public bool IsInClientDialogState => GameStateService.CurrentState == GameState.ClientDialog;
+
+    /// <summary> Открыто меню паузы — диалог не должен принимать пробел/автопрокрутку, пока игрок в паузе. </summary>
+    public bool IsGamePaused => _isPaused;
 
     public event Action<string> OnStoryProgressed;
     public event Action<string> OnClientEncountered;
@@ -248,6 +270,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     public event Action<string> OnTriggerFired;
     public event Action<string> OnExitZonePassed;
     public event Action OnComputerVideoEnded;
+
+    /// <summary> Внутриигровая пауза (меню ESC): подписчики могут ставить на паузу озвучку/видео. </summary>
+    public event Action<bool> OnInGamePauseChanged;
 
     /// <summary> Видео с радио начало воспроизведение (eventId из конфига радио, например day1_2_radio_video). </summary>
     public event Action<string> OnRadioStoryVideoStarted;
@@ -492,18 +517,20 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             onComplete?.Invoke();
     }
 
-    /// <summary> Вызывается после финального fade-to-black (конец дня 2): блокировка ввода и выход из приложения. </summary>
+    /// <summary>
+    /// Вызывается после финального fade-to-black (конец дня 2).
+    /// В билде возвращаемся в главное меню (перезагрузка сцены), чтобы игрок мог нажать Continue / New Game.
+    /// </summary>
     public void QuitApplicationAfterStoryEnding()
     {
         HideHint();
         _controller?.SetBlock(true);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        // Возврат в главное меню: просто перезагружаем текущую сцену.
+        // Menu будет показано через _showMainMenuOnStart / ShowMainMenuThenStart().
+        var sc = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(sc.buildIndex);
     }
 
     /// <summary> Начало второго дня: телепорт в PlayerSpawnPoint, интро из чёрного в прозрачный (после показа интро скрываем fade-to-black). </summary>
@@ -1066,18 +1093,221 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         }
     }
 
-    private void OnEnable()
+    private static bool IsUnderPlayerHierarchy(PlayerView player, Component c)
     {
-        Instance = this;
-        if (_customDialogueUI == null) _customDialogueUI = _dialogueSystemController?.DialogueUI as CustomDialogueUI;
+        return c != null && player != null && c.transform.IsChildOf(player.transform);
+    }
+
+    /// <summary> UI монитора (имя/путь содержит Computer) — не основной канал субтитров в мире; при выборе только его диалоги «исчезают» (канвас монитора выключен). </summary>
+    private static bool IsComputerMonitorDialogueUi(CustomDialogueUI ui)
+    {
+        if (ui == null) return false;
+        if (ui.gameObject.name.IndexOf("Computer", StringComparison.OrdinalIgnoreCase) >= 0)
+            return true;
+        string path = GameObjectUtility.GetHierarchyPath(ui.transform);
+        return path.IndexOf("Computer", StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    /// <summary> Предпочитаем CustomDialogueUI не из ветки монитора (например из Canvas игрока / общего HUD). </summary>
+    private static CustomDialogueUI TryFindNonComputerCustomDialogueUi(PlayerView player)
+    {
+        var all = UnityEngine.Object.FindObjectsByType<CustomDialogueUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        CustomDialogueUI underPlayer = null;
+        CustomDialogueUI firstOther = null;
+        for (int i = 0; i < all.Length; i++)
+        {
+            CustomDialogueUI ui = all[i];
+            if (ui == null || IsComputerMonitorDialogueUi(ui)) continue;
+            if (player != null && ui.transform.IsChildOf(player.transform))
+                underPlayer = ui;
+            if (firstOther == null)
+                firstOther = ui;
+        }
+        return underPlayer ?? firstOther;
+    }
+
+    /// <summary>
+    /// Кэш <c>DialogueManager.m_instance</c> может указывать на другой <see cref="DialogueSystemController"/> (DDOL vs сцена).
+    /// Выравниваем с тем же объектом, что в инспекторе у <see cref="_dialogueSystemController"/>.
+    /// </summary>
+    private void AlignDialogueManagerSingletonWithSerializedController()
+    {
+        if (_dialogueSystemController == null) return;
+        // Иначе подмена синглтона до Awake DSC: databaseManager == null → masterDatabase бросает NRE в локализации и др.
+        if (_dialogueSystemController.databaseManager == null) return;
+        try
+        {
+            FieldInfo field = typeof(DialogueManager).GetField("m_instance", BindingFlags.NonPublic | BindingFlags.Static);
+            field?.SetValue(null, _dialogueSystemController);
+        }
+        catch
+        {
+            // версия плагина без поля / IL2CPP — тогда полагаемся на EnsureSingletonDialogueManagerUsesResolvedUi
+        }
+    }
+
+    /// <summary>
+    /// FindFirstObjectByType / GetComponentInChildren на DialogueSystemController часто возвращали CustomDialogueUI монитора («Computer…»), а не субтитры у игрока — после LoadScene ломались портреты и радио.
+    /// </summary>
+    private CustomDialogueUI ResolvePrimaryCustomDialogueUi(PlayerView player, CustomDialogueUI fromInstaller)
+    {
+        if (_primaryPlayerDialogueUi != null)
+            return _primaryPlayerDialogueUi;
+
+        if (player != null)
+        {
+            CustomDialogueUI underPlayer = player.GetComponentInChildren<CustomDialogueUI>(true);
+            if (underPlayer != null)
+                return underPlayer;
+        }
+
+        if (_playerHudCanvasForDialogueSearch != null)
+        {
+            CustomDialogueUI onHudCanvas = _playerHudCanvasForDialogueSearch.GetComponentInChildren<CustomDialogueUI>(true);
+            if (onHudCanvas != null && !IsComputerMonitorDialogueUi(onHudCanvas))
+                return onHudCanvas;
+        }
+
+        CustomDialogueUI nonComputer = TryFindNonComputerCustomDialogueUi(player);
+        if (nonComputer != null)
+            return nonComputer;
+
+        CustomDialogueUI dscUi = _dialogueSystemController != null ? _dialogueSystemController.DialogueUI as CustomDialogueUI : null;
+
+        if (fromInstaller != null && IsUnderPlayerHierarchy(player, fromInstaller))
+            return fromInstaller;
+        if (dscUi != null && IsUnderPlayerHierarchy(player, dscUi))
+            return dscUi;
+
+        if (fromInstaller != null)
+            return fromInstaller;
+        if (dscUi != null)
+            return dscUi;
+
+        if (_dialogueSystemController != null)
+        {
+            CustomDialogueUI onDsc = _dialogueSystemController.GetComponentInChildren<CustomDialogueUI>(true);
+            if (onDsc != null)
+                return onDsc;
+        }
+
+        return UnityEngine.Object.FindFirstObjectByType<CustomDialogueUI>(UnityEngine.FindObjectsInactive.Include);
+    }
+
+    /// <summary>
+    /// Статический <see cref="DialogueManager.instance"/> кэшируется и часто указывает на DontDestroyOnLoad
+    /// <see cref="DialogueSystemController"/>, тогда как поле сцены <see cref="_dialogueSystemController"/> после LoadScene
+    /// может быть другим объектом. Тогда присвоение только <c>_dialogueSystemController.DialogueUI</c> не обновляет UI
+    /// у фактически используемого менеджера — в логах разные instance id у active UI и dialogueManagerUi.
+    /// </summary>
+    private void EnsureSingletonDialogueManagerUsesResolvedUi()
+    {
+        if (_customDialogueUI == null) return;
+        if (!DialogueManager.hasInstance) return;
+        DialogueManager.dialogueUI = _customDialogueUI;
+    }
+
+    /// <summary> Подставить разрешённый UI в DSC/синглтон и переподписать радио/клиента (без StoryDirector — он ниже по Init). </summary>
+    private void ApplyResolvedCustomDialogueUi(CustomDialogueUI ui)
+    {
+        _customDialogueUI = ui;
+        if (_customDialogueUI == null) return;
+
+        if (_dialogueSystemController != null)
+        {
+            _dialogueSystemController.DialogueUI = _customDialogueUI;
+            _customDialogueUI.ResetStaleStateAfterSceneReload();
+        }
+
+        EnsureSingletonDialogueManagerUsesResolvedUi();
+        RebindClientDialogueFinishedKeySubscription();
+        ResyncDialogueUiConsumersAfterManagerWired();
+    }
+
+    private static bool ShouldPreferDialogueUiInstance(CustomDialogueUI current, CustomDialogueUI candidate)
+    {
+        if (candidate == null) return false;
+        if (current == null) return true;
+        if (ReferenceEquals(current, candidate)) return false;
+        return IsComputerMonitorDialogueUi(current) && !IsComputerMonitorDialogueUi(candidate);
+    }
+
+    /// <summary> Dialogue System создаёт UI префаб не в первый кадр — добираем «не Computer» после Preload/Instantiate. </summary>
+    private IEnumerator CoRetryBindRuntimeDialogueUi(CustomDialogueUI fromInstaller)
+    {
+        const int maxFrames = 72;
+        for (int i = 0; i < maxFrames; i++)
+        {
+            if (i > 0) yield return null;
+            _dialogueSystemController?.PreloadDialogueUI();
+            CustomDialogueUI next = ResolvePrimaryCustomDialogueUi(_player, fromInstaller);
+            if (ShouldPreferDialogueUiInstance(_customDialogueUI, next))
+                ApplyResolvedCustomDialogueUi(next);
+            if (next != null && !IsComputerMonitorDialogueUi(next))
+            {
+                _storyDirector?.ResyncDialogueUiReference();
+                yield break;
+            }
+        }
+    }
+
+    /// <summary> Подмена m_instance в первом кадре Init часто раньше Awake DSC — добираем выравнивание и повторный [Loc]-refresh. </summary>
+    private IEnumerator CoDeferredAlignDialogueSingletonWhenReady()
+    {
+        if (_dialogueSystemController == null) yield break;
+        for (int i = 0; i < 120; i++)
+        {
+            if (_dialogueSystemController.databaseManager != null)
+            {
+                AlignDialogueManagerSingletonWithSerializedController();
+                EnsureSingletonDialogueManagerUsesResolvedUi();
+                DialogueSystemEnFieldApplier.RefreshAfterLanguageChanged(this);
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    private void RebindClientDialogueFinishedKeySubscription()
+    {
+        if (_boundDialogueUiForClientFinishedKeyEvent == _customDialogueUI)
+            return;
+        if (_boundDialogueUiForClientFinishedKeyEvent != null)
+            _boundDialogueUiForClientFinishedKeyEvent.OnClientDialogueFinishedByKey -= OnClientDialogueFinishedByKey;
+        _boundDialogueUiForClientFinishedKeyEvent = _customDialogueUI;
         if (_customDialogueUI != null)
             _customDialogueUI.OnClientDialogueFinishedByKey += OnClientDialogueFinishedByKey;
     }
 
+    private void UnbindClientDialogueFinishedKeySubscription()
+    {
+        if (_boundDialogueUiForClientFinishedKeyEvent != null)
+        {
+            _boundDialogueUiForClientFinishedKeyEvent.OnClientDialogueFinishedByKey -= OnClientDialogueFinishedByKey;
+            _boundDialogueUiForClientFinishedKeyEvent = null;
+        }
+    }
+
+    private void OnEnable()
+    {
+        Instance = this;
+        #region agent log
+        Application.logMessageReceived += AgentOnUnityLogMessage;
+        AgentDebugNdjson.Log("H4", "GameFlowController.OnEnable", "enabled", $"{{\"initialized\":{(_initialized ? "true" : "false")}}}");
+        #endregion
+        RebindClientDialogueFinishedKeySubscription();
+    }
+
     private void OnDisable()
     {
-        if (_customDialogueUI != null)
-            _customDialogueUI.OnClientDialogueFinishedByKey -= OnClientDialogueFinishedByKey;
+        #region agent log
+        Application.logMessageReceived -= AgentOnUnityLogMessage;
+        AgentDebugNdjson.Log("H4", "GameFlowController.OnDisable", "disabled", $"{{\"initialized\":{(_initialized ? "true" : "false")}}}");
+        #endregion
+        if (_isPaused || Time.timeScale == 0f)
+            Time.timeScale = 1f;
+
+        UnbindClientDialogueFinishedKeySubscription();
 
         if (DialogueManager.instance != null)
         {
@@ -1097,6 +1327,21 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
         UnsubscribeConversationEnded();
     }
+
+    #region agent log
+    private static void AgentOnUnityLogMessage(string condition, string stackTrace, LogType type)
+    {
+        if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert)
+            return;
+        string t = type.ToString();
+        string c = condition ?? "";
+        if (c.Length > 800) c = c.Substring(0, 800);
+        string st = stackTrace ?? "";
+        if (st.Length > 1200) st = st.Substring(0, 1200);
+        AgentDebugNdjson.Log("H4", "UnityEngine.Debug", "log_" + t,
+            "{\"condition\":\"" + c.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", " ") + "\",\"stack\":\"" + st.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", " ") + "\"}");
+    }
+    #endregion
 
     private void OnClientConversationStarted()
     {
@@ -1133,6 +1378,9 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private void EnforceClientDialogueControlsForMouseChoices()
     {
         if (_controller == null || !_initialized) return;
+        // Курсор для мыши нужен только во время реального диалога с клиентом у стойки.
+        // Иначе (например, реплика у окна) он может залипнуть видимым.
+        if (_clientInteraction == null || !_clientInteraction.IsActive) return;
         if (GameStateService.CurrentState != GameState.ClientDialog) return;
         if (!DialogueManager.isConversationActive) return;
 
@@ -1147,9 +1395,20 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     public void Init(PlayerView player, IPlayerBlocker controller, IPlayerInput input, IClientInteraction clientInteraction, DeliveryNoteView deliveryNoteView, CustomDialogueUI customDialogueUI = null)
     {
-        if (_initialized) return;
+        #region agent log
+        if (_initialized)
+        {
+            AgentDebugNdjson.Log("H1", "GameFlowController.Init", "skipped_already_initialized", "{}");
+            return;
+        }
+
+        AgentDebugNdjson.Log("H1", "GameFlowController.Init", "entry",
+            $"{{\"playerNull\":{(player == null).ToString().ToLowerInvariant()},\"customDialogueUiParamNull\":{(customDialogueUI == null).ToString().ToLowerInvariant()},\"dscNull\":{(_dialogueSystemController == null).ToString().ToLowerInvariant()}}}");
+        #endregion
 
         _initialized = true;
+        AlignDialogueManagerSingletonWithSerializedController();
+
         if (_gameSoundController == null)
             _gameSoundController = GameSoundController.Instance;
 
@@ -1161,9 +1420,27 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _controller = controller;
         _input = input;
         _clientInteraction = clientInteraction;
-        _customDialogueUI = customDialogueUI ?? (_dialogueSystemController?.DialogueUI as CustomDialogueUI);
+        if (_playerHudCanvasForDialogueSearch == null && player != null)
+            _playerHudCanvasForDialogueSearch = player.PlayerCanvas;
+
+        _dialogueSystemController?.PreloadDialogueUI();
+        ApplyResolvedCustomDialogueUi(ResolvePrimaryCustomDialogueUi(player, customDialogueUI));
+
+        #region agent log
+        {
+            MonoBehaviour dmUi = DialogueManager.hasInstance ? DialogueManager.instance.dialogueUI as MonoBehaviour : null;
+            string cu = _customDialogueUI != null ? _customDialogueUI.name : "null";
+            string du = dmUi != null ? dmUi.name : "null";
+            bool same = _customDialogueUI != null && dmUi != null && dmUi == (MonoBehaviour)(object)_customDialogueUI;
+            AgentDebugNdjson.Log("H2", "GameFlowController.Init", "after_first_resync",
+                $"{{\"customDialogueUi\":\"{cu}\",\"dialogueManagerUi\":\"{du}\",\"sameUnityInstance\":{same.ToString().ToLowerInvariant()}}}");
+        }
+        #endregion
+
         if (_mainMenuSceneUI != null)
             _mainMenuSceneUI.SetVisible(false);
+        ConfigurePauseMenuBindings();
+        SetPaused(false);
 
         if (_clientInteraction != null)
         {
@@ -1186,11 +1463,18 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         }
 
         _storyDirector.Initialize(this, _input, controller, deliveryNoteView);
+        _storyDirector?.ResyncDialogueUiReference();
 
-        DialogueManager.SetLanguage(GetUnifiedLanguage());
+        string startLang = GetUnifiedLanguage();
+        DialogueManager.SetLanguage(startLang);
+        DialogueSystemEnFieldApplier.RefreshAfterLanguageChanged(this);
+
+        StartCoroutine(CoDeferredAlignDialogueSingletonWhenReady());
+        StartCoroutine(CoRetryBindRuntimeDialogueUi(customDialogueUI));
 
         if (_showMainMenuOnStart)
         {
+            SetInGamePauseControlsVisible(false);
             StartCoroutine(ShowMainMenuThenStart());
             return;
         }
@@ -1204,8 +1488,97 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         EnterIntro();
     }
 
+    /// <summary>
+    /// PlayerInstaller вызывает ClientInteraction.Initialize до Init — там передаётся DialogueUI со старой ссылки на уничтоженный Canvas.
+    /// Портреты клиента (OnSubtitleShown) и радио (SetForcedAutoAdvance) должны смотреть на тот же экземпляр, что и DialogueManager.
+    /// </summary>
+    private void ResyncDialogueUiConsumersAfterManagerWired()
+    {
+        if (_customDialogueUI == null)
+        {
+            Debug.LogWarning("[DialogueResync] CustomDialogueUI is null — портреты клиента и авто-листание радио могут не работать.");
+            #region agent log
+            AgentDebugNdjson.Log("H2", "ResyncDialogueUiConsumersAfterManagerWired", "custom_ui_null", "{}");
+            #endregion
+            return;
+        }
+
+        _clientInteraction?.SyncDialogueUi(_customDialogueUI);
+
+        var radios = UnityEngine.Object.FindObjectsByType<RadioInteractable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < radios.Length; i++)
+        {
+            if (radios[i] != null)
+                radios[i].SyncCustomDialogueUi(_customDialogueUI);
+        }
+
+        #region agent log
+        {
+            MonoBehaviour dmUiAgent = DialogueManager.hasInstance ? DialogueManager.instance.dialogueUI as MonoBehaviour : null;
+            bool same = dmUiAgent != null && dmUiAgent == (MonoBehaviour)(object)_customDialogueUI;
+            AgentDebugNdjson.Log("H2", "ResyncDialogueUiConsumersAfterManagerWired", "after_sync",
+                $"{{\"custom\":\"{_customDialogueUI.name}\",\"dm\":\"" + (dmUiAgent != null ? dmUiAgent.name : "null") + "\",\"sameInstance\":" + same.ToString().ToLowerInvariant() + ",\"radioCount\":" + radios.Length + "}}");
+        }
+        #endregion
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        var dmUi = DialogueManager.hasInstance ? DialogueManager.instance.dialogueUI as MonoBehaviour : null;
+        string path = _customDialogueUI != null ? GameObjectUtility.GetHierarchyPath(_customDialogueUI.transform) : "";
+        Debug.Log(
+            "[DialogueResync] Rebind UI потребителей после привязки DialogueManager к CustomDialogueUI сцены. " +
+            "Иначе после выхода в меню: подписи OnSubtitleShown шли на уничтоженный UI (нет спрайтов портретов), " +
+            "SetForcedAutoAdvance/тайм-коды радио — на null (листание только пробелом).\n" +
+            $"  activeCustomDialogueUI={_customDialogueUI.name} (id={_customDialogueUI.GetInstanceID()})\n  path={path}\n" +
+            $"  dialogueManagerUi={(dmUi != null ? $"{dmUi.name} (id={dmUi.GetInstanceID()})" : "null")}, radioInteractables={radios.Length}");
+#endif
+    }
+
+    /// <summary>
+    /// «Новая игра»: DialogueManager (DontDestroyOnLoad) и статический GameStateService переживают сцену —
+    /// без сброса Lua/флагов автодиалоги и условия портретов остаются «грязными», как после старого прохождения.
+    /// </summary>
+    private void ApplyNewGameFreshSession()
+    {
+        #region agent log
+        AgentDebugNdjson.Log("H3", "ApplyNewGameFreshSession", "entry", "{}");
+        #endregion
+        try
+        {
+            if (DialogueManager.hasInstance)
+            {
+                if (DialogueManager.isConversationActive)
+                    DialogueManager.StopConversation();
+                DialogueManager.ResetDatabase(DatabaseResetOptions.KeepAllLoaded);
+            }
+
+            GameStateService.ResetForNewGame();
+
+            if (_dialogueSystemController != null && _customDialogueUI != null)
+                _dialogueSystemController.DialogueUI = _customDialogueUI;
+            EnsureSingletonDialogueManagerUsesResolvedUi();
+            _customDialogueUI?.ResetStaleStateAfterSceneReload();
+            ResyncDialogueUiConsumersAfterManagerWired();
+            DialogueSystemEnFieldApplier.RefreshAfterLanguageChanged(this);
+            HideSkepticPhoneNote();
+
+            GameSaveSystem.ClearAllSaveFiles();
+            GameSaveSystem.SetLoadFromSaveAtStartOverride(false);
+        }
+        catch (Exception ex)
+        {
+            #region agent log
+            string m = ex.Message ?? "";
+            if (m.Length > 400) m = m.Substring(0, 400);
+            m = m.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", " ");
+            AgentDebugNdjson.Log("H3", "ApplyNewGameFreshSession", "exception", "{\"type\":\"" + ex.GetType().Name + "\",\"message\":\"" + m + "\"}");
+            #endregion
+            throw;
+        }
+    }
+
     private System.Collections.IEnumerator ShowMainMenuThenStart()
     {
+        SetInGamePauseControlsVisible(false);
         // Важно: GameFlowController.Init уже вызван, но сюжет должен ждать выбор пользователя.
         if (_introView != null)
         {
@@ -1220,12 +1593,8 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        InputRebindMenu rebindMenu = _inputRebindMenu;
-        if (rebindMenu != null)
-            rebindMenu.gameObject.SetActive(false);
-
-        bool optionsOpen = false;
-        bool canContinue = GameSaveSystem.LoadDay1() != null;
+        bool settingsExpanded = false;
+        bool canContinue = GameSaveSystem.LoadDay1FromSlot(0) != null;
 
         MainMenuChoice choice = MainMenuChoice.None;
         bool exitRequested = false;
@@ -1234,28 +1603,48 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (menu == null)
         {
             Debug.LogWarning("Main menu is enabled, but MainMenuSceneUI reference is missing. Starting New Game.");
-            GameSaveSystem.SetLoadFromSaveAtStartOverride(false);
+            ApplyNewGameFreshSession();
             EnterIntro();
             yield break;
         }
 
         _mainMenuUI = menu;
         menu.SetVisible(true);
+
+        System.Action closeSettingsSubmenu = () =>
+        {
+            if (!settingsExpanded)
+                return;
+            settingsExpanded = false;
+            menu.SetSettingsSubPanelVisible(false);
+            menu.SetMainButtonsVisible(true);
+            menu.SetButtonsInteractable(
+                canContinue: canContinue,
+                newGameEnabled: true,
+                exitEnabled: true,
+                optionsEnabled: true);
+        };
+
         menu.Configure(
             canContinue: canContinue,
             onContinue: () => choice = MainMenuChoice.Continue,
             onNewGame: () => choice = MainMenuChoice.NewGame,
             onOptions: () =>
             {
-                optionsOpen = !optionsOpen;
-                if (rebindMenu != null)
-                    rebindMenu.gameObject.SetActive(optionsOpen);
+                settingsExpanded = !settingsExpanded;
+                menu.SetSettingsSubPanelVisible(settingsExpanded);
+                menu.SetMainButtonsVisible(!settingsExpanded);
+                if (settingsExpanded)
+                {
+                    menu.RefreshSettingsSubButtonLabels();
+                    menu.ApplyLocalizedButtonSpritesPublic();
+                }
 
                 // Чтобы не было конфликтов с кликами по "слою" меню.
                 _mainMenuUI?.SetButtonsInteractable(
-                    canContinue: optionsOpen ? false : canContinue,
-                    newGameEnabled: optionsOpen ? false : true,
-                    exitEnabled: optionsOpen ? false : true,
+                    canContinue: settingsExpanded ? false : canContinue,
+                    newGameEnabled: settingsExpanded ? false : true,
+                    exitEnabled: settingsExpanded ? false : true,
                     optionsEnabled: true);
 
                 Cursor.visible = true;
@@ -1265,31 +1654,37 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             {
                 exitRequested = true;
                 choice = MainMenuChoice.None;
-            });
+            },
+            onLanguage: () =>
+            {
+                string next = IsUiEnglishLocale ? "ru" : "Default";
+                ApplyUiLanguage(next);
+                menu.RefreshSettingsSubButtonLabels();
+                menu.ApplyLocalizedButtonSpritesPublic();
+            },
+            onMusicVolumeChanged: volume =>
+            {
+                GameAudioSettings.SetMusicVolume01(volume);
+                menu.RefreshSettingsSubButtonLabels();
+            },
+            onSoundVolumeChanged: volume =>
+            {
+                GameAudioSettings.SetSfxVolume01(volume);
+                menu.RefreshSettingsSubButtonLabels();
+            },
+            onSettingsBack: closeSettingsSubmenu);
+        menu.SetMainButtonsVisible(true);
         menu.SetButtonsInteractable(canContinue, newGameEnabled: true, exitEnabled: true, optionsEnabled: true);
 
         // Ждём выбора пользователя.
         while (choice == MainMenuChoice.None && !exitRequested)
         {
-            // ESC закрывает Options, если оно открыто.
-            if (optionsOpen && Input.GetKeyDown(KeyCode.Escape))
-            {
-                optionsOpen = false;
-                if (rebindMenu != null)
-                    rebindMenu.gameObject.SetActive(false);
-
-                menu.SetButtonsInteractable(
-                    canContinue: canContinue,
-                    newGameEnabled: true,
-                    exitEnabled: true,
-                    optionsEnabled: true);
-            }
+            // ESC закрывает подменю настроек, если оно открыто.
+            if (settingsExpanded && Input.GetKeyDown(KeyCode.Escape))
+                closeSettingsSubmenu();
 
             yield return null;
         }
-
-        if (rebindMenu != null)
-            rebindMenu.gameObject.SetActive(false);
 
         if (_mainMenuUI != null)
             _mainMenuUI.SetVisible(false);
@@ -1308,29 +1703,33 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             yield break;
         }
 
-        // Continue: загрузим сейв и сразу стартуем второй день (без интро).
+        // Continue: загрузим основной сейв и сразу стартуем второй день (без интро).
         if (choice == MainMenuChoice.Continue)
         {
             yield return StartCoroutine(StartFromSavedGameDelayed());
             yield break;
         }
 
-        // New Game: обычное вступление/интро как в текущей логике.
-        GameSaveSystem.SetLoadFromSaveAtStartOverride(false);
+        // New Game: как первый запуск — сброс Lua/статики DS, файлов сохранения и ребинд UI.
+        ApplyNewGameFreshSession();
         EnterIntro();
     }
 
     private MainMenuUI _mainMenuUI;
     private InputRebindMenu _inputRebindMenu;
+    private bool _isPaused;
+    /// <summary> Был ли заблокирован ввод до открытия паузы (= не могли двигаться). Снимается в момент SetPaused(true), до SetBlock. </summary>
+    private bool _inputBlockedBeforePause;
 
     private System.Collections.IEnumerator StartFromSavedGameDelayed()
     {
+        SetInGamePauseControlsVisible(true);
         if (_introView != null)
             _introView.gameObject.SetActive(false);
         yield return null;
         _controller.SetBlock(false);
         GameStateService.SetState(GameState.None);
-        Day1SaveData loaded = GameSaveSystem.LoadDay1();
+        Day1SaveData loaded = GameSaveSystem.LoadDay1FromSlot(0);
         if (loaded != null)
         {
             _storyDirector.ApplyDay1Save(loaded);
@@ -1353,6 +1752,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
 
     private void EnterIntro()
     {
+        SetInGamePauseControlsVisible(true);
         GameStateService.SetState(GameState.Intro);
         _controller.SetBlock(true);
 
@@ -1405,9 +1805,120 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         _storyDirector.StartStory();
     }
 
+    private void ConfigurePauseMenuBindings()
+    {
+        if (_pauseButton != null)
+        {
+            _pauseButton.onClick.RemoveAllListeners();
+            _pauseButton.onClick.AddListener(() => SetPaused(true));
+        }
+
+        if (_pauseContinueButton != null)
+        {
+            _pauseContinueButton.onClick.RemoveAllListeners();
+            _pauseContinueButton.onClick.AddListener(() => SetPaused(false));
+        }
+
+        if (_pauseExitToMainMenuButton != null)
+        {
+            _pauseExitToMainMenuButton.onClick.RemoveAllListeners();
+            _pauseExitToMainMenuButton.onClick.AddListener(ExitToMainMenuFromPause);
+        }
+
+        if (_pauseMenuPanel != null)
+            _pauseMenuPanel.SetActive(false);
+    }
+
+    private void SetInGamePauseControlsVisible(bool visible)
+    {
+        if (!visible)
+        {
+            if (_isPaused)
+                SetPaused(false);
+            else
+            {
+                Time.timeScale = 1f;
+                if (_pauseMenuPanel != null)
+                    _pauseMenuPanel.SetActive(false);
+            }
+        }
+
+        if (_pauseHudRoot != null)
+            _pauseHudRoot.SetActive(visible);
+        else if (_pauseButton != null)
+            _pauseButton.gameObject.SetActive(visible);
+    }
+
+    private void TogglePause()
+    {
+        SetPaused(!_isPaused);
+    }
+
+    private void SetPaused(bool paused)
+    {
+        // Восстанавливать блокировку только при реальном выходе из паузы. Иначе (Init, повторный SetPaused(false))
+        // применялся бы старый _inputBlockedBeforePause — игрок оставался с SetBlock(true) вне диалога («застревание»).
+        bool leavingPause = _isPaused && !paused;
+        _isPaused = paused;
+        Time.timeScale = paused ? 0f : 1f;
+
+        if (_pauseMenuPanel != null)
+            _pauseMenuPanel.SetActive(paused);
+
+        if (_controller != null)
+        {
+            if (paused)
+            {
+                // «Могли ли двигаться» = !IsInputBlocked — считываем до блокировки для меню паузы.
+                _inputBlockedBeforePause = _controller.IsInputBlocked;
+                _controller.SetBlock(true);
+            }
+            else if (leavingPause)
+            {
+                _controller.SetBlock(_inputBlockedBeforePause);
+            }
+            else
+            {
+                // Как раньше при SetPaused(false) без активной паузы: снять блок (старт Init и т.п.).
+                _controller.SetBlock(false);
+            }
+        }
+
+        Cursor.visible = paused;
+        Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
+
+        OnInGamePauseChanged?.Invoke(paused);
+    }
+
+    private void ExitToMainMenuFromPause()
+    {
+        #region agent log
+        var sc = SceneManager.GetActiveScene();
+        AgentDebugNdjson.Log("H4", "ExitToMainMenuFromPause", "before_load_scene",
+            $"{{\"sceneName\":\"{sc.name}\",\"buildIndex\":{sc.buildIndex}}}");
+        #endregion
+        SetPaused(false);
+        if (DialogueManager.hasInstance && DialogueManager.isConversationActive)
+            DialogueManager.StopConversation();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
     private void Update()
     {
         if (_input == null) return;
+
+        // ESC: переключение паузы. Снимок «могли ли двигаться» — внутри SetPaused(true), до SetBlock.
+        if (_mainMenuUI == null && Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (_isPaused)
+                SetPaused(false);
+            else
+                SetPaused(true);
+            return;
+        }
+
+        if (_isPaused)
+            return;
 
         EnforceClientDialogueControlsForMouseChoices();
 
@@ -1766,6 +2277,15 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    /// <summary>
+    /// Принудительно скрывает курсор и блокирует его (FPS). Нужно до телепорта и затемнения:
+    /// после меню/интро/диалога курсор может остаться видимым — быстрый переход на склад в день 1 давал рассинхрон ввода.
+    /// </summary>
+    private static void ApplyGameplayCursorLock()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
     public void EnterClientDialogueState(bool isLocked, bool movePlayerToClient = true)
     {
@@ -1816,6 +2336,10 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private void OnClientConversationEnded(Transform actor)
     {
         UnsubscribeConversationEnded();
+
+        // Во время телефонного режима (в т.ч. сюжетный звонок 112) курсор нужен для набора номера.
+        if (GameStateService.CurrentState == GameState.Phone)
+            return;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -1873,26 +2397,45 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         return text.Replace("\\r\\n", "\n").Replace("\r\n", "\n").Replace("\r", "\n");
     }
 
+    /// <summary> Сохраняет язык UI и синхронизирует Pixel Crushers + Dialogue System (для главного меню и игры). </summary>
+    public void ApplyUiLanguage(string languageCode)
+    {
+        if (string.IsNullOrWhiteSpace(languageCode))
+            return;
+        languageCode = languageCode.Trim();
+
+        PlayerPrefs.SetString("Language", languageCode);
+        PlayerPrefs.Save();
+
+        if (UILocalizationManager.instance != null)
+            UILocalizationManager.instance.currentLanguage = languageCode;
+
+        if (DialogueManager.hasInstance)
+            DialogueManager.SetLanguage(languageCode);
+
+        DialogueSystemEnFieldApplier.RefreshAfterLanguageChanged(this);
+    }
+
     private string GetUnifiedLanguage()
     {
         const string prefsKey = "Language";
 
-        // 1) То же значение, что у субтитров Dialogue System (после SetLanguage / InitializeLocalization)
-        if (!string.IsNullOrWhiteSpace(Localization.language))
-            return Localization.language.Trim();
-
-        // 2) UILocalizationManager (часто подхватывает PlayerPrefs при старте)
-        if (UILocalizationManager.instance != null && !string.IsNullOrWhiteSpace(UILocalizationManager.instance.currentLanguage))
-            return UILocalizationManager.instance.currentLanguage.Trim();
-
-        // 3) Явный выбор в PlayerPrefs (меню / сохранённая сессия)
+        // 1) Сохранённый выбор игрока (главное меню) — важнее дефолта базы диалогов (в билде часто en).
         string fromPrefs = PlayerPrefs.GetString(prefsKey, "");
         if (!string.IsNullOrWhiteSpace(fromPrefs))
             return fromPrefs.Trim();
 
-        // 4) Значение по умолчанию из инспектора (не должно перекрывать рантайм выше)
+        // 2) UILocalizationManager
+        if (UILocalizationManager.instance != null && !string.IsNullOrWhiteSpace(UILocalizationManager.instance.currentLanguage))
+            return UILocalizationManager.instance.currentLanguage.Trim();
+
+        // 3) Инспектор Game Flow Controller
         if (!string.IsNullOrWhiteSpace(_language))
             return _language.Trim();
+
+        // 4) Dialogue System (может совпадать с языком базы до SetLanguage)
+        if (!string.IsNullOrWhiteSpace(Localization.language))
+            return Localization.language.Trim();
 
         return "ru";
     }
@@ -2136,7 +2679,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         if (_clientArriveBellClip == null)
             return;
         Vector3 pos = _player != null ? _player.transform.position : (Camera.main != null ? Camera.main.transform.position : transform.position);
-        AudioSource.PlayClipAtPoint(_clientArriveBellClip, pos, Mathf.Clamp01(_clientArriveBellVolume));
+        AudioSource.PlayClipAtPoint(_clientArriveBellClip, pos, GameAudioSettings.ScaleSfx(Mathf.Clamp01(_clientArriveBellVolume)));
     }
 
     /// <summary> Колокольчик у стойки в 2D (тот же клип, что после Client_Day1.2), без привязки к позиции игрока. </summary>
@@ -2149,7 +2692,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
         src.spatialBlend = 0f;
         src.dopplerLevel = 0f;
         src.playOnAwake = false;
-        src.PlayOneShot(_clientArriveBellClip, Mathf.Clamp01(_clientArriveBellVolume));
+        src.PlayOneShot(_clientArriveBellClip, GameAudioSettings.ScaleSfx(Mathf.Clamp01(_clientArriveBellVolume)));
         Destroy(go, _clientArriveBellClip.length + 0.15f);
     }
 
@@ -2482,6 +3025,12 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             _skepticPhoneNoteObject.SetActive(true);
     }
 
+    public void HideSkepticPhoneNote()
+    {
+        if (_skepticPhoneNoteObject != null)
+            _skepticPhoneNoteObject.SetActive(false);
+    }
+
     public void ActivateRadioEvent(string id, float? staticVolumeOverride = null)
     {
         if (string.IsNullOrEmpty(id)) return;
@@ -2529,6 +3078,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     /// <summary> Сначала полное затемнение, затем вызов onFadeCompleteBeforeTravel (закрытие диалога), затем телепорт на склад и fade from black. Используется при F из диалога (Client_Day1.4 / ChoseToGivePackage5577). </summary>
     public void PlayFadeToBlackThenWarehouseFromDialogue(Action onFadeCompleteBeforeTravel)
     {
+        ApplyGameplayCursorLock();
         if (_travelFadeDuration <= 0f || _fadeToBlackView == null)
         {
             onFadeCompleteBeforeTravel?.Invoke();
@@ -2560,6 +3110,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
     private void PerformTravelWithFade(TravelTarget target, bool ignoreClientRequirements, bool freeTeleport, bool forceIgnoreSameDestination, Action onSuccess)
     {
         if (onSuccess == null) onSuccess = () => { };
+        ApplyGameplayCursorLock();
         bool useFade = _travelFadeDuration > 0f && _fadeToBlackView != null
             && (target == TravelTarget.Warehouse || target == TravelTarget.Client);
         Vector3 soundPos = _player != null ? _player.transform.position : (Camera.main != null ? Camera.main.transform.position : Vector3.zero);
@@ -2620,6 +3171,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
             Transform point = freeTeleport && _freeTeleportToWarehousePoint != null ? _freeTeleportToWarehousePoint : _warehousePoint;
             if (_player == null || point == null)
                 return false;
+            ApplyGameplayCursorLock();
             RemovePackageFromHands();
             Teleport(point);
             GameStateService.SetState(GameState.Warehouse);
@@ -2695,6 +3247,7 @@ public sealed class GameFlowController : MonoBehaviour, IGameFlowController
                      && GameStateService.CurrentState == GameState.Warehouse
                      && _freeTeleportToClientPoint != null)
                 point = _freeTeleportToClientPoint;
+            ApplyGameplayCursorLock();
             Teleport(point);
             GameStateService.SetState(GameState.ClientDialog);
 

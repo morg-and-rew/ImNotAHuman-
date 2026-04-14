@@ -30,6 +30,17 @@ public static class GameStateService
     {
         WrongPackageDialogueActive = active;
     }
+
+    /// <summary> Как при первом запуске: статическое состояние переживает LoadScene — сбрасываем при «Новая игра». </summary>
+    public static void ResetForNewGame()
+    {
+        CurrentState = GameState.None;
+        PhoneUnlocked = false;
+        RequiredPackageNumber = 0;
+        EnforceRequiredPackageOnly = false;
+        PackageDropLocked = false;
+        WrongPackageDialogueActive = false;
+    }
 }
 
 public enum GameState

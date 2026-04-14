@@ -15,6 +15,9 @@ public sealed class PhoneStoryWiring
     /// <summary> Обычный звонок на 112 вне сюжетного бита. </summary>
     private const string EmergencyCallCasualConversation = "Phone_Call112_Casual";
     private const string LuaUnlockFunc = "UnlockSkepticPhone";
+    private const string SkepticPhoneUnlockedLuaVar = "SkepticPhoneUnlocked";
+    private const string UnlockPhoneFlagVar = "unlock_phone";
+    private const string UnlockPhoneNumberVar = "unlock_phone_number";
 
     private enum CallMode { None, ProviderBeeps, ProviderAfter, SkepticCall, EmergencyCall }
     private CallMode _mode = CallMode.None;
@@ -33,6 +36,11 @@ public sealed class PhoneStoryWiring
 
         Lua.RegisterFunction(LuaUnlockFunc, this,
             SymbolExtensions.GetMethodInfo(() => UnlockSkepticPhone()));
+
+        // При Continue флаг может быть восстановлен раньше, чем зарегистрирована Lua-функция UnlockSkepticPhone.
+        // Дублируем восстановление здесь: после инициализации wiring гарантированно активируем записку/номер.
+        if (DialogueLua.GetVariable(SkepticPhoneUnlockedLuaVar).AsBool)
+            UnlockSkepticPhone();
     }
 
     public void Dispose()
@@ -48,7 +56,15 @@ public sealed class PhoneStoryWiring
         _skepticUnlocked = true;
 
         _callService.Register(SkepticNumber, OnCallSkeptic);
+        DialogueLua.SetVariable(SkepticPhoneUnlockedLuaVar, true);
         _flow.ShowSkepticPhoneNote();
+
+        // Fallback для сцен/билдов, где объект заметки в GameFlowController не назначен:
+        // пробрасываем через общий PhoneUnlockDirector (он спавнит префаб записки у spawn point).
+        DialogueLua.SetVariable(UnlockPhoneFlagVar, 1);
+        DialogueLua.SetVariable(UnlockPhoneNumberVar, SkepticNumber);
+        PhoneUnlockDirector unlockDirector = Object.FindFirstObjectByType<PhoneUnlockDirector>();
+        unlockDirector?.TryUnlockFromDialogue();
     }
 
     private void OnCallProvider()

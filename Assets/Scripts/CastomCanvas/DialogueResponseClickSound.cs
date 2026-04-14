@@ -6,26 +6,39 @@ using UnityEngine.UI;
 /// </summary>
 public sealed class DialogueResponseClickSound : MonoBehaviour
 {
-    private bool _listenerAdded;
-
     private void Awake()
     {
-        TryAddListener();
+        RegisterClick();
     }
 
     private void OnEnable()
     {
-        TryAddListener();
+        RegisterClick();
     }
 
-    private void TryAddListener()
+    /// <summary>
+    /// Не захватывать GameSoundController в замыкании: при перезагрузке сцены старый инстанс уничтожается,
+    /// а кнопка (или шаблон) может пережить сцену — иначе MissingReferenceException при клике.
+    /// </summary>
+    private void RegisterClick()
     {
-        if (_listenerAdded) return;
         Button button = GetComponent<Button>();
         if (button == null) return;
-        GameSoundController sound = GameSoundController.Instance;
-        if (sound == null) return;
-        button.onClick.AddListener(() => sound.PlayDialogueResponseClick());
-        _listenerAdded = true;
+        button.onClick.RemoveListener(OnDialogueResponseClicked);
+        button.onClick.AddListener(OnDialogueResponseClicked);
+    }
+
+    private void OnDestroy()
+    {
+        Button button = GetComponent<Button>();
+        if (button != null)
+            button.onClick.RemoveListener(OnDialogueResponseClicked);
+    }
+
+    private static void OnDialogueResponseClicked()
+    {
+        GameSoundController gsc = GameSoundController.Instance;
+        if (gsc == null) return;
+        gsc.PlayDialogueResponseClick();
     }
 }

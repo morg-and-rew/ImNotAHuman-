@@ -87,7 +87,13 @@ public sealed class PhoneController
     public void Tick()
     {
         if (IsOpen)
+        {
             _blocker?.SetBlock(true);
+            // Пауза и некоторые стейты геймплея могут временно менять lockState/visible.
+            // Пока телефон открыт (в т.ч. сюжетный набор 112), курсор должен оставаться доступным.
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
 

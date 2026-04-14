@@ -15,6 +15,9 @@ public interface IClientInteraction
     bool IsWaitingForContinue { get; }
     bool IsPlayerLookingAtClient(PlayerView player);
     void Initialize(Canvas uiRoot, Image leftImage, Image rightImage, ICustomDialogueUI customDialogueUI);
+
+    /// <summary> После перезагрузки сцены: тот же ICustomDialogueUI мог указывать на уничтоженный UI — переподписать портреты. </summary>
+    void SyncDialogueUi(ICustomDialogueUI customDialogueUI);
     void StartClientDialog();
     void StartClientDialogWithSpecificStep(string clientId, string conversationTitle);
     void ContinueSequence();

@@ -78,6 +78,7 @@ public sealed class GameSoundController : MonoBehaviour
             return;
         }
         Instance = this;
+        GameAudioSettings.EnsureLoaded();
 
         if (_footstepSource != null)
             _footstepVoice = _footstepSource;
@@ -105,7 +106,7 @@ public sealed class GameSoundController : MonoBehaviour
     public void PlayTravelTransition(Vector3 position)
     {
         if (_travelTransitionClip == null) return;
-        AudioSource.PlayClipAtPoint(_travelTransitionClip, position, _travelTransitionVolume);
+        AudioSource.PlayClipAtPoint(_travelTransitionClip, position, GameAudioSettings.ScaleSfx(_travelTransitionVolume));
     }
 
     /// <summary> Воспроизвести один шаг (при ходьбе). </summary>
@@ -118,7 +119,7 @@ public sealed class GameSoundController : MonoBehaviour
         // Один активный шаг: иначе PlayOneShot даёт «оркестр» из длинных клипов при низком pitch.
         _footstepVoice.Stop();
         _footstepVoice.clip = clip;
-        _footstepVoice.volume = _footstepVolume;
+        _footstepVoice.volume = GameAudioSettings.ScaleSfx(_footstepVolume);
         float pitchMul = (IsSteps1FootstepClip(clip) || _footstepClips.Length == 1) ? _footstepSteps1PitchScale : 1f;
         _footstepVoice.pitch = Mathf.Clamp(pitchMul, 0.03f, 3f);
         _footstepVoice.Play();
@@ -139,7 +140,7 @@ public sealed class GameSoundController : MonoBehaviour
     {
         if (_windowOpenClip == null) return;
         Vector3 pos = Camera.main != null ? Camera.main.transform.position : transform.position;
-        AudioSource.PlayClipAtPoint(_windowOpenClip, pos, _windowSoundVolume);
+        AudioSource.PlayClipAtPoint(_windowOpenClip, pos, GameAudioSettings.ScaleSfx(_windowSoundVolume));
     }
 
     /// <summary> Воспроизвести звук закрытия окна. </summary>
@@ -147,7 +148,7 @@ public sealed class GameSoundController : MonoBehaviour
     {
         if (_windowCloseClip == null) return;
         Vector3 pos = Camera.main != null ? Camera.main.transform.position : transform.position;
-        AudioSource.PlayClipAtPoint(_windowCloseClip, pos, _windowSoundVolume);
+        AudioSource.PlayClipAtPoint(_windowCloseClip, pos, GameAudioSettings.ScaleSfx(_windowSoundVolume));
     }
 
     public void StartWindLoop()
@@ -181,7 +182,7 @@ public sealed class GameSoundController : MonoBehaviour
         if (_windLoopSource == null)
             yield break;
 
-        float target = Mathf.Clamp01(_windLoopVolume);
+        float target = GameAudioSettings.ScaleSfx(Mathf.Clamp01(_windLoopVolume));
         float duration = Mathf.Max(0f, _windLoopFadeInDuration);
         if (duration <= 0.001f)
         {
@@ -210,14 +211,14 @@ public sealed class GameSoundController : MonoBehaviour
     {
         if (_dialogueResponseClickClip == null) return;
         Vector3 pos = Camera.main != null ? Camera.main.transform.position : transform.position;
-        AudioSource.PlayClipAtPoint(_dialogueResponseClickClip, pos, _dialogueResponseClickVolume);
+        AudioSource.PlayClipAtPoint(_dialogueResponseClickClip, pos, GameAudioSettings.ScaleSfx(_dialogueResponseClickVolume));
     }
 
     private void PlayPhoneAtCamera(AudioClip clip)
     {
         if (clip == null) return;
         Vector3 pos = Camera.main != null ? Camera.main.transform.position : transform.position;
-        AudioSource.PlayClipAtPoint(clip, pos, _phoneSoundVolume);
+        AudioSource.PlayClipAtPoint(clip, pos, GameAudioSettings.ScaleSfx(_phoneSoundVolume));
     }
 
     /// <param name="digit">Клавиша телефона: '0'–'9', '*' или '#'. Для цифр — индекс в _phoneDigitClips.</param>
@@ -256,7 +257,7 @@ public sealed class GameSoundController : MonoBehaviour
         if (_phoneBeepsClip == null || _phoneOngoingSource == null) return;
         _phoneOngoingSource.Stop();
         _phoneOngoingSource.clip = _phoneBeepsClip;
-        _phoneOngoingSource.volume = _phoneSoundVolume;
+        _phoneOngoingSource.volume = GameAudioSettings.ScaleSfx(_phoneSoundVolume);
         _phoneOngoingSource.loop = true;
         _phoneOngoingSource.Play();
     }

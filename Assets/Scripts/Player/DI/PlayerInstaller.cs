@@ -79,6 +79,16 @@ public sealed class PlayerInstaller : MonoBehaviour
 
         _clientInteraction.Initialize(playerView.PlayerCanvas, playerView.PlayerDialog, playerView.PlayerDialog1, (ICustomDialogueUI)_dialogueSystemController.DialogueUI);
 
+        #region agent log
+        {
+            var ui = _dialogueSystemController != null ? _dialogueSystemController.DialogueUI as UnityEngine.Component : null;
+            string n = ui != null ? ui.name : "null";
+            int id = ui != null ? ui.GetInstanceID() : 0;
+            AgentDebugNdjson.Log("H5", "PlayerInstaller.Awake", "after_ClientInteraction_Initialize",
+                $"{{\"dialogueUiFromDscName\":\"{n}\",\"instanceId\":{id}}}");
+        }
+        #endregion
+
         if (GetComponent<ClientDialogueDepthOfFieldController>() == null)
             gameObject.AddComponent<ClientDialogueDepthOfFieldController>();
 
@@ -106,6 +116,10 @@ public sealed class PlayerInstaller : MonoBehaviour
 
         _gameFlowController.Init(playerView, _playerController, _playerInput, _clientInteraction, playerView.DeliveryNoteView,
             _dialogueSystemController?.DialogueUI as CustomDialogueUI);
+
+        #region agent log
+        AgentDebugNdjson.Log("H5", "PlayerInstaller.Awake", "after_GameFlowController_Init", "{}");
+        #endregion
 
         if (_phoneUIView != null)
             _phoneUIView.SetEventCamera(playerView.PlayerCamera);
